@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digital SAT — Math Practice Exam (Set B)</title>
+<title>Digital SAT — Math Practice Exam (Set K)</title>
 <style>
 
   #wtmBar{ background:#111; color:#fff; display:flex; align-items:center; justify-content:space-between; padding:7px 18px; font-size:.78rem; font-family:Georgia, 'Times New Roman', serif; flex-wrap:wrap; gap:8px; }
@@ -142,7 +142,7 @@
 </div>
 
 <div id="topbar">
-  <div class="brand"><span class="dot"></span> DIGITAL SAT &nbsp;•&nbsp; Math &nbsp;•&nbsp; Form B</div>
+  <div class="brand"><span class="dot"></span> DIGITAL SAT &nbsp;•&nbsp; Math &nbsp;•&nbsp; Form K</div>
   <div class="mid">
     <div id="timerDisplay">--:--</div>
   </div>
@@ -239,102 +239,106 @@ function mkGrid(question, answerStr, level){
 
 const mcTemplatesByLevel = {
   1: [
-    ()=>{ const a=randInt(2,9), b=randInt(2,9); return mkMC(`What is the value of ${a} + ${b} × 2?`, `${a+b*2}`, [`${(a+b)*2}`,`${a+b}`,`${a*b*2}`],1); },
-    ()=>{ const p=randInt(2,12), q=randInt(2,12); return mkMC(`If x − ${p} = ${q}, what is the value of x?`, `${p+q}`, [`${q-p}`,`${p-q}`,`${p*q}`],1); },
-    ()=>{ const n=randInt(3,9)*10, pct=pick([5,15,20,50]); return mkMC(`${pct}% of ${n} is what number?`, `${n*pct/100}`, [`${n-pct}`,`${n*pct/10}`,`${pct}`],1); },
-    ()=>{ const a=randInt(2,10), b=randInt(2,10); return mkMC(`What is the product of ${a} and ${b}?`, `${a*b}`, [`${a+b}`,`${a*b+1}`,`${a-b}`],1); },
-    ()=>{ const re=randInt(1,8), im=randInt(1,8), re2=randInt(1,8), im2=randInt(1,8);
-      return mkMC(`For i = √(−1), what is (${re} − ${im}i) + (${re2} + ${im2}i)?`,
-        `${re+re2} + ${im2-im}i`, [`${re+re2} − ${im2-im}i`,`${re-re2} + ${im-im2}i`,`${re*re2} + ${im*im2}i`],1); }
+    ()=>{ const a=randInt(2,9), x=randInt(2,12); return mkMC(`If ${a}x = ${a*x}, what is the value of x?`, `${x}`, [`${x+1}`,`${x>1?x-1:x+2}`,`${a}`],1); },
+    ()=>{ const n=randInt(4,20)*10, pct=pick([10,20,25,50]); const val=n*pct/100;
+      return mkMC(`What is ${pct}% of ${n}?`, `${val}`, [`${val+pct}`,`${Math.max(val-pct,1)}`,`${n-val}`],1); },
+    ()=>{ const k=randInt(2,9), x1=randInt(2,10), y1=k*x1, x2=randInt(2,10);
+      return mkMC(`If y = kx, where k is a constant, and y = ${y1} when x = ${x1}, what is the value of y when x = ${x2}?`,
+        `${k*x2}`, [`${k*x2+k}`,`${x2}`,`${k*x2-1}`],1); },
+    ()=>{ const a=randInt(1,15), b=randInt(1,15); return mkMC(`What is the sum of ${a} and ${b}?`, `${a+b}`, [`${a+b+1}`,`${a-b}`,`${a*b}`],1); },
+    ()=>{ const re=randInt(1,9), im=randInt(1,9), re2=randInt(1,9), im2=randInt(1,9);
+      return mkMC(`For i = √(−1), what is the sum (${re} + ${im}i) + (${re2} + ${im2}i)?`,
+        `${re+re2} + ${im+im2}i`, [`${re-re2} + ${im-im2}i`,`${re+re2} - ${im+im2}i`,`${re*re2} + ${im*im2}i`],1); }
   ],
   2: [
-    ()=>{ const b=randInt(3,12), h=randInt(3,12); return mkMC(`A triangle has base ${b} and height ${h}. What is its area?`, `${(b*h/2)}`, [`${b*h}`,`${b+h}`,`${b*h/2+1}`],2); },
-    ()=>{ const a=randInt(2,7), b=randInt(4,20), c=randInt(1,15); const x=(c+b)/a; const xStr=Number.isInteger(x)?`${x}`:x.toFixed(1);
-      return mkMC(`If ${a}x − ${b} = ${c}, what is the value of x?`, xStr, [`${(x-1).toFixed(1)}`,`${(x+1).toFixed(1)}`,`${a}`],2); },
-    ()=>{ const nums=[randInt(1,30),randInt(1,30),randInt(1,30)]; const sum=nums.reduce((a,b)=>a+b,0); const med=[...nums].sort((a,b)=>a-b)[1];
-      return mkMC(`What is the median of ${nums.join(', ')}?`, `${med}`, [`${sum}`,`${Math.round(sum/3)}`,`${med+1}`],2); },
-    ()=>{ const start=randInt(200,400), rate=randInt(5,25);
-      return mkMC(`A tank's water level is modeled by L = ${start} − ${rate}m, where m is minutes elapsed. What does ${rate} represent?`,
-        `The rate, in units per minute, at which the level drops`, [`The starting water level`,`The total minutes until empty`,`The tank's capacity`],2); },
-    ()=>{ const hr=randInt(2,7), c1=randInt(2,9), c2=randInt(2,9);
-      return mkMC(`Machine A produces c1 parts each hour for ${hr} hours, and Machine B produces c2 parts each hour for ${hr} hours. Which expression gives the combined total?`,
-        `${hr}c1 + ${hr}c2`, [`${hr}(c1)(c2)`,`c1 + c2`,`${hr*2}c1c2`],2); }
+    ()=>{ const w=randInt(3,12), h=randInt(3,12); return mkMC(`A banner has width ${w} and height ${h}. What is its area?`, `${w*h}`, [`${2*(w+h)}`,`${w+h}`,`${w*h+w}`],2); },
+    ()=>{ const a=randInt(2,6), b=randInt(3,15), c=randInt(1,10); const x=(c-b)/a; const xStr=Number.isInteger(x)?`${x}`:x.toFixed(1);
+      return mkMC(`If ${a}x + ${b} = ${c}, what is the value of x?`, xStr, [`${(x+1).toFixed(1)}`,`${(x-1).toFixed(1)}`,`${a}`],2); },
+    ()=>{ const nums=[randInt(1,20),randInt(1,20),randInt(1,20),randInt(1,20)]; const sum=nums.reduce((a,b)=>a+b,0); const mean=sum/4;
+      const meanStr=Number.isInteger(mean)?`${mean}`:mean.toFixed(2);
+      return mkMC(`What is the mean of ${nums.join(', ')}?`, meanStr, [`${Math.round(mean)+1}`,`${sum}`,`${Math.round(mean)-1}`],2); },
+    ()=>{ const start=randInt(80,150), rate=randInt(10,30);
+      return mkMC(`P = ${start} − ${rate}d models the number of items P a assembler has left to fix after d days. What does ${start} represent?`,
+        `The number of orders to fix at the start`, [`The number of orders fixed per day`,`The number of days needed to finish`,`The number of orders fixed per hour`],2); },
+    ()=>{ const hm=randInt(2,6), hp=randInt(2,6);
+      return mkMC(`Sensor A logged m readings each hour for ${hm} hours, and Sensor B logged p readings each hour for ${hp} hours. Which expression represents the total number of readings logged?`,
+        `${hm}m + ${hp}p`, [`${hm}${hp}mp`,`${hp}m + ${hm}p`,`${hm+hp}mp`],2); }
   ],
   3: [
-    ()=>{ const b=randInt(2,6), e=pick([2,3]); const val=Math.pow(b,e);
+    ()=>{ const b=randInt(2,5), e=pick([2,3]); const val=Math.pow(b,e);
       return mkMC(`What is the value of ${b}^${e}?`, `${val}`, [`${b*e}`,`${val+b}`,`${val-1}`],3); },
-    ()=>{ const rate=randInt(40,90), time=randInt(1,5), extra=randInt(5,20);
-      return mkMC(`A cyclist rides at a constant ${rate} km/h for ${time} hours, then rides an additional ${extra} km. What is the total distance traveled, in km?`,
-        `${rate*time+extra}`, [`${rate*time}`,`${rate+time+extra}`,`${rate*(time+extra)}`],3); },
-    ()=>{ const r=randInt(2,7); const val=(9/r); const valStr=val.toFixed(2).replace(/\.00$/,'').replace(/0$/,'');
-      return mkMC(`If p/q = ${r}, what is the value of 9q/p?`, valStr, [`${r}`,`${9*r}`,`${(r/9).toFixed(2)}`],3); },
-    ()=>{ const g1=randInt(40,90), g2=randInt(40,90), total=g1+g2; const pctOfTotal=Math.round(g2/total*100);
-      return mkMC(`Out of ${total} respondents, ${g1} prefer Plan X and the rest prefer Plan Y. Approximately what percent prefer Plan Y?`,
-        `${pctOfTotal}%`, [`${100-pctOfTotal}%`,`${Math.round(g2/g1*100)}%`,`${g2}%`],3); },
-    ()=>{ const a=randInt(2,6), h3=randInt(4,30);
-      return mkMC(`For the function f defined by f(x) = ${a}x³ + c, where c is a constant, f(2) = ${h3}. What is the value of f(−2)?`,
-        `${h3-16*a}`, [`${h3}`,`${-h3}`,`${16*a}`],3); }
+    ()=>{ const speed=randInt(30,70), time=randInt(2,6);
+      return mkMC(`A ferry travels at a constant ${speed} miles per hour for ${time} hours. How many miles does it travel?`,
+        `${speed*time}`, [`${speed+time}`,`${speed*time+speed}`,`${speed}`],3); },
+    ()=>{ const r=randInt(2,6); const val=(4/r); const valStr=val.toFixed(2).replace(/\.00$/,'').replace(/0$/,'');
+      return mkMC(`If a/b = ${r}, what is the value of 4b/a?`, valStr, [`${r}`,`${4*r}`,`${(r/4).toFixed(2)}`],3); },
+    ()=>{ const g1=randInt(30,70), g2=randInt(30,70), total=g1+g2; const pctOfTotal=Math.round(g1/total*100);
+      return mkMC(`In a survey of ${total} commuters, ${g1} belong to Group A and the rest to Group B. Approximately what percent belong to Group A?`,
+        `${pctOfTotal}%`, [`${100-pctOfTotal}%`,`${Math.round(g1/g2*100)}%`,`${g1}%`],3); },
+    ()=>{ const a=randInt(2,5), g4=randInt(4,30);
+      return mkMC(`For the function g defined by g(x) = ${a}x² + c, where c is a constant, g(4) = ${g4}. What is the value of g(−4)?`,
+        `${g4}`, [`${-g4}`,`${g4+8}`,`${16*a}`],3); }
   ],
   4: [
-    ()=>{ const x1=randInt(-5,3), y1=randInt(-5,5), dx=randInt(1,6), dy=randInt(-5,5); const slope=dy/dx;
+    ()=>{ const x1=randInt(-6,2), y1=randInt(-6,6), dx=randInt(1,5), dy=randInt(-6,6); const slope=dy/dx;
       const slopeStr=Number.isInteger(slope)?`${slope}`:`${dy}/${dx}`;
-      return mkMC(`A line has a y-intercept of ${y1} and passes through the point (${dx}, ${y1+dy}). What is the slope of the line?`,
-        slopeStr, [`${dx}/${dy}`,`${slope-1}`,`${-slope}`],4); },
-    ()=>{ const r1=randInt(1,7), r2=randInt(1,7); const b=-(r1+r2), c=r1*r2;
-      return mkMC(`The equation x² ${b>=0?'+':'-'} ${Math.abs(b)}x + ${c} = 0 has two solutions. What is the product of the two solutions?`,
-        `${c}`, [`${r1+r2}`,`${b}`,`${c+2}`],4); },
-    ()=>{ const x=randInt(1,9), y=randInt(1,9); const a1=randInt(1,5), b1=randInt(1,5), a2=randInt(1,5), b2=randInt(1,5);
-      if(a1*b2-a2*b1===0) return mcTemplatesByLevel[4][2](); const rhs1=a1*x-b1*y, rhs2=a2*x-b2*y;
-      return mkMC(`What is the solution (x, y) to the system: ${a1}x − ${b1}y = ${rhs1} and ${a2}x − ${b2}y = ${rhs2}?`,
-        `(${x}, ${y})`, [`(${y}, ${x})`,`(${x-1}, ${y+1})`,`(${-x}, ${-y})`],4); },
-    ()=>{ const x=randInt(3,9), y=randInt(1,7); const rhs=2*x+y;
-      return mkMC(`If 2x + y = ${rhs}, what is the value of 4^x · 2^y?`, `2^${rhs}`,
-        [`2^${rhs-1}`,`4^${rhs}`,`The value cannot be determined from the information given.`],4); },
-    ()=>{ const cell=randInt(15,45), colTotal=cell+randInt(15,55)+randInt(15,55);
-      return mkMC(`In a two-way frequency table, a cell has a count of ${cell} out of a column total of ${colTotal}. If a person is selected at random from that column, what is the probability the person falls in that cell?`,
-        `${cell}/${colTotal}`, [`${colTotal}/${cell}`,`${cell}/${colTotal+cell}`,`${colTotal-cell}/${colTotal}`],4); }
+      return mkMC(`A line passes through (${x1}, ${y1}) and (${x1+dx}, ${y1+dy}). What is the slope of the line?`,
+        slopeStr, [`${dx}/${dy}`,`${slope+1}`,`${-slope}`],4); },
+    ()=>{ const r1=randInt(1,8), r2=randInt(1,8); const b=-(r1+r2), c=r1*r2;
+      return mkMC(`The equation x² ${b>=0?'+':'-'} ${Math.abs(b)}x + ${c} = 0 has two solutions. What is the sum of the two solutions?`,
+        `${r1+r2}`, [`${c}`,`${r1*r2}`,`${r1+r2+2}`],4); },
+    ()=>{ const x=randInt(1,10), y=randInt(1,10); const a1=randInt(1,4), b1=randInt(1,4), a2=randInt(1,4), b2=randInt(1,4);
+      if(a1*b2-a2*b1===0) return mcTemplatesByLevel[4][2](); const rhs1=a1*x+b1*y, rhs2=a2*x+b2*y;
+      return mkMC(`What is the solution (x, y) to the system: ${a1}x + ${b1}y = ${rhs1} and ${a2}x + ${b2}y = ${rhs2}?`,
+        `(${x}, ${y})`, [`(${y}, ${x})`,`(${x+1}, ${y-1})`,`(${-x}, ${-y})`],4); },
+    ()=>{ const x=randInt(4,10), y=randInt(2,8); const rhs=3*x-y;
+      return mkMC(`If 3x − y = ${rhs}, what is the value of 8^x / 2^y?`, `2^${rhs}`,
+        [`2^${rhs+1}`,`4^${rhs}`,`The value cannot be determined from the information given.`],4); },
+    ()=>{ const cell=randInt(10,40), rowTotal=cell+randInt(10,60)+randInt(10,60);
+      return mkMC(`In a two-way frequency table, a cell has a count of ${cell} out of a row total of ${rowTotal}. If a person is selected at random from that row, what is the probability that the person falls in that cell?`,
+        `${cell}/${rowTotal}`, [`${rowTotal}/${cell}`,`${cell}/${rowTotal+cell}`,`${rowTotal-cell}/${rowTotal}`],4); }
   ],
   5: [
-    ()=>{ const a=randInt(2,8); const x=9*a*a;
-      return mkMC(`If a = ${a}√3 and 3a = √(3x), what is the value of x?`, `${x}`, [`${3*a*a}`,`${a*a}`,`${6*a*a}`],5); },
-    ()=>{ const p=randInt(2,7), q=randInt(3,9); const b=-(p+q), c=p*q; const h=(p+q)/2;
+    ()=>{ const a=randInt(2,9); const x=4*a*a;
+      return mkMC(`If a = ${a}√2 and 2a = √(2x), what is the value of x?`, `${x}`, [`${2*a*a}`,`${a*a}`,`${8*a*a}`],5); },
+    ()=>{ const p=randInt(2,6), q=randInt(3,8); const b=-(p+q), c=p*q; const h=(p+q)/2;
       const k=(-((p-q)*(p-q))/4).toFixed(2).replace(/\.00$/,'');
-      return mkMC(`A parabola has equation y = x² ${b>=0?'+':'−'} ${Math.abs(b)}x + ${c}. Which equivalent form directly reveals the minimum value of the function?`,
+      return mkMC(`A parabola has equation y = x² ${b>=0?'+':'−'} ${Math.abs(b)}x + ${c}. Which equivalent form most directly reveals the vertex of the parabola?`,
         `y = (x − ${h})² + ${k}`, [`y = x(x − ${Math.abs(b)}) + ${c}`,`y = (x + ${p})(x + ${q})`,`y = (x − ${p})(x − ${q})`],5); },
-    ()=>{ const rate1=randInt(3,7), rate2=rate1+pick([1,2,3]), years=8, principal=200;
+    ()=>{ const rate1=randInt(2,6), rate2=rate1+pick([1,2]), years=10, principal=100;
       const val1=(principal*Math.pow(1+rate1/100,years)), val2=(principal*Math.pow(1+rate2/100,years)); const diff=(val2-val1).toFixed(2);
-      return mkMC(`Two accounts each start with $${principal}. One earns ${rate1}% annual interest, the other ${rate2}%, both compounded annually. After ${years} years, approximately how much more will the ${rate2}% account be worth?`,
-        `$${diff}`, [`$${(diff*1+8).toFixed(2)}`,`$${((rate2-rate1)*principal).toFixed(2)}`,`$${val2.toFixed(2)}`],5); },
-    ()=>{ const cx=randInt(2,8), rNum=randInt(2,7), rDen=randInt(2,5); const r2=((rNum*rNum)/(rDen*rDen)).toFixed(2);
-      return mkMC(`A circle in the xy-plane has center (${cx}, 0) and a radius of ${rNum}/${rDen}. Which is an equation of the circle?`,
-        `(x − ${cx})² + y² = ${r2}`, [`(x + ${cx})² + y² = ${r2}`,`(x − ${cx})² + y² = ${(rNum/rDen).toFixed(2)}`,`(x − ${cx}) + y² = ${r2}`],5); },
-    ()=>{ const a=randInt(2,6), b=randInt(2,6), sum=a+b;
-      return mkMC(`If (ax − 3)(bx − 5) = ${a*b}x² + cx + 15 for all values of x, and a + b = ${sum}, which could be a possible value for c?`,
-        `${-(5*a+3*b)}`, [`${-(5*b+3*a)}`,`${a*b}`,`${sum*5}`],5); }
+      return mkMC(`Two accounts each start with $${principal}. One earns ${rate1}% interest compounded annually, the other ${rate2}%. After ${years} years, approximately how much more will the ${rate2}% account be worth?`,
+        `$${diff}`, [`$${(diff*1+5).toFixed(2)}`,`$${((rate2-rate1)*principal).toFixed(2)}`,`$${val2.toFixed(2)}`],5); },
+    ()=>{ const cy=randInt(2,8), rNum=randInt(2,6), rDen=randInt(2,4); const r2=((rNum*rNum)/(rDen*rDen)).toFixed(2);
+      return mkMC(`A circle in the xy-plane has center (0, ${cy}) and a radius of ${rNum}/${rDen}. Which is an equation of the circle?`,
+        `x² + (y − ${cy})² = ${r2}`, [`x² + (y + ${cy})² = ${r2}`,`x² + (y − ${cy})² = ${(rNum/rDen).toFixed(2)}`,`x² + (y − ${cy}) = ${r2}`],5); },
+    ()=>{ const a=randInt(2,5), b=randInt(2,5), sum=a+b;
+      return mkMC(`If (ax + 3)(bx + 11) = ${a*b}x² + cx + 33 for all values of x, and a + b = ${sum}, which could be a possible value for c?`,
+        `${11*a+3*b}`, [`${11*b+3*a}`,`${a*b}`,`${sum*11}`],5); }
   ]
 };
 
 const gridTemplatesByLevel = { 1:[], 2:[], 3:[], 4:[], 5:[] };
 gridTemplatesByLevel[1] = [
-  ()=>{ const a=randInt(2,9); return mkGrid(`If 3x = ${3*a}, what is the value of x?`, `${a}`, 1); },
-  ()=>{ const a=randInt(3,9), b=randInt(1,7); return mkGrid(`If x − ${b} = ${a-b}, what is the value of x?`, `${a}`, 1); }
+  ()=>{ const a=randInt(2,9); return mkGrid(`If 2x = ${2*a}, what is the value of x?`, `${a}`, 1); },
+  ()=>{ const a=randInt(3,9), b=randInt(1,6); return mkGrid(`If x + ${b} = ${a+b}, what is the value of x?`, `${a}`, 1); }
 ];
 gridTemplatesByLevel[2] = [
-  ()=>{ const s=randInt(2,9); return mkGrid(`If x² = ${s*s} and x < 0, what is the value of −x?`, `${s}`, 2); },
-  ()=>{ const a=randInt(3,8); return mkGrid(`A printer prints at least ${a*5} pages per minute. At that steady rate, how many minutes does it take to print ${a*5*3} pages?`, `3`, 2); }
+  ()=>{ const s=randInt(2,9); return mkGrid(`If x² = ${s*s} and x > 0, what is the value of x?`, `${s}`, 2); },
+  ()=>{ const a=randInt(4,9); return mkGrid(`A courier can complete at least ${a*4} deliveries per hour. At that steady rate, how many hours does it take to complete ${a*4*4} deliveries?`, `4`, 2); }
 ];
 gridTemplatesByLevel[3] = [
-  ()=>{ return mkGrid(`A parking garage charges in 15-minute intervals and is open 24 hours a day. How many 15-minute intervals are there in a day?`, `96`, 3); },
-  ()=>{ return mkGrid(`A cone has volume 48π cubic inches and height 9 inches. What is the radius, in inches, of the base? (Hint: V = (1/3)πr²h)`, `4`, 3); }
+  ()=>{ return mkGrid(`A radio station sells 20-minute ad slots and operates 24 hours a day. How many 20-minute slots can it sell in a single day?`, `72`, 3); },
+  ()=>{ const r=randInt(2,6); return mkGrid(`A cylinder has volume 75π cubic yards and height 12 yards. What is the radius, in yards, of the base?`, `2.5`, 3); }
 ];
 gridTemplatesByLevel[4] = [
-  ()=>{ return mkGrid(`If t > 0 and t² − 9 = 0, what is the value of t?`, `3`, 4); },
-  ()=>{ return mkGrid(`If an account earns 3 percent interest compounded annually and its value after t years is modeled as 100(x)^t, what is the value of x?`, `1.03`, 4); }
+  ()=>{ return mkGrid(`If t > 0 and t² − 4 = 0, what is the value of t?`, `2`, 4); },
+  ()=>{ return mkGrid(`If an account earns 2 percent interest compounded annually and its value after t years is modeled as 100(x)^t, what is the value of x?`, `1.02`, 4); }
 ];
 gridTemplatesByLevel[5] = [
-  ()=>{ const p=150, r1=0.03, r2=0.035, t=8; const diff=(p*Math.pow(1+r2,t)-p*Math.pow(1+r1,t)).toFixed(2);
-    return mkGrid(`Two $150 deposits earn compound annual interest of 3% and 3.5% respectively. After 8 years, how much more (rounded to the nearest cent, no dollar sign) will the 3.5% deposit have earned?`, diff, 5); },
-  ()=>{ return mkGrid(`For what value of x is 1/((x-2)² − 6(x-2) + 9) undefined, given the expression simplifies to 1/(x-5)²? Enter that value of x.`, `5`, 5); }
+  ()=>{ const p=500, r1=0.03, r2=0.0375, t=9; const diff=(p*Math.pow(1+r2,t)-p*Math.pow(1+r1,t)).toFixed(2);
+    return mkGrid(`Two $500 deposits earn compound annual interest of 3% and 3.75% respectively. After 9 years, how much more (rounded to the nearest cent, no dollar sign) will the 3.75% deposit have earned?`, diff, 5); },
+  ()=>{ return mkGrid(`For what value of x is 1/((x-6)² + 8(x-6) + 16) undefined, given the expression simplifies to 1/(x-2)²? Enter that value of x.`, `2`, 5); }
 ];
 
 /* =========================================================================

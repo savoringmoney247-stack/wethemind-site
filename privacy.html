@@ -12,8 +12,8 @@
 :root{
   --ink:#142238;
   --ink-2:#1c2f4a;
-  --paper:#FAF7F0;
-  --paper-2:#F0E9D8;
+  --paper:#FFFFFF;
+  --paper-2:#F4F4F2;
   --stamp-red:#E81D1E;
   --stamp-red-deep:#B3161A;
   --gold:#FEBA02;
@@ -43,8 +43,8 @@ h1,h2,h3,h4{
   font-family:Georgia, 'Times New Roman', serif;
   color:var(--ink);
   margin:0 0 .4em;
-  font-weight:700;
-  letter-spacing:.01em;
+  font-weight:800;
+  letter-spacing:.02em;
   text-transform:uppercase;
 }
 p{margin:0 0 1em;}
@@ -87,7 +87,7 @@ img,svg{max-width:100%; display:block;}
 /* ---------- Header + dropdown nav ---------- */
 header{
   position:sticky; top:0; z-index:50;
-  background:rgba(250,247,240,0.95);
+  background:rgba(255,255,255,0.95);
   backdrop-filter:blur(6px);
   border-bottom:1px solid var(--line);
 }
@@ -186,7 +186,8 @@ header{
 
 /* ---------- Section headers ---------- */
 .section-head{ max-width:640px; margin-bottom:48px; margin-left:auto; margin-right:auto; text-align:center; }
-.section-head h2{ font-size:clamp(1.5rem, 3vw, 2.1rem); }
+.section-head h2{ font-size:clamp(1.5rem, 3vw, 2.1rem); position:relative; padding-bottom:16px; }
+.section-head h2::after{ content:""; position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:56px; height:4px; border-radius:2px; background:linear-gradient(90deg, var(--stamp-red), var(--gold)); }
 .section-head p{ color:#6b6558; font-size:1.02rem; }
 
 /* ---------- Hero (home page) ---------- */
@@ -460,6 +461,8 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
 }
 .footer-social a:hover{ border-color:var(--stamp-red); background:var(--paper-2); }
 .footer-social svg{ width:16px; height:16px; }
+.whatsapp-channel-cta{ display:inline-block; margin-top:14px; padding:8px 16px; border-radius:20px; background:#25D366; color:#fff; font-size:.78rem; font-weight:700; text-decoration:none; text-transform:none; letter-spacing:normal; }
+.whatsapp-channel-cta:hover{ background:#1EBE57; }
 .footer-bottom{ display:flex; justify-content:center; flex-wrap:wrap; gap:12px 28px; border-top:1px solid var(--line); padding-top:20px; text-align:center; }
 
 /* ---------- WhatsApp floating button ---------- */
@@ -635,13 +638,14 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
           <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram — link coming soon">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="var(--ink-2)"/></svg>
           </a>
-          <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn — link coming soon">
+          <a href="https://www.linkedin.com/company/wethemind/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="8" cy="9" r="1.3" fill="var(--ink-2)"/><rect x="7" y="11.5" width="2" height="7" fill="var(--ink-2)"/><path d="M12 11.5h2v1.1c.5-.8 1.4-1.3 2.5-1.3 2 0 3 1.3 3 3.6V18.5h-2v-3.2c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7v3.2h-2z" fill="var(--ink-2)"/></svg>
           </a>
           <a href="https://wa.me/917478147260?text=Hi%20We%20the%20Mind!%20%F0%9F%91%8B%20I%27d%20love%20to%20grab%20a%20free%2030-minute%20session%20for%20my%20child%20%E2%80%94%20could%20you%20help%20me%20get%20started%3F" target="_blank" rel="noopener" aria-label="WhatsApp">
             <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#25D366" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
           </a>
         </div>
+        <a href="https://whatsapp.com/channel/0029Vb8QtE2AO7R8RcLozc3w" target="_blank" rel="noopener" class="whatsapp-channel-cta">Join our WhatsApp Channel — free course updates &amp; opportunities</a>
       </div>
       <div>
         <h4>Explore</h4>
