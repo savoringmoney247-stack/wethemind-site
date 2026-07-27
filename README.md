@@ -1,6 +1,6 @@
 # We the Mind — website
 
-Everything you need to host the site is in this folder. **21 files** in total — read the "Host it on GitHub Pages" section below for exact steps.
+Everything you need to host the site is in this folder. **23 files** in total (21 HTML pages + 1 downloadable PDF + this README) — read the "Host it on GitHub Pages" section below for exact steps.
 
 ## Every page is fully self-contained
 Each `.html` file has its own CSS and JavaScript built directly into it — there is no separate `style.css` or `script.js`. Upload any single file on its own and it will look and work correctly, with nothing extra to remember. The tradeoff is repeated CSS inside each file rather than one shared file — intentional, for reliability.
@@ -19,7 +19,8 @@ Each `.html` file has its own CSS and JavaScript built directly into it — ther
 | `resources.html` | Worksheets & Course Plans preview | Resources ▾ |
 | `sat-practice.html` | Links out to all 10 free SAT Math practice exams | Resources ▾ |
 | `sat-math-exam-set-a.html` … `-j.html` (10 files) | The full practice exams themselves — each opens in a new tab | Linked from `sat-practice.html` only |
-| `privacy.html` / `terms.html` | Legal templates (not legal advice — have a lawyer review before real payments) | Footer only |
+| `privacy.html` / `terms.html` | Concrete, complete privacy/terms policies (not legal advice — have a lawyer review before real payments) | Footer only |
+| `we-the-mind-course-plans.pdf` | Downloadable course plans & pricing guide, covering every board/exam/course | Linked from `curriculum.html` and `resources.html` |
 | `Code.gs` | Backup copy of your Google Apps Script (already deployed — see below) |
 | `README.md` | This file — not needed on the live site, just for your reference |
 
@@ -55,7 +56,7 @@ Every link that used to sit inside a sentence has been replaced with an actual b
 
 **Upload the files:**
 4. On the new (empty) repo page, click **uploading an existing file** (a blue link in the middle of the page).
-5. Drag and drop **all 21 HTML files** from this folder into the upload box. (`Code.gs` and `README.md` don't need to go here — they're just for your reference.)
+5. Drag and drop **all 21 HTML files plus `we-the-mind-course-plans.pdf`** (22 files total) from this folder into the upload box. (`Code.gs` and `README.md` don't need to go here — they're just for your reference.)
 6. Scroll down and click **Commit changes**.
 
 **Turn on GitHub Pages:**
@@ -73,8 +74,15 @@ Every link that used to sit inside a sentence has been replaced with an actual b
 ## The Google Sheet is already connected
 Your Apps Script URL is already wired into the booking form on `index.html`. If you ever redeploy the script and get a new URL, open `index.html`, search for `data-endpoint=`, and swap in the new URL.
 
+## What's new in this latest round
+- **Everything is center-aligned** — headings, card text, grids, footer columns, the booking panel, Word of the Day — across all 11 site pages (the 10 SAT exam files keep their own distinct interface, untouched).
+- **SAT Practice Tests are now highlighted as our headline free offer**: a bold gold-bordered banner sits right below the trust strip on the home page, and "SAT Practice ⭐" is now a red pill button in the main nav (promoted out of the Resources dropdown) on every page.
+- **Moving background + automatic seasonal/day-night theme**: the site now reads the visitor's real date and time and floats seasonal emoji particles across the background (snowflakes in winter, blossoms in spring, sun/leaves in summer, falling leaves in autumn), plus swaps in moon and stars at night versus sun and cloud by day, with a subtle darker tint after dark. This runs automatically — no setup needed.
+- **Privacy Policy and Terms of Service rewritten** — no more "this is a template" language or bracketed placeholders. Both now read as complete, concrete policies (real refund window, real cancellation cutoff, a children's-privacy section, etc.). They're still not a substitute for an actual lawyer's review before you take real payments, but they no longer look unfinished.
+- **New: `we-the-mind-course-plans.pdf`** — a professional, branded, 4-page course plans and pricing guide covering all 19 boards/exams/courses (grouped the same way as `curriculum.html`), each with the minimum number of sessions we'd recommend and what's actually taught, plus the full pricing table up front. Downloadable from a banner on both `curriculum.html` and `resources.html`.
+
 ## Still worth doing before you run ads
 - **Social links**: the YouTube, Instagram, and LinkedIn icons in the footer currently point to `#`. Search each file for `target="_blank"` to find and replace them with your real profile URLs.
 - **Resource files**: `resources.html` has "Preview (Coming Soon)" placeholder buttons — swap in real worksheet/course-plan links once you have them.
 - **Ad tracking**: add your real GA4 / Google Ads / Meta Pixel snippets to each page's `<head>` if you want cross-page tracking.
-- **Legal pages**: `privacy.html` and `terms.html` are templates, not legal advice — have a lawyer review before publishing or taking real payments.
+- **Legal pages**: `privacy.html` and `terms.html` now have complete, concrete policy text (no more placeholders) — but still aren't a substitute for a real lawyer's review before you publish or take real payments.
