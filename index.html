@@ -415,6 +415,20 @@ header{
 .form-footnote{ font-size:.76rem; color:#6b6558; margin-top:12px; }
 #form-success{ display:none; padding:20px; background:#e9f1ec; border:1px solid var(--green); color:var(--green); border-radius:2px; font-size:.92rem; }
 
+/* ---------- Free Mass Session (YouTube) callout ---------- */
+.mass-session-card{
+  background:linear-gradient(165deg, rgba(254,186,2,.14), rgba(254,186,2,.05));
+  border:2px solid var(--gold); border-radius:10px; padding:48px; text-align:center;
+}
+.mass-session-badge{
+  display:inline-block; background:var(--gold); color:var(--ink); font-weight:700; font-size:.72rem;
+  text-transform:uppercase; letter-spacing:.08em; padding:6px 14px; border-radius:20px; margin-bottom:16px;
+}
+.mass-session-card h2{ font-size:clamp(1.3rem,2.6vw,1.7rem); margin-bottom:14px; }
+.mass-session-card > p{ max-width:60ch; margin:0 auto 28px; color:#4a4438; }
+.mass-session-card form{ max-width:640px; margin:0 auto; text-align:left; }
+#mass-session-success{ display:none; padding:20px; background:#e9f1ec; border:1px solid var(--green); color:var(--green); border-radius:2px; font-size:.92rem; max-width:640px; margin:0 auto; }
+
 /* ---------- Pricing (own page) ---------- */
 .pricing-tabs{ display:flex; gap:10px; margin-bottom:32px; flex-wrap:wrap; justify-content:center; }
 .tab-btn{
@@ -829,6 +843,14 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
               <input type="hidden" name="utm_medium" id="utm_medium">
               <input type="hidden" name="utm_campaign" id="utm_campaign">
 
+              <div class="field">
+                <label for="session_type">What are you booking?</label>
+                <select id="session_type" name="session_type" required>
+                  <option value="Free 30-Minute Demo">Free 30-Minute Demo</option>
+                  <option value="Group Session Trial">Group Session Trial</option>
+                  <option value="Single Problem-Solving Session">Single Problem-Solving Session ($20)</option>
+                </select>
+              </div>
               <div class="form-row">
                 <div class="field">
                   <label for="parent_name">Parent name</label>
@@ -879,7 +901,6 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
                       <option>University Math</option>
                       <option>University Physics/Chemistry</option>
                       <option>University Computer Science</option>
-                      <option>University Economics/Business</option>
                     </optgroup>
                     <option>Other — I'll specify below</option>
                   </select>
@@ -891,7 +912,12 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
               </div>
               <div class="field">
                 <label for="notes">Subject, problems to solve, or group size</label>
-                <input type="text" id="notes" name="notes" placeholder="e.g. IB DP Maths AA HL — functions, or 'group of 5'">
+                <input type="text" id="notes" name="notes" placeholder="e.g. IB DP Maths AA HL — functions, or 'group of 5'" required>
+              </div>
+              <div class="field" id="problem_file_field" style="display:none;">
+                <label for="problem_file">Upload your problem(s) — photo, PDF, or document <span style="font-weight:400;">(max 10 MB)</span></label>
+                <input type="file" id="problem_file" name="problem_file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
+                <p class="form-footnote" id="problem_file_error" style="display:none; color:var(--stamp-red);">That file is over 10 MB — please upload something smaller.</p>
               </div>
               <button type="submit" class="btn btn-primary form-submit">Book My Free Session</button>
               <p class="form-footnote">By submitting, you agree to be contacted about scheduling your free session. We don't share your details with advertisers.</p>
@@ -899,6 +925,42 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
             <div id="form-success">Thanks — we've got your request, noted and ready to grow. Look out for a confirmation email with your session time shortly.</div>
           </div>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mass-session" style="padding-top:0;">
+    <div class="wrap">
+      <div class="mass-session-card">
+        <span class="mass-session-badge">100% Free · No Card, No Catch</span>
+        <h2>Can't book a 1:1 slot yet? Join a Mass Session on YouTube — free, always.</h2>
+        <p>Once a week we teach a full topic live on YouTube for anyone who wants to watch, ask questions, and learn alongside other students. No fee, no strings — just tell us your name, grade, the topic you want covered, and a preferred date, and we'll do our best to feature it.</p>
+        <form id="mass-session-form" data-endpoint="https://script.google.com/macros/s/AKfycbw4v7C_-phYjQUH38Gi4fWWzhpYgKZPggMOp4xah5FNHU3OL0Ifv0qni07jaNZh8zqW/exec">
+          <div class="form-row">
+            <div class="field">
+              <label for="ms_name">Your name</label>
+              <input type="text" id="ms_name" name="student_name" required>
+            </div>
+            <div class="field">
+              <label for="ms_grade">Grade / year</label>
+              <input type="text" id="ms_grade" name="grade" placeholder="e.g. Grade 10" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="ms_topic">Topic you want covered</label>
+              <input type="text" id="ms_topic" name="notes" placeholder="e.g. Quadratic equations" required>
+            </div>
+            <div class="field">
+              <label for="ms_date">Preferred date</label>
+              <input type="date" id="ms_date" name="preferred_date" required>
+            </div>
+          </div>
+          <input type="hidden" name="session_type" value="Mass Session (Free YouTube)">
+          <button type="submit" class="btn btn-primary form-submit">Request My Free Spot</button>
+          <p class="form-footnote">We'll email you the YouTube link and go-live time before the session.</p>
+        </form>
+        <div id="mass-session-success" style="display:none;">Thanks — your request is in. Look out for an email with the YouTube link and go-live time.</div>
       </div>
     </div>
   </section>
@@ -944,7 +1006,7 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
     <div class="footer-grid">
       <div>
         <h4>We the Mind</h4>
-        <p style="max-width:34ch;">Curriculum-matched academic mentoring for students, wherever they study.</p>
+        <p style="max-width:34ch;margin:0 auto;">Curriculum-matched academic mentoring for students, wherever they study.</p>
         <div class="footer-social">
           <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube — link coming soon">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><path d="M10 9l6 3-6 3z" fill="var(--ink-2)"/></svg>
@@ -1195,10 +1257,46 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   })();
 
-  // ---- Demo form submit — sends responses straight into a Google Sheet ----
+  // ---- Session type: pre-select from ?type= and toggle the problem-upload field ----
   (function(){
-    var form = document.getElementById('demo-form');
-    var successBox = document.getElementById('form-success');
+    var sessionType = document.getElementById('session_type');
+    var fileField = document.getElementById('problem_file_field');
+    var fileInput = document.getElementById('problem_file');
+    var fileError = document.getElementById('problem_file_error');
+    if(!sessionType || !fileField || !fileInput) return;
+
+    var typeMap = {
+      individual: 'Free 30-Minute Demo',
+      group: 'Group Session Trial',
+      single: 'Single Problem-Solving Session'
+    };
+    var typeParam = new URLSearchParams(window.location.search).get('type');
+    if(typeParam && typeMap[typeParam]) sessionType.value = typeMap[typeParam];
+
+    function syncFileField(){
+      var isSingle = sessionType.value === 'Single Problem-Solving Session';
+      fileField.style.display = isSingle ? 'block' : 'none';
+      fileInput.required = isSingle;
+      if(!isSingle){ fileInput.value = ''; fileError.style.display = 'none'; }
+    }
+    syncFileField();
+    sessionType.addEventListener('change', syncFileField);
+
+    fileInput.addEventListener('change', function(){
+      var file = fileInput.files[0];
+      if(file && file.size > 10 * 1024 * 1024){
+        fileError.style.display = 'block';
+        fileInput.value = '';
+      } else {
+        fileError.style.display = 'none';
+      }
+    });
+  })();
+
+  // ---- Shared handler: wires a form up to the Google Sheet endpoint ----
+  function wireSheetForm(formId, successId, subjectLine, busyText, idleText){
+    var form = document.getElementById(formId);
+    var successBox = document.getElementById(successId);
     if(!form) return;
 
     form.addEventListener('submit', function(e){
@@ -1211,10 +1309,11 @@ document.addEventListener('DOMContentLoaded', function(){
         var lines = [];
         formData.forEach(function(value, key){
           if(!value || key.indexOf('utm_') === 0) return;
+          if(value instanceof File){ if(value.name) lines.push(key.replace(/_/g,' ') + ': ' + value.name); return; }
           lines.push(key.replace(/_/g, ' ') + ': ' + value);
         });
         var mailto = 'mailto:hello@wethemind.com'
-          + '?subject=' + encodeURIComponent('New free-session request — We the Mind')
+          + '?subject=' + encodeURIComponent(subjectLine)
           + '&body=' + encodeURIComponent(lines.join('\n'));
         var mailLink = document.createElement('a');
         mailLink.href = mailto;
@@ -1225,7 +1324,7 @@ document.addEventListener('DOMContentLoaded', function(){
       }
 
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Booking…';
+      submitBtn.textContent = busyText;
 
       fetch(endpoint, { method:'POST', mode:'no-cors', body:formData })
         .then(function(){
@@ -1234,11 +1333,17 @@ document.addEventListener('DOMContentLoaded', function(){
         })
         .catch(function(){
           submitBtn.disabled = false;
-          submitBtn.textContent = 'Book My Free Session';
+          submitBtn.textContent = idleText;
           alert('Something went wrong sending your request — please try again, or email hello@wethemind.com directly.');
         });
     });
-  })();
+  }
+
+  // ---- Demo form submit — sends responses straight into a Google Sheet ----
+  wireSheetForm('demo-form', 'form-success', 'New free-session request — We the Mind', 'Booking…', 'Book My Free Session');
+
+  // ---- Mass Session (free YouTube) request form ----
+  wireSheetForm('mass-session-form', 'mass-session-success', 'New Mass Session request — We the Mind', 'Sending…', 'Request My Free Spot');
 </script>
 
 </body>

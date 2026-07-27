@@ -257,9 +257,9 @@ header{
 
 /* ---------- Boards & Exams ---------- */
 .board-groups{ display:flex; flex-direction:column; gap:46px; }
-.board-group{ --accent: var(--stamp-red); }
+.board-group{ --accent: var(--stamp-red); text-align:center; }
 .group-tag{
-  display:inline-flex; align-items:baseline; gap:10px; font-weight:600; font-size:.8rem;
+  display:inline-flex; align-items:baseline; justify-content:center; gap:10px; font-weight:600; font-size:.8rem;
   text-transform:uppercase; letter-spacing:.09em; color:var(--accent);
   padding-bottom:12px; margin-bottom:20px; border-bottom:3px solid var(--accent);
 }
@@ -423,7 +423,7 @@ header{
 .pdf-download-banner{
   display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:center; text-align:center;
   background:var(--paper-2); border:2px dashed var(--gold); border-radius:12px; padding:26px 30px;
-  text-decoration:none; color:inherit; margin-bottom:20px;
+  text-decoration:none; color:inherit; margin:40px 0 20px;
   transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
 }
 .pdf-download-banner:hover{ transform:translateY(-3px); box-shadow:var(--shadow); background:#fff; }
@@ -434,10 +434,11 @@ header{
 
 /* ---------- Resources: Worksheets & Course Plans (own page) ---------- */
 .resource-groups{ display:flex; flex-direction:column; gap:46px; }
-.resource-cards{ display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:18px; justify-content:center; }
+.resource-cards{ display:flex; flex-wrap:wrap; justify-content:center; gap:18px; }
 .resource-card{
   background:#fff; border:1px solid var(--line); border-radius:10px; padding:24px; text-align:center;
   display:flex; flex-direction:column; align-items:center; gap:10px;
+  flex:0 1 240px;
 }
 .resource-card .level-pill{
   display:inline-block; align-self:center; font-size:.62rem; text-transform:uppercase; letter-spacing:.05em;
@@ -626,14 +627,6 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
           </div>
         </div>
 
-        <div class="board-group" style="--accent:var(--violet);">
-          <div class="group-tag">English &amp; Writing <span class="count">— sample worksheets</span></div>
-          <div class="resource-cards">
-            <div class="resource-card"><span class="level-pill" style="background:var(--violet);">Essays</span><h4>Thesis Statement Builder</h4><p>A fill-in framework for turning a vague idea into a sharp argument.</p><a href="#" onclick="event.preventDefault();" class="btn btn-ghost btn-sm">Preview (Coming Soon)</a></div>
-            <div class="resource-card"><span class="level-pill" style="background:var(--violet);">Grammar</span><h4>Common Mistakes Checklist</h4><p>The errors that show up most often in student essays, with fixes.</p><a href="#" onclick="event.preventDefault();" class="btn btn-ghost btn-sm">Preview (Coming Soon)</a></div>
-          </div>
-        </div>
-
         <div class="board-group" style="--accent:var(--leaf);">
           <div class="group-tag">Course Plans <span class="count">— what a plan looks like</span></div>
           <div class="resource-cards">
@@ -667,7 +660,7 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
     <div class="footer-grid">
       <div>
         <h4>We the Mind</h4>
-        <p style="max-width:34ch;">Curriculum-matched academic mentoring for students, wherever they study.</p>
+        <p style="max-width:34ch;margin:0 auto;">Curriculum-matched academic mentoring for students, wherever they study.</p>
         <div class="footer-social">
           <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube — link coming soon">
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><path d="M10 9l6 3-6 3z" fill="var(--ink-2)"/></svg>
