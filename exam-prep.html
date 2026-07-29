@@ -3,18 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Privacy Policy — We the Mind</title>
+<title>Exam Prep Vaults — We The Mind</title>
+<meta name="description" content="Free-to-try practice vaults for AMC 8/10/12, TIFR GS Math, and the ACT — original problems, official archive links, and no reproduced contest material.">
 <link rel="stylesheet" href="style.css">
 <style>
-/* Page-specific: Study Squad mini-card (icon variant, not photo) */
-.squad-card{
-  background:#fff; border:1px solid var(--line); border-radius:10px; padding:22px 18px; text-align:center;
-  transition:transform .2s ease, box-shadow .2s ease;
+:root{
+  --paper:#F4EEDD; --paper-deep:#ECE3CB; --ink:#142238; --ink-soft:#1c2f4a;
+  --graphite:#33302A; --red-pen:#E81D1E; --gold:#FEBA02; --rule:rgba(27,42,74,0.14);
+  --shadow-lg:0 18px 40px rgba(27,20,10,0.16); --shadow-sm:0 4px 10px rgba(27,20,10,0.10);
 }
-.squad-icon-3d{ width:76px; height:76px; margin:0 auto 12px; filter:drop-shadow(0 10px 14px rgba(20,34,56,.25)); }
-.squad-card h4{ font-size:1.05rem; margin-bottom:.15em; }
-.squad-subject{ font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:#6b6558; margin-bottom:8px; display:block; }
-.squad-card p{ color:#6b6558; font-size:.85rem; margin:0; }
+*{box-sizing:border-box;}
+body{
+  margin:0; font-family:Georgia,'Times New Roman',serif; color:var(--graphite);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 27px, var(--rule) 27px 28px),
+    repeating-linear-gradient(90deg, transparent 0 27px, rgba(27,42,74,0.05) 27px 28px),
+    radial-gradient(ellipse at top left, #FBF7E9 0%, var(--paper) 55%, var(--paper-deep) 100%);
+  background-attachment:fixed; line-height:1.6; min-height:100vh;
+}
+.engraved{text-transform:uppercase; letter-spacing:0.14em; font-weight:700; color:var(--ink);
+  text-shadow:0.5px 0.5px 0 rgba(255,255,255,0.55), -0.5px -0.5px 0 rgba(27,20,10,0.25);}
+
+.grid{
+  max-width:1000px; margin:50px auto 80px; padding:0 24px;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:26px;
+}
+.card{
+  background:#FBF8ED; border:1px solid var(--rule); border-top:5px solid var(--accent);
+  box-shadow:var(--shadow-sm); padding:28px 26px; text-decoration:none; color:inherit;
+  display:flex; flex-direction:column; transition:transform .25s ease, box-shadow .25s ease;
+}
+.card:hover{transform:translateY(-5px); box-shadow:var(--shadow-lg);}
+.card .mark{
+  width:54px; height:54px; border-radius:50%; border:2px solid var(--accent); background:var(--accent-soft);
+  display:flex; align-items:center; justify-content:center; font-size:22px; color:var(--accent); margin-bottom:16px;
+}
+.card h2{font-size:20px; margin:0 0 8px; color:var(--ink);}
+.card .tagline{font-size:13px; font-style:italic; color:var(--red-pen); margin-bottom:14px;}
+.card p{font-size:14px; color:var(--graphite); margin:0 0 18px; flex:1;}
+.card .go{
+  align-self:flex-start; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+  padding:9px 18px; border:1.5px solid var(--ink); border-radius:4px; color:var(--ink); transition:all .2s ease;
+}
+.card:hover .go{background:var(--ink); color:var(--paper);}
 </style>
 </head>
 <body>
@@ -61,46 +92,41 @@
 </header>
 
 
-<main>
-  <div class="page-header">
-    <div class="wrap">
-      <span class="eyebrow">Legal</span>
-      <h1>Privacy Policy</h1>
-      <p class="updated">Last updated: 2026</p>
-    </div>
+<div class="page-header">
+  <div class="wrap">
+    <span class="eyebrow">One Roof, Three Exams</span>
+    <h1 class="engraved" style="color:#fff;">Exam <span class="accent" style="color:var(--gold);">Prep Vaults</span></h1>
+    <p>Every track lives on its own page below — same wax-seal reveals, same original practice problems, tuned to a different exam. Pick a card to open that track.</p>
   </div>
-  <section>
-    <div class="wrap legal-content">
-      <p>We the Mind ("we," "us," "our") provides curriculum-matched academic mentoring, practice tools, and free educational resources. This policy explains, plainly, what information we collect, why, and what you can do about it.</p>
+</div>
 
-      <h2>What We Collect</h2>
-      <p>When you book a free session, we collect the parent and student name, email address, phone number, curriculum or exam, grade, and any notes you add about the subject or problems you'd like help with. If you arrive through an online ad, we also record which campaign brought you here (source, medium, and campaign name) so we know which ads are actually working — this never includes anything about you personally beyond that.</p>
-      <p>Our free tools (Word of the Day, Grammar Checker, Word Scramble, Math Sprint, SAT practice exams) run entirely in your browser. We don't collect or store your answers, scores, or practice history on our servers.</p>
+<div class="grid">
+  <a class="card" href="amc_archive.html" style="--accent:#A9382C; --accent-soft:#F2E2DF;">
+    <div class="mark">Σ</div>
+    <h2>AMC 8 / 10 / 12</h2>
+    <div class="tagline">Get radical about your practice.</div>
+    <p>A free, official 2015–2025 archive index plus a wax-seal practice vault covering ratios, geometry, number theory, complex numbers, and more.</p>
+    <span class="go">Open Track →</span>
+  </a>
 
-      <h2>How We Use It</h2>
-      <p>To schedule and run your free session, follow up if you'd like to continue with a paid plan, and decide which curricula and exams to prioritize adding next. Booking details are stored in a private Google Sheet accessible only to our team — we don't sell, rent, or share your information with advertisers or other third parties.</p>
+  <a class="card" href="tifr_prep.html" style="--accent:#6E3B7A; --accent-soft:#EEE5F1;">
+    <div class="mark">∀</div>
+    <h2>TIFR — IPhD / PhD Math</h2>
+    <div class="tagline">Get well-defined for TIFR.</div>
+    <p>The real GS exam format explained honestly, official past-paper links, and original problems across Analysis, Algebra, and Topology.</p>
+    <span class="go">Open Track →</span>
+  </a>
 
-      <h2>Cookies &amp; Advertising</h2>
-      <p>We use cookies for basic site analytics and to measure how our ad campaigns perform (for example, Google Ads or Meta). You can decline non-essential cookies using the banner shown on your first visit. Declining doesn't affect your ability to book a session or use any free tool on the site.</p>
+  <a class="card" href="act_prep.html" style="--accent:#2E6E5E; --accent-soft:#E3F0EC;">
+    <div class="mark">ƒ</div>
+    <h2>ACT — Math &amp; Science</h2>
+    <div class="tagline">Stay rational under pressure.</div>
+    <p>Built for the Enhanced ACT format: original Math problems and real data-table Science reasoning, plus free links to ACT's own practice tests.</p>
+    <span class="go">Open Track →</span>
+  </a>
+</div>
 
-      <h2>Children's Privacy</h2>
-      <p>Our mentoring is aimed at students from Grade 9 through college, some of whom are minors. We collect a student's name and grade only as part of a parent's booking — we don't knowingly collect information directly from a child without a parent or guardian initiating contact. A parent can request that we delete their child's information at any time using the contact details below.</p>
-
-      <h2>Data Retention</h2>
-      <p>We keep booking information for as long as you remain a prospective or active student, and delete it on request. Ad-attribution data is kept only long enough to evaluate campaign performance, typically a few months.</p>
-
-      <h2>Your Rights</h2>
-      <p>You can ask us to access, correct, or delete your data at any time — just reach out using the contact details below and we'll action it promptly.</p>
-
-      <h2>Changes to This Policy</h2>
-      <p>If this policy changes in a meaningful way, we'll update the "last updated" date above. We encourage checking back occasionally if you're a returning student or parent.</p>
-
-      <h2>Contact</h2>
-      <p>We the Mind</p>
-      <a href="mailto:hello@wethemind.com" class="btn btn-primary">Email Us</a>
-    </div>
-  </section>
-</main>
+<p class="stamp-note" style="text-align:center;max-width:720px;margin:20px auto;color:#6b6558;font-size:.85rem;"><b>We The Mind</b> — original practice content across every track. Real official materials are always linked out, never reproduced.</p>
 
 <footer>
   <div class="wrap">
@@ -143,7 +169,6 @@
           <li><a href="games.html">Games</a></li>
           <li><a href="grammar.html">Grammar Checker</a></li>
           <li><a href="vocabulary.html">Word of the Day</a></li>
-          <li><a href="resources.html">Worksheets &amp; Plans</a></li>
           <li><a href="sat-practice.html">SAT Practice Tests</a></li>
         </ul>
       </div>
@@ -175,14 +200,11 @@
 
 <script>
 // We the Mind — shared behavior across every page
-
 document.addEventListener('DOMContentLoaded', function(){
 
-  // ---- Footer year ----
   var yearEl = document.getElementById('year');
   if(yearEl) yearEl.textContent = new Date().getFullYear();
 
-  // ---- Seasonal / day-night ambient theme ----
   (function(){
     var month = new Date().getMonth();
     var hour = new Date().getHours();
@@ -226,7 +248,6 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   })();
 
-  // ---- Mobile nav menu ----
   var burger = document.getElementById('burger-btn');
   var nav = document.getElementById('nav-links');
   if(burger && nav){
@@ -236,7 +257,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 
-  // ---- Dropdown nav item (Resources ▾) ----
   document.querySelectorAll('.nav-dropdown').forEach(function(dd){
     var toggle = dd.querySelector('.nav-dropdown-toggle');
     if(!toggle) return;
@@ -256,7 +276,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   });
 
-  // Close mobile menu when any nav link is tapped
   if(nav){
     nav.querySelectorAll('a').forEach(function(link){
       link.addEventListener('click', function(){
@@ -266,7 +285,6 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 
-  // ---- Cookie / ad-consent banner ----
   var consent = document.getElementById('consent');
   if(consent){
     if(!localStorage.getItem('wtm_consent')){
@@ -281,19 +299,7 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   }
 
-  // ---- FAQ accordion (if present on the page) ----
-  document.querySelectorAll('.faq-item').forEach(function(item){
-    var q = item.querySelector('.faq-q');
-    if(!q) return;
-    q.addEventListener('click', function(){
-      var wasOpen = item.classList.contains('open');
-      document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
-      if(!wasOpen) item.classList.add('open');
-    });
-  });
-
 });
-
 </script>
 
 </body>

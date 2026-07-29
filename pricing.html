@@ -21,6 +21,16 @@
 .faq-q{ display:flex; justify-content:center; align-items:center; gap:12px; cursor:pointer; font-size:1.08rem; color:var(--ink); text-transform:none; text-align:center; }
 .faq-q .plus{ color:var(--stamp-red); font-size:1.2rem; transition:transform .2s ease; flex:none; }
 .faq-a{ max-height:0; overflow:hidden; color:#6b6558; font-size:.94rem; transition:max-height .25s ease; text-align:center; }
+.currency-bar{ display:flex; align-items:center; justify-content:center; gap:10px; margin-top:18px; flex-wrap:wrap; }
+.currency-bar label{ font-size:.85rem; color:#cfd9e8; }
+.currency-select{
+  font: inherit; font-size:.9rem; padding:7px 30px 7px 12px; border-radius:8px; border:1px solid rgba(255,255,255,.3);
+  background:#fff; color:var(--ink); cursor:pointer; appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%236b6558'/></svg>");
+  background-repeat:no-repeat; background-position:right 12px center;
+}
+.currency-select:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+.currency-note{ font-size:.78rem; color:#cfd9e8; text-align:center; margin:6px auto 0; max-width:60ch; }
 </style>
 </head>
 <body>
@@ -47,6 +57,7 @@
         <button class="nav-dropdown-toggle" type="button" aria-expanded="false">Resources <span class="caret">&#9662;</span></button>
         <div class="nav-dropdown-menu">
           <div class="nav-dropdown-menu-label">More Free Tools</div>
+          <a href="exam-prep.html"><span class="dd-icon">&#127942;</span><span class="dd-text">Exam Vaults<small>AMC, TIFR &amp; ACT practice</small></span></a>
           <a href="games.html"><span class="dd-icon">&#127918;</span><span class="dd-text">Games<small>Word Scramble &amp; Math Sprint</small></span></a>
           <a href="grammar.html"><span class="dd-icon">&#9999;&#65039;</span><span class="dd-text">Grammar Checker<small>Fix My Grammar</small></span></a>
           <a href="vocabulary.html"><span class="dd-icon">&#128214;</span><span class="dd-text">Word of the Day<small>Vocabulary, one word at a time</small></span></a>
@@ -67,11 +78,16 @@
 
 
 <main>
-  <div class="page-header">
+  <div class="page-header" style="padding-bottom:52px;">
     <div class="wrap">
       <span class="eyebrow">Pricing</span>
       <h1>Simple, honest pricing — solo, in a group, or one session at a time.</h1>
       <p>Every option below starts with the same free 30-minute session first. You only pay once you've decided to stick around.</p>
+      <div class="currency-bar">
+        <label for="currency-select">Show prices in:</label>
+        <select id="currency-select" class="currency-select" aria-label="Choose your currency"></select>
+      </div>
+      <p class="currency-note">We've set your currency based on your location — switch it anytime if it's not right.</p>
     </div>
   </div>
 
@@ -85,31 +101,31 @@
       </div>
 
       <div class="pricing-panel" id="panel-individual">
-        <p class="group-note">Single sessions start at <strong>$18</strong>. Buy a package and the per-session price drops — no hidden fees, no "processing charges," no fine print.</p>
+        <p class="group-note">Single sessions start at <strong><span data-dyn="baseSingle">$18</span></strong>. Buy a package and the per-session price drops — no hidden fees, no "processing charges," no fine print.</p>
         <div class="pricing-grid">
           <div class="price-card">
             <span class="mono small-cap">Fledgling</span>
             <h3>10 Sessions</h3>
-            <div class="price-tag"><span class="amount">$15</span><span class="per">/ session</span></div>
-            <p class="price-total">$150 total</p>
-            <p class="price-save">Save 17% vs. single sessions</p>
+            <div class="price-tag"><span class="amount" data-price="ind10">$15</span><span class="per">/ session</span></div>
+            <p class="price-total"><span data-total="ind10:10">$150</span> total</p>
+            <p class="price-save">Save <span data-percent="ind10">17</span>% vs. single sessions</p>
             <a href="index.html?type=individual#book-demo" class="btn btn-ghost" style="width:100%; justify-content:center;">Start With a Free Trial</a>
           </div>
           <div class="price-card featured">
             <span class="badge">Most Popular</span>
             <span class="mono small-cap">Flight</span>
             <h3>25 Sessions</h3>
-            <div class="price-tag"><span class="amount">$12</span><span class="per">/ session</span></div>
-            <p class="price-total">$300 total</p>
-            <p class="price-save">Save 33% vs. single sessions</p>
+            <div class="price-tag"><span class="amount" data-price="ind25">$12</span><span class="per">/ session</span></div>
+            <p class="price-total"><span data-total="ind25:25">$300</span> total</p>
+            <p class="price-save">Save <span data-percent="ind25">33</span>% vs. single sessions</p>
             <a href="index.html?type=individual#book-demo" class="btn btn-primary" style="width:100%; justify-content:center;">Start With a Free Trial</a>
           </div>
           <div class="price-card">
             <span class="mono small-cap">Parliament <span class="hint">(a group of owls is really called that)</span></span>
             <h3>50 Sessions</h3>
-            <div class="price-tag"><span class="amount">$9</span><span class="per">/ session</span></div>
-            <p class="price-total">$450 total</p>
-            <p class="price-save">Save 50% vs. single sessions</p>
+            <div class="price-tag"><span class="amount" data-price="ind50">$9</span><span class="per">/ session</span></div>
+            <p class="price-total"><span data-total="ind50:50">$450</span> total</p>
+            <p class="price-save">Save <span data-percent="ind50">50</span>% vs. single sessions</p>
             <a href="index.html?type=individual#book-demo" class="btn btn-ghost" style="width:100%; justify-content:center;">Start With a Free Trial</a>
           </div>
         </div>
@@ -121,26 +137,26 @@
           <div class="price-card">
             <span class="mono small-cap">Small Group</span>
             <h3>2–4 Students</h3>
-            <div class="price-tag"><span class="amount">$10</span><span class="per">/ student / session</span></div>
-            <p class="price-total">$100 per student — 10 sessions</p>
-            <p class="price-save">e.g. group of 4 = $400 total</p>
+            <div class="price-tag"><span class="amount" data-price="groupSmall">$10</span><span class="per">/ student / session</span></div>
+            <p class="price-total"><span data-total="groupSmall:10">$100</span> per student — 10 sessions</p>
+            <p class="price-save">e.g. group of 4 = <span data-total="groupSmall:10:4">$400</span> total</p>
             <a href="index.html?type=group#book-demo" class="btn btn-ghost" style="width:100%; justify-content:center;">Start With a Free Trial</a>
           </div>
           <div class="price-card featured">
             <span class="badge">Best Value</span>
             <span class="mono small-cap">Standard Group</span>
             <h3>5–7 Students</h3>
-            <div class="price-tag"><span class="amount">$7</span><span class="per">/ student / session</span></div>
-            <p class="price-total">$70 per student — 10 sessions</p>
-            <p class="price-save">e.g. group of 6 = $420 total</p>
+            <div class="price-tag"><span class="amount" data-price="groupStd">$7</span><span class="per">/ student / session</span></div>
+            <p class="price-total"><span data-total="groupStd:10">$70</span> per student — 10 sessions</p>
+            <p class="price-save">e.g. group of 6 = <span data-total="groupStd:10:6">$420</span> total</p>
             <a href="index.html?type=group#book-demo" class="btn btn-primary" style="width:100%; justify-content:center;">Start With a Free Trial</a>
           </div>
           <div class="price-card">
             <span class="mono small-cap">Full Group</span>
             <h3>8–10 Students</h3>
-            <div class="price-tag"><span class="amount">$5</span><span class="per">/ student / session</span></div>
-            <p class="price-total">$50 per student — 10 sessions</p>
-            <p class="price-save">e.g. group of 9 = $450 total</p>
+            <div class="price-tag"><span class="amount" data-price="groupFull">$5</span><span class="per">/ student / session</span></div>
+            <p class="price-total"><span data-total="groupFull:10">$50</span> per student — 10 sessions</p>
+            <p class="price-save">e.g. group of 9 = <span data-total="groupFull:10:9">$450</span> total</p>
             <a href="index.html?type=group#book-demo" class="btn btn-ghost" style="width:100%; justify-content:center;">Start With a Free Trial</a>
           </div>
         </div>
@@ -153,7 +169,7 @@
             <span class="badge">No Commitment</span>
             <span class="mono small-cap">Problem-Solving Session</span>
             <h3>1 Session, Up to 5 Problems</h3>
-            <div class="price-tag" style="justify-content:center;"><span class="amount">$20</span><span class="per">/ session</span></div>
+            <div class="price-tag" style="justify-content:center;"><span class="amount" data-price="singleProblem">$20</span><span class="per">/ session</span></div>
             <p class="price-total">Flat rate — one-time, no package needed</p>
             <p class="price-save">Submit your list of up to 5 problems when you book</p>
             <a href="index.html?type=single#book-demo" class="btn btn-primary" style="width:100%; justify-content:center;">Book This Session</a>
@@ -189,7 +205,7 @@
 
       <div class="faq-item">
         <div class="faq-q"><span>Can I book just one session to solve specific problems?</span><span class="plus">+</span></div>
-        <div class="faq-a"><p>Yes — the Single Problem-Solving Session is a flat $20, one-time, no package required. Send your list of up to 5 problems when you book, and your mentor comes prepared to work through them with you.</p></div>
+        <div class="faq-a"><p>Yes — the Single Problem-Solving Session is a flat <span data-dyn="singleProblem">$20</span>, one-time, no package required. Send your list of up to 5 problems when you book, and your mentor comes prepared to work through them with you.</p></div>
       </div>
       <div class="faq-item">
         <div class="faq-q"><span>Can my child study with friends in a group?</span><span class="plus">+</span></div>
@@ -224,7 +240,10 @@
             <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#25D366" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
           </a>
         </div>
-        <a href="https://whatsapp.com/channel/0029Vb8QtE2AO7R8RcLozc3w" target="_blank" rel="noopener" class="whatsapp-channel-cta">Join our WhatsApp Channel — free course updates &amp; opportunities</a>
+        <a href="https://whatsapp.com/channel/0029Vb8QtE2AO7R8RcLozc3w" target="_blank" rel="noopener" class="whatsapp-channel-cta">
+          <span class="whatsapp-channel-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23.1c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.2 1.2-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7 0-5.9 4.8-10.7 10.7-10.7 5.9 0 10.7 4.8 10.7 10.7S21.9 26.1 16 26.1z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg></span>
+          <span class="whatsapp-channel-text"><strong>Join Our WhatsApp Channel</strong><small>Free course updates &amp; opportunities</small></span>
+        </a>
       </div>
       <div>
         <h4>Explore</h4>
@@ -238,6 +257,7 @@
       <div>
         <h4>Resources</h4>
         <ul>
+          <li><a href="exam-prep.html">Exam Vaults</a></li>
           <li><a href="games.html">Games</a></li>
           <li><a href="grammar.html">Grammar Checker</a></li>
           <li><a href="vocabulary.html">Word of the Day</a></li>
@@ -414,6 +434,143 @@ document.addEventListener('DOMContentLoaded', function(){
       });
     });
   })();
+</script>
+
+<script>
+(function(){
+  // ---- Localized pricing ----
+  // All figures are set independently per currency to stay affordable and
+  // competitive in each region — not a straight currency conversion.
+  var PRICES = {
+    USD: { ind10:15,  ind25:12,  ind50:9,   baseSingle:18,  groupSmall:10,  groupStd:7,   groupFull:5,   singleProblem:20  },
+    INR: { ind10:399, ind25:299, ind50:249, baseSingle:449, groupSmall:249, groupStd:179, groupFull:129, singleProblem:499 },
+    GBP: { ind10:12,  ind25:10,  ind50:8,   baseSingle:14,  groupSmall:8,   groupStd:6,   groupFull:4,   singleProblem:15  },
+    EUR: { ind10:13,  ind25:11,  ind50:8,   baseSingle:15,  groupSmall:9,   groupStd:6,   groupFull:5,   singleProblem:17  },
+    CAD: { ind10:19,  ind25:15,  ind50:11,  baseSingle:22,  groupSmall:13,  groupStd:9,   groupFull:6,   singleProblem:25  },
+    AUD: { ind10:21,  ind25:17,  ind50:13,  baseSingle:24,  groupSmall:14,  groupStd:10,  groupFull:7,   singleProblem:28  },
+    NZD: { ind10:22,  ind25:18,  ind50:14,  baseSingle:25,  groupSmall:15,  groupStd:11,  groupFull:8,   singleProblem:30  },
+    AED: { ind10:55,  ind25:45,  ind50:33,  baseSingle:65,  groupSmall:37,  groupStd:26,  groupFull:18,  singleProblem:72  },
+    SAR: { ind10:56,  ind25:45,  ind50:34,  baseSingle:68,  groupSmall:38,  groupStd:27,  groupFull:19,  singleProblem:75  },
+    QAR: { ind10:55,  ind25:44,  ind50:33,  baseSingle:66,  groupSmall:37,  groupStd:26,  groupFull:18,  singleProblem:73  },
+    SGD: { ind10:20,  ind25:16,  ind50:12,  baseSingle:23,  groupSmall:13,  groupStd:9,   groupFull:7,   singleProblem:26  },
+    ZAR: { ind10:220, ind25:180, ind50:140, baseSingle:260, groupSmall:150, groupStd:105, groupFull:75,  singleProblem:290 },
+    NGN: { ind10:5500,ind25:4500,ind50:3500,baseSingle:6500,groupSmall:3800,groupStd:2700,groupFull:1900,singleProblem:7200},
+    PHP: { ind10:580, ind25:470, ind50:370, baseSingle:680, groupSmall:390, groupStd:280, groupFull:200, singleProblem:770 },
+    MYR: { ind10:62,  ind25:50,  ind50:38,  baseSingle:72,  groupSmall:42,  groupStd:30,  groupFull:21,  singleProblem:80  }
+  };
+
+  var CURRENCY_LABELS = {
+    USD:'USD — US Dollar ($)', INR:'INR — Indian Rupee (₹)', GBP:'GBP — British Pound (£)',
+    EUR:'EUR — Euro (€)', CAD:'CAD — Canadian Dollar ($)', AUD:'AUD — Australian Dollar ($)',
+    NZD:'NZD — New Zealand Dollar ($)', AED:'AED — UAE Dirham', SAR:'SAR — Saudi Riyal',
+    QAR:'QAR — Qatari Riyal', SGD:'SGD — Singapore Dollar ($)', ZAR:'ZAR — South African Rand (R)',
+    NGN:'NGN — Nigerian Naira (₦)', PHP:'PHP — Philippine Peso (₱)',
+    MYR:'MYR — Malaysian Ringgit (RM)'
+  };
+
+  var COUNTRY_CURRENCY = {
+    US:'USD', IN:'INR', GB:'GBP', CA:'CAD', AU:'AUD', NZ:'NZD',
+    AE:'AED', SA:'SAR', QA:'QAR', SG:'SGD', ZA:'ZAR', NG:'NGN', PH:'PHP', MY:'MYR',
+    DE:'EUR', FR:'EUR', ES:'EUR', IT:'EUR', NL:'EUR', BE:'EUR', AT:'EUR', IE:'EUR', PT:'EUR',
+    FI:'EUR', GR:'EUR', SK:'EUR', SI:'EUR', EE:'EUR', LV:'EUR', LT:'EUR', LU:'EUR', MT:'EUR', CY:'EUR', HR:'EUR'
+  };
+
+  var STORAGE_KEY = 'wtm_currency';
+
+  function detectCurrency(){
+    try {
+      var stored = localStorage.getItem(STORAGE_KEY);
+      if(stored && PRICES[stored]) return stored;
+    } catch(e){}
+    try {
+      var lang = navigator.language || (navigator.languages && navigator.languages[0]) || '';
+      var parts = lang.split('-');
+      var region = parts.length > 1 ? parts[1].toUpperCase() : '';
+      if(region && COUNTRY_CURRENCY[region]) return COUNTRY_CURRENCY[region];
+    } catch(e){}
+    try {
+      var tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+      var TZ_HINTS = {
+        'Asia/Kolkata':'INR','Asia/Calcutta':'INR','Europe/London':'GBP','Australia/Sydney':'AUD',
+        'Australia/Melbourne':'AUD','Australia/Brisbane':'AUD','Pacific/Auckland':'NZD',
+        'Asia/Dubai':'AED','Asia/Riyadh':'SAR','Asia/Qatar':'QAR','Asia/Singapore':'SGD',
+        'Africa/Johannesburg':'ZAR','Africa/Lagos':'NGN','Asia/Manila':'PHP',
+        'Asia/Kuala_Lumpur':'MYR','America/Toronto':'CAD','America/Vancouver':'CAD'
+      };
+      if(TZ_HINTS[tz]) return TZ_HINTS[tz];
+      if(tz.indexOf('Europe/') === 0) return 'EUR';
+    } catch(e){}
+    return 'USD';
+  }
+
+  function formatMoney(amount, currency){
+    try {
+      return new Intl.NumberFormat('en', {
+        style:'currency', currency: currency, minimumFractionDigits:0, maximumFractionDigits:0
+      }).format(amount);
+    } catch(e){
+      return currency + ' ' + Math.round(amount);
+    }
+  }
+
+  function render(currency){
+    var data = PRICES[currency] || PRICES.USD;
+
+    document.querySelectorAll('[data-price]').forEach(function(el){
+      var key = el.getAttribute('data-price');
+      if(data[key] !== undefined) el.textContent = formatMoney(data[key], currency);
+    });
+
+    document.querySelectorAll('[data-dyn]').forEach(function(el){
+      var key = el.getAttribute('data-dyn');
+      if(data[key] !== undefined) el.textContent = formatMoney(data[key], currency);
+    });
+
+    document.querySelectorAll('[data-percent]').forEach(function(el){
+      var key = el.getAttribute('data-percent');
+      if(data[key] !== undefined && data.baseSingle){
+        var pct = Math.round((data.baseSingle - data[key]) / data.baseSingle * 100);
+        el.textContent = pct;
+      }
+    });
+
+    document.querySelectorAll('[data-total]').forEach(function(el){
+      var parts = el.getAttribute('data-total').split(':');
+      var key = parts[0], sessions = Number(parts[1]) || 1, groupSize = parts[2] ? Number(parts[2]) : 1;
+      if(data[key] !== undefined){
+        el.textContent = formatMoney(data[key] * sessions * groupSize, currency);
+      }
+    });
+  }
+
+  function init(){
+    var select = document.getElementById('currency-select');
+    if(!select) return;
+
+    Object.keys(PRICES).forEach(function(code){
+      var opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = CURRENCY_LABELS[code] || code;
+      select.appendChild(opt);
+    });
+
+    var current = detectCurrency();
+    select.value = current;
+    render(current);
+
+    select.addEventListener('change', function(){
+      var chosen = select.value;
+      try { localStorage.setItem(STORAGE_KEY, chosen); } catch(e){}
+      render(chosen);
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
 </script>
 
 </body>
