@@ -1,5 +1,5 @@
 /* ==========================================================================
-   We the Mind — shared currency localization
+   We The Mind — shared currency localization
    Detects the visitor's likely currency from their timezone / browser locale
    and converts any USD figure marked up with data-usd (or data-usd-inline)
    into that local currency. Falls back to USD if detection fails.

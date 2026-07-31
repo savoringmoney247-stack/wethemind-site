@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Games — We The Mind</title>
+<meta name="description" content="Free brain-warmer games: Word Scramble and Quick Math Sprint. No sign-up needed.">
+<link rel="canonical" href="https://wethemind.com/education/games/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Games — We The Mind">
+<meta property="og:description" content="Free brain-warmer games: Word Scramble and Quick Math Sprint. No sign-up needed.">
+<meta property="og:url" content="https://wethemind.com/education/games/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Games — We The Mind">
+<meta name="twitter:description" content="Free brain-warmer games: Word Scramble and Quick Math Sprint. No sign-up needed.">
+<link rel="stylesheet" href="/style.css">
+<style>
+/* Page-specific: Study Squad mini-card (icon variant, not photo) */
+.squad-card{
+  background:#fff; border:1px solid var(--line); border-radius:10px; padding:22px 18px; text-align:center;
+  transition:transform .2s ease, box-shadow .2s ease;
+}
+.squad-icon-3d{ width:76px; height:76px; margin:0 auto 12px; filter:drop-shadow(0 10px 14px rgba(20,34,56,.25)); }
+.squad-card h4{ font-size:1.05rem; margin-bottom:.15em; }
+.squad-subject{ font-size:.68rem; text-transform:uppercase; letter-spacing:.06em; color:#6b6558; margin-bottom:8px; display:block; }
+.squad-card p{ color:#6b6558; font-size:.85rem; margin:0; }
+</style>
+</head>
+<body>
+<div class="umbrella-bar"><div class="wrap umbrella-bar-inner"><a href="/" class="umbrella-brand">We The Mind</a><nav class="umbrella-nav"><a href="/education/" class="active">Education</a><a href="/money/">Savoring Money</a><a href="/tech/">Tech</a><a href="/tools/">Tools</a><a href="/academy/">Academy</a><a href="/blog/">Blog</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav></div></div>
+<div class="ambient-bg" aria-hidden="true">
+  <span class="blob blob-red"></span>
+  <span class="blob blob-gold"></span>
+  <span class="blob blob-blue"></span>
+  <span class="blob blob-violet"></span>
+  <span class="blob blob-leaf"></span>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="/" class="logo">
+      <span class="logo-mark"></span>
+      <span class="logo-text">We The Mind</span>
+    </a>
+    <nav class="nav-links" id="nav-links">
+      <a href="/education/curriculum/">Boards &amp; Exams</a>
+      <a href="/education/study-squad/">Study Squad</a>
+      <a href="/education/pricing/">Pricing</a>
+      <a href="/education/sat-practice/" class="nav-highlight">SAT Practice &#11088;</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false">Resources <span class="caret">&#9662;</span></button>
+        <div class="nav-dropdown-menu">
+          <div class="nav-dropdown-menu-label">More Free Tools</div>
+          <a href="/education/exam-prep/"><span class="dd-icon">&#127942;</span><span class="dd-text">Exam Vaults<small>AMC, TIFR &amp; ACT practice</small></span></a>
+          <a href="/education/games/"><span class="dd-icon">&#127918;</span><span class="dd-text">Games<small>Word Scramble &amp; Math Sprint</small></span></a>
+          <a href="/education/grammar/"><span class="dd-icon">&#9999;&#65039;</span><span class="dd-text">Grammar Checker<small>Fix My Grammar</small></span></a>
+          <a href="/education/vocabulary/"><span class="dd-icon">&#128214;</span><span class="dd-text">Word of the Day<small>Vocabulary, one word at a time</small></span></a>
+          <a href="/education/resources/"><span class="dd-icon">&#128196;</span><span class="dd-text">Worksheets &amp; Course Plans<small>Study materials</small></span></a>
+          <a href="/education/math-tracker/"><span class="dd-icon">&#128207;</span><span class="dd-text">SAT Math Tracker<small>Checklist every topic</small></span></a>
+        </div>
+      </div>
+      <a href="/education/#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="/education/#book-demo" class="btn btn-primary btn-sm">Book Free Session</a>
+      <button class="burger" id="burger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="2" fill="currentColor"/><rect y="7" width="22" height="2" fill="currentColor"/><rect y="14" width="22" height="2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+
+<main>
+  <div class="page-header">
+    <div class="wrap">
+      <span class="eyebrow">Practice Zone</span>
+      <h1>Fun &amp; Games</h1>
+      <p>Two quick brain-warmers. Free, no sign-up, nothing saved — just play.</p>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="games-grid">
+
+        <div class="game-card">
+          <h3>Word Scramble</h3>
+          <p class="game-sub">Unscramble the word before you second-guess yourself.</p>
+          <div class="scramble-letters" id="scramble-letters">— — —</div>
+          <div class="scramble-input-row">
+            <input type="text" id="scramble-input" placeholder="Type your answer" autocomplete="off">
+            <button class="btn btn-primary" id="scramble-submit" type="button">Check</button>
+          </div>
+          <p class="scramble-feedback" id="scramble-feedback"></p>
+          <div class="scramble-stats">
+            <span>Score: <strong id="scramble-score">0</strong></span>
+            <span>Streak: <strong id="scramble-streak">0</strong></span>
+          </div>
+          <div class="game-actions">
+            <button class="btn btn-ghost" id="scramble-hint" type="button">Hint</button>
+            <button class="btn btn-ghost" id="scramble-skip" type="button">New Word</button>
+          </div>
+        </div>
+
+        <div class="game-card">
+          <h3>Quick Math Sprint</h3>
+          <p class="game-sub">60 seconds. As many as you can.</p>
+          <div class="mathsprint-display">
+            <div class="mathsprint-timer" id="mathsprint-timer">60s</div>
+            <div class="mathsprint-question" id="mathsprint-question">Press Start</div>
+          </div>
+          <div class="mathsprint-input-row">
+            <input type="text" id="mathsprint-input" placeholder="Your answer" autocomplete="off" inputmode="numeric" disabled>
+            <button class="btn btn-primary" id="mathsprint-start" type="button">Start</button>
+          </div>
+          <p class="scramble-feedback" id="mathsprint-feedback"></p>
+          <div class="scramble-stats">
+            <span>Correct: <strong id="mathsprint-score">0</strong></span>
+            <span>Best: <strong id="mathsprint-best">0</strong></span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>We The Mind</h4>
+        <p style="max-width:34ch;margin:0 auto;">From Grade 9 to college graduation — curriculum-matched mentoring that builds the foundation everything else stands on.</p>
+        <div class="footer-social">
+          <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube — link coming soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><path d="M10 9l6 3-6 3z" fill="var(--ink-2)"/></svg>
+          </a>
+          <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram — link coming soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="var(--ink-2)"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/wethemind/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="8" cy="9" r="1.3" fill="var(--ink-2)"/><rect x="7" y="11.5" width="2" height="7" fill="var(--ink-2)"/><path d="M12 11.5h2v1.1c.5-.8 1.4-1.3 2.5-1.3 2 0 3 1.3 3 3.6V18.5h-2v-3.2c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7v3.2h-2z" fill="var(--ink-2)"/></svg>
+          </a>
+          <a href="https://wa.me/917478147260?text=Hi%20We%20the%20Mind!%20%F0%9F%91%8B%20I%27d%20love%20to%20grab%20a%20free%2030-minute%20session%20for%20my%20child%20%E2%80%94%20could%20you%20help%20me%20get%20started%3F" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#25D366" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+          </a>
+        </div>
+        <a href="https://whatsapp.com/channel/0029Vb8QtE2AO7R8RcLozc3w" target="_blank" rel="noopener" class="whatsapp-channel-cta">
+          <span class="whatsapp-channel-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23.1c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.2 1.2-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7 0-5.9 4.8-10.7 10.7-10.7 5.9 0 10.7 4.8 10.7 10.7S21.9 26.1 16 26.1z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg></span>
+          <span class="whatsapp-channel-text"><strong>Join Our WhatsApp Channel</strong><small>Free course updates &amp; opportunities</small></span>
+        </a>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="/education/curriculum/">Boards &amp; Exams</a></li>
+          <li><a href="/education/study-squad/">Study Squad</a></li>
+          <li><a href="/education/pricing/">Pricing</a></li>
+          <li><a href="/education/#book-demo">Book a Free Session</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/education/exam-prep/">Exam Vaults</a></li>
+          <li><a href="/education/games/">Games</a></li>
+          <li><a href="/education/grammar/">Grammar Checker</a></li>
+          <li><a href="/education/vocabulary/">Word of the Day</a></li>
+          <li><a href="/education/resources/">Worksheets &amp; Plans</a></li>
+          <li><a href="/education/sat-practice/">SAT Practice Tests</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/privacy/">Privacy Policy</a></li>
+          <li><a href="/terms/">Terms of Service</a></li>
+          <li><a href="mailto:hello@wethemind.com">hello@wethemind.com</a></li>
+          <li><a href="https://wa.me/917478147260">WhatsApp: +91 74781 47260</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> We The Mind. All rights reserved.</span>
+      <span>Made for students, everywhere.</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/917478147260?text=Hi%20We%20the%20Mind!%20%F0%9F%91%8B%20I%27d%20love%20to%20grab%20a%20free%2030-minute%20session%20for%20my%20child%20%E2%80%94%20could%20you%20help%20me%20get%20started%3F" class="whatsapp-fab" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23.1c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.2 1.2-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7 0-5.9 4.8-10.7 10.7-10.7 5.9 0 10.7 4.8 10.7 10.7S21.9 26.1 16 26.1z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+</a>
+
+<div id="consent" role="dialog" aria-label="Cookie notice">
+  <p>We use cookies for site analytics and to measure our ad campaigns. See our privacy policy for details.</p>
+  <button class="btn btn-light" id="consent-accept" type="button">Accept</button>
+</div>
+
+<script>
+// We The Mind — shared behavior across every page
+
+document.addEventListener('DOMContentLoaded', function(){
+
+  // ---- Footer year ----
+  var yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+
+  // ---- Seasonal / day-night ambient theme ----
+  (function(){
+    var month = new Date().getMonth();
+    var hour = new Date().getHours();
+    var season = (month === 11 || month <= 1) ? 'winter'
+               : (month <= 4) ? 'spring'
+               : (month <= 7) ? 'summer' : 'autumn';
+    var isNight = (hour < 6 || hour >= 19);
+    document.body.classList.add('season-' + season, isNight ? 'time-night' : 'time-day');
+
+    var seasonIcons = {
+      winter: ['\u2744\uFE0F', '\u2744\uFE0F', '\u26C4\uFE0F'],
+      spring: ['\uD83C\uDF38', '\uD83C\uDF3F', '\uD83C\uDF3A'],
+      summer: ['\u2600\uFE0F', '\uD83C\uDF3B', '\uD83C\uDF3F'],
+      autumn: ['\uD83C\uDF42', '\uD83C\uDF41', '\uD83C\uDF43']
+    };
+    var icons = (seasonIcons[season] || seasonIcons.autumn).slice();
+    icons.push(isNight ? '\uD83C\uDF19' : '\u2601\uFE0F');
+    if(isNight) icons.push('\u2B50');
+
+    var container = document.createElement('div');
+    container.className = 'season-particles';
+    container.setAttribute('aria-hidden', 'true');
+    var total = 10;
+    for(var i = 0; i < total; i++){
+      var span = document.createElement('span');
+      span.className = 'season-particle';
+      span.textContent = icons[i % icons.length];
+      span.style.left = (Math.random() * 96) + 'vw';
+      span.style.animationDuration = (16 + Math.random() * 14) + 's';
+      span.style.animationDelay = (Math.random() * 18) + 's';
+      span.style.fontSize = (1 + Math.random() * 1.1) + 'rem';
+      container.appendChild(span);
+    }
+    document.body.insertBefore(container, document.body.firstChild);
+
+    if(isNight){
+      var tint = document.createElement('div');
+      tint.className = 'night-tint';
+      tint.setAttribute('aria-hidden', 'true');
+      document.body.insertBefore(tint, document.body.firstChild);
+    }
+  })();
+
+  // ---- Mobile nav menu ----
+  var burger = document.getElementById('burger-btn');
+  var nav = document.getElementById('nav-links');
+  if(burger && nav){
+    burger.addEventListener('click', function(){
+      var isOpen = nav.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+
+  // ---- Dropdown nav item (Resources ▾) ----
+  document.querySelectorAll('.nav-dropdown').forEach(function(dd){
+    var toggle = dd.querySelector('.nav-dropdown-toggle');
+    if(!toggle) return;
+    toggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      var isOpen = dd.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
+  document.addEventListener('click', function(e){
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(dd){
+      if(!dd.contains(e.target)){
+        dd.classList.remove('open');
+        var t = dd.querySelector('.nav-dropdown-toggle');
+        if(t) t.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  // Close mobile menu when any nav link is tapped
+  if(nav){
+    nav.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', function(){
+        nav.classList.remove('nav-open');
+        if(burger) burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  // ---- Cookie / ad-consent banner ----
+  var consent = document.getElementById('consent');
+  if(consent){
+    if(!localStorage.getItem('wtm_consent')){
+      consent.classList.add('show');
+    }
+    var acceptBtn = document.getElementById('consent-accept');
+    if(acceptBtn){
+      acceptBtn.addEventListener('click', function(){
+        localStorage.setItem('wtm_consent', 'yes');
+        consent.classList.remove('show');
+      });
+    }
+  }
+
+  // ---- FAQ accordion (if present on the page) ----
+  document.querySelectorAll('.faq-item').forEach(function(item){
+    var q = item.querySelector('.faq-q');
+    if(!q) return;
+    q.addEventListener('click', function(){
+      var wasOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item').forEach(function(i){ i.classList.remove('open'); });
+      if(!wasOpen) item.classList.add('open');
+    });
+  });
+
+});
+
+</script>
+
+
+<script>
+  var VOCAB_WORDS = ["aardvark","abbreviates","abettors","abnegation","aborts","abrogation","absolutely","abstracting","abysmal","accents","acclaim","accorded","accumulated","acetate","aconite","acquitted","actives","acuter","addictive","adequately","adjudge","adjutants","admonishes","adrenaline","adumbration","adversely","advocate","affability","affirms","aficionados","afterward","aggregate","agnostics","aimlessly","airline","alarming","alerting","aligned","allegorical","allocate","allusions","altars","alumna","amazon","ambushed","amigos","amounted","amputate","analgesic","anarchy","anchovies","anesthetize","anguish","anneal","annoyances","anorak","antedated","anthropology","antipasti","antitoxins","apartment","apogee","appalled","appeaser","applauded","appoints","apprehension","approx","aquiculture","arcane","archipelago","arguably","armful","arousing","arriving","arthropods","artless","ascribe","aspect","aspirins","assemblyman","assign","assort","asters","astronomer","athletics","attachés","attenuate","attributed","audiophile","augustest","authorship","autopilot","avenue","avoidably","awestruck","babied","backbiting","backing","backslider","backwards","baffling","balancing","balling","baloney","banding","banjos","bantam","barbarity","barely","barnstorm","barren","baseballs","basses","bathmat","battled","bazillion","beards","beauties","bedazzles","bedrocks","beelines","befriends","beguiling","beings","belittled","bellyful","benediction","benumbs","beseeched","bestiary","betides","betwixt","biasing","bidding","bigoted","billion","binocular","biosphere","birthday","bishopric","bituminous","blackest","blacktopping","blankly","blazes","blemished","blindfolds","blitzed","blogger","bloodsucker","blower","bluebottle","blundering","boarding","bobcat","boggier","bologna","bonding","boobing","bookmobiles","booted","borderlands","botched","boulders","boutique","boycott","braiding","branch","braver","breadbasket","breakwaters","breeding","bricklayers","briers","briniest","broaching","brochures","brontosaurus","browbeating","brunet","bubblier","buckskins","buffer","buildings","bulled","bullrings","bumptious","bunted","burgher","burnish","bushed","busing","buttered","buttressing","bystander","cabooses","cadgers","cajole","calculi","caliphs","calluses","cambium","campanili","canceling","canines","cannonballs","canter","capable","capitulated","caption","caraways","cardigans","caressed","carnal","carouser","carried","cartridge","cashews","caster","casualty","catalytic","catches","catering","catnaps","caulks","cavaliers","ceaselessly","cellists","censuses","central","ceremonial","cessations","chairlifts","chamberlains","chancery","chanticleers","charades","charmer","chastest","chauvinism","checkmated","cheerfulness","chemistry","chewiest","chieftain","chilli","chinstraps","chiseller","chocolate","choppering","chosen","chrysalis","churchgoer","ciders","circle","circumflex","citruses","clambers","clapper","classicism","clawing","clearly","clerics","climaxed","clipboard","clodhoppers","closures","cloverleaf","clumsiness","coagulated","coating","cockades","cocktails","codifying","coffined","coherence","coined","collaring","college","colloquy","colony","combating","comely","commander","commentates","committal","communicants","compactly","compatriots","compilations","completer","comporting","compressed","computerized","conceiving","conciliate","concord","condense","condoned","confederated","confident","confluence","confusions","congresses","conjunctions","connive","conscripting","conses","consommé","constipating","constructs","consummating","contemptibly","continentals","contract","contravenes","contumacious","convents","conveyances","convoyed","coolies","copies","copying","corked","corniest","corporate","correlate","corrupter","cosign","costar","cottontail","counselor","countersigns","courage","courtyard","cowardly","coxswain","crackled","cranberries","crasser","crayon","creases","crediting","creole","cricket","crinolines","criticizes","crookedly","crossed","crouching","crucifixion","cruises","crunchiest","cryptograms","cucumber","culotte","cuneiform","curdled","currencies","curtaining","cussed","cutlery","cyclical","dabbing","daintiest","damnable","dandies","darkened","dateline","daybed","deadened","dealing","debased","debonairly","decamping","deceivers","decimation","declassified","decorated","decries","deepening","defeated","defenseless","definer","defoliating","deftly","dehydrated","delegating","delighting","deliverer","demagogs","demise","demoniac","denaturing","denouement","deodorant","depict","depopulated","depravity","deprogram","deregulated","derogation","describe","deserts","desiring","despicably","destroyed","detect","deterrent","detoxify","developing","devised","dewdrop","diagnostics","diapered","dickie","dietary","diffusely","dignities","dillydallies","dimwit","diodes","direction","disabled","disappointed","disavowed","discerns","discomfited","discorded","discredits","disembarked","disfranchise","dishes","disinclines","dislocated","dismissing","disowns","disperses","disposed","disquisition","dissects","dissipates","distaste","distinctly","districts","dittoes","divest","divisiveness","docility","dodders","doggones","dolling","dominating","doodlers","dormers","doubtfully","dowdiest","downplay","doxology","dragons","drawback","dreams","dribble","drivelled","drooped","drowsier","drunkenness","ductless","dumbest","dunner","dustier","dyadic","dérailleurs","earner","earthshaking","eating","ecology","edgier","educating","effervescent","eggheads","eighteens","elapses","electors","elegiacs","eliminate","elopes","emanation","embarks","emblem","embroils","emigrates","emotive","employe","emulating","encamped","enclaves","encroaches","endearments","endues","enfold","engines","enjoined","enlivening","enraptures","ensigns","enterprises","enticement","entrap","enumerable","environs","epiglottis","epitomizing","equation","equivalently","ermine","erupted","eschew","espresso","estimate","ethnic","euphemistic","evangelize","eventuated","eviller","exactest","exasperating","excerpts","exclaiming","excruciating","executrix","exhaling","exhumed","exorcise","expatriate","expediting","expertise","explicit","exponents","expressive","extending","extinguisher","extradition","extrinsic","eyeglass","fabulous","facsimile","faggots","faithfulness","falsely","famish","fantasize","farrow","fastener","fathers","faultily","feasibility","federating","feldspar","femurs","ferryboats","fetched","fezzes","fiddled","fieriness","filberts","filmiest","finality","fingered","firebombed","fireside","fishbowl","fitness","fizzles","flagstone","flamings","flasher","flatted","flawed","fleshes","flighty","flippy","floods","flotations","floweriest","flukier","fluoroscope","flyers","focusing","foliage","fondly","foothills","forage","forcing","forefinger","forename","forestalling","forewomen","forgiving","former","forswears","forward","founders","foxier","fragmented","frankfurters","freaked","freelance","freezer","freshening","friendlies","fringes","frogging","frostiest","fruitcake","fucker","fuller","functioning","funnier","furrier","fussier","gabardines","gained","gallivanting","gamboling","ganglion","garble","garnered","garrotte","gasworks","gauntness","gearbox","gender","generous","gentled","geocaching","gerbils","gesundheit","ghoulish","gigapixel","gingerly","girted","gladness","glasses","gliding","glitzy","glossary","glummest","goalie","goddamed","goiters","gonorrhoea","gophers","gouging","gracefully","grafter","grandmas","granule","grassiest","gravely","greases","greenness","gridirons","grimness","grizzly","grosbeak","groundless","groves","gruffer","guaranties","guesstimate","guiltiness","gunboats","gurney","guying","haberdasher","hackneys","hairbrush","halcyon","hallway","hamming","handcuffing","handles","handwork","haphazardly","hardcovers","harelip","harmonized","harshness","hatchback","haunch","haystacks","headhunters","headstrong","hearkens","heartstrings","heavyset","heedless","heists","helping","hemorrhoids","herbal","hereupon","hesitate","hibernating","hifalutin","hightailed","hindered","hissing","hoagie","hobbyist","hoisting","hollowest","homelands","hometown","homophobic","honied","hookah","hopefulness","hornpipe","horseshoe","hostages","hothead","housecleaned","hovels","huddling","humanizer","humidifies","humpbacks","hunting","hurtle","hutches","hydrogenated","hyperbolas","hypnotize","hysterics","idealize","idiosyncrasy","ignominious","illnesses","imagination","imitating","immigrant","immortality","impairment","impatient","imperatively","impertinent","implementer","important","impotence","impressive","improvises","inabilities","inattentive","incarcerated","incidentally","inclemency","incomparably","incredible","inculpate","indefinably","indicate","indigo","indorses","industrial","inequitable","infamous","infelicity","infiltrated","inflation","informant","ingenious","inhabitable","inherits","initials","injustices","innocents","inputs","inscribes","inseparably","insinuation","inspections","insteps","instructs","insurgence","intellects","intentions","intercom","interjection","intermarry","internet","interrogated","intervenes","intimidated","intrenching","intrusion","invalidate","inventive","invests","invoked","irascibility","irrefutable","irrigating","isometric","itemizing","jackdaw","jailing","jasper","jazziest","jerkily","jewels","jingling","jockeyed","joists","journalese","joyriders","jugging","jumped","junkiest","kabobs","keenly","kettles","kibitzer","kidnapper","kiloton","kinglier","kiting","kneading","knives","knuckling","labelling","lackey","ladled","lambasts","lampblack","landlines","languishes","larcenous","lasagnes","lateraling","lauding","laurels","laxatives","lazybones","leaking","leatherneck","leeching","legally","legislating","lemming","leotards","letterbox","leviathan","libations","libertine","lichen","lifestyle","lightning","limbers","limping","lingerie","lioness","liquidators","litanies","litigation","livens","loaned","localizes","locoweeds","loggerheads","lolcats","longish","loosed","lorgnettes","louvred","lowliness","luckily","luminary","lunging","lustrous","lyricists","mackerel","madhouses","magisterial","magnolias","mailbombing","mainstreamed","maladjusted","malignantly","maltreats","manatee","mangled","manifesting","mannerly","mantlepiece","maraca","mariachis","markers","marquesses","martens","masculine","massage","mastery","matchmaking","matriculates","matzos","maximizing","mealiest","meatball","medial","meditates","megalomaniac","melodically","memorial","menhadens","mentors","merganser","mescaline","metabolism","meteorite","metropolises","microfilms","midges","midwiving","mileages","militias","milliliters","mimics","mingled","minimum","minstrels","miring","miscalls","miscue","misers","mishaps","mismatching","misruled","misstates","mistrials","mizzens","modding","modicums","moistened","moleskin","monarch","mongering","monogramming","monotheist","monumentally","moonstruck","moratoriums","mortar","mortuary","motherly","motorbiking","mottoes","mousetrap","moving","mudslinger","mulattos","multiplexer","mummer","murdered","mushier","muskmelon","mutating","muzzle","mythologist","naming","narrate","nasturtium","naturally","navigates","necessities","needlessly","negligs","neonatal","netbook","neurosurgery","newest","newsstands","nicknaming","nightingale","nineteen","nitrogenous","noises","nonchalant","nonmalignant","nonsensical","normal","nosegay","notepad","nought","nuclear","numbly","nuptials","nutritious","obediently","obligate","obscene","observers","obstructing","ocarinas","occurs","odiously","officer","offstages","oligarchy","oneself","opaques","ophthalmic","oppression","optioned","orators","ordinals","orgasm","originators","orthogonal","ostentation","outbalanced","outdistanced","outgrown","outliving","outraged","outshone","outstretch","ovaries","overblown","overcooks","overeats","overhead","overload","overpowers","overrode","overshooting","oversteps","overtook","oviparous","oxymora","packet","paging","pajamas","palisades","palpate","pancaked","panhandlers","panting","papillae","paragliding","parameciums","paratroopers","parenting","parlors","parrots","participants","partnering","passing","pastier","patellas","patine","patronized","paused","payments","pearled","pedagogical","pediatrist","peering","penalizes","penguin","penologist","pepped","percentages","perfecter","perfuming","peripherals","perkiest","permuting","perquisite","personages","persuasively","perverseness","petard","pettifogged","phantom","philanderers","phlebitis","phonier","photographs","physiques","pickers","picturesque","piggies","pilaus","pillories","pincers","pinnate","pippin","pistol","pitons","placebo","plaguing","planks","plateau","plaudit","playmate","pleasurable","plexuses","ploughshares","plummeted","pluralize","pocketed","poignant","pokeys","polish","pollen","polyester","polysyllabic","pompousness","pooped","populate","portables","portioned","positional","postbox","postmasters","potbellied","potshot","pouted","practices","prates","prearranging","precisely","predeceasing","predisposing","prefacing","prehensile","premiers","prepare","preregister","presents","pressman","pretences","pretzels","prewar","priests","princeliest","priory","priviest","proboscides","procreating","product","proficient","progenitor","prohibited","prolong","promotions","proofreader","properties","propose","proscribes","prosper","protective","protozoon","proves","provost","pseudonym","psychotics","pucker","pugnacious","pulsating","punchy","punned","pureness","purple","pursues","pussycat","puzzler","quadratic","quainter","quarantined","quartos","queerness","quibbled","quietus","quislings","rabbinate","racist","radiation","rafter","raillery","rajahs","ramrodded","ranginess","rapier","rashers","rationalist","raucous","ravishingly","reader","reales","reanimates","rearming","reassigns","rebounding","recanting","recentest","recherché","reckonings","recoils","recondition","recorders","recriminates","recuperating","reddish","redevelop","redoubling","redundant","reemphasizes","reexamines","refiling","reflections","reforming","refuel","refutation","regent","registries","regulates","rehiring","reinstate","rejoiced","related","relegate","religious","remainders","remember","remodeling","remover","renegaded","rental","reorged","repayment","repertoires","replica","repossessing","reprise","reproved","reputably","rereading","resell","resettle","resiliency","resonated","respelt","restatement","restorer","resultant","retail","retches","retooling","retreating","retrograded","reunifying","reveled","reverently","revise","revoked","rewiring","rheumatism","ribbon","riddled","rigamarole","ringed","riposted","rivalled","roadkill","robocall","roentgens","romantic","roomiest","rosiness","rotundity","roundelays","rovers","rubbers","rudiment","rumble","runarounds","rustier","sabres","sacrosanct","safeties","saintly","salient","saltest","salvoes","sanctioning","sandhog","sanitary","sarcophagus","satellites","saturates","savaged","savvier","scalar","scamming","scanty","scarred","scheduled","schleps","schooled","sciences","sconces","scornfully","scragglier","scratchiness","screwball","script","scrubbing","scudding","scumming","seabirds","search","seaward","secretariat","secularizing","seduces","seesaw","seizing","selloffs","seminar","sensation","sentencing","septicemia","serapes","sermon","servility","seventeenths","sexists","shading","shakeups","shammy","shared","shatters","sheepfolds","shells","shifted","shinbones","shipments","shirtwaist","shoddier","shopkeeper","shorted","shouldering","showers","shrewder","shrinks","shucked","shuttered","sickle","sidestepped","sieved","signature","silently","silvering","simplified","singed","sinning","sitters","skater","skidding","skintight","skullduggery","skyrocketing","slammer","slating","sledded","sleepyhead","slicker","slingshot","slivered","slouched","sluggers","slushier","smartphones","smiled","smokers","smothers","snaffle","snarfed","sneezed","snippiest","snoots","snowblowers","snowshoes","soapboxes","socialists","soften","solacing","solicitor","soloists","somersaulted","soothed","sorcery","soubriquet","soupiest","southpaw","spacewalk","spanking","sparseness","speared","specify","speculation","spellbinds","spheroidal","spilled","spiraea","spitefulness","splendid","splotching","spongers","spoonfuls","spotlight","sprays","sprinkles","spryness","squabbles","squashing","squeegees","squirming","stable","staggers","stalagmites","stammering","standout","starker","starves","stationer","staving","steaming","steered","stepmom","sterling","stickleback","stigmatize","stingiest","stirrings","stockyard","stoned","stoppages","storming","stragglier","strange","stratify","streetcar","strewing","stringent","strobes","structured","stucco","stultifies","stupidities","stylizing","subdivided","subjugates","submergence","subpoenaed","subsidies","substratum","subtracted","successfully","suckle","suffixed","sugary","sulfuric","sultriest","summonsed","sundries","suntanning","supermarkets","supervenes","supplicants","suppressing","surfboard","surmounting","surrey","suspecting","swaddle","swanks","swayed","sweetbrier","sweltering","swings","swivels","syllabifies","sympathize","syncing","synthesizes","tabbed","tabulating","tactlessly","taints","tallying","tangents","tanning","tardily","tartan","tastiness","tautologies","teaches","tearjerker","technocrats","teetotal","telepathy","telltale","temporary","tendentious","tennis","tenures","termites","terrorism","testily","thalamus","thematically","therapists","thespians","thingamajig","thirty","thousandths","threnodies","throatiest","thrower","thunderbolts","tickers","tighten","timberlines","timing","tinkle","tipster","titillated","toasty","toggles","tollgate","tonight","toothpick","topsail","torque","totalities","toughened","toweled","traced","tradesmen","trainees","tramps","transcribes","transfuse","translated","transpires","trapezoid","traveled","treading","trebles","trenching","tribesman","tricycle","trilogies","tripods","trivializes","troopship","trouncing","truckles","truncates","truthful","tuckers","tunefully","tureen","turnover","tutorial","twenties","twinklings","tympana","typifying","ukelele","umbilicus","unalterable","unawares","unblushing","uncannily","uncleanliest","uncontrolled","undeceive","underbrush","undergoing","underpasses","undersides","undertow","undignified","unearthed","unevenly","unfeigned","unfriends","unhanding","unhooks","uninhabited","united","unlaced","unloading","unmasking","unoccupied","unplugs","unravelling","unresolved","unsanitary","unseeing","unsnarl","unstressed","untenable","untruthful","unwelcome","unyielding","upgrades","uppercut","upstaged","urbanest","usages","utilitarian","vacates","vagabonding","validate","vampire","vaping","variety","vaults","veined","venereal","veranda","verifiable","versus","vestry","vibrations","victoriously","vigilantes","vindicate","violently","virtuosity","visioning","vitiation","vocabulary","voided","volunteered","vouchsafe","vulgarly","wafting","waited","walled","wandered","warbled","warlord","warring","washrooms","watched","waterfowls","wattage","waylaying","wearable","weavers","weeders","weightier","wellsprings","wetbacks","whatnot","whelps","whimpered","whirligig","whistling","whizzed","whoppers","widowed","wigwam","willfulness","windfall","windstorms","winning","wiretap","wisterias","witless","woefully","wondered","woodenness","wooing","workbooks","workshops","worship","wrangled","wrenches","wrinkle","wrongful","yahoos"];
+
+  (function(){
+    var scrambleCandidates = VOCAB_WORDS.filter(function(w){ return w.length >= 5 && w.length <= 9; });
+    var lettersEl = document.getElementById('scramble-letters');
+    var input = document.getElementById('scramble-input');
+    var submitBtn = document.getElementById('scramble-submit');
+    var hintBtn = document.getElementById('scramble-hint');
+    var skipBtn = document.getElementById('scramble-skip');
+    var feedback = document.getElementById('scramble-feedback');
+    var scoreEl = document.getElementById('scramble-score');
+    var streakEl = document.getElementById('scramble-streak');
+    var currentWord = '';
+    var score = 0, streak = 0;
+
+    function scramble(word){
+      var arr = word.split(''), scrambled;
+      do {
+        for(var i = arr.length - 1; i > 0; i--){
+          var j = Math.floor(Math.random() * (i + 1));
+          var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+        }
+        scrambled = arr.join('');
+      } while(scrambled === word);
+      return scrambled;
+    }
+    function newWord(){
+      currentWord = scrambleCandidates[Math.floor(Math.random() * scrambleCandidates.length)];
+      lettersEl.textContent = scramble(currentWord).split('').join(' ');
+      input.value = '';
+      feedback.textContent = '';
+      feedback.className = 'scramble-feedback';
+    }
+    submitBtn.addEventListener('click', function(){
+      var guess = input.value.trim().toLowerCase();
+      if(!guess) return;
+      if(guess === currentWord){
+        score++; streak++;
+        scoreEl.textContent = score; streakEl.textContent = streak;
+        feedback.textContent = 'Correct — "' + currentWord + '"! On to the next one.';
+        feedback.className = 'scramble-feedback';
+        setTimeout(newWord, 900);
+      } else {
+        streak = 0; streakEl.textContent = streak;
+        feedback.textContent = 'Not quite — try again, or hit Hint.';
+        feedback.className = 'scramble-feedback error';
+      }
+    });
+    input.addEventListener('keydown', function(e){ if(e.key === 'Enter') submitBtn.click(); });
+    hintBtn.addEventListener('click', function(){
+      feedback.textContent = 'Hint: it starts with "' + currentWord[0].toUpperCase() + '"';
+      feedback.className = 'scramble-feedback';
+    });
+    skipBtn.addEventListener('click', newWord);
+    newWord();
+  })();
+
+  (function(){
+    var startBtn = document.getElementById('mathsprint-start');
+    var input = document.getElementById('mathsprint-input');
+    var qEl = document.getElementById('mathsprint-question');
+    var timerEl = document.getElementById('mathsprint-timer');
+    var feedback = document.getElementById('mathsprint-feedback');
+    var scoreEl = document.getElementById('mathsprint-score');
+    var bestEl = document.getElementById('mathsprint-best');
+    var score = 0, best = 0, timeLeft = 60, answer = 0, timerId = null;
+
+    function newQuestion(){
+      var ops = ['+', '-', '\u00d7'];
+      var op = ops[Math.floor(Math.random() * ops.length)];
+      var a, b;
+      if(op === '+'){ a = Math.floor(Math.random()*50)+1; b = Math.floor(Math.random()*50)+1; answer = a+b; }
+      else if(op === '-'){ a = Math.floor(Math.random()*50)+10; b = Math.floor(Math.random()*a); answer = a-b; }
+      else { a = Math.floor(Math.random()*12)+1; b = Math.floor(Math.random()*12)+1; answer = a*b; }
+      qEl.textContent = a + ' ' + op + ' ' + b + ' = ?';
+    }
+    function endGame(){
+      clearInterval(timerId);
+      input.disabled = true; startBtn.disabled = false; startBtn.textContent = 'Play Again';
+      qEl.textContent = "Time's up!";
+      if(score > best){ best = score; bestEl.textContent = best; }
+      feedback.textContent = 'You solved ' + score + ' in 60 seconds.';
+    }
+    startBtn.addEventListener('click', function(){
+      score = 0; timeLeft = 60;
+      scoreEl.textContent = score; timerEl.textContent = timeLeft + 's';
+      feedback.textContent = '';
+      input.disabled = false; input.value = ''; input.focus();
+      startBtn.disabled = true; startBtn.textContent = 'Playing…';
+      newQuestion();
+      timerId = setInterval(function(){
+        timeLeft--; timerEl.textContent = timeLeft + 's';
+        if(timeLeft <= 0) endGame();
+      }, 1000);
+    });
+    input.addEventListener('keydown', function(e){
+      if(e.key !== 'Enter') return;
+      var val = parseInt(input.value, 10);
+      if(!isNaN(val) && val === answer){ score++; scoreEl.textContent = score; }
+      input.value = '';
+      if(timeLeft > 0) newQuestion();
+    });
+  })();
+</script>
+
+</body>
+</html>

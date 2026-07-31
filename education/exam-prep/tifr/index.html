@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>We The Mind — TIFR Track: Well-Defined for the GS Math Exam</title>
+<link rel="canonical" href="https://wethemind.com/education/exam-prep/tifr/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="We The Mind — TIFR Track: Well-Defined for the GS Math Exam">
+<meta property="og:description" content="We The Mind — TIFR Track: Well-Defined for the GS Math Exam">
+<meta property="og:url" content="https://wethemind.com/education/exam-prep/tifr/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="We The Mind — TIFR Track: Well-Defined for the GS Math Exam">
+<meta name="twitter:description" content="We The Mind — TIFR Track: Well-Defined for the GS Math Exam">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+
+<link rel="stylesheet" href="/style.css">
+<style>
+:root{
+  --paper:      #F4EEDD;
+  --paper-deep: #ECE3CB;
+  --ink:        #142238;
+  --ink-soft:   #1c2f4a;
+  --graphite:   #33302A;
+  --red-pen:    #E81D1E;
+  --gold:       #FEBA02;
+  --rule:       rgba(27,42,74,0.14);
+  --analysis:      #1F4E8C;
+  --analysis-soft: #E5EBF3;
+  --algebra:       #6E3B7A;
+  --algebra-soft:  #EEE5F1;
+  --topology:      #2E6E5E;
+  --topology-soft: #E3F0EC;
+  --accent:     var(--ink);
+  --accent-soft:#E9E2CC;
+  --shadow-lg:  0 18px 40px rgba(27,20,10,0.16);
+  --shadow-sm:  0 4px 10px rgba(27,20,10,0.10);
+}
+
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+body{
+  margin:0;
+  font-family:Georgia,'Times New Roman',serif;
+  color:var(--graphite);
+  background:
+    radial-gradient(ellipse at top left, #FBF7E9 0%, var(--paper) 55%, var(--paper-deep) 100%);
+  background-attachment:fixed;
+  line-height:1.6;
+}
+
+.engraved{
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  font-weight:700;
+  color:var(--ink);
+  text-shadow:
+    0.5px 0.5px 0 rgba(255,255,255,0.55),
+    -0.5px -0.5px 0 rgba(27,20,10,0.25);
+}
+
+/* ---------- top nav ---------- */
+.topnav{
+  position:sticky; top:0; z-index:50;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:14px; padding:14px 28px;
+  background:linear-gradient(180deg, rgba(244,238,221,0.98), rgba(244,238,221,0.90));
+  border-bottom:2px solid var(--ink);
+  backdrop-filter:blur(4px);
+  flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:10px;}
+.brand-mark{
+  width:34px; height:34px; border-radius:50%;
+  border:2px solid var(--ink);
+  display:flex; align-items:center; justify-content:center;
+  font-family:Georgia,serif; font-weight:700; color:var(--ink); font-size:16px;
+  background:var(--accent-soft);
+}
+.brand-name{font-size:14px;}
+.brand-name small{display:block; font-size:9.5px; letter-spacing:0.1em; color:var(--ink-soft); text-transform:uppercase; font-weight:400;}
+.navlinks{display:flex; gap:6px; flex-wrap:wrap;}
+.navlinks a{
+  font-family:Georgia,serif; font-size:12.5px; text-decoration:none;
+  color:var(--ink); padding:7px 13px; border:1px solid var(--ink);
+  border-radius:3px; letter-spacing:0.08em; text-transform:uppercase;
+  transition:all .25s ease;
+}
+.navlinks a:hover, .navlinks a:focus-visible{background:var(--ink); color:var(--paper);}
+.scoreboard{
+  font-family:Georgia,serif; font-size:13px; letter-spacing:0.05em;
+  border:1.5px dashed var(--red-pen); color:var(--red-pen);
+  padding:6px 14px; border-radius:20px; white-space:nowrap;
+  background:rgba(169,56,44,0.06); text-decoration:none;
+}
+#scoreVal{font-weight:700;}
+
+/* ---------- hero ---------- */
+.vault-hero{
+  position:relative !important; z-index:1 !important; top:auto !important;
+  max-width:1000px; margin:38px auto 10px; padding:46px 46px 40px;
+  background:#FBF8ED; border:1px solid var(--ink); box-shadow:var(--shadow-lg);
+}
+.vault-hero::before{content:""; position:absolute; inset:10px; border:1px solid rgba(27,42,74,0.35); pointer-events:none;}
+.vault-hero-eyebrow{font-size:12px; letter-spacing:0.32em; color:var(--red-pen); text-transform:uppercase; margin-bottom:14px; font-weight:700;}
+.vault-hero h1{font-size:clamp(28px,4.6vw,46px); margin:0 0 6px; line-height:1.1;}
+.vault-hero h1 .accent-word{color:var(--red-pen); font-style:italic; text-transform:none; letter-spacing:0; text-shadow:none;}
+.vault-hero p.lede{max-width:660px; font-size:16px; color:var(--ink-soft); margin:18px auto 26px;}
+.vault-hero-stats{display:flex; gap:18px; flex-wrap:wrap; justify-content:center;}
+.stat{flex:1 1 150px; border:1px solid var(--rule); border-left:4px solid var(--ink); padding:14px 16px; background:rgba(255,255,255,0.5);}
+.stat b{display:block; font-size:20px; color:var(--ink);}
+.stat span{font-size:11.5px; letter-spacing:0.03em; color:var(--ink-soft);}
+.seal-badge{
+  position:absolute; top:30px; right:38px; width:96px; height:96px; border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #7B4A88, #4C2A57 70%);
+  display:flex; align-items:center; justify-content:center; color:#F4EEDD; font-size:10.5px;
+  text-align:center; letter-spacing:0.06em; border:2px solid #38213F; box-shadow:var(--shadow-sm);
+  transform:rotate(9deg); font-weight:700; text-transform:uppercase; line-height:1.3;
+}
+
+/* ---------- marketing generic ---------- */
+.marketing-section{max-width:1000px; margin:70px auto 0; padding:0 20px;}
+.marketing-head{max-width:660px; margin:0 auto 30px;}
+.marketing-head .kicker{font-size:12px; letter-spacing:0.28em; color:var(--red-pen); text-transform:uppercase; font-weight:700; margin-bottom:10px;}
+.marketing-head h2{font-size:26px; margin:0 0 8px;}
+.marketing-head p{font-size:14.5px; color:var(--ink-soft); margin:0;}
+
+.feature-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px;}
+.feature-card{background:#FBF8ED; border:1px solid var(--rule); border-top:4px solid var(--ink); padding:22px 20px; box-shadow:var(--shadow-sm); transition:transform .25s ease, box-shadow .25s ease;}
+.feature-card:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg);}
+.feature-card .emoji{font-size:26px; margin-bottom:10px; display:block;}
+.feature-card h3{font-size:16px; margin:0 0 8px; color:var(--ink);}
+.feature-card p{font-size:13.5px; color:var(--graphite); margin:0;}
+
+/* ---------- exam-format ledger ---------- */
+.format-wrap{max-width:1000px; margin:22px auto 0; padding:0 20px;}
+.format-table{width:100%; border-collapse:collapse; background:#FBF8ED; border:1px solid var(--ink); box-shadow:var(--shadow-sm);}
+.format-table th{text-align:left; font-size:11px; letter-spacing:0.1em; text-transform:uppercase; padding:10px 14px; border-bottom:2px solid var(--ink); color:var(--ink); background:var(--accent-soft);}
+.format-table td{padding:10px 14px; border-bottom:1px solid var(--rule); font-size:13.5px;}
+.format-table tr:nth-child(even) td{background:rgba(27,42,74,0.02);}
+
+.linkpill{display:inline-block; font-size:12px; padding:5px 13px; margin:3px 6px 3px 0; border:1px solid var(--ink); border-radius:20px; text-decoration:none; color:var(--ink); transition:all .2s ease;}
+.linkpill:hover{background:var(--ink); color:var(--paper);}
+.linkpill.key{border-style:dashed; color:var(--ink-soft); border-color:var(--ink-soft);}
+.linkpill.key:hover{background:var(--ink-soft); color:#fff;}
+
+.archive-note{border:1px solid var(--rule); border-left:4px solid var(--red-pen); background:rgba(169,56,44,0.05); padding:16px 20px; font-size:13.5px; color:var(--ink-soft); margin-top:18px;}
+.archive-note b{color:var(--red-pen);}
+
+/* ---------- section banners (subject tracks) ---------- */
+.section-wrap{max-width:1000px; margin:56px auto 20px; padding:0 20px; scroll-margin-top:90px;}
+.section-banner{display:flex; align-items:center; gap:20px; flex-wrap:wrap; padding:24px 30px; border:1px solid var(--accent); background:var(--accent-soft); position:relative; overflow:hidden;}
+.section-banner::after{content:""; position:absolute; right:-40px; top:-40px; width:150px; height:150px; border-radius:50%; background:radial-gradient(circle, rgba(255,255,255,0.35), transparent 70%);}
+.section-icon{width:58px; height:58px; flex:0 0 auto; border-radius:50%; border:2px solid var(--accent); background:#fff; display:flex; align-items:center; justify-content:center; font-size:22px;}
+.section-banner h2{margin:0 0 4px; font-size:24px; color:var(--accent); text-shadow:none;}
+.section-banner p{margin:0; font-size:13.5px; color:var(--graphite); max-width:560px;}
+.section-facts{display:flex; gap:10px; margin-left:auto; flex-wrap:wrap;}
+.fact-pill{font-size:11px; letter-spacing:0.03em; padding:5px 11px; border-radius:20px; border:1px solid var(--accent); color:var(--accent); background:#fff; white-space:nowrap;}
+
+/* ---------- cards ---------- */
+.cards{display:flex; flex-direction:column; gap:26px; margin-top:26px;}
+.card{border:1px solid var(--rule); border-top:5px solid var(--accent); background:#FBF8ED; box-shadow:var(--shadow-sm); position:relative; transition:box-shadow .3s ease;}
+.card:hover{box-shadow:var(--shadow-lg);}
+.card-head{display:flex; align-items:center; gap:12px; padding:18px 26px 0; flex-wrap:wrap;}
+.qnum{font-size:12.5px; font-weight:700; color:var(--accent); letter-spacing:0.06em; border:1px solid var(--accent); padding:3px 10px; border-radius:3px;}
+.topic-pill{font-size:11.5px; color:var(--ink-soft); border-bottom:1px dotted var(--ink-soft); padding-bottom:1px; font-style:italic;}
+.stars{margin-left:auto; letter-spacing:2px; color:var(--gold); font-size:14px;}
+
+.statement{padding:16px 26px 6px; font-size:16.5px; color:var(--graphite);}
+.statement .katex{font-size:1.02em;}
+
+.choices{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:10px; padding:14px 26px 20px;}
+.choice{text-align:left; cursor:pointer; font-family:Georgia,serif; font-size:14px; padding:10px 14px; border:1.5px solid var(--rule); background:#fff; border-radius:4px; color:var(--graphite); transition:all .2s ease; display:flex; gap:8px; align-items:baseline;}
+.choice b{color:var(--accent);}
+.choice:hover:not(:disabled){border-color:var(--accent); transform:translateY(-1px);}
+.choice:disabled{cursor:default;}
+.choice.correct{background:#E9F1EA; border-color:var(--topology);}
+.choice.incorrect{background:#F7EAE8; border-color:var(--red-pen);}
+.choice.reveal-correct{background:#E9F1EA; border-color:var(--topology); box-shadow:0 0 0 2px rgba(46,110,94,0.25) inset;}
+
+.feedback-line{padding:0 26px; font-size:13.5px; min-height:20px; font-style:italic;}
+.feedback-line.good{color:var(--topology);}
+.feedback-line.bad{color:var(--red-pen);}
+
+.seal-row{display:flex; align-items:center; gap:16px; padding:6px 26px 24px;}
+.seal-btn{
+  width:74px; height:74px; border-radius:50%; flex:0 0 auto; border:2px solid #5C1912; cursor:pointer;
+  background:radial-gradient(circle at 35% 30%, #C0453A, #7E241C 70%); color:#F4EEDD;
+  font-family:Georgia,serif; font-size:9px; letter-spacing:0.05em; text-transform:uppercase; font-weight:700;
+  line-height:1.25; box-shadow:var(--shadow-sm); transition:transform .25s ease, opacity .25s ease, filter .25s ease; position:relative;
+}
+.seal-btn:disabled{filter:grayscale(0.85) brightness(1.05); cursor:not-allowed; opacity:0.55;}
+.seal-btn:not(:disabled):hover{transform:scale(1.06) rotate(-3deg);}
+.seal-btn.cracked{animation:crackPop .5s ease forwards;}
+@keyframes crackPop{0%{transform:scale(1) rotate(0);}35%{transform:scale(1.18) rotate(-8deg);}70%{transform:scale(0.85) rotate(4deg); opacity:0.6;}100%{transform:scale(0.4) rotate(0deg); opacity:0;}}
+.seal-hint{font-size:12.5px; color:var(--ink-soft); font-style:italic;}
+
+.vault{max-height:0; overflow:hidden; transition:max-height .7s cubic-bezier(.4,0,.2,1);}
+.card.open .vault{max-height:3000px;}
+.vault-inner{padding:6px 26px 30px; border-top:1px dashed var(--rule); margin-top:4px;}
+
+.concept-box{background:var(--accent-soft); border-left:4px solid var(--accent); padding:14px 18px; margin:18px 0; font-size:14px; opacity:0; transform:translateY(8px);}
+.card.open .concept-box{animation:stepIn .5s ease forwards; animation-delay:.05s;}
+.concept-box .label{font-size:11px; letter-spacing:0.14em; text-transform:uppercase; font-weight:700; color:var(--accent); display:block; margin-bottom:6px;}
+
+.step{display:flex; gap:12px; margin:12px 0; font-size:14px; opacity:0; transform:translateX(-10px);}
+.card.open .step{animation:stepIn .5s ease forwards;}
+@keyframes stepIn{to{opacity:1; transform:translate(0,0);}}
+.step-num{flex:0 0 auto; width:24px; height:24px; border-radius:50%; border:1.5px solid var(--accent); color:var(--accent); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700;}
+.step-text{padding-top:2px;}
+
+.answer-stamp{display:inline-flex; align-items:center; gap:10px; margin-top:16px; padding:10px 22px; border:3px double var(--red-pen); border-radius:8px; color:var(--red-pen); font-size:15px; letter-spacing:0.04em; font-weight:700; transform:rotate(-4deg) scale(0.4); opacity:0; text-transform:uppercase;}
+.card.open .answer-stamp{animation:stampIn .55s cubic-bezier(.2,1.4,.5,1) forwards; animation-delay:.4s;}
+@keyframes stampIn{to{transform:rotate(-4deg) scale(1); opacity:0.92;}}
+
+.reference{margin-top:18px; font-size:13px; opacity:0;}
+.card.open .reference{animation:stepIn .5s ease forwards; animation-delay:.55s;}
+.reference a{color:var(--accent); text-decoration:none; border-bottom:1px dotted var(--accent);}
+.reference a:hover{color:var(--red-pen); border-color:var(--red-pen);}
+
+/* ---------- testimonials ---------- */
+.testi-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px;}
+.testi-card{background:#FBF8ED; border:1px solid var(--rule); padding:22px 22px 18px; box-shadow:var(--shadow-sm); position:relative;}
+.testi-card::before{content:"\201C"; position:absolute; top:6px; left:14px; font-size:44px; color:var(--accent-soft); font-family:Georgia,serif;}
+.testi-quote{font-style:italic; font-size:14px; position:relative; z-index:1; margin:14px 0 14px;}
+.testi-who{display:flex; align-items:center; gap:10px; justify-content:center;}
+.testi-avatar{width:36px; height:36px; border-radius:50%; border:1.5px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--ink); background:var(--accent-soft); flex:0 0 auto;}
+.testi-name{font-size:13px; font-weight:700; color:var(--ink);}
+.testi-tag{font-size:11.5px; color:var(--ink-soft);}
+
+/* ---------- pricing ---------- */
+.pricing-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:20px; align-items:stretch;}
+.price-card{background:#FBF8ED; border:1px solid var(--ink); padding:26px 22px; display:flex; flex-direction:column; box-shadow:var(--shadow-sm); position:relative;}
+.price-card.popular{border-width:2px; border-color:var(--red-pen); transform:scale(1.03); box-shadow:var(--shadow-lg);}
+.price-card .badge{position:absolute; top:-13px; right:18px; background:var(--red-pen); color:#F4EEDD; font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase; padding:4px 12px; border-radius:12px;}
+.price-card h3{font-size:18px; margin:0 0 4px; color:var(--ink);}
+.price-card .price-tagline{font-size:12.5px; color:var(--ink-soft); font-style:italic; margin-bottom:14px;}
+.price-card .price-num{font-size:30px; font-weight:700; color:var(--ink); margin-bottom:4px;}
+.price-card .price-num span{font-size:13px; font-weight:400; color:var(--ink-soft);}
+.price-card ul{list-style:none; margin:14px 0 20px; padding:0; font-size:13.5px; flex:1;}
+.price-card li{padding:6px 0; border-bottom:1px dashed var(--rule);}
+.price-card li::before{content:"✓ "; color:var(--topology); font-weight:700;}
+.cta-btn{display:inline-block; text-align:center; padding:11px 18px; border:1.5px solid var(--ink); border-radius:4px; font-family:Georgia,serif; font-size:13px; letter-spacing:0.04em; text-transform:uppercase; text-decoration:none; color:var(--ink); background:transparent; cursor:pointer; transition:all .2s ease;}
+.cta-btn:hover{background:var(--ink); color:var(--paper);}
+.cta-btn.solid{background:var(--red-pen); border-color:var(--red-pen); color:#fff;}
+.cta-btn.solid:hover{background:#832A20; border-color:#832A20;}
+
+/* ---------- FAQ ---------- */
+.faq-item{border-bottom:1px solid var(--rule);}
+.faq-q{width:100%; text-align:left; background:none; border:none; cursor:pointer; font-family:Georgia,serif; font-size:15px; color:var(--ink); padding:16px 4px; display:flex; justify-content:space-between; align-items:center; gap:14px;}
+.faq-q .plus{font-size:18px; color:var(--red-pen); transition:transform .25s ease; flex:0 0 auto;}
+.faq-item.open .faq-q .plus{transform:rotate(45deg);}
+.faq-a{max-height:0; overflow:hidden; transition:max-height .4s ease; font-size:13.5px; color:var(--ink-soft);}
+.faq-item.open .faq-a{max-height:320px;}
+.faq-a p{padding:0 4px 16px; margin:0;}
+
+/* ---------- sticky CTA ---------- */
+.sticky-cta{position:fixed; bottom:18px; left:18px; z-index:60; background:var(--ink); color:var(--paper); padding:12px 20px; border-radius:30px; font-size:13px; letter-spacing:0.04em; box-shadow:var(--shadow-lg); text-decoration:none; border:1.5px solid var(--gold); display:flex; align-items:center; gap:8px; transition:transform .2s ease;}
+.sticky-cta:hover{transform:translateY(-3px);}
+
+/* ---------- newsletter ---------- */
+.newsletter{max-width:1000px; margin:70px auto 0; padding:34px 40px; text-align:center; background:var(--ink); color:var(--paper); border:1px solid var(--ink);}
+.newsletter h3{margin:0 0 8px; font-size:20px;}
+.newsletter p{margin:0 0 18px; font-size:13.5px; color:#C9D2E2;}
+.newsletter form{display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+.newsletter input{font-family:Georgia,serif; padding:11px 14px; border:1.5px solid #C9D2E2; border-radius:4px; min-width:230px; background:rgba(255,255,255,0.06); color:var(--paper);}
+.newsletter input::placeholder{color:#9FAEC7;}
+.newsletter .cta-btn{border-color:var(--gold); color:var(--gold);}
+.newsletter .cta-btn:hover{background:var(--gold); color:var(--ink);}
+
+::selection{background:var(--gold); color:#fff;}
+@media (prefers-reduced-motion: reduce){*{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}}
+@media (max-width:640px){.vault-hero{padding:30px 20px;} .seal-badge{position:static; margin-bottom:16px; transform:none;} .section-facts{margin-left:0;}}
+
+/* ---------- force marketing/text blocks to center (per site owner request) ---------- */
+body, p, li, ul, ol, dl, dt, dd, h1, h2, h3, h4, h5, h6, span, div, section, article,
+header, footer, nav, label, a, td, th, blockquote, figcaption, small, strong, em, i, b,
+button, input, select, textarea,
+.price-card, .price-tagline, .price-num, .format-table th, .format-table td,
+.faq-q, .faq-a, .stamp-note, .page-header, .page-header p, .kicker,
+.marketing-head, .marketing-section, .eyebrow {
+  text-align: center !important;
+}
+
+/* ---------- keep the practice-problem cards left-aligned & professional ---------- */
+.card, .card-head, .qnum, .topic-pill, .statement, .choices, .choice,
+.feedback-line, .seal-hint, .vault-inner, .concept-box, .step, .step-text,
+.reference, .reference a {
+  text-align: left !important;
+}
+.card-head{ justify-content:flex-start; }
+.choices{ justify-content:flex-start; }
+.seal-row{ justify-content:flex-start; }
+.answer-stamp{ text-align:center !important; }
+
+/* ---------- pure white background (per site owner request) ---------- */
+body{
+  background:
+    radial-gradient(ellipse at top left, #FFFFFF 0%, #FFFFFF 55%, #FAFAFA 100%);
+}
+
+/* ---------- newsletter block: legible heading + a subscribe button that actually stands out ---------- */
+.newsletter h3.engraved{ color:var(--gold); text-shadow:none; }
+.newsletter .cta-btn.solid{
+  background:var(--gold); border-color:var(--gold); color:var(--ink); font-weight:700;
+}
+.newsletter .cta-btn.solid:hover{
+  background:#fff; border-color:#fff; color:var(--ink);
+}
+</style>
+</head>
+<body>
+<div class="umbrella-bar"><div class="wrap umbrella-bar-inner"><a href="/" class="umbrella-brand">We The Mind</a><nav class="umbrella-nav"><a href="/education/" class="active">Education</a><a href="/money/">Savoring Money</a><a href="/tech/">Tech</a><a href="/tools/">Tools</a><a href="/academy/">Academy</a><a href="/blog/">Blog</a><a href="/about/">About</a><a href="/contact/">Contact</a></nav></div></div>
+
+<div class="ambient-bg" aria-hidden="true">
+  <span class="blob blob-red"></span>
+  <span class="blob blob-gold"></span>
+  <span class="blob blob-blue"></span>
+  <span class="blob blob-violet"></span>
+  <span class="blob blob-leaf"></span>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="/" class="logo">
+      <span class="logo-mark"></span>
+      <span class="logo-text">We The Mind</span>
+    </a>
+    <nav class="nav-links" id="nav-links">
+      <a href="/education/curriculum/">Boards &amp; Exams</a>
+      <a href="/education/study-squad/">Study Squad</a>
+      <a href="/education/pricing/">Pricing</a>
+      <a href="/education/sat-practice/" class="nav-highlight">SAT Practice &#11088;</a>
+      <div class="nav-dropdown">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false">Resources <span class="caret">&#9662;</span></button>
+        <div class="nav-dropdown-menu">
+          <div class="nav-dropdown-menu-label">More Free Tools</div>
+          <a href="/education/exam-prep/"><span class="dd-icon">&#127942;</span><span class="dd-text">Exam Vaults<small>AMC, TIFR &amp; ACT practice</small></span></a>
+          <a href="/education/games/"><span class="dd-icon">&#127918;</span><span class="dd-text">Games<small>Word Scramble &amp; Math Sprint</small></span></a>
+          <a href="/education/grammar/"><span class="dd-icon">&#9999;&#65039;</span><span class="dd-text">Grammar Checker<small>Fix My Grammar</small></span></a>
+          <a href="/education/vocabulary/"><span class="dd-icon">&#128214;</span><span class="dd-text">Word of the Day<small>Vocabulary, one word at a time</small></span></a>
+          <a href="/education/resources/"><span class="dd-icon">&#128196;</span><span class="dd-text">Worksheets &amp; Course Plans<small>Study materials</small></span></a>
+          <a href="/education/math-tracker/"><span class="dd-icon">&#128207;</span><span class="dd-text">SAT Math Tracker<small>Checklist every topic</small></span></a>
+        </div>
+      </div>
+      <a href="/education/#faq">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="/education/#book-demo" class="btn btn-primary btn-sm">Book Free Session</a>
+      <button class="burger" id="burger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="2" fill="currentColor"/><rect y="7" width="22" height="2" fill="currentColor"/><rect y="14" width="22" height="2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<header class="vault-hero">
+  <div class="seal-badge">100%<br>Original<br>Content</div>
+  <a href="#pricing" class="scoreboard" style="text-decoration:none; display:inline-block; margin-bottom:14px;">Score so far: <span id="scoreVal">0</span> / <span id="scoreMax">11</span></a>
+  <div class="vault-hero-eyebrow">For TIFR Integrated PhD &amp; PhD Aspirants</div>
+  <h1 class="engraved">Get <span class="accent-word">Well-Defined</span> for TIFR</h1>
+  <p class="lede">We The Mind's TIFR Track turns Real Analysis dread into a well-ordered study plan. Practice original, GS-style problems across Analysis, Algebra, and Topology, break a wax seal to check your reasoning, and grab our free, official-source index to real past papers — because guessing the syllabus shouldn't be part of the syllabus.</p>
+  <div style="display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 26px; justify-content:center;">
+    <a href="#pricing" class="cta-btn solid">Start Free Trial</a>
+    <a href="#vault-title" class="cta-btn">Try a Free Problem</a>
+  </div>
+  <div class="vault-hero-stats">
+    <div class="stat"><b>3</b><span>SUBJECT TRACKS: ANALYSIS · ALGEBRA · TOPOLOGY</span></div>
+    <div class="stat"><b>2</b><span>STAGES: WRITTEN TEST, THEN INTERVIEW</span></div>
+    <div class="stat"><b>11+</b><span>ORIGINAL PRACTICE PROBLEMS</span></div>
+    <div class="stat"><b>&#8734;</b><span>TIMES YOU CAN RETRY, NO JUDGMENT</span></div>
+  </div>
+</header>
+
+<section class="marketing-section" id="features">
+  <div class="marketing-head">
+    <div class="kicker">Why Us</div>
+    <h2 class="engraved" style="font-size:22px;">A Basis For Your Prep</h2>
+    <p>Four reasons this is worth adding to your study group — no linear independence required to see it.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <span class="emoji">🕯️</span>
+      <h3>Wax-Seal Reveals</h3>
+      <p>Pick your answer, then break the seal to check it. Committing before you peek is how real exam pressure actually works.</p>
+    </div>
+    <div class="feature-card">
+      <span class="emoji">📐</span>
+      <h3>Concept Before Proof</h3>
+      <p>Every solution opens with the underlying theorem or technique — Sylow's theorem, uniform continuity, residues — so you learn the "why" first.</p>
+    </div>
+    <div class="feature-card">
+      <span class="emoji">🗂️</span>
+      <h3>Official Past-Paper Index</h3>
+      <p>A free, direct index to TIFR's own past-paper archive — no third-party scans, straight from the source.</p>
+    </div>
+    <div class="feature-card">
+      <span class="emoji">📊</span>
+      <h3>A Score That Remembers</h3>
+      <p>Your progress saves automatically, so your prep compounds like a well-chosen sequence — monotonic, and bounded above by "ready."</p>
+    </div>
+  </div>
+</section>
+
+<div class="format-wrap" id="format">
+  <div class="marketing-head" style="margin-top:56px;">
+    <div class="kicker">Know Your Exam</div>
+    <h2 class="engraved" style="font-size:22px;">The GS Mathematics Format</h2>
+    <p>A quick, honest map of what you're actually walking into — sourced from TIFR's own published exam pattern.</p>
+  </div>
+  <table class="format-table">
+    <tr><th>Stage</th><th>Format</th><th>Who It Counts For</th><th>Marking</th></tr>
+    <tr><td>Part A</td><td>Objective — single correct option out of four</td><td>Everyone, incl. Integrated PhD at CAM Bengaluru</td><td>+2 correct, −1 incorrect</td></tr>
+    <tr><td>Part B</td><td>Subjective / short written answers</td><td>PhD &amp; other programs (not required for I-PhD at CAM)</td><td>+2 correct, −2 incorrect</td></tr>
+    <tr><td>Interview</td><td>In-person / online academic interview</td><td>Shortlisted candidates from the written stage</td><td>Qualitative</td></tr>
+  </table>
+  <div class="archive-note">
+    <b>Get the real thing, free:</b> TIFR publishes its own past papers and syllabus directly.
+    <a class="linkpill" href="https://www.tifr.res.in/academics/past_question_papers.php" target="_blank" rel="noopener">Official Past Papers Hub ↗</a>
+    <a class="linkpill key" href="https://www.tifr.res.in/academics/docs/past_QP/GS2024_QP_MTH.pdf" target="_blank" rel="noopener">GS 2024 Math Paper ↗</a>
+    <a class="linkpill key" href="https://www.tifr.res.in/academics/docs/past_QP/GS2023_QP_MTH.pdf" target="_blank" rel="noopener">GS 2023 Math Paper ↗</a>
+    <br>We link straight to TIFR's own site rather than hosting copies — nothing here reproduces their questions.
+  </div>
+</div>
+
+<div class="section-wrap" style="margin-top:56px;">
+  <h2 class="engraved" style="font-size:22px;">The Practice Vault</h2>
+  <p style="font-size:14.5px; color:var(--ink-soft); max-width:660px; margin:0 auto;" id="vault-title">Eleven original, GS-style problems across the three subjects most heavily tested. Pick an answer, then break the seal for the concept, the full solution, and a reference for going deeper.</p>
+</div>
+
+<main id="main"></main>
+
+<section class="marketing-section" id="testimonials">
+  <div class="marketing-head">
+    <div class="kicker">Word On The Corridor</div>
+    <h2 class="engraved" style="font-size:22px;">Reviews, Well-Ordered</h2>
+    <p>A few notes from students who broke a seal or two. Names changed. Epsilon of exaggeration removed.</p>
+  </div>
+  <div class="testi-grid">
+    <div class="testi-card">
+      <p class="testi-quote">I finally understand why Sylow subgroups matter, instead of just memorizing the counting formula. Big difference in the interview.</p>
+      <div class="testi-who"><div class="testi-avatar">N.</div><div><div class="testi-name">N., MSc Math</div><div class="testi-tag">PhD applicant</div></div></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">The residue-theorem problem alone was worth it. I stopped fearing contour integrals somewhere around seal number four.</p>
+      <div class="testi-who"><div class="testi-avatar">S.</div><div><div class="testi-name">S., 4th Year BSc</div><div class="testi-tag">Integrated PhD applicant</div></div></div>
+    </div>
+    <div class="testi-card">
+      <p class="testi-quote">Linking straight to TIFR's own past papers saved me from three sketchy PDF downloads. Ten out of ten, no negative marking.</p>
+      <div class="testi-who"><div class="testi-avatar">K.</div><div><div class="testi-name">K., MSc Math</div><div class="testi-tag">Second attempt, GS</div></div></div>
+    </div>
+  </div>
+</section>
+
+<section class="marketing-section" id="pricing">
+  <div class="marketing-head">
+    <div class="kicker">Plans</div>
+    <h2 class="engraved" style="font-size:22px;">One Field, Fully Free</h2>
+    <p>Every past-paper link, every practice problem, and every upcoming video lesson — all free, no hidden constant of integration.</p>
+  </div>
+  <div class="pricing-grid" style="max-width:420px; margin:0 auto;">
+    <div class="price-card popular">
+      <span class="badge">100% Free</span>
+      <h3>TIFR Track</h3>
+      <div class="price-tagline">Free forever — video lessons live on our YouTube channel.</div>
+      <div class="price-num"><span data-usd="0">$0</span><span>/forever</span></div>
+      <ul>
+        <li>Official past-paper index, free forever</li>
+        <li>All practice problems across Analysis, Algebra, Topology</li>
+        <li>Wax-seal solution reveals</li>
+        <li>Progress saved automatically</li>
+        <li>Full video lessons on our YouTube channel</li>
+      </ul>
+      <a href="#vault-title" class="cta-btn solid">Start Practicing Free</a>
+    </div>
+  </div>
+</section>
+
+<section class="marketing-section" id="faq">
+  <div class="marketing-head">
+    <div class="kicker">FAQ</div>
+    <h2 class="engraved" style="font-size:22px;">Frequently Asked Questions</h2>
+    <p>Or, as we call them, the union of everyone's questions minus the overlap.</p>
+  </div>
+  <div id="faqList"></div>
+</section>
+
+<div class="newsletter">
+  <h3 class="engraved" style="font-size:19px;">Join Our Convergent Series</h3>
+  <p>One email a week. It converges, we promise — no divergent spam.</p>
+  <form onsubmit="return false;">
+    <input type="email" placeholder="you@example.com" required>
+    <button class="cta-btn solid" type="submit">Subscribe</button>
+  </form>
+</div>
+
+<a href="#pricing" class="sticky-cta">🕯️ Break the seal on a free trial</a>
+
+<p class="stamp-note" style="text-align:center;max-width:720px;margin:20px auto;color:#6b6558;font-size:.85rem;"><b>We The Mind — TIFR Track</b> — original practice problems, not reproductions of any official exam. Real past papers live free via the <a href="https://www.tifr.res.in/academics/past_question_papers.php" target="_blank" rel="noopener">official TIFR index</a> above. Set your own pace, break a seal only when you are ready.</p>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <h4>We The Mind</h4>
+        <p style="max-width:34ch;margin:0 auto;">From Grade 9 to college graduation — curriculum-matched mentoring that builds the foundation everything else stands on.</p>
+        <div class="footer-social">
+          <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube — link coming soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><path d="M10 9l6 3-6 3z" fill="var(--ink-2)"/></svg>
+          </a>
+          <a href="#" onclick="event.preventDefault();" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram — link coming soon">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="12" cy="12" r="4" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="17.2" cy="6.8" r="1.1" fill="var(--ink-2)"/></svg>
+          </a>
+          <a href="https://www.linkedin.com/company/wethemind/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="var(--ink-2)" stroke-width="1.6"/><circle cx="8" cy="9" r="1.3" fill="var(--ink-2)"/><rect x="7" y="11.5" width="2" height="7" fill="var(--ink-2)"/><path d="M12 11.5h2v1.1c.5-.8 1.4-1.3 2.5-1.3 2 0 3 1.3 3 3.6V18.5h-2v-3.2c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7v3.2h-2z" fill="var(--ink-2)"/></svg>
+          </a>
+          <a href="https://wa.me/917478147260?text=Hi%20We%20the%20Mind!%20%F0%9F%91%8B%20I%27d%20love%20to%20grab%20a%20free%2030-minute%20session%20for%20my%20child%20%E2%80%94%20could%20you%20help%20me%20get%20started%3F" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#25D366" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+          </a>
+        </div>
+        <a href="https://whatsapp.com/channel/0029Vb8QtE2AO7R8RcLozc3w" target="_blank" rel="noopener" class="whatsapp-channel-cta">
+          <span class="whatsapp-channel-icon"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23.1c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.2 1.2-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7 0-5.9 4.8-10.7 10.7-10.7 5.9 0 10.7 4.8 10.7 10.7S21.9 26.1 16 26.1z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg></span>
+          <span class="whatsapp-channel-text"><strong>Join Our WhatsApp Channel</strong><small>Free course updates &amp; opportunities</small></span>
+        </a>
+      </div>
+      <div>
+        <h4>Explore</h4>
+        <ul>
+          <li><a href="/education/curriculum/">Boards &amp; Exams</a></li>
+          <li><a href="/education/study-squad/">Study Squad</a></li>
+          <li><a href="/education/pricing/">Pricing</a></li>
+          <li><a href="/education/#book-demo">Book a Free Session</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="/education/exam-prep/">Exam Vaults</a></li>
+          <li><a href="/education/games/">Games</a></li>
+          <li><a href="/education/grammar/">Grammar Checker</a></li>
+          <li><a href="/education/vocabulary/">Word of the Day</a></li>
+          <li><a href="/education/sat-practice/">SAT Practice Tests</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/privacy/">Privacy Policy</a></li>
+          <li><a href="/terms/">Terms of Service</a></li>
+          <li><a href="mailto:hello@wethemind.com">hello@wethemind.com</a></li>
+          <li><a href="https://wa.me/917478147260">WhatsApp: +91 74781 47260</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year"></span> We The Mind. All rights reserved.</span>
+      <span>Made for students, everywhere.</span>
+    </div>
+  </div>
+</footer>
+
+<a href="https://wa.me/917478147260?text=Hi%20We%20the%20Mind!%20%F0%9F%91%8B%20I%27d%20love%20to%20grab%20a%20free%2030-minute%20session%20for%20my%20child%20%E2%80%94%20could%20you%20help%20me%20get%20started%3F" class="whatsapp-fab" target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path fill="#fff" d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23.1c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.2 1.2-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7 0-5.9 4.8-10.7 10.7-10.7 5.9 0 10.7 4.8 10.7 10.7S21.9 26.1 16 26.1z"/><path fill="#fff" d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z"/></svg>
+</a>
+
+<div id="consent" role="dialog" aria-label="Cookie notice">
+  <p>We use cookies for site analytics and to measure our ad campaigns. See our privacy policy for details.</p>
+  <button class="btn btn-light" id="consent-accept" type="button">Accept</button>
+</div>
+
+<script>
+// We The Mind — shared behavior across every page
+document.addEventListener('DOMContentLoaded', function(){
+
+  var yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+
+  (function(){
+    var month = new Date().getMonth();
+    var hour = new Date().getHours();
+    var season = (month === 11 || month <= 1) ? 'winter'
+               : (month <= 4) ? 'spring'
+               : (month <= 7) ? 'summer' : 'autumn';
+    var isNight = (hour < 6 || hour >= 19);
+    document.body.classList.add('season-' + season, isNight ? 'time-night' : 'time-day');
+
+    var seasonIcons = {
+      winter: ['\u2744\uFE0F', '\u2744\uFE0F', '\u26C4\uFE0F'],
+      spring: ['\uD83C\uDF38', '\uD83C\uDF3F', '\uD83C\uDF3A'],
+      summer: ['\u2600\uFE0F', '\uD83C\uDF3B', '\uD83C\uDF3F'],
+      autumn: ['\uD83C\uDF42', '\uD83C\uDF41', '\uD83C\uDF43']
+    };
+    var icons = (seasonIcons[season] || seasonIcons.autumn).slice();
+    icons.push(isNight ? '\uD83C\uDF19' : '\u2601\uFE0F');
+    if(isNight) icons.push('\u2B50');
+
+    var container = document.createElement('div');
+    container.className = 'season-particles';
+    container.setAttribute('aria-hidden', 'true');
+    var total = 10;
+    for(var i = 0; i < total; i++){
+      var span = document.createElement('span');
+      span.className = 'season-particle';
+      span.textContent = icons[i % icons.length];
+      span.style.left = (Math.random() * 96) + 'vw';
+      span.style.animationDuration = (16 + Math.random() * 14) + 's';
+      span.style.animationDelay = (Math.random() * 18) + 's';
+      span.style.fontSize = (1 + Math.random() * 1.1) + 'rem';
+      container.appendChild(span);
+    }
+    document.body.insertBefore(container, document.body.firstChild);
+
+    if(isNight){
+      var tint = document.createElement('div');
+      tint.className = 'night-tint';
+      tint.setAttribute('aria-hidden', 'true');
+      document.body.insertBefore(tint, document.body.firstChild);
+    }
+  })();
+
+  var burger = document.getElementById('burger-btn');
+  var nav = document.getElementById('nav-links');
+  if(burger && nav){
+    burger.addEventListener('click', function(){
+      var isOpen = nav.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+
+  document.querySelectorAll('.nav-dropdown').forEach(function(dd){
+    var toggle = dd.querySelector('.nav-dropdown-toggle');
+    if(!toggle) return;
+    toggle.addEventListener('click', function(e){
+      e.stopPropagation();
+      var isOpen = dd.classList.toggle('open');
+      toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  });
+  document.addEventListener('click', function(e){
+    document.querySelectorAll('.nav-dropdown.open').forEach(function(dd){
+      if(!dd.contains(e.target)){
+        dd.classList.remove('open');
+        var t = dd.querySelector('.nav-dropdown-toggle');
+        if(t) t.setAttribute('aria-expanded', 'false');
+      }
+    });
+  });
+
+  if(nav){
+    nav.querySelectorAll('a').forEach(function(link){
+      link.addEventListener('click', function(){
+        nav.classList.remove('nav-open');
+        if(burger) burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+
+  var consent = document.getElementById('consent');
+  if(consent){
+    if(!localStorage.getItem('wtm_consent')){
+      consent.classList.add('show');
+    }
+    var acceptBtn = document.getElementById('consent-accept');
+    if(acceptBtn){
+      acceptBtn.addEventListener('click', function(){
+        localStorage.setItem('wtm_consent', 'yes');
+        consent.classList.remove('show');
+      });
+    }
+  }
+
+});
+</script>
+
+<script>
+/* ---------------------------------------------------------
+   DATA
+--------------------------------------------------------- */
+const SECTIONS = [
+  {
+    id:"analysis", key:"analysis", title:"Analysis Track", accent:"var(--analysis)", accentSoft:"var(--analysis-soft)",
+    icon:"∫",
+    blurb:"Real and complex analysis: continuity, convergence, and the residue theorem — the section most GS papers lean on hardest.",
+    facts:["Real Analysis","Complex Analysis","Sequences & Series"]
+  },
+  {
+    id:"algebra", key:"algebra", title:"Algebra Track", accent:"var(--algebra)", accentSoft:"var(--algebra-soft)",
+    icon:"⊕",
+    blurb:"Linear algebra and group theory: rank-nullity, diagonalizability, Sylow's theorems, and quotient groups.",
+    facts:["Linear Algebra","Group Theory","Ring Theory (light)"]
+  },
+  {
+    id:"topology", key:"topology", title:"Topology & ODE Track", accent:"var(--topology)", accentSoft:"var(--topology-soft)",
+    icon:"◯",
+    blurb:"Point-set topology, compactness and connectedness, plus the differential-equations basics that sneak into Part A.",
+    facts:["Point-Set Topology","Compactness","Linear ODEs"]
+  }
+];
+
+const PROBLEMS = {
+  analysis:[
+    {
+      topic:"Fixed Points &amp; Continuity", stars:2,
+      statement:"Let $f:[0,1]\\to[0,1]$ be continuous. Which of the following must be true?",
+      choices:["$f$ has at least one fixed point","$f$ is monotonic","$f$ is differentiable almost everywhere","$f$ attains its infimum only at $x=0$"], answer:0,
+      concept:"Define $g(x) = f(x) - x$. Since $f$ maps $[0,1]$ into itself, $g(0)\\ge 0$ and $g(1)\\le 0$. The <b>Intermediate Value Theorem</b> then guarantees a point where $g$ vanishes — a fixed point of $f$.",
+      steps:[
+        "Define $g(x) = f(x)-x$ on $[0,1]$; $g$ is continuous since $f$ is.",
+        "$g(0) = f(0) - 0 = f(0) \\ge 0$, and $g(1) = f(1)-1 \\le 0$ because $f(1)\\in[0,1]$.",
+        "By the IVT, there exists $c\\in[0,1]$ with $g(c)=0$, i.e. $f(c) = c$."
+      ],
+      answerText:"$f$ has at least one fixed point",
+      ref:{text:"Intermediate Value Theorem — overview", url:"https://en.wikipedia.org/wiki/Intermediate_value_theorem"}
+    },
+    {
+      topic:"Uniform Continuity", stars:3,
+      statement:"Suppose $f:(0,1)\\to\\mathbb{R}$ is uniformly continuous. Which of the following must be true?",
+      choices:["$f$ extends to a continuous function on $[0,1]$","$f$ is bounded but need not extend continuously","$f$ must be monotonic","$f$ must be Lipschitz"], answer:0,
+      concept:"Uniform continuity on a bounded set lets you control oscillation independent of location, which is exactly what's needed to define $f$ at the missing endpoints via limits of Cauchy sequences.",
+      steps:[
+        "For any sequence $x_n\\to 0^+$ in $(0,1)$, uniform continuity makes $(x_n)$ Cauchy imply $(f(x_n))$ Cauchy, so $\\lim_{x\\to 0^+} f(x)$ exists.",
+        "The same argument gives $\\lim_{x\\to 1^-} f(x)$.",
+        "Defining $f$ at $0$ and $1$ by these limits produces a continuous extension to $[0,1]$."
+      ],
+      answerText:"$f$ extends to a continuous function on $[0,1]$",
+      ref:{text:"Uniform continuity — overview", url:"https://en.wikipedia.org/wiki/Uniform_continuity"}
+    },
+    {
+      topic:"Series Convergence", stars:3,
+      statement:"Does the series $\\displaystyle\\sum_{n=2}^{\\infty} \\frac{1}{n(\\log n)^2}$ converge?",
+      choices:["Yes, it converges","No, it diverges","It converges only conditionally","Convergence depends on the base of the logarithm"], answer:0,
+      concept:"For series of the form $\\sum \\frac{1}{n(\\log n)^p}$, the <b>Cauchy condensation test</b> reduces the question to a simpler series in $2^k$, avoiding a direct integral computation.",
+      steps:[
+        "Condensation replaces $\\sum a_n$ (for decreasing positive $a_n$) with $\\sum 2^k a_{2^k}$.",
+        "Here $2^k a_{2^k} = 2^k \\cdot \\dfrac{1}{2^k (k\\log 2)^2} = \\dfrac{1}{(\\log 2)^2}\\cdot\\dfrac{1}{k^2}$.",
+        "Since $\\sum 1/k^2$ converges, the condensed series converges, so the original series converges too."
+      ],
+      answerText:"Yes, it converges",
+      ref:{text:"Cauchy condensation test — overview", url:"https://en.wikipedia.org/wiki/Cauchy_condensation_test"}
+    },
+    {
+      topic:"Contour Integration", stars:3,
+      statement:"Evaluate $\\displaystyle\\oint_{|z|=2} \\frac{dz}{z^2+1}$ using residues.",
+      choices:["$0$","$2\\pi i$","$\\pi$","$4\\pi i$"], answer:0,
+      concept:"Factor the denominator to locate the poles, then apply the <b>Residue Theorem</b>: the integral equals $2\\pi i$ times the sum of residues enclosed by the contour.",
+      steps:[
+        "Factor: $z^2+1 = (z-i)(z+i)$, giving simple poles at $z=i$ and $z=-i$, both inside $|z|=2$.",
+        "Residue at $z=i$: $\\dfrac{1}{z+i}\\Big|_{z=i} = \\dfrac{1}{2i}$. Residue at $z=-i$: $\\dfrac{1}{z-i}\\Big|_{z=-i} = -\\dfrac{1}{2i}$.",
+        "Sum of residues: $\\dfrac{1}{2i} - \\dfrac{1}{2i} = 0$, so the integral is $2\\pi i \\cdot 0 = 0$."
+      ],
+      answerText:"$0$",
+      ref:{text:"Residue theorem — overview", url:"https://en.wikipedia.org/wiki/Residue_theorem"}
+    }
+  ],
+  algebra:[
+    {
+      topic:"Rank–Nullity", stars:2,
+      statement:"Let $T:\\mathbb{R}^5\\to\\mathbb{R}^3$ be a linear map with $\\operatorname{rank}(T)=2$. What is $\\dim(\\ker T)$?",
+      choices:["1","2","3","4"], answer:2,
+      concept:"The <b>Rank–Nullity Theorem</b> states $\\dim(\\ker T) + \\operatorname{rank}(T) = \\dim(\\text{domain})$, linking the kernel's size directly to the rank without needing an explicit matrix.",
+      steps:[
+        "Domain dimension is $5$; rank is given as $2$.",
+        "Rank–Nullity: $\\dim(\\ker T) = 5 - \\operatorname{rank}(T)$.",
+        "$\\dim(\\ker T) = 5 - 2 = 3$."
+      ],
+      answerText:"3",
+      ref:{text:"Rank–nullity theorem — overview", url:"https://en.wikipedia.org/wiki/Rank%E2%80%93nullity_theorem"}
+    },
+    {
+      topic:"Diagonalizability", stars:2,
+      statement:"Which condition is sufficient to guarantee that an $n\\times n$ matrix $A$ is diagonalizable over $\\mathbb{C}$?",
+      choices:["$A$ is invertible","$A$ has $n$ distinct eigenvalues","$A$ is symmetric with real entries only","$\\operatorname{trace}(A) = 0$"], answer:1,
+      concept:"Eigenvectors for <b>distinct eigenvalues</b> are automatically linearly independent. With $n$ distinct eigenvalues on an $n$-dimensional space, that's enough eigenvectors to form a full basis, so $A$ is diagonalizable.",
+      steps:[
+        "Eigenvectors corresponding to distinct eigenvalues are always linearly independent.",
+        "With $n$ distinct eigenvalues for an $n\\times n$ matrix, this gives $n$ linearly independent eigenvectors.",
+        "$n$ independent eigenvectors in an $n$-dimensional space form a basis, so $A$ is diagonalizable in that basis."
+      ],
+      answerText:"$A$ has $n$ distinct eigenvalues",
+      ref:{text:"Diagonalizable matrix — overview", url:"https://en.wikipedia.org/wiki/Diagonalizable_matrix"}
+    },
+    {
+      topic:"Sylow's Theorems", stars:4,
+      statement:"Let $G$ be a group with $|G| = 45 = 3^2 \\cdot 5$. How many Sylow $5$-subgroups can $G$ have?",
+      choices:["1","5","9","45"], answer:0,
+      concept:"Sylow's Third Theorem says the number $n_p$ of Sylow $p$-subgroups satisfies $n_p \\equiv 1 \\pmod p$ and $n_p \\mid \\frac{|G|}{p^k}$ (the cofactor of the highest power of $p$).",
+      steps:[
+        "Here $p=5$, and the cofactor is $45/5 = 9$, so $n_5$ divides $9$: possibilities are $1, 3, 9$.",
+        "Also $n_5 \\equiv 1 \\pmod 5$. Checking: $1\\equiv 1$, $3\\equiv 3$, $9\\equiv 4$ — only $1$ satisfies this.",
+        "So $n_5 = 1$: there is exactly one (necessarily normal) Sylow $5$-subgroup."
+      ],
+      answerText:"1",
+      ref:{text:"Sylow theorems — overview", url:"https://en.wikipedia.org/wiki/Sylow_theorems"}
+    },
+    {
+      topic:"Quotient Groups", stars:3,
+      statement:"If $N$ is a normal subgroup of $G$ such that both $N$ and $G/N$ are cyclic, must $G$ be abelian?",
+      choices:["Yes, always","No — $S_3$ is a counterexample","Only if $|N|$ is prime","Only if $G$ is finite"], answer:1,
+      concept:"Cyclic building blocks don't force the whole group to be abelian — this is exactly the kind of \"extension problem\" that group theory studies, and $S_3$ is the classic small counterexample.",
+      steps:[
+        "Take $G = S_3$ and $N = A_3 = \\{e,(123),(132)\\}$, the cyclic subgroup of order $3$.",
+        "$N \\trianglelefteq S_3$ and $N$ is cyclic; $G/N$ has order $2$, so it's cyclic too.",
+        "But $S_3$ itself is non-abelian, so cyclic quotient and cyclic normal subgroup do not force $G$ abelian."
+      ],
+      answerText:"No — $S_3$ is a counterexample",
+      ref:{text:"Group extension — overview", url:"https://en.wikipedia.org/wiki/Group_extension"}
+    }
+  ],
+  topology:[
+    {
+      topic:"Connectedness", stars:2,
+      statement:"Which of the following spaces (with the subspace topology from $\\mathbb{R}$ or $\\mathbb{R}^n$) is <em>not</em> connected?",
+      choices:["$\\mathbb{R}$ with the usual topology","$[0,1]\\cup[2,3]$","$S^1$, the unit circle","Any convex subset of $\\mathbb{R}^n$"], answer:1,
+      concept:"A space is <b>disconnected</b> if it splits into two disjoint nonempty open sets. A visible \"gap\" between two intervals is the simplest way to witness this.",
+      steps:[
+        "$[0,1]$ and $[2,3]$ are each open in the subspace topology on $[0,1]\\cup[2,3]$ (their complements within the set are closed).",
+        "They're disjoint, nonempty, and their union is the whole space — exactly the definition of a disconnection.",
+        "$\\mathbb{R}$, $S^1$, and convex sets are all connected (convex sets are even path-connected), so $[0,1]\\cup[2,3]$ is the odd one out."
+      ],
+      answerText:"$[0,1]\\cup[2,3]$",
+      ref:{text:"Connected space — overview", url:"https://en.wikipedia.org/wiki/Connected_space"}
+    },
+    {
+      topic:"Compactness", stars:3,
+      statement:"Let $X$ be a compact metric space and $f:X\\to\\mathbb{R}$ continuous. Which of the following must be true?",
+      choices:["$f$ is bounded and attains its maximum and minimum","$f$ is uniformly continuous only if $X$ is convex","$f$ must be injective","$f$ must be differentiable"], answer:0,
+      concept:"This is the metric-space generalization of the <b>Extreme Value Theorem</b>: continuous images of compact sets are compact, and compact subsets of $\\mathbb{R}$ are closed and bounded, hence contain their sup and inf.",
+      steps:[
+        "$f(X)$ is compact in $\\mathbb{R}$ because continuous images of compact sets are compact.",
+        "Compact subsets of $\\mathbb{R}$ are closed and bounded (Heine–Borel).",
+        "A closed, bounded subset of $\\mathbb{R}$ contains both its supremum and infimum, so $f$ attains a max and a min on $X$."
+      ],
+      answerText:"$f$ is bounded and attains its maximum and minimum",
+      ref:{text:"Extreme value theorem — overview", url:"https://en.wikipedia.org/wiki/Extreme_value_theorem"}
+    },
+    {
+      topic:"Second-Order Linear ODEs", stars:2,
+      statement:"What is the general solution of $y'' - 4y' + 4y = 0$?",
+      choices:["$C_1 e^{2x} + C_2 e^{-2x}$","$(C_1 + C_2 x)e^{2x}$","$C_1\\cos 2x + C_2 \\sin 2x$","$C_1 e^{2x} + C_2 x e^{4x}$"], answer:1,
+      concept:"For a constant-coefficient linear ODE, form the <b>characteristic equation</b>. A repeated root $r$ contributes both $e^{rx}$ and $xe^{rx}$ to the general solution, since the two would otherwise coincide.",
+      steps:[
+        "Characteristic equation: $r^2 - 4r + 4 = 0$, i.e. $(r-2)^2 = 0$.",
+        "This gives a repeated root $r=2$.",
+        "For a repeated root, the general solution is $y = (C_1 + C_2 x)e^{2x}$."
+      ],
+      answerText:"$(C_1 + C_2 x)e^{2x}$",
+      ref:{text:"Linear ODE with constant coefficients — overview", url:"https://en.wikipedia.org/wiki/Linear_differential_equation"}
+    }
+  ]
+};
+
+const LETTERS = ["A","B","C","D"];
+
+/* ---------------------------------------------------------
+   RENDER
+--------------------------------------------------------- */
+const main = document.getElementById("main");
+let score = 0;
+const scoreMaxEl = document.getElementById("scoreMax");
+const scoreValEl = document.getElementById("scoreVal");
+let totalQuestions = 0;
+Object.values(PROBLEMS).forEach(arr => totalQuestions += arr.length);
+scoreMaxEl.textContent = totalQuestions;
+
+SECTIONS.forEach(section => {
+  const wrap = document.createElement("div");
+  wrap.className = "section-wrap";
+  wrap.id = section.id;
+  wrap.style.setProperty("--accent", section.accent);
+
+  const banner = document.createElement("div");
+  banner.className = "section-banner";
+  banner.style.setProperty("background", section.accentSoft);
+  banner.innerHTML = `
+    <div class="section-icon">${section.icon}</div>
+    <div>
+      <h2 class="engraved" style="color:${section.accent}">${section.title}</h2>
+      <p>${section.blurb}</p>
+    </div>
+    <div class="section-facts">
+      ${section.facts.map(f=>`<span class="fact-pill" style="border-color:${section.accent};color:${section.accent}">${f}</span>`).join("")}
+    </div>
+  `;
+  wrap.appendChild(banner);
+
+  const cardsEl = document.createElement("div");
+  cardsEl.className = "cards";
+
+  PROBLEMS[section.key].forEach((p, idx) => {
+    const qid = `${section.key}-${idx}`;
+    const card = document.createElement("article");
+    card.className = "card";
+    card.style.setProperty("--accent", section.accent);
+    card.dataset.qid = qid;
+
+    const stars = "★".repeat(p.stars) + "☆".repeat(5-p.stars);
+
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="qnum">${section.title} · No. ${idx+1}</span>
+        <span class="topic-pill">${p.topic}</span>
+        <span class="stars">${stars}</span>
+      </div>
+      <div class="statement">${p.statement}</div>
+      <div class="choices">
+        ${p.choices.map((c,i)=>`<button class="choice" data-i="${i}"><b>${LETTERS[i]}.</b> ${c}</button>`).join("")}
+      </div>
+      <div class="feedback-line"></div>
+      <div class="seal-row">
+        <button class="seal-btn" disabled>Choose<br>an answer<br>to unlock</button>
+        <span class="seal-hint">Pick a choice above, then break the seal to check your reasoning.</span>
+      </div>
+      <div class="vault">
+        <div class="vault-inner">
+          <div class="concept-box"><span class="label">Concept Refresher</span>${p.concept}</div>
+          ${p.steps.map((s,i)=>`<div class="step" style="animation-delay:${0.15+i*0.15}s"><span class="step-num">${i+1}</span><span class="step-text">${s}</span></div>`).join("")}
+          <div class="answer-stamp">Answer: ${LETTERS[p.answer]} — ${p.answerText}</div>
+          <div class="reference">Go deeper: <a href="${p.ref.url}" target="_blank" rel="noopener">${p.ref.text} ↗</a></div>
+        </div>
+      </div>
+    `;
+
+    const choiceBtns = card.querySelectorAll(".choice");
+    const sealBtn = card.querySelector(".seal-btn");
+    const feedback = card.querySelector(".feedback-line");
+
+    choiceBtns.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(card.dataset.locked) return;
+        card.dataset.locked = "1";
+        const chosen = parseInt(btn.dataset.i,10);
+        choiceBtns.forEach(b=>b.disabled = true);
+        if(chosen === p.answer){
+          btn.classList.add("correct");
+          feedback.textContent = "✓ Correct — clean proof. Break the seal to see the full reasoning.";
+          feedback.classList.add("good");
+          score++;
+        } else {
+          btn.classList.add("incorrect");
+          choiceBtns[p.answer].classList.add("reveal-correct");
+          feedback.textContent = "✗ Not quite — break the seal below to see where the argument goes.";
+          feedback.classList.add("bad");
+        }
+        scoreValEl.textContent = score;
+        sealBtn.disabled = false;
+        sealBtn.innerHTML = "Break<br>the<br>Seal";
+        saveProgress(qid, chosen);
+      });
+    });
+
+    sealBtn.addEventListener("click", ()=>{
+      if(sealBtn.disabled) return;
+      sealBtn.classList.add("cracked");
+      setTimeout(()=>{ card.classList.add("open"); renderMath(card); }, 260);
+    });
+
+    cardsEl.appendChild(card);
+  });
+
+  wrap.appendChild(cardsEl);
+  main.appendChild(wrap);
+});
+
+function renderMath(scope){
+  if(window.renderMathInElement){
+    renderMathInElement(scope, {
+      delimiters:[{left:"$$", right:"$$", display:true},{left:"$", right:"$", display:false}],
+      throwOnError:false
+    });
+  }
+}
+window.addEventListener("load", ()=>{ renderMath(document.body); });
+
+/* ---------------------------------------------------------
+   FAQ
+--------------------------------------------------------- */
+const FAQS = [
+  {q:"Do you use any real, copyrighted TIFR questions?", a:"No. Every problem in the Practice Vault is original, written to match GS-level style and difficulty. Our official-links section simply points to TIFR's own published past papers elsewhere on the web — we don't host or reproduce that content here."},
+  {q:"Is this really free, no upgrade needed?", a:"Yes — the entire TIFR track is free, including every practice problem and the official past-paper index. Fuller video lessons live separately on our YouTube channel, also free."},
+  {q:"Is Part B covered here?", a:"The Practice Vault focuses on Part A-style objective problems. Part B written-answer walkthroughs are covered in our free YouTube video lessons."},
+  {q:"I'm applying to Integrated PhD, not PhD — is this still relevant?", a:"Yes — Integrated PhD candidates at TIFR CAM Bengaluru are evaluated on Part A only, so the Practice Vault maps directly onto what actually counts for you."},
+  {q:"Why wax seals?", a:"Because clicking 'Show Answer' is boring, and committing to an answer before you peek is how you actually learn faster. Also, they're fun to break."}
+];
+const faqList = document.getElementById("faqList");
+FAQS.forEach(f=>{
+  const item = document.createElement("div");
+  item.className = "faq-item";
+  item.innerHTML = `<button class="faq-q"><span>${f.q}</span><span class="plus">+</span></button><div class="faq-a"><p>${f.a}</p></div>`;
+  item.querySelector(".faq-q").addEventListener("click", ()=>{ item.classList.toggle("open"); });
+  faqList.appendChild(item);
+});
+
+/* ---------------------------------------------------------
+   PERSISTENCE (best-effort; falls back to in-memory only)
+--------------------------------------------------------- */
+let answered = {};
+async function saveProgress(qid, chosen){
+  answered[qid] = chosen;
+  try{
+    localStorage.setItem("tifr-track-progress", JSON.stringify({answered, score}));
+  }catch(e){ /* storage unavailable — progress just won't persist across sessions */ }
+}
+async function loadProgress(){
+  try{
+    const raw = localStorage.getItem("tifr-track-progress");
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    if(!data || !data.answered) return;
+    Object.entries(data.answered).forEach(([qid, chosenIdx])=>{
+      const card = document.querySelector(`.card[data-qid="${qid}"]`);
+      if(!card) return;
+      const choiceBtns = card.querySelectorAll(".choice");
+      const sealBtn = card.querySelector(".seal-btn");
+      const feedback = card.querySelector(".feedback-line");
+      const [secKey, idxStr] = qid.split("-");
+      const p = PROBLEMS[secKey][parseInt(idxStr,10)];
+      card.dataset.locked = "1";
+      choiceBtns.forEach(b=>b.disabled = true);
+      if(chosenIdx === p.answer){
+        choiceBtns[chosenIdx].classList.add("correct");
+        feedback.textContent = "✓ Correct — clean proof. Break the seal to see the full reasoning.";
+        feedback.classList.add("good");
+      } else {
+        choiceBtns[chosenIdx].classList.add("incorrect");
+        choiceBtns[p.answer].classList.add("reveal-correct");
+        feedback.textContent = "✗ Not quite — break the seal below to see where the argument goes.";
+        feedback.classList.add("bad");
+      }
+      sealBtn.disabled = false;
+      sealBtn.innerHTML = "Break<br>the<br>Seal";
+    });
+    score = data.score || 0;
+    scoreValEl.textContent = score;
+    answered = data.answered;
+  }catch(e){ /* no saved progress yet, or storage unavailable */ }
+}
+loadProgress();
+</script>
+<script src="/currency-shared.js"></script>
+</body>
+</html>

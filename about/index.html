@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About We The Mind</title>
+<meta name="description" content="We The Mind is a knowledge ecosystem spanning academic mentoring, personal finance, technology, and free tools — built to help students and lifelong learners grow.">
+<link rel="canonical" href="https://wethemind.com/about/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="About We The Mind">
+<meta property="og:description" content="A knowledge ecosystem spanning education, personal finance, technology, tools, and structured courses.">
+<meta property="og:url" content="https://wethemind.com/about/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<style>
+.division-hero{ padding:88px 0 64px; text-align:center; background:var(--ink); }
+.division-hero .eyebrow{ color:var(--gold); justify-content:center; }
+.division-hero h1{ color:#fff; font-size:clamp(2rem,4vw,2.8rem); margin-bottom:.5em; }
+.division-hero p{ color:#cfd9e8; max-width:60ch; margin:0 auto 1.6em; }
+.value-grid{ display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+.value-card{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:26px; text-align:center; flex:0 1 240px; }
+.value-card h3{ font-size:1.05rem; margin-bottom:.4em; }
+.value-card p{ color:#6b6558; font-size:.9rem; margin:0; }
+</style>
+</head>
+<body>
+<div class="ambient-bg" aria-hidden="true">
+  <span class="blob blob-red"></span>
+  <span class="blob blob-gold"></span>
+  <span class="blob blob-blue"></span>
+  <span class="blob blob-violet"></span>
+  <span class="blob blob-leaf"></span>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="/" class="logo">
+      <span class="logo-mark"></span>
+      <span class="logo-text">We The Mind</span>
+    </a>
+    <nav class="nav-links" id="nav-links">
+      <a href="/education/">Education</a>
+      <a href="/money/">Savoring Money</a>
+      <a href="/tech/">Tech</a>
+      <a href="/tools/">Tools</a>
+      <a href="/academy/">Academy</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about/" class="active">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="/education/#book-demo" class="btn btn-primary btn-sm">Book Free Session</a>
+      <button class="burger" id="burger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="2" fill="currentColor"/><rect y="7" width="22" height="2" fill="currentColor"/><rect y="14" width="22" height="2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="division-hero">
+    <div class="wrap">
+      <span class="eyebrow">About Us</span>
+      <h1>One Mind, Every Discipline That Matters</h1>
+      <p>We The Mind started as a single promise: match a student with a mentor who already teaches their exact board and course. That promise grew into a wider ecosystem — because the same honest, foundations-first approach applies just as well to personal finance, technology, and the tools people use every day.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What We Believe</span>
+        <h2>How We Approach Everything We Build</h2>
+      </div>
+      <div class="value-grid">
+        <div class="value-card">
+          <h3>Foundations First</h3>
+          <p>Whether it's Grade 9 algebra or a first investment, we start with fundamentals — because everything after that gets easier, not harder, when the base is solid.</p>
+        </div>
+        <div class="value-card">
+          <h3>No Fluff, No Filler</h3>
+          <p>We'd rather say less and mean it than pad a page to look impressive. Every claim on this site is something we can actually back up.</p>
+        </div>
+        <div class="value-card">
+          <h3>Free Where It Counts</h3>
+          <p>Practice tools, calculators, and resources that genuinely help should be free to try — payment only starts where real 1:1 time is involved.</p>
+        </div>
+        <div class="value-card">
+          <h3>One Ecosystem, Many Doors</h3>
+          <p>Education, personal finance, technology, and tools all live under one roof — because growth rarely happens in just one subject at a time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--paper-2); padding-top:0;">
+    <div class="wrap" style="text-align:center;">
+      <a href="/contact/" class="btn btn-primary">Get in Touch</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <span>&copy; <span id="year"></span> We The Mind. All rights reserved.</span>
+      <span><a href="/">Back to We The Mind</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+  var burger = document.getElementById('burger-btn');
+  var nav = document.getElementById('nav-links');
+  if(burger && nav){
+    burger.addEventListener('click', function(){
+      var isOpen = nav.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+});
+</script>
+</body>
+</html>

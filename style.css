@@ -1,5 +1,5 @@
 /* ==========================================================================
-   We the Mind — shared stylesheet (used by every page)
+   We The Mind — shared stylesheet (used by every page)
    ========================================================================== */
 
 :root{
@@ -83,6 +83,14 @@ img,svg{max-width:100%; display:block;}
 .btn-light{ background:var(--paper); color:var(--ink); }
 .btn-light:hover{ background:#fff; transform:translateY(-2px); }
 .btn-sm{ padding:9px 16px; font-size:.7rem; }
+
+/* ---------- Umbrella brand bar (We The Mind, above the vertical's own nav) ---------- */
+.umbrella-bar{ background:var(--ink); color:#cfd9e8; font-size:.74rem; }
+.umbrella-bar-inner{ display:flex; align-items:center; justify-content:space-between; padding:8px 0; gap:16px; flex-wrap:wrap; }
+.umbrella-brand{ color:var(--gold); font-weight:700; text-decoration:none; letter-spacing:.06em; text-transform:uppercase; font-size:.72rem; flex:none; }
+.umbrella-nav{ display:flex; gap:16px; flex-wrap:wrap; }
+.umbrella-nav a{ color:#cfd9e8; text-decoration:none; text-transform:uppercase; letter-spacing:.03em; font-weight:600; transition:color .15s ease; }
+.umbrella-nav a:hover, .umbrella-nav a.active{ color:var(--gold); }
 
 /* ---------- Header + dropdown nav ---------- */
 header{
@@ -630,4 +638,46 @@ footer{ border-top:1px solid var(--line); padding:52px 0 28px; font-size:.86rem;
 .blob-leaf{ width:0; height:0; display:none; }
 @keyframes drift1{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(40px,30px) scale(1.06); } }
 @keyframes drift2{ 0%,100%{ transform:translate(0,0) scale(1); } 50%{ transform:translate(-35px,-25px) scale(0.96); } }
+
+/* ==========================================================================
+   Dark mode — follows the visitor's OS/browser preference automatically.
+   Redefines the core palette, then patches the shared components that use
+   hardcoded white/light-gray instead of a variable. Page-specific themed
+   experiences (the exam-prep "vault" pages, the SAT exam-taking UI) keep
+   their own deliberate light aesthetic and are not touched here.
+   ========================================================================== */
+@media (prefers-color-scheme: dark){
+  :root{
+    --ink:#EDEFF4;
+    --ink-2:#C7CEDC;
+    --paper:#0F1622;
+    --paper-2:#171F2E;
+    --line:rgba(200,210,230,0.16);
+    --shadow: 0 18px 40px -22px rgba(0,0,0,0.6);
+  }
+  header{ background:rgba(15,22,34,0.92); border-bottom-color:var(--line); }
+  .umbrella-bar{ background:#0A0F18; }
+  footer{ border-top-color:var(--line); }
+  .price-card, .board-card, .offer-card, .vertical-card, .resource-card,
+  .squad-card, .sat-card, .why-card, .contact-form-card, .value-card,
+  .game-card, .word-panel-card, .nav-dropdown-menu, .price-card.featured,
+  .footer-social a, .choice, .grammar-corrected{
+    background:#182335; border-color:var(--line);
+  }
+  .price-card.featured, .price-card.board-card, .offer-card:hover, .vertical-card:hover{
+    background:#1C2A40;
+  }
+  .field input, .field select, .currency-select, textarea, #grammar-input{
+    background:#182335; color:var(--ink); border-color:var(--line);
+  }
+  .btn-ghost{ border-color:var(--line); color:var(--ink); }
+  .btn-light{ background:#182335; color:var(--ink); }
+  #form-success, #mass-session-success, #notify-success, #contact-success{
+    background:#16261c; border-color:var(--green); color:#8fd0a8;
+  }
+  .topic-chip, .pillar-chip{ background:#182335; border-color:var(--line); color:var(--ink); }
+  #consent{ background:#182335; color:var(--ink); border-color:var(--line); }
+  .page-header{ background:#0A0F18; }
+  .division-hero, .umbrella-hero{ background:#0A0F18; }
+}
 @media (prefers-reduced-motion: reduce){ .blob{ animation:none; } }

@@ -1,9 +1,9 @@
 /**
- * We the Mind — booking &amp; session-request forms → Google Sheet
+ * We The Mind — booking &amp; session-request forms → Google Sheet
  *
  * SETUP (5 minutes):
  * 1. Go to https://sheets.google.com and create a new blank spreadsheet.
- *    Name it something like "We the Mind — Demo Bookings".
+ *    Name it something like "We The Mind — Demo Bookings".
  * 2. In the sheet, go to Extensions → Apps Script.
  * 3. Delete any starter code and paste this whole file in.
  * 4. Click Deploy → New deployment.
@@ -21,7 +21,7 @@
  *
  * Single Problem-Solving Session bookings can include an uploaded photo,
  * PDF, or document (max 10 MB, enforced client-side). Uploaded files are
- * saved into a Drive folder named "We the Mind — Problem Uploads" (created
+ * saved into a Drive folder named "We The Mind — Problem Uploads" (created
  * automatically the first time one is submitted), and the row in the sheet
  * gets a link to that file instead of the raw binary.
  *
@@ -30,7 +30,7 @@
  */
 
 var SHEET_NAME = 'Responses';
-var UPLOAD_FOLDER_NAME = 'We the Mind — Problem Uploads';
+var UPLOAD_FOLDER_NAME = 'We The Mind — Problem Uploads';
 var MAX_UPLOAD_BYTES = 10 * 1024 * 1024; // 10 MB
 
 var HEADERS = [
@@ -97,7 +97,7 @@ function doPost(e) {
 // Lets you sanity-check the deployed URL in a browser (GET request).
 function doGet(e) {
   return ContentService
-    .createTextOutput('We the Mind booking endpoint is live. Submit via POST.')
+    .createTextOutput('We The Mind booking endpoint is live. Submit via POST.')
     .setMimeType(ContentService.MimeType.TEXT);
 }
 

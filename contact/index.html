@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact We The Mind</title>
+<meta name="description" content="Get in touch with We The Mind — questions about Education, Savoring Money, Tech, Tools, or Academy. We reply within a few hours.">
+<link rel="canonical" href="https://wethemind.com/contact/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Contact We The Mind">
+<meta property="og:description" content="Questions about Education, Savoring Money, Tech, Tools, or Academy — we reply within a few hours.">
+<meta property="og:url" content="https://wethemind.com/contact/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<style>
+.division-hero{ padding:88px 0 64px; text-align:center; background:var(--ink); }
+.division-hero .eyebrow{ color:var(--gold); justify-content:center; }
+.division-hero h1{ color:#fff; font-size:clamp(2rem,4vw,2.8rem); margin-bottom:.5em; }
+.division-hero p{ color:#cfd9e8; max-width:52ch; margin:0 auto 1.6em; }
+.contact-grid{ display:flex; gap:40px; flex-wrap:wrap; justify-content:center; align-items:flex-start; }
+.contact-form-card{ flex:1 1 420px; max-width:480px; background:#fff; border:1px solid var(--line); border-radius:14px; padding:36px; }
+.contact-info{ flex:0 1 280px; display:flex; flex-direction:column; gap:18px; }
+.contact-info-item{ background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; }
+.contact-info-item h4{ font-size:.95rem; margin-bottom:.3em; }
+.contact-info-item p{ color:#6b6558; font-size:.9rem; margin:0; }
+#contact-success{ display:none; padding:20px; background:#e9f1ec; border:1px solid var(--green); color:var(--green); border-radius:2px; font-size:.92rem; text-align:center; }
+</style>
+</head>
+<body>
+<div class="ambient-bg" aria-hidden="true">
+  <span class="blob blob-red"></span>
+  <span class="blob blob-gold"></span>
+  <span class="blob blob-blue"></span>
+  <span class="blob blob-violet"></span>
+  <span class="blob blob-leaf"></span>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="/" class="logo">
+      <span class="logo-mark"></span>
+      <span class="logo-text">We The Mind</span>
+    </a>
+    <nav class="nav-links" id="nav-links">
+      <a href="/education/">Education</a>
+      <a href="/money/">Savoring Money</a>
+      <a href="/tech/">Tech</a>
+      <a href="/tools/">Tools</a>
+      <a href="/academy/">Academy</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about/">About</a>
+      <a href="/contact/" class="active">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="/education/#book-demo" class="btn btn-primary btn-sm">Book Free Session</a>
+      <button class="burger" id="burger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="2" fill="currentColor"/><rect y="7" width="22" height="2" fill="currentColor"/><rect y="14" width="22" height="2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="division-hero">
+    <div class="wrap">
+      <span class="eyebrow">Get in Touch</span>
+      <h1>Questions? We Reply Fast.</h1>
+      <p>Whether it's about a session, a partnership, or just curiosity about what we're building — send us a note and we'll get back to you within a few hours.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="contact-grid">
+        <div class="contact-form-card">
+          <form id="contact-form" data-endpoint="https://script.google.com/macros/s/AKfycbw4v7C_-phYjQUH38Gi4fWWzhpYgKZPggMOp4xah5FNHU3OL0Ifv0qni07jaNZh8zqW/exec">
+            <input type="hidden" name="session_type" value="General Contact">
+            <div class="field">
+              <label for="contact-name">Your name</label>
+              <input type="text" id="contact-name" name="student_name" required>
+            </div>
+            <div class="field">
+              <label for="contact-email">Email</label>
+              <input type="email" id="contact-email" name="email" required>
+            </div>
+            <div class="field">
+              <label for="contact-message">What can we help with?</label>
+              <input type="text" id="contact-message" name="notes" placeholder="e.g. Partnership inquiry, question about pricing…" required>
+            </div>
+            <button type="submit" class="btn btn-primary form-submit" style="width:100%; justify-content:center;">Send Message</button>
+          </form>
+          <div id="contact-success">Thanks — your message is in. We'll reply within a few hours.</div>
+        </div>
+        <div class="contact-info">
+          <div class="contact-info-item">
+            <h4>Email</h4>
+            <p><a href="mailto:hello@wethemind.com">hello@wethemind.com</a></p>
+          </div>
+          <div class="contact-info-item">
+            <h4>WhatsApp</h4>
+            <p><a href="https://wa.me/917478147260">+91 74781 47260</a></p>
+          </div>
+          <div class="contact-info-item">
+            <h4>Prefer to Just Book?</h4>
+            <p><a href="/education/#book-demo">Book a free 30-minute session</a> instead — no form needed.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <span>&copy; <span id="year"></span> We The Mind. All rights reserved.</span>
+      <span><a href="/">Back to We The Mind</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+  var burger = document.getElementById('burger-btn');
+  var nav = document.getElementById('nav-links');
+  if(burger && nav){
+    burger.addEventListener('click', function(){
+      var isOpen = nav.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+
+  var form = document.getElementById('contact-form');
+  var successBox = document.getElementById('contact-success');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var endpoint = form.getAttribute('data-endpoint');
+      var submitBtn = form.querySelector('.form-submit');
+      var formData = new FormData(form);
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      fetch(endpoint, { method:'POST', mode:'no-cors', body:formData })
+        .then(function(){
+          form.style.display = 'none';
+          successBox.style.display = 'block';
+        })
+        .catch(function(){
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          alert('Something went wrong — please try again, or email hello@wethemind.com directly.');
+        });
+    });
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academy — Coming Soon | We The Mind</title>
+<meta name="description" content="We The Mind's Academy — live classes, recorded courses, membership, and certificates. Coming soon.">
+<link rel="canonical" href="https://wethemind.com/academy/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Academy — Coming Soon | We The Mind">
+<meta property="og:description" content="Live classes, recorded courses, membership, and certificates. Coming soon.">
+<meta property="og:url" content="https://wethemind.com/academy/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<style>
+.division-hero{ padding:88px 0 64px; text-align:center; background:var(--ink); }
+.division-hero .eyebrow{ color:var(--gold); justify-content:center; }
+.division-hero h1{ color:#fff; font-size:clamp(2rem,4vw,2.8rem); margin-bottom:.5em; }
+.division-hero p{ color:#cfd9e8; max-width:52ch; margin:0 auto 1.6em; }
+.topic-grid{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; }
+.topic-chip{
+  display:flex; align-items:center; gap:10px; padding:14px 20px; border-radius:12px; border:1px solid var(--line);
+  background:#fff; font-weight:600; font-size:.92rem; flex:0 1 220px;
+}
+.notify-form{ max-width:480px; margin:0 auto; }
+#notify-success{ display:none; padding:20px; background:#e9f1ec; border:1px solid var(--green); color:var(--green); border-radius:2px; font-size:.92rem; max-width:480px; margin:0 auto; text-align:center; }
+</style>
+</head>
+<body>
+<div class="ambient-bg" aria-hidden="true">
+  <span class="blob blob-red"></span>
+  <span class="blob blob-gold"></span>
+  <span class="blob blob-blue"></span>
+  <span class="blob blob-violet"></span>
+  <span class="blob blob-leaf"></span>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="/" class="logo">
+      <span class="logo-mark"></span>
+      <span class="logo-text">We The Mind</span>
+    </a>
+    <nav class="nav-links" id="nav-links">
+      <a href="/education/">Education</a>
+      <a href="/money/">Savoring Money</a>
+      <a href="/tech/">Tech</a>
+      <a href="/tools/">Tools</a>
+      <a href="/academy/" class="active">Academy</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="/education/#book-demo" class="btn btn-primary btn-sm">Book Free Session</a>
+      <button class="burger" id="burger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="2" fill="currentColor"/><rect y="7" width="22" height="2" fill="currentColor"/><rect y="14" width="22" height="2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="division-hero">
+    <div class="wrap">
+      <span class="eyebrow">We The Mind · Academy</span>
+      <h1>Academy — Coming Soon</h1>
+      <p>A structured path beyond 1:1 mentoring — live classes, recorded courses, membership, and certificates. We're building it now.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What's Coming</span>
+        <h2>What This Division Will Cover</h2>
+      </div>
+      <div class="topic-grid">
+        <div class="topic-chip">&#127909; Live Classes</div>
+        <div class="topic-chip">&#127916; Recorded Courses</div>
+        <div class="topic-chip">&#11088; Membership</div>
+        <div class="topic-chip">&#127942; Certificates</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--paper-2);">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Get Notified</span>
+        <h2>Be First to Know When Academy Launches</h2>
+        <p>Leave your name and email — we'll let you know the moment this division goes live. No spam, just the one email.</p>
+      </div>
+      <form id="notify-form" class="notify-form" data-endpoint="https://script.google.com/macros/s/AKfycbw4v7C_-phYjQUH38Gi4fWWzhpYgKZPggMOp4xah5FNHU3OL0Ifv0qni07jaNZh8zqW/exec">
+        <input type="hidden" name="session_type" value="Academy Interest">
+        <div class="field">
+          <label for="notify-name">Your name</label>
+          <input type="text" id="notify-name" name="student_name" required>
+        </div>
+        <div class="field">
+          <label for="notify-email">Email</label>
+          <input type="email" id="notify-email" name="email" required>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit" style="width:100%; justify-content:center;">Notify Me</button>
+      </form>
+      <div id="notify-success">Thanks — we'll email you the moment Academy launches.</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <span>&copy; <span id="year"></span> We The Mind. All rights reserved.</span>
+      <span><a href="/">Back to We The Mind</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+  var burger = document.getElementById('burger-btn');
+  var nav = document.getElementById('nav-links');
+  if(burger && nav){
+    burger.addEventListener('click', function(){
+      var isOpen = nav.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+
+  var form = document.getElementById('notify-form');
+  var successBox = document.getElementById('notify-success');
+  if(form){
+    form.addEventListener('submit', function(e){
+      e.preventDefault();
+      var endpoint = form.getAttribute('data-endpoint');
+      var submitBtn = form.querySelector('.form-submit');
+      var formData = new FormData(form);
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending…';
+      fetch(endpoint, { method:'POST', mode:'no-cors', body:formData })
+        .then(function(){
+          form.style.display = 'none';
+          successBox.style.display = 'block';
+        })
+        .catch(function(){
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Notify Me';
+          alert('Something went wrong — please try again, or email hello@wethemind.com directly.');
+        });
+    });
+  }
+});
+</script>
+</body>
+</html>

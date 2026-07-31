@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savoring Money — Personal Finance Division | We The Mind</title>
+<meta name="description" content="Savoring Money is We The Mind's personal finance division — investing, tax & ITR, insurance, banking, and financial literacy explained plainly.">
+<link rel="canonical" href="https://wethemind.com/money/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Savoring Money — Personal Finance Division of We The Mind">
+<meta property="og:description" content="Investing, tax & ITR, insurance, banking, and financial literacy — explained plainly.">
+<meta property="og:url" content="https://wethemind.com/money/">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="/style.css">
+<style>
+.division-hero{ padding:88px 0 64px; text-align:center; background:var(--ink); }
+.division-hero .eyebrow{ color:var(--gold); justify-content:center; }
+.division-hero h1{ color:#fff; font-size:clamp(2rem,4vw,2.8rem); margin-bottom:.5em; }
+.division-hero p{ color:#cfd9e8; max-width:52ch; margin:0 auto 1.6em; }
+.topic-grid{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; }
+.topic-chip{
+  display:flex; align-items:center; gap:10px; padding:14px 20px; border-radius:12px; border:1px solid var(--line);
+  background:#fff; font-weight:600; font-size:.92rem; flex:0 1 220px;
+}
+</style>
+</head>
+<body>
+<div class="ambient-bg" aria-hidden="true">
+  <span class="blob blob-red"></span>
+  <span class="blob blob-gold"></span>
+  <span class="blob blob-blue"></span>
+  <span class="blob blob-violet"></span>
+  <span class="blob blob-leaf"></span>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="/" class="logo">
+      <span class="logo-mark"></span>
+      <span class="logo-text">We The Mind</span>
+    </a>
+    <nav class="nav-links" id="nav-links">
+      <a href="/education/">Education</a>
+      <a href="/money/" class="active">Savoring Money</a>
+      <a href="/tech/">Tech</a>
+      <a href="/tools/">Tools</a>
+      <a href="/academy/">Academy</a>
+      <a href="/blog/">Blog</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="/education/#book-demo" class="btn btn-primary btn-sm">Book Free Session</a>
+      <button class="burger" id="burger-btn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="nav-links">
+        <svg width="22" height="16" viewBox="0 0 22 16" aria-hidden="true"><rect width="22" height="2" fill="currentColor"/><rect y="7" width="22" height="2" fill="currentColor"/><rect y="14" width="22" height="2" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="division-hero">
+    <div class="wrap">
+      <span class="eyebrow">We The Mind · Personal Finance Division</span>
+      <h1>Savoring Money</h1>
+      <p>Money decisions taught the same way we teach Grade 9 math — clearly, honestly, and built on fundamentals that compound. Savoring Money lives on its own site, dedicated entirely to personal finance and financial literacy.</p>
+      <a href="https://savoringmoney247-stack.github.io/savoring-money/" target="_blank" rel="noopener" class="btn btn-primary">Visit Savoring Money &rarr;</a>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What You'll Find There</span>
+        <h2>Personal Finance, Explained Plainly</h2>
+      </div>
+      <div class="topic-grid">
+        <div class="topic-chip">&#128200; Investing</div>
+        <div class="topic-chip">&#128203; Tax &amp; ITR</div>
+        <div class="topic-chip">&#128176; Personal Finance Basics</div>
+        <div class="topic-chip">&#128274; Insurance</div>
+        <div class="topic-chip">&#127974; Banking</div>
+        <div class="topic-chip">&#127891; Financial Literacy</div>
+      </div>
+      <p style="text-align:center; color:#6b6558; margin-top:32px;">Savoring Money is run as its own dedicated site so it can go deep on money — while staying part of the We The Mind family.</p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-bottom" style="border-top:none; padding-top:0;">
+      <span>&copy; <span id="year"></span> We The Mind. All rights reserved.</span>
+      <span><a href="/">Back to We The Mind</a></span>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  var yearEl = document.getElementById('year');
+  if(yearEl) yearEl.textContent = new Date().getFullYear();
+  var burger = document.getElementById('burger-btn');
+  var nav = document.getElementById('nav-links');
+  if(burger && nav){
+    burger.addEventListener('click', function(){
+      var isOpen = nav.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    });
+  }
+});
+</script>
+</body>
+</html>
