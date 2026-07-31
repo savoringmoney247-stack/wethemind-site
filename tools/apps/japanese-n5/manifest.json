@@ -1,0 +1,53 @@
+{
+  "name": "Nihongo N5 — Learn Japanese for JLPT",
+  "short_name": "日本語 N5",
+  "description": "Master JLPT N5 Japanese with interactive flashcards, quizzes, kanji practice, grammar guide and audio pronunciation. 100% offline.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#fdf6ec",
+  "theme_color": "#C0392B",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "utilities"],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Vocabulary Flashcards",
+      "short_name": "Flashcards",
+      "description": "Jump straight to spaced-repetition vocab cards",
+      "url": "./index.html?start=vocab",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Practice Quiz",
+      "short_name": "Quiz",
+      "description": "Start a JLPT-style practice quiz",
+      "url": "./index.html?start=quiz",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Kanji Grid",
+      "short_name": "Kanji",
+      "description": "Browse and master all 103 N5 kanji",
+      "url": "./index.html?start=kanji",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

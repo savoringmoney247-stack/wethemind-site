@@ -23,7 +23,7 @@
 }
 
 *{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
+html{scroll-behavior:smooth; scroll-padding-top:90px;}
 body{
   margin:0;
   background:var(--paper);
@@ -86,7 +86,7 @@ img,svg{max-width:100%; display:block;}
 
 /* ---------- Umbrella brand bar (We The Mind, above the vertical's own nav) ---------- */
 .umbrella-bar{ background:var(--ink); color:#cfd9e8; font-size:.74rem; }
-.umbrella-bar-inner{ display:flex; align-items:center; justify-content:space-between; padding:8px 0; gap:16px; flex-wrap:wrap; }
+.umbrella-bar-inner{ display:flex; align-items:center; justify-content:center; padding:8px 0; gap:28px; flex-wrap:wrap; text-align:center; }
 .umbrella-brand{ color:var(--gold); font-weight:700; text-decoration:none; letter-spacing:.06em; text-transform:uppercase; font-size:.72rem; flex:none; }
 .umbrella-nav{ display:flex; gap:16px; flex-wrap:wrap; }
 .umbrella-nav a{ color:#cfd9e8; text-decoration:none; text-transform:uppercase; letter-spacing:.03em; font-weight:600; transition:color .15s ease; }
@@ -358,7 +358,7 @@ header{
 .board-card.more{ display:flex; align-items:center; justify-content:center; text-align:center; background:var(--accent); color:#fff; }
 .board-card.more p{ color:rgba(255,255,255,.85); font-size:.82rem; margin:6px 0 0; }
 .board-card.more h4{ color:#fff; }
-.stamp-note{ margin-top:28px; color:#6b6558; font-size:.92rem; }
+.stamp-note{ margin-top:28px; color:#6b6558; font-size:.92rem; text-align:center; }
 
 /* ---------- Why us ---------- */
 .why-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line); }

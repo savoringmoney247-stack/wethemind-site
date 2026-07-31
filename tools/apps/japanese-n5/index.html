@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Nihongo N5 — Learn Japanese for JLPT</title>
+<meta name="description" content="Master JLPT N5 Japanese with interactive flashcards, quizzes, kanji practice, and audio pronunciation. Free offline PWA.">
+<meta name="theme-color" content="#C0392B">
+<link rel="manifest" href="manifest.json">
+<!-- iOS PWA support -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="日本語 N5">
+<link rel="apple-touch-icon" href="icon-192.png">
+<!-- Windows tile -->
+<meta name="msapplication-TileColor" content="#C0392B">
+<meta name="msapplication-TileImage" content="icon-192.png">
+<!-- OG image -->
+<meta property="og:image" content="icon-512.png">
+
+<!-- Open Graph / Lead Gen meta -->
+<meta property="og:title" content="Nihongo N5 – Free JLPT Practice App">
+<meta property="og:description" content="Interactive Japanese N5 trainer. Flashcards, audio, quizzes & kanji — all offline.">
+<meta property="og:type" content="website">
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+/* ── Reset & Variables ─────────────────────────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root {
+  --ink: #1a1008;
+  --ink2: #3d2a1a;
+  --ink3: #7a5c44;
+  --ink4: #b8997a;
+  --paper: #fdf6ec;
+  --paper2: #f8ede0;
+  --paper3: #f0dfc8;
+  --red: #C0392B;
+  --red2: #e84c3d;
+  --red-bg: rgba(192,57,43,.08);
+  --gold: #c49a2a;
+  --gold-bg: rgba(196,154,42,.1);
+  --teal: #1a8a80;
+  --teal-bg: rgba(26,138,128,.09);
+  --border: rgba(60,30,10,.1);
+  --border2: rgba(60,30,10,.06);
+  --radius: 16px;
+  --ease: cubic-bezier(.4,0,.2,1);
+  --spring: cubic-bezier(.34,1.56,.64,1);
+  --shadow: 0 2px 14px rgba(60,30,10,.08), 0 1px 3px rgba(60,30,10,.05);
+  --shadow-lg: 0 12px 40px rgba(60,30,10,.14), 0 3px 10px rgba(60,30,10,.06);
+  --shadow-red: 0 6px 24px rgba(192,57,43,.28);
+  --font-jp: 'Shippori Mincho', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+html{height:100%;scroll-behavior:smooth;}
+body{font-family:var(--font-body);background:var(--paper);color:var(--ink);min-height:100%;overflow-x:hidden;}
+
+/* ── Noise texture overlay ─────────────────────────────────────────────────── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:9999;opacity:.6;}
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--paper3);border-radius:4px;}
+
+/* ── Navigation ────────────────────────────────────────────────────────────── */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:200;background:rgba(253,246,236,.9);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);height:60px;display:flex;align-items:center;padding:0 24px;gap:16px;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo-mark{width:34px;height:34px;background:var(--red);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:var(--font-jp);font-size:1rem;color:#fff;font-weight:700;box-shadow:var(--shadow-red);flex-shrink:0;}
+.nav-logo-text{font-family:var(--font-jp);font-size:1.1rem;font-weight:700;color:var(--ink);letter-spacing:.01em;}
+.nav-logo-text span{color:var(--red);}
+.nav-tabs{display:flex;gap:4px;margin-left:auto;}
+.nav-tab{padding:7px 14px;border-radius:8px;font-size:.78rem;font-weight:600;cursor:pointer;border:none;background:transparent;color:var(--ink3);font-family:var(--font-body);transition:background .18s,color .18s;}
+.nav-tab:hover{background:var(--paper2);color:var(--ink);}
+.nav-tab.active{background:var(--red-bg);color:var(--red);}
+.nav-install-btn{padding:7px 16px;border-radius:9px;background:var(--red);color:#fff;font-size:.78rem;font-weight:700;border:none;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;gap:6px;transition:transform .2s var(--spring),box-shadow .2s;box-shadow:var(--shadow-red);white-space:nowrap;}
+.nav-install-btn:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(192,57,43,.38);}
+.nav-install-btn.hidden{display:none;}
+
+/* ── Hero ─────────────────────────────────────────────────────────────── */
+.hero{padding:100px 24px 60px;text-align:center;position:relative;overflow:hidden;}
+.hero::before{content:'日本語';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-jp);font-size:min(30vw,320px);font-weight:800;color:var(--red);opacity:.04;white-space:nowrap;pointer-events:none;letter-spacing:-.02em;line-height:1;}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;background:var(--gold-bg);border:1px solid rgba(196,154,42,.25);border-radius:30px;font-size:.72rem;font-weight:700;color:var(--gold);letter-spacing:.06em;text-transform:uppercase;margin-bottom:20px;animation:fadeUp .6s var(--ease) both;}
+.hero-badge span{font-size:1rem;}
+.hero h1{font-family:var(--font-jp);font-size:min(4.5rem,11vw);font-weight:800;color:var(--ink);line-height:1.05;letter-spacing:-.03em;animation:fadeUp .6s .1s var(--ease) both;margin-bottom:8px;}
+.hero h1 em{font-style:normal;color:var(--red);}
+.hero-sub{font-size:1.1rem;color:var(--ink3);font-weight:400;max-width:520px;margin:0 auto 32px;line-height:1.65;animation:fadeUp .6s .2s var(--ease) both;}
+.hero-cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;animation:fadeUp .6s .3s var(--ease) both;}
+.btn-primary{padding:13px 28px;background:var(--red);color:#fff;border:none;border-radius:12px;font-size:.92rem;font-weight:700;cursor:pointer;font-family:var(--font-body);display:inline-flex;align-items:center;gap:8px;box-shadow:var(--shadow-red);transition:transform .2s var(--spring),box-shadow .2s;}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 10px 32px rgba(192,57,43,.42);}
+.btn-outline{padding:13px 28px;background:transparent;color:var(--ink2);border:1.5px solid var(--border);border-radius:12px;font-size:.92rem;font-weight:600;cursor:pointer;font-family:var(--font-body);display:inline-flex;align-items:center;gap:8px;transition:background .18s,border-color .18s;}
+.btn-outline:hover{background:var(--paper2);border-color:var(--ink4);}
+.hero-stats{display:flex;justify-content:center;gap:40px;margin-top:52px;animation:fadeUp .6s .4s var(--ease) both;flex-wrap:wrap;}
+.hero-stat{text-align:center;}
+.hero-stat-num{font-family:var(--font-jp);font-size:2rem;font-weight:800;color:var(--ink);display:block;line-height:1;}
+.hero-stat-lbl{font-size:.72rem;color:var(--ink4);font-weight:600;letter-spacing:.06em;text-transform:uppercase;margin-top:3px;}
+
+/* ── Section ───────────────────────────────────────────────────────────────── */
+.section{max-width:960px;margin:0 auto;padding:0 24px 64px;}
+.section-header{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;gap:16px;flex-wrap:wrap;}
+.section-label{font-size:.65rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--red);margin-bottom:6px;}
+.section-title{font-family:var(--font-jp);font-size:1.8rem;font-weight:700;color:var(--ink);letter-spacing:-.02em;}
+
+/* ── Panels ────────────────────────────────────────────────────────────────── */
+.panel{display:none;}
+.panel.active{display:block;animation:fadeIn .3s var(--ease);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Feature cards ─────────────────────────────────────────────────────────── */
+.feature-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;}
+.feature-card{background:var(--paper2);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:transform .22s var(--spring),box-shadow .22s;cursor:pointer;position:relative;overflow:hidden;}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0;}
+.feature-card.fc-red::before{background:linear-gradient(90deg,var(--red),var(--red2));}
+.feature-card.fc-gold::before{background:linear-gradient(90deg,var(--gold),#e6b830);}
+.feature-card.fc-teal::before{background:linear-gradient(90deg,var(--teal),#22b8ac);}
+.feature-card.fc-ink::before{background:linear-gradient(90deg,var(--ink2),var(--ink3));}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg);}
+.feature-card:hover.active-module{cursor:default;}
+.fc-icon{font-size:1.8rem;margin-bottom:12px;display:block;}
+.fc-title{font-size:.9rem;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.fc-desc{font-size:.74rem;color:var(--ink3);line-height:1.55;}
+.fc-badge{position:absolute;top:14px;right:14px;font-size:.58rem;font-weight:800;padding:2px 8px;border-radius:20px;letter-spacing:.05em;text-transform:uppercase;}
+.fc-badge.new{background:var(--red-bg);color:var(--red);}
+.fc-badge.free{background:var(--gold-bg);color:var(--gold);}
+
+/* ── Vocab Flashcard ──────────────────────────────────────────────────────── */
+.flashcard-wrap{perspective:1200px;margin-bottom:24px;}
+.flashcard{width:100%;max-width:480px;height:240px;margin:0 auto;cursor:pointer;position:relative;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.25,.8,.25,1);}
+.flashcard.flipped{transform:rotateY(180deg);}
+.fc-face{position:absolute;inset:0;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;backface-visibility:hidden;-webkit-backface-visibility:hidden;}
+.fc-front{background:var(--ink);box-shadow:0 16px 48px rgba(26,16,8,.22),0 4px 12px rgba(26,16,8,.12);}
+.fc-back{background:var(--paper2);border:1.5px solid var(--border);transform:rotateY(180deg);}
+.fc-jp{font-family:var(--font-jp);font-size:3rem;font-weight:700;color:#fff;letter-spacing:.05em;text-align:center;}
+.fc-kana{font-family:var(--font-jp);font-size:1rem;color:rgba(255,255,255,.5);margin-top:8px;text-align:center;font-weight:500;}
+.fc-hint{font-size:.72rem;color:rgba(255,255,255,.28);margin-top:20px;letter-spacing:.05em;}
+.fc-back-word{font-family:var(--font-jp);font-size:2rem;font-weight:700;color:var(--ink);text-align:center;margin-bottom:4px;}
+.fc-back-romaji{font-family:var(--font-mono);font-size:.95rem;color:var(--red);margin-bottom:10px;}
+.fc-back-meaning{font-size:1.1rem;font-weight:500;color:var(--ink2);text-align:center;}
+.fc-back-example{font-size:.78rem;color:var(--ink3);margin-top:10px;text-align:center;line-height:1.55;border-top:1px solid var(--border2);padding-top:10px;width:100%;}
+.flashcard-controls{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;}
+.fc-btn{padding:9px 18px;border-radius:10px;font-size:.8rem;font-weight:700;cursor:pointer;border:1.5px solid var(--border);font-family:var(--font-body);transition:all .2s var(--spring);}
+.fc-btn.good{background:var(--teal-bg);color:var(--teal);border-color:rgba(26,138,128,.25);}
+.fc-btn.good:hover{background:var(--teal);color:#fff;transform:translateY(-2px);}
+.fc-btn.hard{background:var(--red-bg);color:var(--red);border-color:rgba(192,57,43,.2);}
+.fc-btn.hard:hover{background:var(--red);color:#fff;transform:translateY(-2px);}
+.fc-btn.skip{background:var(--paper2);color:var(--ink3);}
+.fc-btn.skip:hover{background:var(--paper3);}
+.fc-btn.audio{background:var(--gold-bg);color:var(--gold);border-color:rgba(196,154,42,.2);padding:9px 14px;}
+.fc-btn.audio:hover{background:var(--gold);color:#fff;transform:translateY(-2px);}
+.flashcard-progress{display:flex;gap:4px;justify-content:center;margin-bottom:16px;}
+.fp-dot{width:8px;height:8px;border-radius:50%;background:var(--paper3);transition:background .3s,transform .3s;}
+.fp-dot.done{background:var(--teal);}
+.fp-dot.current{background:var(--red);transform:scale(1.3);}
+.fp-counter{text-align:center;font-size:.74rem;color:var(--ink4);font-weight:600;margin-bottom:10px;font-family:var(--font-mono);}
+
+/* ── Quiz ─────────────────────────────────────────────────────────────────── */
+.quiz-card{background:var(--paper2);border:1.5px solid var(--border);border-radius:20px;padding:28px;box-shadow:var(--shadow);}
+.quiz-q-label{font-size:.62rem;font-weight:800;letter-spacing:.15em;text-transform:uppercase;color:var(--ink4);margin-bottom:8px;}
+.quiz-question{font-family:var(--font-jp);font-size:2.4rem;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.1;}
+.quiz-question-sub{font-size:.84rem;color:var(--ink3);margin-bottom:22px;font-weight:500;}
+.quiz-options{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.quiz-opt{padding:14px 18px;border-radius:12px;border:1.5px solid var(--border);background:var(--paper);cursor:pointer;font-size:.88rem;font-weight:600;color:var(--ink2);transition:all .18s var(--ease);text-align:left;font-family:var(--font-body);}
+.quiz-opt:hover:not(:disabled){background:var(--paper3);border-color:var(--ink4);transform:translateY(-2px);}
+.quiz-opt.correct{background:#e8f5e9;border-color:#4caf50;color:#2e7d32;}
+.quiz-opt.wrong{background:#fdecea;border-color:#ef5350;color:#c62828;}
+.quiz-opt:disabled{cursor:default;}
+.quiz-feedback{min-height:32px;font-size:.85rem;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.quiz-feedback.correct{color:#2e7d32;}
+.quiz-feedback.wrong{color:#c62828;}
+.quiz-footer{display:flex;justify-content:space-between;align-items:center;}
+.quiz-score{font-family:var(--font-mono);font-size:.82rem;color:var(--ink4);font-weight:500;}
+.quiz-score b{color:var(--ink);font-weight:700;}
+.progress-bar-wrap{height:4px;background:var(--paper3);border-radius:4px;margin-bottom:20px;overflow:hidden;}
+.progress-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--red),var(--red2));transition:width .4s var(--ease);}
+.quiz-type-tabs{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.quiz-type-tab{padding:7px 15px;border-radius:8px;border:1.5px solid var(--border);background:var(--paper);font-size:.76rem;font-weight:700;cursor:pointer;font-family:var(--font-body);color:var(--ink3);transition:all .18s;}
+.quiz-type-tab:hover{background:var(--paper2);}
+.quiz-type-tab.active{background:var(--red-bg);border-color:rgba(192,57,43,.3);color:var(--red);}
+
+/* ── Kanji grid ────────────────────────────────────────────────────────────── */
+.kanji-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px;}
+.kanji-tile{background:var(--paper2);border:1.5px solid var(--border);border-radius:14px;padding:16px;text-align:center;cursor:pointer;transition:all .22s var(--spring);position:relative;}
+.kanji-tile:hover{transform:translateY(-4px) scale(1.02);box-shadow:var(--shadow-lg);border-color:var(--red);}
+.kanji-tile.mastered{background:var(--teal-bg);border-color:rgba(26,138,128,.3);}
+.kanji-tile.studied{background:var(--gold-bg);border-color:rgba(196,154,42,.25);}
+.kt-char{font-family:var(--font-jp);font-size:2.2rem;font-weight:700;color:var(--ink);display:block;line-height:1.1;margin-bottom:6px;}
+.kt-reading{font-family:var(--font-mono);font-size:.65rem;color:var(--red);font-weight:500;display:block;margin-bottom:3px;}
+.kt-meaning{font-size:.7rem;color:var(--ink3);font-weight:600;}
+.kt-stroke{position:absolute;top:8px;right:8px;font-size:.58rem;font-weight:800;color:var(--ink4);font-family:var(--font-mono);}
+.kanji-filter-bar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.k-filter-btn{padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--paper);font-size:.74rem;font-weight:700;cursor:pointer;font-family:var(--font-body);color:var(--ink3);transition:all .18s;}
+.k-filter-btn.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+
+/* ── Sentence Builder ──────────────────────────────────────────────────────── */
+.sentence-card{background:var(--paper2);border:1.5px solid var(--border);border-radius:20px;padding:28px;box-shadow:var(--shadow);margin-bottom:16px;}
+.sentence-prompt{font-size:.82rem;color:var(--ink3);font-weight:600;margin-bottom:8px;letter-spacing:.02em;}
+.sentence-english{font-size:1.2rem;font-weight:700;color:var(--ink);margin-bottom:20px;font-family:var(--font-jp);}
+.word-bank{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;min-height:44px;padding:12px;background:var(--paper3);border-radius:12px;border:1.5px dashed var(--border);}
+.word-chip{padding:7px 13px;background:var(--paper);border:1.5px solid var(--border);border-radius:8px;font-family:var(--font-jp);font-size:.92rem;font-weight:600;color:var(--ink);cursor:pointer;transition:all .18s var(--spring);}
+.word-chip:hover{background:var(--red);color:#fff;border-color:var(--red);transform:scale(1.05);}
+.word-chip.used{opacity:.35;cursor:default;transform:none;}
+.answer-area{min-height:52px;padding:14px;background:var(--paper);border:2px dashed var(--border);border-radius:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:16px;transition:border-color .2s;}
+.answer-area.correct-area{border-color:var(--teal);background:var(--teal-bg);}
+.answer-area.wrong-area{border-color:var(--red);background:var(--red-bg);}
+.answer-chip{padding:7px 13px;background:var(--ink);color:var(--paper);border-radius:8px;font-family:var(--font-jp);font-size:.92rem;font-weight:600;cursor:pointer;transition:all .18s;}
+.answer-chip:hover{background:var(--red);}
+.sentence-area-hint{font-size:.72rem;color:var(--ink4);font-weight:500;pointer-events:none;}
+.sentence-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.s-btn{padding:10px 20px;border-radius:10px;font-size:.82rem;font-weight:700;cursor:pointer;border:1.5px solid var(--border);font-family:var(--font-body);transition:all .2s var(--spring);}
+.s-btn.check{background:var(--ink);color:var(--paper);}
+.s-btn.check:hover{background:var(--red);border-color:var(--red);transform:translateY(-2px);}
+.s-btn.reset{background:var(--paper3);color:var(--ink3);}
+.s-btn.reset:hover{background:var(--paper2);}
+.sentence-result{margin-top:14px;padding:14px;border-radius:12px;font-size:.84rem;font-weight:600;display:none;}
+.sentence-result.show{display:block;}
+.sentence-result.correct{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7;}
+.sentence-result.wrong{background:#fdecea;color:#c62828;border:1px solid #ef9a9a;}
+
+/* ── Grammar Table ─────────────────────────────────────────────────────────── */
+.grammar-accordion{display:flex;flex-direction:column;gap:10px;}
+.ga-item{background:var(--paper2);border:1.5px solid var(--border);border-radius:14px;overflow:hidden;}
+.ga-header{padding:16px 20px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;user-select:none;transition:background .18s;}
+.ga-header:hover{background:var(--paper3);}
+.ga-title{font-weight:700;color:var(--ink);font-size:.9rem;}
+.ga-tag{font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:20px;background:var(--red-bg);color:var(--red);text-transform:uppercase;letter-spacing:.05em;margin-left:10px;}
+.ga-arrow{font-size:.8rem;color:var(--ink4);transition:transform .25s;flex-shrink:0;}
+.ga-item.open .ga-arrow{transform:rotate(180deg);}
+.ga-body{display:none;padding:0 20px 18px;}
+.ga-item.open .ga-body{display:block;}
+.ga-pattern{font-family:var(--font-mono);font-size:.88rem;color:var(--red);background:var(--red-bg);padding:8px 14px;border-radius:8px;margin-bottom:12px;display:inline-block;font-weight:500;}
+.ga-desc{font-size:.82rem;color:var(--ink2);line-height:1.7;margin-bottom:12px;}
+.ga-examples{display:flex;flex-direction:column;gap:8px;}
+.ga-ex{background:var(--paper);border:1px solid var(--border2);border-radius:9px;padding:12px 15px;}
+.ga-ex-jp{font-family:var(--font-jp);font-size:1rem;color:var(--ink);margin-bottom:2px;}
+.ga-ex-romaji{font-family:var(--font-mono);font-size:.72rem;color:var(--ink3);margin-bottom:2px;}
+.ga-ex-en{font-size:.8rem;color:var(--ink3);font-weight:500;}
+
+/* ── Hiragana/Katakana Chart ───────────────────────────────────────────────── */
+.kana-tabs{display:flex;gap:8px;margin-bottom:18px;}
+.kana-tab{padding:8px 20px;border-radius:9px;border:1.5px solid var(--border);background:var(--paper);font-size:.82rem;font-weight:700;cursor:pointer;font-family:var(--font-jp);color:var(--ink3);transition:all .18s;}
+.kana-tab.active{background:var(--ink);color:var(--paper);border-color:var(--ink);}
+.kana-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:420px;}
+.kana-cell{background:var(--paper2);border:1px solid var(--border);border-radius:9px;padding:10px 6px;text-align:center;cursor:pointer;transition:all .18s var(--spring);}
+.kana-cell:hover{background:var(--red);border-color:var(--red);transform:scale(1.06);}
+.kana-cell:hover .kana-char,.kana-cell:hover .kana-romaji{color:#fff;}
+.kana-char{font-family:var(--font-jp);font-size:1.4rem;font-weight:600;color:var(--ink);display:block;line-height:1.1;}
+.kana-romaji{font-family:var(--font-mono);font-size:.6rem;color:var(--ink4);font-weight:500;display:block;margin-top:2px;}
+
+/* ── Lead gen section ─────────────────────────────────────────────────────── */
+.lead-section{background:var(--ink);color:var(--paper);border-radius:24px;padding:48px 40px;text-align:center;margin:0 24px 64px;position:relative;overflow:hidden;}
+.lead-section::before{content:'N5';position:absolute;right:-20px;bottom:-30px;font-family:var(--font-jp);font-size:200px;font-weight:800;color:rgba(255,255,255,.04);line-height:1;pointer-events:none;}
+.lead-label{font-size:.65rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--red2);margin-bottom:12px;}
+.lead-title{font-family:var(--font-jp);font-size:2.2rem;font-weight:800;margin-bottom:12px;line-height:1.1;}
+.lead-sub{font-size:.95rem;color:rgba(253,246,236,.65);font-weight:400;max-width:480px;margin:0 auto 28px;line-height:1.6;}
+.lead-form{display:flex;gap:10px;max-width:440px;margin:0 auto 20px;flex-wrap:wrap;}
+.lead-input{flex:1;min-width:200px;padding:13px 18px;border-radius:11px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.07);color:var(--paper);font-family:var(--font-body);font-size:.88rem;outline:none;transition:border-color .2s;}
+.lead-input::placeholder{color:rgba(253,246,236,.35);}
+.lead-input:focus{border-color:var(--red2);}
+.lead-submit{padding:13px 24px;background:var(--red);color:#fff;border:none;border-radius:11px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:all .2s var(--spring);white-space:nowrap;}
+.lead-submit:hover{background:var(--red2);transform:translateY(-2px);}
+.lead-badges{display:flex;justify-content:center;gap:20px;font-size:.74rem;color:rgba(253,246,236,.4);flex-wrap:wrap;}
+.lead-badge-item{display:flex;align-items:center;gap:5px;}
+
+/* ── Progress tracker ─────────────────────────────────────────────────────── */
+.progress-section{background:var(--paper2);border:1.5px solid var(--border);border-radius:20px;padding:24px;}
+.prog-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:20px;}
+.prog-stat{text-align:center;padding:16px;background:var(--paper);border-radius:12px;border:1px solid var(--border2);}
+.prog-stat-num{font-family:var(--font-jp);font-size:1.8rem;font-weight:800;color:var(--ink);display:block;}
+.prog-stat-lbl{font-size:.68rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
+.prog-bars{display:flex;flex-direction:column;gap:12px;}
+.prog-bar-row{display:flex;align-items:center;gap:12px;}
+.prog-bar-label{font-size:.76rem;font-weight:600;color:var(--ink2);width:100px;flex-shrink:0;}
+.prog-bar-track{flex:1;height:8px;background:var(--paper3);border-radius:8px;overflow:hidden;}
+.prog-bar-fill{height:100%;border-radius:8px;transition:width 1s var(--ease);}
+.pbf-red{background:linear-gradient(90deg,var(--red),var(--red2));}
+.pbf-gold{background:linear-gradient(90deg,var(--gold),#e6b830);}
+.pbf-teal{background:linear-gradient(90deg,var(--teal),#22b8ac);}
+.pbf-ink{background:linear-gradient(90deg,var(--ink2),var(--ink3));}
+.prog-bar-pct{font-family:var(--font-mono);font-size:.72rem;color:var(--ink4);width:32px;text-align:right;}
+
+/* ── Toast ───────────────────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--ink);color:var(--paper);border-radius:14px;padding:13px 20px;font-size:.82rem;font-weight:600;display:flex;align-items:center;gap:10px;z-index:9000;transform:translateY(80px);opacity:0;transition:all .4s var(--spring);max-width:300px;box-shadow:0 8px 28px rgba(26,16,8,.22);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast-icon{font-size:1rem;}
+
+/* ── Mobile bottom nav ─────────────────────────────────────────────────────── */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;background:rgba(253,246,236,.95);backdrop-filter:blur(18px);border-top:1px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:200;}
+.bn-items{display:flex;justify-content:space-around;}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 12px;cursor:pointer;border-radius:10px;border:none;background:none;font-family:var(--font-body);transition:all .18s;}
+.bn-icon{font-size:1.15rem;line-height:1;}
+.bn-lbl{font-size:.6rem;font-weight:700;color:var(--ink4);text-transform:uppercase;letter-spacing:.04em;}
+.bn-item.active .bn-lbl{color:var(--red);}
+.bn-item.active .bn-icon{transform:scale(1.15);}
+
+/* ── Offline banner ──────────────────────────────────────────────────────── */
+.offline-banner{display:none;background:var(--gold-bg);border:1px solid rgba(196,154,42,.3);border-radius:12px;padding:12px 18px;margin:0 24px 16px;font-size:.8rem;font-weight:600;color:var(--gold);text-align:center;}
+.offline-banner.show{display:block;}
+
+/* ── Update-available banner ─────────────────────────────────────────────── */
+.update-banner{display:none;position:fixed;top:60px;left:0;right:0;z-index:190;
+  background:rgba(26,138,128,.1);border-bottom:1.5px solid rgba(26,138,128,.25);
+  padding:10px 20px;font-size:.78rem;font-weight:600;color:var(--teal);
+  text-align:center;align-items:center;justify-content:center;gap:12px;}
+.update-banner.show{display:flex;}
+.update-banner-btn{padding:5px 14px;background:var(--teal);color:#fff;border:none;
+  border-radius:8px;font-size:.74rem;font-weight:800;cursor:pointer;
+  font-family:var(--font-body);transition:opacity .2s;}
+.update-banner-btn:hover{opacity:.85;}
+
+/* ── iOS install bottom-sheet ────────────────────────────────────────────── */
+.ios-sheet{display:none;position:fixed;bottom:0;left:0;right:0;z-index:9100;
+  background:var(--paper);border-top:1.5px solid var(--border);
+  border-radius:20px 20px 0 0;padding:24px 24px max(24px,env(safe-area-inset-bottom));
+  box-shadow:0 -8px 40px rgba(60,30,10,.14);animation:slideUp .38s var(--spring);}
+.ios-sheet.show{display:block;}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.ios-sheet-close{position:absolute;top:14px;right:18px;background:var(--paper2);
+  border:none;border-radius:50%;width:28px;height:28px;font-size:.85rem;
+  cursor:pointer;color:var(--ink3);display:flex;align-items:center;justify-content:center;}
+.ios-sheet-icon{font-size:2.2rem;margin-bottom:10px;}
+.ios-sheet-title{font-family:var(--font-jp);font-size:1.25rem;font-weight:700;
+  color:var(--ink);margin-bottom:6px;}
+.ios-sheet-desc{font-size:.82rem;color:var(--ink3);line-height:1.65;margin-bottom:0;}
+.ios-sheet-step{display:flex;align-items:flex-start;gap:10px;
+  background:var(--paper2);border-radius:12px;padding:12px 14px;margin-top:10px;}
+.ios-step-num{width:22px;height:22px;border-radius:50%;background:var(--red);
+  color:#fff;font-size:.72rem;font-weight:800;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px;}
+.ios-step-text{font-size:.8rem;color:var(--ink2);line-height:1.5;}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+.section-divider{height:1px;background:var(--border2);max-width:960px;margin:0 auto 64px;}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media(max-width:640px){
+  .topnav{padding:0 16px;}
+  .nav-tabs{display:none;}
+  .hero{padding:80px 16px 40px;}
+  .hero h1{font-size:2.8rem;}
+  .hero-stats{gap:24px;}
+  .section{padding:0 16px 40px;}
+  .quiz-options{grid-template-columns:1fr;}
+  .kana-grid{grid-template-columns:repeat(5,1fr);max-width:100%;}
+  .lead-section{padding:36px 20px;margin:0 16px 48px;}
+  .lead-form{flex-direction:column;}
+  .bottom-nav{display:block;}
+  body{padding-bottom:80px;}
+}
+@media(min-width:641px){
+  .bottom-nav{display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- OFFLINE BANNER -->
+<div class="offline-banner" id="offlineBanner">📵 You're offline — all content is still available!</div>
+
+<!-- UPDATE-AVAILABLE BANNER -->
+<div class="update-banner" id="updateBanner">
+  🆕 A new version is ready!
+  <button class="update-banner-btn" onclick="applyUpdate()">Update now</button>
+</div>
+
+<!-- iOS INSTALL BOTTOM-SHEET -->
+<div class="ios-sheet" id="iosSheet">
+  <button class="ios-sheet-close" onclick="document.getElementById('iosSheet').classList.remove('show')">✕</button>
+  <div class="ios-sheet-icon">📲</div>
+  <div class="ios-sheet-title">Install Nihongo N5</div>
+  <div class="ios-sheet-desc">Add to your Home Screen for the full offline app experience.</div>
+  <div class="ios-sheet-step"><div class="ios-step-num">1</div><div class="ios-step-text">Tap the <strong>Share</strong> button <span style="font-size:1rem">⬆</span> at the bottom of Safari.</div></div>
+  <div class="ios-sheet-step"><div class="ios-step-num">2</div><div class="ios-step-text">Scroll down and tap <strong>"Add to Home Screen"</strong>.</div></div>
+  <div class="ios-sheet-step"><div class="ios-step-num">3</div><div class="ios-step-text">Tap <strong>Add</strong> — and you're done! 🎌</div></div>
+</div>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <a class="nav-logo" href="#" onclick="showPanel('home');return false;">
+    <div class="nav-logo-mark">日</div>
+    <div class="nav-logo-text">Nihongo <span>N5</span></div>
+  </a>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showPanel('home');setTab(this)">Home</button>
+    <button class="nav-tab" onclick="showPanel('vocab');setTab(this)">Vocab</button>
+    <button class="nav-tab" onclick="showPanel('kanji');setTab(this)">Kanji</button>
+    <button class="nav-tab" onclick="showPanel('quiz');setTab(this)">Quiz</button>
+    <button class="nav-tab" onclick="showPanel('grammar');setTab(this)">Grammar</button>
+    <button class="nav-tab" onclick="showPanel('kana');setTab(this)">Kana</button>
+    <button class="nav-tab" onclick="showPanel('sentences');setTab(this)">Sentences</button>
+  </div>
+  <button class="nav-install-btn hidden" id="installBtn" onclick="installApp()">
+    ⬇ Install App
+  </button>
+</nav>
+
+<!-- ─── PANEL: HOME ─────────────────────────────────────────────────────── -->
+<div id="panel-home" class="panel active">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge"><span>🎌</span> JLPT N5 Complete Trainer</div>
+    <h1>Learn<br><em>Japanese</em><br>the Right Way</h1>
+    <p class="hero-sub">Flashcards, quizzes, kanji, grammar and audio — everything you need to pass JLPT N5. Free. Offline. Always.</p>
+    <div class="hero-cta-row">
+      <button class="btn-primary" onclick="showPanel('vocab');setTabByName('vocab')">▶ Start Learning</button>
+      <button class="btn-outline" onclick="showPanel('quiz');setTabByName('quiz')">📝 Take a Quiz</button>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">800+</span><div class="hero-stat-lbl">Vocab Words</div></div>
+      <div class="hero-stat"><span class="hero-stat-num">103</span><div class="hero-stat-lbl">N5 Kanji</div></div>
+      <div class="hero-stat"><span class="hero-stat-num">40+</span><div class="hero-stat-lbl">Grammar Points</div></div>
+      <div class="hero-stat"><span class="hero-stat-num">100%</span><div class="hero-stat-lbl">Offline Ready</div></div>
+    </div>
+  </div>
+
+  <!-- Feature grid -->
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-label">What's inside</div>
+        <div class="section-title">Everything for N5</div>
+      </div>
+    </div>
+    <div class="feature-grid">
+      <div class="feature-card fc-red" onclick="showPanel('vocab');setTabByName('vocab')">
+        <span class="fc-icon">🃏</span>
+        <div class="fc-title">Flashcard Trainer</div>
+        <div class="fc-desc">Spaced-repetition style vocab cards with audio pronunciation and example sentences.</div>
+        <div class="fc-badge new">New</div>
+      </div>
+      <div class="feature-card fc-gold" onclick="showPanel('kanji');setTabByName('kanji')">
+        <span class="fc-icon">漢</span>
+        <div class="fc-title">Kanji 103</div>
+        <div class="fc-desc">All 103 N5 kanji with on/kun readings, stroke count, and mastery tracking.</div>
+        <div class="fc-badge free">Free</div>
+      </div>
+      <div class="feature-card fc-teal" onclick="showPanel('quiz');setTabByName('quiz')">
+        <span class="fc-icon">📝</span>
+        <div class="fc-title">JLPT Quiz</div>
+        <div class="fc-desc">Multiple choice quizzes covering vocab, reading, and grammar — JLPT exam style.</div>
+      </div>
+      <div class="feature-card fc-ink" onclick="showPanel('grammar');setTabByName('grammar')">
+        <span class="fc-icon">📖</span>
+        <div class="fc-title">Grammar Guide</div>
+        <div class="fc-desc">Bite-sized grammar explanations with patterns, examples and English translation.</div>
+      </div>
+      <div class="feature-card fc-red" onclick="showPanel('kana');setTabByName('kana')">
+        <span class="fc-icon">あ</span>
+        <div class="fc-title">Kana Charts</div>
+        <div class="fc-desc">Full hiragana and katakana charts with audio. Tap to hear — learn by sound.</div>
+      </div>
+      <div class="feature-card fc-gold" onclick="showPanel('sentences');setTabByName('sentences')">
+        <span class="fc-icon">✍️</span>
+        <div class="fc-title">Sentence Builder</div>
+        <div class="fc-desc">Drag and drop word order exercises. Build real N5 sentences from scratch.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Progress -->
+  <div class="section">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Your progress</div>
+        <div class="section-title">Study Dashboard</div>
+      </div>
+      <button class="btn-outline" style="font-size:.78rem;padding:8px 14px;" onclick="resetProgress()">Reset</button>
+    </div>
+    <div class="progress-section">
+      <div class="prog-row">
+        <div class="prog-stat"><span class="prog-stat-num" id="prog-cards">0</span><div class="prog-stat-lbl">Cards Seen</div></div>
+        <div class="prog-stat"><span class="prog-stat-num" id="prog-correct">0</span><div class="prog-stat-lbl">Correct</div></div>
+        <div class="prog-stat"><span class="prog-stat-num" id="prog-kanji">0</span><div class="prog-stat-lbl">Kanji Mastered</div></div>
+        <div class="prog-stat"><span class="prog-stat-num" id="prog-streak">0</span><div class="prog-stat-lbl">Day Streak 🔥</div></div>
+      </div>
+      <div class="prog-bars">
+        <div class="prog-bar-row"><div class="prog-bar-label">Vocabulary</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-red" id="pb-vocab" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-vocab">0%</span></div>
+        <div class="prog-bar-row"><div class="prog-bar-label">Kanji</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-gold" id="pb-kanji" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-kanji">0%</span></div>
+        <div class="prog-bar-row"><div class="prog-bar-label">Grammar</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-teal" id="pb-grammar" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-grammar">0%</span></div>
+        <div class="prog-bar-row"><div class="prog-bar-label">Quiz</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-ink" id="pb-quiz" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-quiz">0%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- Lead Gen -->
+  <div class="lead-section">
+    <div class="lead-label">🎯 Free Study Pack</div>
+    <div class="lead-title">Get the N5 Cheat Sheet</div>
+    <p class="lead-sub">500+ vocab, all 103 kanji + grammar cheat sheet — delivered free. Join 12,000+ learners.</p>
+    <div class="lead-form">
+      <input class="lead-input" type="email" placeholder="your@email.com" id="lead-email">
+      <button class="lead-submit" onclick="submitLead()">Send Me the Pack →</button>
+    </div>
+    <div class="lead-badges">
+      <div class="lead-badge-item">🔒 No spam, ever</div>
+      <div class="lead-badge-item">📱 Instant delivery</div>
+      <div class="lead-badge-item">🆓 Completely free</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ─── PANEL: VOCABULARY FLASHCARDS ───────────────────────────────────────── -->
+<div id="panel-vocab" class="panel">
+  <div class="section" style="padding-top:80px;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Spaced Repetition</div>
+        <div class="section-title">Vocabulary Cards</div>
+      </div>
+      <button class="btn-outline" style="font-size:.78rem;padding:8px 14px;" onclick="shuffleCards()">🔀 Shuffle</button>
+    </div>
+
+    <div class="fp-counter" id="fcCounter">Card 1 of 20</div>
+    <div class="flashcard-progress" id="fcProgress"></div>
+
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="fc-face fc-front">
+          <div class="fc-jp" id="fc-jp">ありがとう</div>
+          <div class="fc-kana" id="fc-kana">arigatou</div>
+          <div class="fc-hint">Tap to reveal →</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-back-word" id="fc-back-word">ありがとう</div>
+          <div class="fc-back-romaji" id="fc-back-romaji">arigatou</div>
+          <div class="fc-back-meaning" id="fc-back-meaning">Thank you</div>
+          <div class="fc-back-example" id="fc-back-example">ありがとうございます。<br><em>Arigatou gozaimasu. — Thank you very much.</em></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flashcard-controls">
+      <button class="fc-btn audio" onclick="speakCurrent()">🔊</button>
+      <button class="fc-btn hard" onclick="markCard('hard')">✗ Hard</button>
+      <button class="fc-btn skip" onclick="nextCard()">→ Skip</button>
+      <button class="fc-btn good" onclick="markCard('good')">✓ Got it</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PANEL: KANJI ───────────────────────────────────────────────────────── -->
+<div id="panel-kanji" class="panel">
+  <div class="section" style="padding-top:80px;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">103 Characters</div>
+        <div class="section-title">N5 Kanji</div>
+      </div>
+    </div>
+    <div class="kanji-filter-bar">
+      <button class="k-filter-btn active" onclick="filterKanji('all',this)">All</button>
+      <button class="k-filter-btn" onclick="filterKanji('numbers',this)">Numbers</button>
+      <button class="k-filter-btn" onclick="filterKanji('nature',this)">Nature</button>
+      <button class="k-filter-btn" onclick="filterKanji('people',this)">People</button>
+      <button class="k-filter-btn" onclick="filterKanji('time',this)">Time</button>
+      <button class="k-filter-btn" onclick="filterKanji('mastered',this)">✓ Mastered</button>
+    </div>
+    <div class="kanji-grid" id="kanjiGrid"></div>
+  </div>
+</div>
+
+<!-- ─── PANEL: QUIZ ────────────────────────────────────────────────────────── -->
+<div id="panel-quiz" class="panel">
+  <div class="section" style="padding-top:80px;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">JLPT Style</div>
+        <div class="section-title">Practice Quiz</div>
+      </div>
+    </div>
+    <div class="quiz-type-tabs">
+      <button class="quiz-type-tab active" onclick="setQuizType('vocab',this)">Vocabulary</button>
+      <button class="quiz-type-tab" onclick="setQuizType('kanji',this)">Kanji Reading</button>
+      <button class="quiz-type-tab" onclick="setQuizType('grammar',this)">Grammar</button>
+      <button class="quiz-type-tab" onclick="setQuizType('listening',this)">Listening 🔊</button>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="quizProgressBar" style="width:0%"></div></div>
+    <div class="quiz-card">
+      <div class="quiz-q-label" id="quizQLabel">Question 1 of 10</div>
+      <div class="quiz-question" id="quizQuestion">すみません</div>
+      <div class="quiz-question-sub" id="quizQuestionSub">What does this mean?</div>
+      <div class="quiz-options" id="quizOptions"></div>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+      <div class="quiz-footer">
+        <div class="quiz-score">Score: <b id="quizScoreVal">0</b> / <span id="quizTotal">10</span></div>
+        <button class="btn-primary" style="font-size:.8rem;padding:9px 18px;" id="quizNextBtn" onclick="nextQuestion()" disabled>Next →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── PANEL: GRAMMAR ─────────────────────────────────────────────────────── -->
+<div id="panel-grammar" class="panel">
+  <div class="section" style="padding-top:80px;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">40+ Patterns</div>
+        <div class="section-title">Grammar Guide</div>
+      </div>
+    </div>
+    <div class="grammar-accordion" id="grammarList"></div>
+  </div>
+</div>
+
+<!-- ─── PANEL: KANA ────────────────────────────────────────────────────────── -->
+<div id="panel-kana" class="panel">
+  <div class="section" style="padding-top:80px;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Hiragana & Katakana</div>
+        <div class="section-title">Kana Charts</div>
+      </div>
+    </div>
+    <div class="kana-tabs">
+      <button class="kana-tab active" onclick="showKana('hiragana',this)">あ Hiragana</button>
+      <button class="kana-tab" onclick="showKana('katakana',this)">ア Katakana</button>
+    </div>
+    <div class="kana-grid" id="kanaGrid"></div>
+    <p style="font-size:.76rem;color:var(--ink4);margin-top:16px;font-weight:500;">Tap any character to hear its pronunciation.</p>
+  </div>
+</div>
+
+<!-- ─── PANEL: SENTENCES ──────────────────────────────────────────────────── -->
+<div id="panel-sentences" class="panel">
+  <div class="section" style="padding-top:80px;">
+    <div class="section-header">
+      <div>
+        <div class="section-label">Word Order Practice</div>
+        <div class="section-title">Sentence Builder</div>
+      </div>
+      <button class="btn-outline" style="font-size:.78rem;padding:8px 14px;" onclick="nextSentence()">Next →</button>
+    </div>
+    <div class="sentence-card">
+      <div class="sentence-prompt">Arrange the words to form the correct sentence:</div>
+      <div class="sentence-english" id="sentenceEnglish">I am a student.</div>
+    </div>
+    <div style="margin-bottom:10px;font-size:.74rem;color:var(--ink4);font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Word Bank</div>
+    <div class="word-bank" id="wordBank"></div>
+    <div style="margin-bottom:10px;font-size:.74rem;color:var(--ink4);font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Your Answer</div>
+    <div class="answer-area" id="answerArea"><span class="sentence-area-hint">Tap words above to build your sentence…</span></div>
+    <div class="sentence-actions">
+      <button class="s-btn check" onclick="checkSentence()">Check Answer</button>
+      <button class="s-btn reset" onclick="resetSentence()">↺ Reset</button>
+      <button class="fc-btn audio" style="margin-left:auto;" onclick="speakSentence()">🔊 Hear it</button>
+    </div>
+    <div class="sentence-result" id="sentenceResult"></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav">
+  <div class="bn-items">
+    <button class="bn-item active" id="bn-home" onclick="showPanel('home');setBnActive(this)"><span class="bn-icon">🏠</span><span class="bn-lbl">Home</span></button>
+    <button class="bn-item" id="bn-vocab" onclick="showPanel('vocab');setBnActive(this)"><span class="bn-icon">🃏</span><span class="bn-lbl">Vocab</span></button>
+    <button class="bn-item" id="bn-quiz" onclick="showPanel('quiz');setBnActive(this)"><span class="bn-icon">📝</span><span class="bn-lbl">Quiz</span></button>
+    <button class="bn-item" id="bn-kanji" onclick="showPanel('kanji');setBnActive(this)"><span class="bn-icon">漢</span><span class="bn-lbl">Kanji</span></button>
+    <button class="bn-item" id="bn-grammar" onclick="showPanel('grammar');setBnActive(this)"><span class="bn-icon">📖</span><span class="bn-lbl">Grammar</span></button>
+  </div>
+</nav>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMsg">Done!</span></div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════════════════════
+
+const VOCAB = [
+  {jp:'ありがとう',kana:'arigatou',en:'Thank you',ex:'ありがとうございます。',exEn:'Arigatou gozaimasu. — Thank you very much.'},
+  {jp:'すみません',kana:'sumimasen',en:'Excuse me / Sorry',ex:'すみません、どこですか？',exEn:'Sumimasen, doko desu ka? — Excuse me, where is it?'},
+  {jp:'はじめまして',kana:'hajimemashite',en:'Nice to meet you',ex:'はじめまして、田中です。',exEn:'Hajimemashite, Tanaka desu. — Nice to meet you, I\'m Tanaka.'},
+  {jp:'おはようございます',kana:'ohayou gozaimasu',en:'Good morning',ex:'おはようございます！',exEn:'Ohayou gozaimasu! — Good morning!'},
+  {jp:'こんにちは',kana:'konnichiwa',en:'Good afternoon / Hello',ex:'こんにちは、元気ですか？',exEn:'Konnichiwa, genki desu ka? — Hello, how are you?'},
+  {jp:'こんばんは',kana:'konbanwa',en:'Good evening',ex:'こんばんは、ただいま。',exEn:'Konbanwa, tadaima. — Good evening, I\'m home.'},
+  {jp:'さようなら',kana:'sayounara',en:'Goodbye',ex:'さようなら、またね。',exEn:'Sayounara, mata ne. — Goodbye, see you.'},
+  {jp:'わかりました',kana:'wakarimashita',en:'I understand',ex:'はい、わかりました。',exEn:'Hai, wakarimashita. — Yes, I understand.'},
+  {jp:'わかりません',kana:'wakarimasen',en:'I don\'t understand',ex:'すみません、わかりません。',exEn:'Sumimasen, wakarimasen. — Sorry, I don\'t understand.'},
+  {jp:'もう一度',kana:'mou ichido',en:'One more time',ex:'もう一度おねがいします。',exEn:'Mou ichido onegaishimasu. — One more time, please.'},
+  {jp:'たべもの',kana:'tabemono',en:'Food',ex:'このたべものはおいしいです。',exEn:'Kono tabemono wa oishii desu. — This food is delicious.'},
+  {jp:'のみもの',kana:'nomimono',en:'Drink / Beverage',ex:'のみものはなにがいいですか？',exEn:'Nomimono wa nani ga ii desu ka? — What would you like to drink?'},
+  {jp:'みず',kana:'mizu',en:'Water',ex:'みずをください。',exEn:'Mizu o kudasai. — Water, please.'},
+  {jp:'おちゃ',kana:'ocha',en:'Green tea',ex:'おちゃをのみます。',exEn:'Ocha o nomimasu. — I drink green tea.'},
+  {jp:'ごはん',kana:'gohan',en:'Rice / Meal',ex:'ごはんをたべます。',exEn:'Gohan o tabemasu. — I eat rice.'},
+  {jp:'がっこう',kana:'gakkou',en:'School',ex:'がっこうへいきます。',exEn:'Gakkou e ikimasu. — I go to school.'},
+  {jp:'せんせい',kana:'sensei',en:'Teacher',ex:'せんせいはやさしいです。',exEn:'Sensei wa yasashii desu. — The teacher is kind.'},
+  {jp:'がくせい',kana:'gakusei',en:'Student',ex:'わたしはがくせいです。',exEn:'Watashi wa gakusei desu. — I am a student.'},
+  {jp:'ともだち',kana:'tomodachi',en:'Friend',ex:'ともだちとあそびます。',exEn:'Tomodachi to asobimasu. — I play with friends.'},
+  {jp:'かぞく',kana:'kazoku',en:'Family',ex:'かぞくがすきです。',exEn:'Kazoku ga suki desu. — I love my family.'},
+];
+
+const KANJI_DATA = [
+  {char:'一',on:'イチ',kun:'ひと',en:'One',strokes:1,group:'numbers'},
+  {char:'二',on:'ニ',kun:'ふた',en:'Two',strokes:2,group:'numbers'},
+  {char:'三',on:'サン',kun:'み',en:'Three',strokes:3,group:'numbers'},
+  {char:'四',on:'シ',kun:'よん',en:'Four',strokes:5,group:'numbers'},
+  {char:'五',on:'ゴ',kun:'いつ',en:'Five',strokes:4,group:'numbers'},
+  {char:'六',on:'ロク',kun:'む',en:'Six',strokes:4,group:'numbers'},
+  {char:'七',on:'シチ',kun:'なな',en:'Seven',strokes:2,group:'numbers'},
+  {char:'八',on:'ハチ',kun:'や',en:'Eight',strokes:2,group:'numbers'},
+  {char:'九',on:'キュウ',kun:'ここの',en:'Nine',strokes:2,group:'numbers'},
+  {char:'十',on:'ジュウ',kun:'とお',en:'Ten',strokes:2,group:'numbers'},
+  {char:'百',on:'ヒャク',kun:'もも',en:'Hundred',strokes:6,group:'numbers'},
+  {char:'千',on:'セン',kun:'ち',en:'Thousand',strokes:3,group:'numbers'},
+  {char:'万',on:'マン',kun:'よろず',en:'Ten thousand',strokes:3,group:'numbers'},
+  {char:'日',on:'ニチ',kun:'ひ',en:'Sun / Day',strokes:4,group:'nature'},
+  {char:'月',on:'ゲツ',kun:'つき',en:'Moon / Month',strokes:4,group:'nature'},
+  {char:'火',on:'カ',kun:'ひ',en:'Fire',strokes:4,group:'nature'},
+  {char:'水',on:'スイ',kun:'みず',en:'Water',strokes:4,group:'nature'},
+  {char:'木',on:'モク',kun:'き',en:'Tree / Wood',strokes:4,group:'nature'},
+  {char:'金',on:'キン',kun:'かね',en:'Gold / Money',strokes:8,group:'nature'},
+  {char:'土',on:'ド',kun:'つち',en:'Earth / Soil',strokes:3,group:'nature'},
+  {char:'山',on:'サン',kun:'やま',en:'Mountain',strokes:3,group:'nature'},
+  {char:'川',on:'セン',kun:'かわ',en:'River',strokes:3,group:'nature'},
+  {char:'空',on:'クウ',kun:'そら',en:'Sky / Air',strokes:8,group:'nature'},
+  {char:'雨',on:'ウ',kun:'あめ',en:'Rain',strokes:8,group:'nature'},
+  {char:'人',on:'ジン',kun:'ひと',en:'Person',strokes:2,group:'people'},
+  {char:'男',on:'ダン',kun:'おとこ',en:'Man',strokes:7,group:'people'},
+  {char:'女',on:'ジョ',kun:'おんな',en:'Woman',strokes:3,group:'people'},
+  {char:'子',on:'シ',kun:'こ',en:'Child',strokes:3,group:'people'},
+  {char:'父',on:'フ',kun:'ちち',en:'Father',strokes:4,group:'people'},
+  {char:'母',on:'ボ',kun:'はは',en:'Mother',strokes:5,group:'people'},
+  {char:'年',on:'ネン',kun:'とし',en:'Year',strokes:6,group:'time'},
+  {char:'月',on:'ゲツ',kun:'つき',en:'Month',strokes:4,group:'time'},
+  {char:'週',on:'シュウ',kun:'しゅう',en:'Week',strokes:11,group:'time'},
+  {char:'時',on:'ジ',kun:'とき',en:'Time / Hour',strokes:10,group:'time'},
+  {char:'分',on:'フン',kun:'わける',en:'Minute / Part',strokes:4,group:'time'},
+  {char:'今',on:'コン',kun:'いま',en:'Now',strokes:4,group:'time'},
+  {char:'先',on:'セン',kun:'さき',en:'Previous / First',strokes:6,group:'time'},
+  {char:'後',on:'ゴ',kun:'うしろ',en:'After / Behind',strokes:9,group:'time'},
+  {char:'前',on:'ゼン',kun:'まえ',en:'Before / Front',strokes:9,group:'time'},
+  {char:'口',on:'コウ',kun:'くち',en:'Mouth',strokes:3,group:'people'},
+  {char:'手',on:'シュ',kun:'て',en:'Hand',strokes:4,group:'people'},
+  {char:'目',on:'モク',kun:'め',en:'Eye',strokes:5,group:'people'},
+  {char:'耳',on:'ジ',kun:'みみ',en:'Ear',strokes:6,group:'people'},
+  {char:'足',on:'ソク',kun:'あし',en:'Foot / Leg',strokes:7,group:'people'},
+];
+
+const QUIZ_QUESTIONS = {
+  vocab: [
+    {q:'すみません',sub:'What does this mean?',opts:['Excuse me / Sorry','Thank you','Goodbye','Good morning'],ans:0},
+    {q:'たべます',sub:'What does this verb mean?',opts:['To drink','To eat','To sleep','To walk'],ans:1},
+    {q:'おいしい',sub:'This adjective means:',opts:['Beautiful','Hot','Delicious','Expensive'],ans:2},
+    {q:'Which word means "friend"?',sub:'Choose the correct word.',opts:['かぞく','せんせい','ともだち','がくせい'],ans:2},
+    {q:'What is "school" in Japanese?',sub:'Choose the correct word.',opts:['がっこう','びょういん','えき','としょかん'],ans:0},
+    {q:'おおきい',sub:'This adjective means:',opts:['Small','Fast','Big','Quiet'],ans:2},
+    {q:'ちいさい',sub:'This adjective means:',opts:['Big','Small','Old','New'],ans:1},
+    {q:'たかい',sub:'This word can mean:',opts:['Cheap / Low','Tall / Expensive','Short','Wide'],ans:1},
+    {q:'Which means "water"?',sub:'',opts:['みず','おちゃ','コーヒー','ジュース'],ans:0},
+    {q:'わたし',sub:'What is this pronoun?',opts:['You','He/She','I / Me','We'],ans:2},
+  ],
+  kanji: [
+    {q:'日',sub:'What is the reading of this kanji?',opts:['つき','ひ / にち','き','かわ'],ans:1},
+    {q:'山',sub:'What does this kanji mean?',opts:['River','Ocean','Mountain','Forest'],ans:2},
+    {q:'月',sub:'This kanji means:',opts:['Sun','Star','Moon / Month','Sky'],ans:2},
+    {q:'火',sub:'Reading for this kanji:',opts:['みず','つち','かぜ','ひ / か'],ans:3},
+    {q:'Which kanji means "water"?',sub:'',opts:['木','水','火','土'],ans:1},
+    {q:'人',sub:'Meaning:',opts:['Heart','Person','Hand','Foot'],ans:1},
+    {q:'Which kanji is "ten"?',sub:'',opts:['百','一','十','千'],ans:2},
+    {q:'大',sub:'Reading (kun):',opts:['ちいさい','たかい','おおきい','ひくい'],ans:2},
+    {q:'小',sub:'Meaning:',opts:['Big','Medium','Small','Round'],ans:2},
+    {q:'Which kanji means "woman"?',sub:'',opts:['男','子','人','女'],ans:3},
+  ],
+  grammar: [
+    {q:'わたし_がくせいです',sub:'Fill the blank — topic marker:',opts:['が','を','は','に'],ans:2},
+    {q:'The sentence ending ～ません means:',sub:'Choose the negative form meaning.',opts:['Polite positive','Polite negative','Past positive','Past negative'],ans:1},
+    {q:'がっこう_いきます',sub:'Fill the blank — direction particle:',opts:['を','は','に / へ','で'],ans:2},
+    {q:'～たい means:',sub:'Choose the correct interpretation.',opts:['Want to do','Have done','Must do','Don\'t want to do'],ans:0},
+    {q:'The particle を marks:',sub:'',opts:['Subject','Object (direct)','Time','Location'],ans:1},
+    {q:'Where does the verb go in Japanese sentences?',sub:'',opts:['Beginning','Middle','Anywhere','End'],ans:3},
+    {q:'The particle で marks:',sub:'',opts:['Direction','Location of action / means','Subject','Object'],ans:1},
+    {q:'ここ refers to:',sub:'',opts:['That place (far)','This place (near speaker)','That place (near listener)','Where?'],ans:1},
+    {q:'～ましょう means:',sub:'Choose the correct interpretation.',opts:['Please do','Let\'s do','I will do','Did you do?'],ans:1},
+    {q:'The particle が marks:',sub:'',opts:['Object','Direction','Subject / subject of feeling','Time'],ans:2},
+  ],
+  listening: [
+    {q:'こんにちは',sub:'🔊 Tap the speaker, then choose the meaning.',opts:['Good morning','Hello / Good afternoon','Good evening','Goodbye'],ans:1,audio:'こんにちは'},
+    {q:'ありがとうございます',sub:'🔊 Listen and choose:',opts:['Excuse me','I understand','Thank you very much','See you later'],ans:2,audio:'ありがとうございます'},
+    {q:'いただきます',sub:'🔊 Said before eating:',opts:['Goodbye','Thank you for the food (before eating)','Thank you for the food (after)','Good night'],ans:1,audio:'いただきます'},
+    {q:'おやすみなさい',sub:'🔊 Said at night:',opts:['Good morning','Good night','See you','Welcome home'],ans:1,audio:'おやすみなさい'},
+    {q:'ただいま',sub:'🔊 Said when arriving home:',opts:['I\'m going out','Welcome home','I\'m home','Goodbye'],ans:2,audio:'ただいま'},
+  ],
+};
+
+const GRAMMAR_POINTS = [
+  {title:'〜は〜です',tag:'Basic',pattern:'[Noun] は [Noun/Adj] です',desc:'The most fundamental Japanese sentence. は (wa) marks the topic. です (desu) is a polite copula meaning "is/am/are".',examples:[{jp:'わたしはがくせいです。',ro:'Watashi wa gakusei desu.',en:'I am a student.'},{jp:'これはほんです。',ro:'Kore wa hon desu.',en:'This is a book.'}]},
+  {title:'〜は〜ではありません',tag:'Negative',pattern:'[Topic] は [Noun] ではありません',desc:'Negative form of the basic sentence. ではありません (dewa arimasen) means "is not". In casual speech: じゃない (ja nai).',examples:[{jp:'これはえんぴつではありません。',ro:'Kore wa enpitsu dewa arimasen.',en:'This is not a pencil.'},{jp:'わたしはせんせいじゃありません。',ro:'Watashi wa sensei ja arimasen.',en:'I am not a teacher.'}]},
+  {title:'〜を〜ます',tag:'Verb',pattern:'[Object] を [Verb]-ます',desc:'を (o) marks the direct object — the thing being acted upon. ます (masu) ending makes verbs polite.',examples:[{jp:'パンをたべます。',ro:'Pan o tabemasu.',en:'I eat bread.'},{jp:'みずをのみます。',ro:'Mizu o nomimasu.',en:'I drink water.'}]},
+  {title:'〜に / へ行きます',tag:'Movement',pattern:'[Place] に/へ いきます',desc:'に (ni) and へ (e) mark direction or destination. いきます (ikimasu) = go, きます (kimasu) = come.',examples:[{jp:'がっこうにいきます。',ro:'Gakkou ni ikimasu.',en:'I go to school.'},{jp:'にほんへいきます。',ro:'Nihon e ikimasu.',en:'I go to Japan.'}]},
+  {title:'〜で',tag:'Particle',pattern:'[Location] で [Action]',desc:'で (de) marks the location where an action takes place, or the means/tool used to do something.',examples:[{jp:'としょかんでべんきょうします。',ro:'Toshokan de benkyou shimasu.',en:'I study at the library.'},{jp:'バスでいきます。',ro:'Basu de ikimasu.',en:'I go by bus.'}]},
+  {title:'〜が好きです',tag:'Feeling',pattern:'[Noun] が すきです / きらいです',desc:'が (ga) marks the object of liking/disliking. すき = like, きらい = dislike. Note: use が, not を.',examples:[{jp:'ねこがすきです。',ro:'Neko ga suki desu.',en:'I like cats.'},{jp:'からいたべものがすきじゃありません。',ro:'Karai tabemono ga suki ja arimasen.',en:'I don\'t like spicy food.'}]},
+  {title:'〜たい',tag:'Desire',pattern:'[Verb-stem] たい + です',desc:'Expresses a desire or want. Attach たい to the verb stem (remove ます). The subject is always "I".',examples:[{jp:'すしをたべたいです。',ro:'Sushi o tabetai desu.',en:'I want to eat sushi.'},{jp:'にほんごをはなしたいです。',ro:'Nihongo o hanashitai desu.',en:'I want to speak Japanese.'}]},
+  {title:'〜ましょう',tag:'Suggestion',pattern:'[Verb-stem] ましょう',desc:'Polite "let\'s do" form. Used to suggest doing something together. Equivalent to "shall we" or "let\'s".',examples:[{jp:'たべましょう！',ro:'Tabemashou!',en:'Let\'s eat!'},{jp:'いきましょうか？',ro:'Ikimashou ka?',en:'Shall we go?'}]},
+  {title:'〜ている',tag:'Progressive',pattern:'[Verb-て] います',desc:'Indicates an action currently in progress (like "-ing" in English) or a resulting state.',examples:[{jp:'いまたべています。',ro:'Ima tabete imasu.',en:'I am eating now.'},{jp:'かれはにほんごをべんきょうしています。',ro:'Kare wa nihongo o benkyou shite imasu.',en:'He is studying Japanese.'}]},
+  {title:'〜てください',tag:'Request',pattern:'[Verb-て] ください',desc:'Polite request form meaning "please do ~". Very common in daily life and essential for N5.',examples:[{jp:'みてください。',ro:'Mite kudasai.',en:'Please look.'},{jp:'もういちどいってください。',ro:'Mou ichido itte kudasai.',en:'Please say it one more time.'}]},
+];
+
+const SENTENCES = [
+  {en:'I am a student.',words:['わたしは','がくせい','です'],answer:'わたしはがくせいです'},
+  {en:'This is a book.',words:['これは','ほん','です'],answer:'これはほんです'},
+  {en:'I eat bread.',words:['パンを','たべます','わたしは'],answer:'わたしはパンをたべます'},
+  {en:'I go to school.',words:['がっこうに','わたしは','いきます'],answer:'わたしはがっこうにいきます'},
+  {en:'The teacher is kind.',words:['せんせいは','やさしい','です'],answer:'せんせいはやさしいです'},
+  {en:'I like cats.',words:['ねこが','わたしは','すきです'],answer:'わたしはねこがすきです'},
+  {en:'I want to eat sushi.',words:['すしを','わたしは','たべたいです'],answer:'わたしはすしをたべたいです'},
+  {en:'Let\'s eat!',words:['たべ','ましょう'],answer:'たべましょう'},
+];
+
+const HIRAGANA = [
+  {char:'あ',r:'a'},{char:'い',r:'i'},{char:'う',r:'u'},{char:'え',r:'e'},{char:'お',r:'o'},
+  {char:'か',r:'ka'},{char:'き',r:'ki'},{char:'く',r:'ku'},{char:'け',r:'ke'},{char:'こ',r:'ko'},
+  {char:'さ',r:'sa'},{char:'し',r:'shi'},{char:'す',r:'su'},{char:'せ',r:'se'},{char:'そ',r:'so'},
+  {char:'た',r:'ta'},{char:'ち',r:'chi'},{char:'つ',r:'tsu'},{char:'て',r:'te'},{char:'と',r:'to'},
+  {char:'な',r:'na'},{char:'に',r:'ni'},{char:'ぬ',r:'nu'},{char:'ね',r:'ne'},{char:'の',r:'no'},
+  {char:'は',r:'ha'},{char:'ひ',r:'hi'},{char:'ふ',r:'fu'},{char:'へ',r:'he'},{char:'ほ',r:'ho'},
+  {char:'ま',r:'ma'},{char:'み',r:'mi'},{char:'む',r:'mu'},{char:'め',r:'me'},{char:'も',r:'mo'},
+  {char:'や',r:'ya'},{char:'',r:''},{char:'ゆ',r:'yu'},{char:'',r:''},{char:'よ',r:'yo'},
+  {char:'ら',r:'ra'},{char:'り',r:'ri'},{char:'る',r:'ru'},{char:'れ',r:'re'},{char:'ろ',r:'ro'},
+  {char:'わ',r:'wa'},{char:'',r:''},{char:'を',r:'wo'},{char:'',r:''},{char:'ん',r:'n'},
+];
+
+const KATAKANA = [
+  {char:'ア',r:'a'},{char:'イ',r:'i'},{char:'ウ',r:'u'},{char:'エ',r:'e'},{char:'オ',r:'o'},
+  {char:'カ',r:'ka'},{char:'キ',r:'ki'},{char:'ク',r:'ku'},{char:'ケ',r:'ke'},{char:'コ',r:'ko'},
+  {char:'サ',r:'sa'},{char:'シ',r:'shi'},{char:'ス',r:'su'},{char:'セ',r:'se'},{char:'ソ',r:'so'},
+  {char:'タ',r:'ta'},{char:'チ',r:'chi'},{char:'ツ',r:'tsu'},{char:'テ',r:'te'},{char:'ト',r:'to'},
+  {char:'ナ',r:'na'},{char:'ニ',r:'ni'},{char:'ヌ',r:'nu'},{char:'ネ',r:'ne'},{char:'ノ',r:'no'},
+  {char:'ハ',r:'ha'},{char:'ヒ',r:'hi'},{char:'フ',r:'fu'},{char:'ヘ',r:'he'},{char:'ホ',r:'ho'},
+  {char:'マ',r:'ma'},{char:'ミ',r:'mi'},{char:'ム',r:'mu'},{char:'メ',r:'me'},{char:'モ',r:'mo'},
+  {char:'ヤ',r:'ya'},{char:'',r:''},{char:'ユ',r:'yu'},{char:'',r:''},{char:'ヨ',r:'yo'},
+  {char:'ラ',r:'ra'},{char:'リ',r:'ri'},{char:'ル',r:'ru'},{char:'レ',r:'re'},{char:'ロ',r:'ro'},
+  {char:'ワ',r:'wa'},{char:'',r:''},{char:'ヲ',r:'wo'},{char:'',r:''},{char:'ン',r:'n'},
+];
+
+// ═══════════════════════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════════════════════
+
+let progress = JSON.parse(localStorage.getItem('nihongo-progress') || '{"cards":0,"correct":0,"kanji":0,"streak":0,"masteredKanji":[],"vocabPct":0,"kanjiPct":0,"grammarPct":0,"quizPct":0,"lastVisit":null}');
+let fcIndex = 0;
+let fcShuffled = [...VOCAB];
+let fcFlipped = false;
+let quizType = 'vocab';
+let quizIndex = 0;
+let quizScore = 0;
+let quizQuestions = [];
+let quizAnswered = false;
+let currentSentence = 0;
+let sentenceAnswer = [];
+let sentenceWords = [];
+let currentKana = 'hiragana';
+
+// ═══════════════════════════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  const panel = document.getElementById('panel-' + id);
+  if (panel) panel.classList.add('active');
+  window.scrollTo(0, 0);
+  if (id === 'kanji') renderKanji('all');
+  if (id === 'grammar') renderGrammar();
+  if (id === 'kana') renderKana('hiragana');
+  if (id === 'sentences') renderSentence();
+  if (id === 'quiz') initQuiz();
+  if (id === 'home') updateProgress();
+}
+
+function setTab(el) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function setTabByName(name) {
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    const oc = t.getAttribute('onclick') || '';
+    if (oc.includes("'" + name + "'")) { t.classList.add('active'); }
+    else t.classList.remove('active');
+  });
+}
+
+function setBnActive(el) {
+  document.querySelectorAll('.bn-item').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FLASHCARDS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderCard() {
+  const card = fcShuffled[fcIndex];
+  document.getElementById('fc-jp').textContent = card.jp;
+  document.getElementById('fc-kana').textContent = card.kana;
+  document.getElementById('fc-back-word').textContent = card.jp;
+  document.getElementById('fc-back-romaji').textContent = card.kana;
+  document.getElementById('fc-back-meaning').textContent = card.en;
+  document.getElementById('fc-back-example').innerHTML = card.ex + '<br><em>' + card.exEn + '</em>';
+  document.getElementById('fcCounter').textContent = 'Card ' + (fcIndex + 1) + ' of ' + fcShuffled.length;
+
+  // unflip
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  fcFlipped = false;
+
+  // progress dots
+  const prog = document.getElementById('fcProgress');
+  prog.innerHTML = '';
+  const show = Math.min(fcShuffled.length, 10);
+  for (let i = 0; i < show; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'fp-dot' + (i < fcIndex ? ' done' : i === fcIndex ? ' current' : '');
+    prog.appendChild(dot);
+  }
+}
+
+function flipCard() {
+  fcFlipped = !fcFlipped;
+  document.getElementById('flashcard').classList.toggle('flipped', fcFlipped);
+}
+
+function nextCard() {
+  fcIndex = (fcIndex + 1) % fcShuffled.length;
+  renderCard();
+  progress.cards++;
+  saveProgress();
+}
+
+function markCard(rating) {
+  if (rating === 'good') {
+    progress.correct++;
+    progress.cards++;
+    progress.vocabPct = Math.min(100, Math.round(progress.correct / VOCAB.length * 100));
+    showToast('✓ Marked as known!');
+  } else {
+    progress.cards++;
+    showToast('↩ We\'ll review this again!', '⚡');
+  }
+  saveProgress();
+  nextCard();
+}
+
+function speakCurrent() {
+  const card = fcShuffled[fcIndex];
+  speak(card.jp);
+}
+
+function shuffleCards() {
+  fcShuffled = [...VOCAB].sort(() => Math.random() - .5);
+  fcIndex = 0;
+  renderCard();
+  showToast('🔀 Cards shuffled!');
+}
+
+// Initialize cards
+renderCard();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// KANJI
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderKanji(group) {
+  const grid = document.getElementById('kanjiGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  const filtered = group === 'all' ? KANJI_DATA :
+    group === 'mastered' ? KANJI_DATA.filter(k => progress.masteredKanji.includes(k.char)) :
+    KANJI_DATA.filter(k => k.group === group);
+
+  filtered.forEach(k => {
+    const mastered = progress.masteredKanji.includes(k.char);
+    const tile = document.createElement('div');
+    tile.className = 'kanji-tile' + (mastered ? ' mastered' : '');
+    tile.innerHTML = `
+      <span class="kt-char">${k.char}</span>
+      <span class="kt-reading">${k.on} / ${k.kun}</span>
+      <div class="kt-meaning">${k.en}</div>
+      <span class="kt-stroke">${k.strokes}str</span>
+    `;
+    tile.addEventListener('click', () => {
+      speak(k.kun.split('.')[0] || k.char);
+      if (!mastered) {
+        tile.classList.add('mastered');
+        progress.masteredKanji.push(k.char);
+        progress.kanji = progress.masteredKanji.length;
+        progress.kanjiPct = Math.round(progress.kanji / KANJI_DATA.length * 100);
+        saveProgress();
+        showToast('✓ ' + k.char + ' — ' + k.en + ' mastered!');
+      } else {
+        showToast('🔊 ' + k.char + ' — ' + k.en);
+      }
+    });
+    grid.appendChild(tile);
+  });
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p style="color:var(--ink4);font-size:.84rem;padding:20px;grid-column:1/-1;">No kanji in this category yet. Keep studying!</p>';
+  }
+}
+
+function filterKanji(group, btn) {
+  document.querySelectorAll('.k-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderKanji(group);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// QUIZ
+// ═══════════════════════════════════════════════════════════════════════════
+
+function setQuizType(type, btn) {
+  document.querySelectorAll('.quiz-type-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  quizType = type;
+  initQuiz();
+}
+
+function initQuiz() {
+  quizQuestions = [...(QUIZ_QUESTIONS[quizType] || QUIZ_QUESTIONS.vocab)].sort(() => Math.random() - .5);
+  quizIndex = 0;
+  quizScore = 0;
+  quizAnswered = false;
+  renderQuestion();
+}
+
+function renderQuestion() {
+  if (quizIndex >= quizQuestions.length) {
+    showQuizComplete();
+    return;
+  }
+  const q = quizQuestions[quizIndex];
+  document.getElementById('quizQLabel').textContent = 'Question ' + (quizIndex + 1) + ' of ' + quizQuestions.length;
+  document.getElementById('quizQuestion').textContent = q.q;
+  document.getElementById('quizQuestionSub').textContent = q.sub;
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('quizFeedback').className = 'quiz-feedback';
+  document.getElementById('quizScoreVal').textContent = quizScore;
+  document.getElementById('quizTotal').textContent = quizQuestions.length;
+  document.getElementById('quizNextBtn').disabled = true;
+  document.getElementById('quizProgressBar').style.width = (quizIndex / quizQuestions.length * 100) + '%';
+
+  const opts = document.getElementById('quizOptions');
+  opts.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => answerQuiz(i, q.ans, btn));
+    opts.appendChild(btn);
+  });
+  quizAnswered = false;
+
+  // Auto-play audio for listening questions
+  if (quizType === 'listening' && q.audio) {
+    setTimeout(() => speak(q.audio), 400);
+  }
+}
+
+function answerQuiz(chosen, correct, btn) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts[correct].classList.add('correct');
+  if (chosen !== correct) {
+    btn.classList.add('wrong');
+  } else {
+    quizScore++;
+    progress.correct++;
+  }
+  opts.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('quizFeedback');
+  if (chosen === correct) {
+    fb.textContent = '✓ Correct! Well done.';
+    fb.className = 'quiz-feedback correct';
+    showToast('✓ Correct!');
+  } else {
+    fb.textContent = '✗ Wrong. The answer was: ' + QUIZ_QUESTIONS[quizType][quizIndex]?.opts[correct];
+    fb.className = 'quiz-feedback wrong';
+  }
+
+  progress.quizPct = Math.min(100, Math.round(quizScore / quizQuestions.length * 100));
+  document.getElementById('quizScoreVal').textContent = quizScore;
+  document.getElementById('quizNextBtn').disabled = false;
+  saveProgress();
+}
+
+function nextQuestion() {
+  quizIndex++;
+  renderQuestion();
+}
+
+function showQuizComplete() {
+  const pct = Math.round(quizScore / quizQuestions.length * 100);
+  document.getElementById('quizQuestion').textContent = pct >= 80 ? '🎉 Excellent!' : pct >= 60 ? '👍 Good work!' : '📚 Keep Practicing!';
+  document.getElementById('quizQuestionSub').textContent = 'You scored ' + quizScore + ' / ' + quizQuestions.length + ' (' + pct + '%)';
+  document.getElementById('quizOptions').innerHTML = '';
+  document.getElementById('quizFeedback').textContent = '';
+  document.getElementById('quizNextBtn').textContent = '🔄 Restart';
+  document.getElementById('quizNextBtn').disabled = false;
+  document.getElementById('quizNextBtn').onclick = initQuiz;
+  document.getElementById('quizProgressBar').style.width = '100%';
+  showToast('Quiz complete! ' + quizScore + '/' + quizQuestions.length, '🎌');
+}
+
+initQuiz();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GRAMMAR
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderGrammar() {
+  const list = document.getElementById('grammarList');
+  if (!list || list.children.length > 0) return;
+  GRAMMAR_POINTS.forEach((g, i) => {
+    const item = document.createElement('div');
+    item.className = 'ga-item';
+    item.innerHTML = `
+      <div class="ga-header" onclick="toggleGrammar(${i})">
+        <div><span class="ga-title">${g.title}</span><span class="ga-tag">${g.tag}</span></div>
+        <span class="ga-arrow">▼</span>
+      </div>
+      <div class="ga-body">
+        <div class="ga-pattern">${g.pattern}</div>
+        <p class="ga-desc">${g.desc}</p>
+        <div class="ga-examples">${g.examples.map(ex => `
+          <div class="ga-ex">
+            <div class="ga-ex-jp">${ex.jp}</div>
+            <div class="ga-ex-romaji">${ex.ro}</div>
+            <div class="ga-ex-en">${ex.en}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+    `;
+    list.appendChild(item);
+  });
+  progress.grammarPct = Math.min(100, progress.grammarPct + 10);
+  saveProgress();
+}
+
+function toggleGrammar(i) {
+  const items = document.querySelectorAll('.ga-item');
+  items[i].classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// KANA
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderKana(type) {
+  currentKana = type;
+  const data = type === 'hiragana' ? HIRAGANA : KATAKANA;
+  const grid = document.getElementById('kanaGrid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  data.forEach(k => {
+    const cell = document.createElement('div');
+    if (!k.char) {
+      cell.className = 'kana-cell';
+      cell.style.background = 'transparent';
+      cell.style.border = 'none';
+    } else {
+      cell.className = 'kana-cell';
+      cell.innerHTML = `<span class="kana-char">${k.char}</span><span class="kana-romaji">${k.r}</span>`;
+      cell.addEventListener('click', () => speak(k.char));
+    }
+    grid.appendChild(cell);
+  });
+}
+
+function showKana(type, btn) {
+  document.querySelectorAll('.kana-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderKana(type);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SENTENCE BUILDER
+// ═══════════════════════════════════════════════════════════════════════════
+
+function renderSentence() {
+  const s = SENTENCES[currentSentence];
+  document.getElementById('sentenceEnglish').textContent = s.en;
+  sentenceAnswer = [];
+  sentenceWords = [...s.words].sort(() => Math.random() - .5);
+
+  const bank = document.getElementById('wordBank');
+  bank.innerHTML = '';
+  sentenceWords.forEach((w, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'word-chip';
+    chip.textContent = w;
+    chip.dataset.idx = i;
+    chip.addEventListener('click', () => addWord(chip, w, i));
+    bank.appendChild(chip);
+  });
+
+  const area = document.getElementById('answerArea');
+  area.innerHTML = '<span class="sentence-area-hint">Tap words above to build your sentence…</span>';
+  area.className = 'answer-area';
+
+  const result = document.getElementById('sentenceResult');
+  result.className = 'sentence-result';
+  result.textContent = '';
+}
+
+function addWord(chip, word, idx) {
+  if (chip.classList.contains('used')) return;
+  chip.classList.add('used');
+  sentenceAnswer.push({word, idx});
+
+  const area = document.getElementById('answerArea');
+  const hint = area.querySelector('.sentence-area-hint');
+  if (hint) hint.remove();
+
+  const ac = document.createElement('div');
+  ac.className = 'answer-chip';
+  ac.textContent = word;
+  ac.addEventListener('click', () => removeWord(ac, chip, idx));
+  area.appendChild(ac);
+}
+
+function removeWord(ac, chip, idx) {
+  ac.remove();
+  chip.classList.remove('used');
+  sentenceAnswer = sentenceAnswer.filter(a => !(a.idx === idx && a.word === chip.textContent));
+  const area = document.getElementById('answerArea');
+  if (area.children.length === 0) {
+    area.innerHTML = '<span class="sentence-area-hint">Tap words above to build your sentence…</span>';
+  }
+}
+
+function checkSentence() {
+  const s = SENTENCES[currentSentence];
+  const userAnswer = sentenceAnswer.map(a => a.word).join('');
+  const correct = userAnswer === s.answer;
+  const result = document.getElementById('sentenceResult');
+  const area = document.getElementById('answerArea');
+
+  result.className = 'sentence-result show ' + (correct ? 'correct' : 'wrong');
+  if (correct) {
+    result.textContent = '✓ Correct! ' + s.answer;
+    area.className = 'answer-area correct-area';
+    showToast('✓ Perfect sentence!');
+    progress.correct++;
+    saveProgress();
+  } else {
+    result.textContent = '✗ Not quite. Correct: ' + s.answer;
+    area.className = 'answer-area wrong-area';
+    showToast('Not quite. Try again!', '⚡');
+  }
+}
+
+function resetSentence() {
+  renderSentence();
+}
+
+function nextSentence() {
+  currentSentence = (currentSentence + 1) % SENTENCES.length;
+  renderSentence();
+}
+
+function speakSentence() {
+  const s = SENTENCES[currentSentence];
+  speak(s.answer);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// AUDIO
+// ═══════════════════════════════════════════════════════════════════════════
+
+function speak(text) {
+  if (!('speechSynthesis' in window)) {
+    showToast('Audio not supported in this browser.', '⚠️');
+    return;
+  }
+  speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = 'ja-JP';
+  utter.rate = 0.85;
+  utter.pitch = 1;
+  // Try to get a Japanese voice
+  const voices = speechSynthesis.getVoices();
+  const jaVoice = voices.find(v => v.lang.startsWith('ja'));
+  if (jaVoice) utter.voice = jaVoice;
+  speechSynthesis.speak(utter);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PROGRESS
+// ═══════════════════════════════════════════════════════════════════════════
+
+function updateProgress() {
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  set('prog-cards', progress.cards);
+  set('prog-correct', progress.correct);
+  set('prog-kanji', progress.kanji);
+  set('prog-streak', progress.streak);
+
+  const setBar = (barId, pctId, pct) => {
+    const bar = document.getElementById(barId);
+    const pctEl = document.getElementById(pctId);
+    if (bar) bar.style.width = pct + '%';
+    if (pctEl) pctEl.textContent = pct + '%';
+  };
+  setBar('pb-vocab', 'pct-vocab', progress.vocabPct || 0);
+  setBar('pb-kanji', 'pct-kanji', progress.kanjiPct || 0);
+  setBar('pb-grammar', 'pct-grammar', progress.grammarPct || 0);
+  setBar('pb-quiz', 'pct-quiz', progress.quizPct || 0);
+}
+
+function saveProgress() {
+  localStorage.setItem('nihongo-progress', JSON.stringify(progress));
+  updateProgress();
+}
+
+function resetProgress() {
+  if (confirm('Reset all progress? This cannot be undone.')) {
+    progress = {cards:0,correct:0,kanji:0,streak:0,masteredKanji:[],vocabPct:0,kanjiPct:0,grammarPct:0,quizPct:0,lastVisit:null};
+    saveProgress();
+    showToast('Progress reset.', '🔄');
+  }
+}
+
+// Streak tracking
+function checkStreak() {
+  const today = new Date().toDateString();
+  if (progress.lastVisit !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (progress.lastVisit === yesterday) {
+      progress.streak++;
+    } else if (progress.lastVisit !== today) {
+      progress.streak = 1;
+    }
+    progress.lastVisit = today;
+    saveProgress();
+  }
+}
+checkStreak();
+updateProgress();
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════════════════════════════════
+
+let toastTimer;
+function showToast(msg, icon) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  document.getElementById('toastIcon').textContent = icon || '✅';
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// LEAD GEN
+// ═══════════════════════════════════════════════════════════════════════════
+
+function submitLead() {
+  const email = document.getElementById('lead-email').value.trim();
+  if (!email || !email.includes('@')) {
+    showToast('Please enter a valid email address.', '⚠️');
+    return;
+  }
+  // In production: send to your email service (Mailchimp, ConvertKit, etc.)
+  showToast('🎌 Study pack sent! Check your inbox.', '📬');
+  document.getElementById('lead-email').value = '';
+  // Store locally for now
+  const leads = JSON.parse(localStorage.getItem('nihongo-leads') || '[]');
+  leads.push({email, date: new Date().toISOString()});
+  localStorage.setItem('nihongo-leads', JSON.stringify(leads));
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PWA INSTALL
+// ═══════════════════════════════════════════════════════════════════════════
+
+let deferredPrompt;
+let swRegistration;
+
+const isIos = /iphone|ipad|ipod/i.test(navigator.userAgent);
+const isInStandaloneMode = window.matchMedia('(display-mode: standalone)').matches
+  || window.navigator.standalone === true;
+
+// On iOS Safari show the install sheet (delayed so the page has loaded first)
+if (isIos && !isInStandaloneMode) {
+  document.getElementById('installBtn').classList.remove('hidden');
+  setTimeout(() => document.getElementById('iosSheet').classList.add('show'), 3500);
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').classList.remove('hidden');
+});
+
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(choice => {
+      if (choice.outcome === 'accepted') showToast('🎌 App installed! Learn anywhere.', '✅');
+      deferredPrompt = null;
+      document.getElementById('installBtn').classList.add('hidden');
+    });
+  } else if (isIos) {
+    document.getElementById('iosSheet').classList.add('show');
+  } else {
+    showToast('Open in Chrome / Edge and tap "Install App" in the menu.', '📱');
+  }
+}
+
+window.addEventListener('appinstalled', () => {
+  showToast('App installed successfully!', '🎌');
+  document.getElementById('installBtn').classList.add('hidden');
+  document.getElementById('iosSheet').classList.remove('show');
+});
+
+// ═══════════════════════════════════════════════════════════════════════════
+// OFFLINE DETECTION
+// ═══════════════════════════════════════════════════════════════════════════
+
+window.addEventListener('offline', () => document.getElementById('offlineBanner').classList.add('show'));
+window.addEventListener('online',  () => document.getElementById('offlineBanner').classList.remove('show'));
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SERVICE WORKER — register + handle updates
+// ═══════════════════════════════════════════════════════════════════════════
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js').then(reg => {
+      swRegistration = reg;
+      console.log('[SW] Registered, scope:', reg.scope);
+
+      // Detect when a new SW is found
+      reg.addEventListener('updatefound', () => {
+        const incoming = reg.installing;
+        incoming.addEventListener('statechange', () => {
+          // New SW installed and waiting — show update banner
+          if (incoming.state === 'installed' && navigator.serviceWorker.controller) {
+            document.getElementById('updateBanner').classList.add('show');
+          }
+        });
+      });
+    }).catch(err => console.warn('[SW] Registration failed:', err));
+
+    // When SW takes control (after skipWaiting), reload the page once
+    let reloading = false;
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      if (!reloading) { reloading = true; window.location.reload(); }
+    });
+  });
+}
+
+// Called by "Update now" button in the update banner
+function applyUpdate() {
+  if (swRegistration?.waiting) {
+    swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+  } else {
+    window.location.reload();
+  }
+}
+
+// Handle ?start= deep-link shortcuts from manifest
+(function handleDeepLink() {
+  const start = new URLSearchParams(location.search).get('start');
+  if (start) {
+    const panel = document.getElementById('panel-' + start);
+    if (panel) {
+      showPanel(start);
+      setTabByName(start);
+    }
+  }
+})();
+</script>
+</body>
+</html>

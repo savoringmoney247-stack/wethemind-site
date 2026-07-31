@@ -29,20 +29,34 @@
 .faq-q{ display:flex; justify-content:center; align-items:center; gap:12px; cursor:pointer; font-size:1.08rem; color:var(--ink); text-transform:none; text-align:center; }
 .faq-q .plus{ color:var(--stamp-red); font-size:1.2rem; transition:transform .2s ease; flex:none; }
 .faq-a{ max-height:0; overflow:hidden; color:#6b6558; font-size:.94rem; transition:max-height .25s ease; text-align:center; }
-.currency-bar{ display:flex; align-items:center; justify-content:center; gap:12px; margin-top:20px; flex-wrap:wrap; }
+.currency-bar{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:28px; flex-wrap:wrap; }
 .currency-bar label{ font-size:.85rem; color:#cfd9e8; font-weight:600; }
 .currency-select{
   font: inherit; font-size:.92rem; font-weight:700; padding:10px 36px 10px 18px; border-radius:30px;
-  border:1.5px solid var(--gold); background:linear-gradient(135deg,#fff,#fdf6e3); color:var(--ink);
+  border:1.5px solid var(--gold);
+  /* Both the arrow icon AND the fill are background-image layers, so they must be declared
+     together (comma-separated) — declaring background-image a second time was wiping the
+     gradient out entirely, leaving the control with no fill (so the dark page behind it
+     showed through and the dark text became invisible against it). */
+  background-color:#fdf6e3;
+  background-image:
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23142238'/></svg>"),
+    linear-gradient(135deg,#fff,#fdf6e3);
+  background-repeat:no-repeat, no-repeat;
+  background-position:right 16px center, 0 0;
+  background-size:10px 6px, 100% 100%;
+  /* Fixed (not theme-variable) text color: this control always sits on a light
+     gradient background, so its text must stay dark in both light and dark mode
+     or it becomes unreadable against the light fill. */
+  color:#142238 !important;
   cursor:pointer; appearance:none;
-  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23142238'/></svg>");
-  background-repeat:no-repeat; background-position:right 16px center;
   box-shadow:0 8px 20px -8px rgba(254,186,2,.55), inset 0 1px 0 rgba(255,255,255,.8);
   transition:transform .2s ease, box-shadow .2s ease;
 }
+.currency-select option{ color:#142238; background:#fff; }
 .currency-select:hover{ transform:translateY(-2px); box-shadow:0 12px 26px -8px rgba(254,186,2,.7), inset 0 1px 0 rgba(255,255,255,.8); }
 .currency-select:focus{ outline:2px solid var(--gold); outline-offset:2px; }
-.currency-note{ font-size:.78rem; color:#cfd9e8; text-align:center; margin:6px auto 0; max-width:60ch; }
+.currency-note{ font-size:.78rem; color:#cfd9e8; text-align:center; margin:2.6em auto 0; max-width:60ch; }
 </style>
 </head>
 <body>

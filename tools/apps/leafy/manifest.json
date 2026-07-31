@@ -1,0 +1,42 @@
+{
+  "name": "Leafy — Plant Care Tracker",
+  "short_name": "Leafy",
+  "description": "Track your plants, watering schedules, and care notes — all offline.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#060F08",
+  "theme_color": "#16A34A",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "plant-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "plant-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Add Plant",
+      "short_name": "Add",
+      "description": "Quickly add a new plant",
+      "url": "./index.html?action=add",
+      "icons": [{ "src": "plant-icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Water Due",
+      "short_name": "Water",
+      "description": "See plants due for watering",
+      "url": "./index.html?filter=due",
+      "icons": [{ "src": "plant-icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <meta name="description" content="Leafy — Track your plants, watering schedules and care notes"/>
+  <meta name="theme-color" content="#16A34A"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Leafy"/>
+  <link rel="apple-touch-icon" href="plant-icon-192.png"/>
+  <link rel="manifest" href="manifest.json"/>
+  <title>Leafy 🌿</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+  <style>
+    :root {
+      --bg:        #060F08;
+      --bg2:       #091408;
+      --surface:   #0E1F10;
+      --surface2:  #132815;
+      --surface3:  #183020;
+      --border:    rgba(52,211,153,0.12);
+      --border2:   rgba(52,211,153,0.22);
+      --green:     #34D399;
+      --green-lt:  #6EE7B7;
+      --green-dk:  #059669;
+      --green-dim: #064E3B;
+      --teal:      #22D3EE;
+      --amber:     #FBBF24;
+      --red:       #F87171;
+      --purple:    #A78BFA;
+      --text:      #F0FDF4;
+      --muted:     rgba(167,243,208,0.45);
+      --muted2:    rgba(167,243,208,0.25);
+      --glow:      0 0 30px rgba(52,211,153,0.2);
+      --shadow:    0 8px 40px rgba(6,9,8,0.6);
+      --radius:    20px;
+      --ff-head:   'Cormorant Garamond', serif;
+      --ff-body:   'DM Sans', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--ff-body);
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* Noise texture overlay */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 55% at 20% 5%,  rgba(52,211,153,0.13) 0%, transparent 65%),
+        radial-gradient(ellipse 55% 65% at 85% 90%,  rgba(34,211,238,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 45% 40% at 65% 20%,  rgba(52,211,153,0.07) 0%, transparent 55%),
+        radial-gradient(ellipse 30% 30% at 10% 80%,  rgba(167,139,250,0.05) 0%, transparent 55%);
+    }
+
+    #particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    #confetti  { position: fixed; inset: 0; z-index: 1000; pointer-events: none; }
+    #ripple-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
+
+    #app {
+      position: relative; z-index: 1;
+      height: 100%;
+      display: flex; flex-direction: column;
+      max-width: 480px; margin: 0 auto;
+      padding: env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 16px 20px 8px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-shrink: 0;
+      text-align: center;
+    }
+    .brand { text-align: center; flex: 1; }
+    .brand-name {
+      font-family: var(--ff-head);
+      font-size: 2.2rem;
+      font-style: italic;
+      font-weight: 600;
+      background: linear-gradient(135deg, #6EE7B7 0%, #34D399 40%, #22D3EE 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 0.01em;
+      line-height: 1;
+    }
+    .brand-sub {
+      font-size: 0.62rem; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--muted); margin-top: 2px;
+    }
+    .header-left, .header-right { display: flex; align-items: center; gap: 8px; }
+    .date-pill {
+      display: flex; align-items: center; gap: 5px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px; padding: 5px 11px;
+      font-size: 0.7rem; color: var(--green-lt); font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+    .btn-add-top {
+      width: 38px; height: 38px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green-dk), var(--green));
+      border: none; color: #fff; font-size: 1.4rem; font-weight: 300;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 3px 20px rgba(52,211,153,0.4), 0 0 0 0 rgba(52,211,153,0.4);
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+      flex-shrink: 0; line-height: 1;
+    }
+    .btn-add-top:hover { transform: scale(1.12) rotate(90deg); box-shadow: 0 4px 28px rgba(52,211,153,0.6); }
+    .btn-add-top:active { transform: scale(0.95); }
+
+    /* ── STREAK ── */
+    .streak-bar {
+      display: flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 4px 20px 10px;
+      flex-shrink: 0;
+    }
+    .streak-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, rgba(251,191,36,0.12), rgba(245,158,11,0.06));
+      border: 1px solid rgba(251,191,36,0.25);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 0.72rem; font-weight: 600; color: #FCD34D;
+      letter-spacing: 0.04em;
+    }
+    .streak-fire { font-size: 0.95rem; animation: flicker 1.5s ease-in-out infinite; }
+    @keyframes flicker {
+      0%,100% { transform: scale(1) rotate(-3deg); }
+      50% { transform: scale(1.15) rotate(3deg); }
+    }
+
+    /* ── SEARCH ── */
+    .search-wrap { padding: 0 20px 10px; flex-shrink: 0; }
+    .search-box {
+      position: relative; display: flex; align-items: center;
+    }
+    .search-icon {
+      position: absolute; left: 14px; font-size: 0.85rem; opacity: 0.4; pointer-events: none;
+    }
+    .search-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 10px 16px 10px 38px;
+      font-family: var(--ff-body); font-size: 0.83rem;
+      color: var(--text); outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+    }
+    .search-input::placeholder { color: var(--muted); }
+    .search-input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(52,211,153,0.12), var(--glow);
+      background: var(--surface2);
+    }
+    .search-clear {
+      position: absolute; right: 12px;
+      background: none; border: none; color: var(--muted);
+      font-size: 1rem; cursor: pointer; padding: 4px;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    }
+    .search-clear.show { opacity: 1; pointer-events: auto; }
+
+    /* ── STATS ── */
+    .stats-strip {
+      display: flex; gap: 8px;
+      padding: 0 20px 12px;
+      flex-shrink: 0;
+    }
+    .stat-pill {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 10px 8px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s, border-color 0.25s;
+      cursor: default; position: relative; overflow: hidden;
+    }
+    .stat-pill::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(52,211,153,0.04), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .stat-pill:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.4), var(--glow); border-color: var(--border2); }
+    .stat-pill:hover::before { opacity: 1; }
+    .stat-pill .sp-icon { font-size: 1.1rem; margin-bottom: 3px; }
+    .stat-pill .sp-val {
+      font-family: var(--ff-head);
+      font-size: 1.3rem; font-weight: 600; line-height: 1;
+      color: var(--green-lt);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .stat-pill .sp-lbl {
+      font-size: 0.6rem; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--muted); margin-top: 2px;
+    }
+    .stat-pill.urgent { border-color: rgba(251,191,36,0.3); }
+    .stat-pill.urgent .sp-val { color: var(--amber); }
+    .stat-pill.healthy { border-color: rgba(52,211,153,0.25); }
+    .stat-pill.healthy .sp-val { color: var(--green); }
+
+    /* ── FILTER TABS ── */
+    .filter-row {
+      display: flex; gap: 6px;
+      padding: 0 20px 14px;
+      flex-shrink: 0; overflow-x: auto;
+      justify-content: center;
+    }
+    .filter-row::-webkit-scrollbar { display: none; }
+    .ftab {
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 7px 15px;
+      font-family: var(--ff-body);
+      font-size: 0.75rem; font-weight: 600;
+      letter-spacing: 0.04em;
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer; white-space: nowrap;
+      transition: all 0.28s cubic-bezier(0.34,1.56,0.64,1);
+      flex-shrink: 0;
+    }
+    .ftab.active {
+      background: linear-gradient(135deg, var(--green-dk), var(--green));
+      color: #fff; border-color: transparent;
+      box-shadow: 0 3px 16px rgba(52,211,153,0.35);
+      transform: scale(1.06);
+    }
+    .ftab:not(.active):hover { color: var(--green-lt); border-color: var(--border2); transform: scale(1.04); }
+
+    /* ── PLANT GRID ── */
+    .plants-scroll {
+      flex: 1; overflow-y: auto;
+      padding: 0 20px 10px;
+    }
+    .plants-scroll::-webkit-scrollbar { width: 3px; }
+    .plants-scroll::-webkit-scrollbar-thumb { background: var(--green-dim); border-radius: 3px; }
+
+    .plants-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .plant-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 14px 14px;
+      cursor: pointer;
+      transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.28s, border-color 0.28s;
+      animation: fadeUp 0.4s ease both;
+      position: relative; overflow: hidden;
+      text-align: center;
+    }
+    .plant-card::before {
+      content: '';
+      position: absolute; top: -40%; right: -25%;
+      width: 85%; padding-bottom: 85%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(52,211,153,0.06) 0%, transparent 70%);
+      pointer-events: none; transition: opacity 0.3s, transform 0.5s;
+    }
+    .plant-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 16px 40px rgba(0,0,0,0.5), 0 0 20px rgba(52,211,153,0.15); border-color: var(--border2); }
+    .plant-card:hover::before { transform: scale(1.3); }
+    .plant-card:active { transform: scale(0.96); }
+
+    /* Health-tinted glow rings */
+    .plant-card.health-thriving  { box-shadow: 0 0 0 1px rgba(52,211,153,0.2); }
+    .plant-card.health-okay      { box-shadow: 0 0 0 1px rgba(34,211,238,0.2); }
+    .plant-card.health-needs-help{ box-shadow: 0 0 0 1px rgba(251,191,36,0.2); }
+    .plant-card.health-sick      { box-shadow: 0 0 0 1px rgba(248,113,113,0.2); }
+
+    .plant-card.due-today { border-color: rgba(251,191,36,0.4); }
+    .plant-card.due-today .water-badge { background: rgba(251,191,36,0.15); color: var(--amber); }
+    .plant-card.overdue { border-color: rgba(248,113,113,0.4); }
+    .plant-card.overdue .water-badge { background: rgba(248,113,113,0.15); color: var(--red); }
+
+    .urgency-dot {
+      position: absolute; top: 10px; right: 10px;
+      width: 8px; height: 8px; border-radius: 50%;
+      animation: pingDot 1.8s ease-in-out infinite;
+    }
+    .urgency-dot.today { background: var(--amber); }
+    .urgency-dot.overdue { background: var(--red); }
+    @keyframes pingDot {
+      0%,100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.6); opacity: 0.5; }
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px) scale(0.94); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes popIn {
+      0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+      60% { transform: scale(1.15) rotate(5deg); }
+      100% { transform: scale(1) rotate(0); opacity: 1; }
+    }
+
+    .plant-emoji-wrap {
+      position: relative; display: inline-block;
+      margin-bottom: 8px;
+    }
+    .plant-emoji {
+      font-size: 2.6rem; line-height: 1; display: block;
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+    }
+    .plant-card:hover .plant-emoji { transform: scale(1.2) rotate(-8deg); }
+    .health-dot-ring {
+      position: absolute; inset: -4px;
+      border-radius: 50%; border: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .plant-card.health-thriving  .health-dot-ring { border-color: rgba(52,211,153,0.5); }
+    .plant-card.health-okay      .health-dot-ring { border-color: rgba(34,211,238,0.5); }
+    .plant-card.health-needs-help .health-dot-ring { border-color: rgba(251,191,36,0.5); }
+    .plant-card.health-sick      .health-dot-ring { border-color: rgba(248,113,113,0.5); }
+
+    .plant-name {
+      font-family: var(--ff-head); font-style: italic;
+      font-size: 1rem; font-weight: 600;
+      color: var(--text); margin-bottom: 1px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .plant-species {
+      font-size: 0.65rem; color: var(--muted);
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      margin-bottom: 10px;
+    }
+
+    .water-bar-wrap {
+      background: var(--bg2);
+      border-radius: 100px; height: 4px; overflow: hidden;
+      margin-bottom: 7px; position: relative;
+    }
+    .water-bar {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--green-dk), var(--green), var(--teal));
+      background-size: 200% 100%;
+      transition: width 0.9s cubic-bezier(0.34,1.56,0.64,1);
+      animation: shimmer 3s linear infinite;
+    }
+    .water-bar.low  { background: linear-gradient(90deg, #92400E, var(--amber)); animation: none; }
+    .water-bar.dry  { background: linear-gradient(90deg, #7F1D1D, var(--red)); animation: none; }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .water-badge {
+      display: inline-block;
+      font-size: 0.62rem; font-weight: 600;
+      padding: 3px 8px; border-radius: 100px;
+      background: var(--surface2);
+      color: var(--muted); letter-spacing: 0.04em;
+      transition: all 0.3s;
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center; padding: 50px 20px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .es-emoji { font-size: 4.5rem; display: block; margin-bottom: 16px; animation: float 3s ease-in-out infinite; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-12px) rotate(3deg); }
+    }
+    .empty-state h3 {
+      font-family: var(--ff-head); font-style: italic;
+      font-size: 1.5rem; font-weight: 600;
+      color: var(--green-lt); margin-bottom: 8px;
+    }
+    .empty-state p { font-size: 0.84rem; color: var(--muted); line-height: 1.6; }
+    .btn-empty-add {
+      margin-top: 20px;
+      background: linear-gradient(135deg, var(--green-dk), var(--green));
+      border: none; border-radius: 100px;
+      color: #fff; font-family: var(--ff-body); font-size: 0.88rem; font-weight: 600;
+      padding: 11px 24px; cursor: pointer;
+      box-shadow: 0 4px 20px rgba(52,211,153,0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-empty-add:hover { transform: scale(1.04); box-shadow: 0 6px 28px rgba(52,211,153,0.5); }
+
+    /* ── BOTTOM NAV ── */
+    .bottom-nav {
+      flex-shrink: 0;
+      display: flex;
+      background: var(--bg2);
+      border-top: 1px solid var(--border);
+      padding: 6px 0 calc(env(safe-area-inset-bottom,0px) + 6px);
+    }
+    .nav-btn {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 2px;
+      background: none; border: none;
+      cursor: pointer; padding: 6px 0;
+      transition: all 0.25s;
+      position: relative;
+    }
+    .nav-btn .nb-icon { font-size: 1.25rem; transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+    .nav-btn:hover .nb-icon { transform: scale(1.25) translateY(-2px); }
+    .nav-btn .nb-lbl {
+      font-size: 0.58rem; font-weight: 600;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); transition: color 0.25s;
+    }
+    .nav-btn.active .nb-lbl { color: var(--green); }
+    .nav-btn.active .nb-icon { transform: scale(1.1) translateY(-1px); }
+    .nav-btn.active::after {
+      content: '';
+      position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%);
+      width: 4px; height: 4px; border-radius: 50%; background: var(--green);
+    }
+
+    /* ── OVERLAY / SHEET ── */
+    .overlay {
+      display: none;
+      position: fixed; inset: 0; z-index: 200;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(8px);
+      align-items: flex-end; justify-content: center;
+    }
+    .overlay.open { display: flex; }
+
+    .sheet {
+      width: 100%; max-width: 480px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-top: 1px solid var(--border2);
+      border-radius: 28px 28px 0 0;
+      padding: 0 0 calc(env(safe-area-inset-bottom,0px) + 24px);
+      max-height: 93vh; overflow-y: auto;
+      animation: sheetUp 0.38s cubic-bezier(0.34,1.3,0.64,1);
+    }
+    @keyframes sheetUp {
+      from { transform: translateY(100%); opacity: 0.5; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+    .sheet-handle {
+      width: 38px; height: 4px; border-radius: 2px;
+      background: var(--border2); margin: 14px auto 0;
+    }
+    .sheet-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 22px 14px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .sheet-title {
+      font-family: var(--ff-head); font-style: italic;
+      font-size: 1.4rem; font-weight: 600;
+      color: var(--green-lt); flex: 1; text-align: center;
+    }
+    .btn-close {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--surface); border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.9rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .btn-close:hover { color: var(--text); background: var(--surface2); transform: rotate(90deg); }
+
+    .sheet-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; text-align: center; }
+
+    /* Emoji picker */
+    .emoji-row {
+      display: grid; grid-template-columns: repeat(6,1fr); gap: 8px;
+    }
+    .ep-btn {
+      aspect-ratio: 1; border-radius: 12px;
+      background: var(--surface); border: 2px solid transparent;
+      font-size: 1.4rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .ep-btn:hover { background: var(--surface2); transform: scale(1.18); }
+    .ep-btn.sel { border-color: var(--green); background: rgba(52,211,153,0.12); transform: scale(1.12); box-shadow: 0 0 12px rgba(52,211,153,0.25); }
+
+    /* Form fields */
+    label.field-lbl {
+      font-size: 0.66rem; font-weight: 600;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted);
+      display: block; margin-bottom: 7px; text-align: left;
+    }
+    .field-input {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 11px 15px;
+      font-family: var(--ff-body); font-size: 0.9rem;
+      color: var(--text); outline: none;
+      transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+      text-align: left;
+    }
+    .field-input::placeholder { color: var(--muted); }
+    .field-input:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(52,211,153,0.1); background: var(--surface2); }
+    textarea.field-input { resize: none; min-height: 76px; }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: left; }
+
+    /* Health buttons */
+    .health-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .health-btn {
+      padding: 10px 6px; border-radius: 14px;
+      background: var(--surface); border: 2px solid transparent;
+      font-family: var(--ff-body); font-size: 0.78rem; font-weight: 600;
+      cursor: pointer; color: var(--muted);
+      transition: all 0.22s cubic-bezier(0.34,1.56,0.64,1); text-align: center;
+      display: flex; align-items: center; justify-content: center; gap: 5px;
+    }
+    .health-btn:hover { background: var(--surface2); transform: scale(1.03); }
+    .health-btn[data-h="thriving"].sel  { border-color: var(--green); background: rgba(52,211,153,0.1); color: var(--green-lt); box-shadow: 0 0 12px rgba(52,211,153,0.2); }
+    .health-btn[data-h="okay"].sel      { border-color: var(--teal);  background: rgba(34,211,238,0.1); color: var(--teal); box-shadow: 0 0 12px rgba(34,211,238,0.2); }
+    .health-btn[data-h="needs-help"].sel{ border-color: var(--amber); background: rgba(251,191,36,0.1); color: var(--amber); box-shadow: 0 0 12px rgba(251,191,36,0.2); }
+    .health-btn[data-h="sick"].sel      { border-color: var(--red);   background: rgba(248,113,113,0.1); color: var(--red); box-shadow: 0 0 12px rgba(248,113,113,0.2); }
+
+    /* Watering frequency slider */
+    .slider-wrap { text-align: center; }
+    .water-freq-display {
+      font-family: var(--ff-head); font-size: 2rem; font-weight: 600;
+      color: var(--green-lt); margin-bottom: 4px; line-height: 1;
+    }
+    .water-freq-label { font-size: 0.7rem; color: var(--muted); margin-bottom: 12px; }
+    input[type=range] {
+      width: 100%; -webkit-appearance: none; appearance: none;
+      height: 6px; border-radius: 3px;
+      background: linear-gradient(90deg, var(--green-dk) var(--pct,50%), var(--surface2) var(--pct,50%));
+      outline: none; cursor: pointer;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none; width: 22px; height: 22px;
+      border-radius: 50%; background: var(--green);
+      box-shadow: 0 2px 12px rgba(52,211,153,0.5); cursor: grab;
+      transition: transform 0.15s;
+    }
+    input[type=range]:active::-webkit-slider-thumb { cursor: grabbing; transform: scale(1.2); }
+
+    /* Action buttons */
+    .btn-save {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--green-dk), var(--green));
+      border: none; border-radius: 16px;
+      font-family: var(--ff-body); font-size: 0.95rem; font-weight: 700;
+      color: #fff; cursor: pointer; letter-spacing: 0.04em;
+      box-shadow: 0 4px 24px rgba(52,211,153,0.35);
+      transition: all 0.22s; position: relative; overflow: hidden;
+    }
+    .btn-save::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.15) 50%, transparent 100%);
+      transform: translateX(-100%); transition: transform 0.5s;
+    }
+    .btn-save:hover::after { transform: translateX(100%); }
+    .btn-save:hover  { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(52,211,153,0.5); }
+    .btn-save:active { transform: scale(0.98); }
+
+    .btn-delete {
+      width: 100%; padding: 12px;
+      background: transparent; border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 16px; font-family: var(--ff-body);
+      font-size: 0.86rem; font-weight: 600;
+      color: var(--red); cursor: pointer;
+      transition: all 0.22s;
+    }
+    .btn-delete:hover { background: rgba(248,113,113,0.08); border-color: rgba(248,113,113,0.5); }
+
+    /* ── DETAIL SHEET ── */
+    .detail-hero {
+      text-align: center; padding: 10px 0 0;
+      position: relative;
+    }
+    .detail-emoji {
+      font-size: 5rem; display: block;
+      animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+      filter: drop-shadow(0 8px 20px rgba(0,0,0,0.4));
+      margin-bottom: 6px;
+    }
+    .detail-name  {
+      font-family: var(--ff-head); font-style: italic;
+      font-size: 1.8rem; font-weight: 600;
+      color: var(--green-lt); line-height: 1;
+    }
+    .detail-species { color: var(--muted); font-size: 0.8rem; margin-top: 3px; }
+
+    .health-badge {
+      display: inline-flex; align-items: center; gap: 5px;
+      border-radius: 100px; padding: 5px 14px; margin-top: 10px;
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em;
+    }
+
+    /* Circular water countdown */
+    .water-ring-wrap {
+      display: flex; justify-content: center; margin: 4px 0;
+    }
+    .water-ring-svg { width: 110px; height: 110px; transform: rotate(-90deg); }
+    .water-ring-bg { fill: none; stroke: var(--surface2); stroke-width: 8; }
+    .water-ring-fill {
+      fill: none; stroke-width: 8; stroke-linecap: round;
+      transition: stroke-dashoffset 1s cubic-bezier(0.34,1.56,0.64,1), stroke 0.5s;
+    }
+    .water-ring-center {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .water-ring-days { font-family: var(--ff-head); font-size: 1.5rem; font-weight: 600; line-height: 1; }
+    .water-ring-lbl  { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+    .water-ring-container { position: relative; width: 110px; height: 110px; }
+
+    .info-grid {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .info-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px 10px;
+      text-align: center; transition: transform 0.2s;
+    }
+    .info-box:hover { transform: translateY(-2px); }
+    .info-box .ib-lbl { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .info-box .ib-val { font-size: 0.92rem; font-weight: 600; color: var(--text); }
+
+    .note-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-left: 3px solid var(--green-dk);
+      border-radius: 14px; padding: 13px 16px;
+      font-size: 0.84rem; line-height: 1.6; color: var(--muted);
+      font-style: italic; text-align: left;
+    }
+
+    /* Log section */
+    .log-section { text-align: left; }
+    .log-title { font-size: 0.66rem; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; text-align: center; }
+    .log-list { display: flex; flex-direction: column; gap: 6px; max-height: 130px; overflow-y: auto; }
+    .log-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 12px;
+      background: var(--surface); border-radius: 12px;
+      font-size: 0.78rem; color: var(--green-lt);
+      animation: fadeUp 0.25s ease;
+    }
+    .log-item .li-date { color: var(--muted); margin-left: auto; font-size: 0.7rem; }
+
+    /* Water now button */
+    .btn-water-now {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, #0C4A6E, var(--teal));
+      border: none; border-radius: 16px;
+      font-family: var(--ff-body); font-size: 0.95rem; font-weight: 700;
+      color: #fff; cursor: pointer;
+      box-shadow: 0 4px 24px rgba(34,211,238,0.3);
+      transition: all 0.22s; position: relative; overflow: hidden;
+    }
+    .btn-water-now::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      transform: translateX(-100%); transition: transform 0.55s;
+    }
+    .btn-water-now:hover::after { transform: translateX(100%); }
+    .btn-water-now:hover { transform: translateY(-2px); box-shadow: 0 6px 32px rgba(34,211,238,0.45); }
+    .btn-water-now:active { transform: scale(0.98); }
+
+    /* ── SCHEDULE VIEW ── */
+    .schedule-view { padding: 0 20px; text-align: center; }
+    .schedule-view h2 { font-family: var(--ff-head); font-style: italic; font-size: 1.5rem; color: var(--green-lt); margin-bottom: 16px; }
+    .week-strip { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; justify-content: center; }
+    .week-strip::-webkit-scrollbar { display: none; }
+    .day-col {
+      min-width: 48px; flex-shrink: 0;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 10px 6px;
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      transition: transform 0.2s;
+    }
+    .day-col.today-col { border-color: var(--green); background: var(--surface2); }
+    .day-col .day-name { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+    .day-col .day-num  { font-family: var(--ff-head); font-size: 1.1rem; font-weight: 600; color: var(--text); }
+    .day-col .day-dots { display: flex; flex-direction: column; gap: 3px; align-items: center; min-height: 20px; }
+    .day-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+    .schedule-list { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+    .sched-item {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 12px 14px;
+      animation: fadeUp 0.3s ease both;
+      text-align: left;
+    }
+    .sched-emoji { font-size: 1.8rem; flex-shrink: 0; }
+    .sched-info { flex: 1; }
+    .sched-name { font-family: var(--ff-head); font-style: italic; font-size: 1rem; font-weight: 600; color: var(--text); }
+    .sched-date { font-size: 0.72rem; color: var(--muted); }
+    .sched-badge {
+      font-size: 0.68rem; font-weight: 700;
+      padding: 4px 10px; border-radius: 100px; white-space: nowrap;
+    }
+    .sched-badge.overdue { background: rgba(248,113,113,0.15); color: var(--red); }
+    .sched-badge.today   { background: rgba(251,191,36,0.15); color: var(--amber); }
+    .sched-badge.soon    { background: rgba(52,211,153,0.12); color: var(--green); }
+    .sched-badge.later   { background: var(--surface2); color: var(--muted); }
+
+    /* ── TIPS VIEW ── */
+    .tips-view { padding: 0 20px; overflow-y: auto; text-align: center; }
+    .tips-view h2 { font-family: var(--ff-head); font-style: italic; font-size: 1.5rem; color: var(--green-lt); margin-bottom: 16px; }
+    .tip-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 18px; padding: 16px 18px; margin-bottom: 10px;
+      animation: fadeUp 0.35s ease both; text-align: left;
+      transition: transform 0.2s;
+    }
+    .tip-card:hover { transform: translateY(-2px); }
+    .tip-icon { font-size: 1.6rem; margin-bottom: 8px; display: block; }
+    .tip-title { font-family: var(--ff-head); font-style: italic; font-size: 1.05rem; font-weight: 600; color: var(--green-lt); margin-bottom: 5px; }
+    .tip-text  { font-size: 0.82rem; line-height: 1.65; color: var(--muted); }
+
+    /* ── SETTINGS VIEW ── */
+    .settings-view { padding: 0 20px; overflow-y: auto; text-align: center; }
+    .settings-view h2 { font-family: var(--ff-head); font-style: italic; font-size: 1.5rem; color: var(--green-lt); margin-bottom: 16px; }
+    .setting-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 14px 16px; margin-bottom: 8px;
+    }
+    .setting-label { font-size: 0.88rem; font-weight: 500; color: var(--text); }
+    .setting-sub   { font-size: 0.72rem; color: var(--muted); margin-top: 2px; }
+    .toggle {
+      width: 44px; height: 24px; border-radius: 12px;
+      background: var(--surface2); border: none; cursor: pointer;
+      position: relative; transition: background 0.3s;
+      flex-shrink: 0;
+    }
+    .toggle::after {
+      content: ''; position: absolute; top: 3px; left: 3px;
+      width: 18px; height: 18px; border-radius: 50%; background: var(--muted);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .toggle.on { background: var(--green-dk); }
+    .toggle.on::after { transform: translateX(20px); background: #fff; }
+    .btn-danger {
+      width: 100%; padding: 13px; margin-top: 8px;
+      background: transparent; border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 14px; font-family: var(--ff-body); font-size: 0.88rem;
+      font-weight: 600; color: var(--red); cursor: pointer;
+      transition: all 0.22s;
+    }
+    .btn-danger:hover { background: rgba(248,113,113,0.08); }
+    .app-version { font-size: 0.72rem; color: var(--muted2); margin-top: 16px; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: calc(env(safe-area-inset-bottom,16px) + 72px);
+      left: 50%; transform: translateX(-50%) translateY(60px);
+      background: var(--surface3);
+      border: 1px solid var(--border2);
+      color: var(--text); padding: 11px 24px;
+      border-radius: 100px; font-size: 0.84rem; font-weight: 500;
+      box-shadow: 0 4px 28px rgba(0,0,0,0.4);
+      transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+      opacity: 0; pointer-events: none; white-space: nowrap; z-index: 999;
+      max-width: calc(100vw - 40px); text-overflow: ellipsis; overflow: hidden;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+    /* ── INSTALL BANNER ── */
+    #install-banner {
+      display: none;
+      position: fixed; bottom: calc(env(safe-area-inset-bottom,0px) + 80px);
+      left: 50%; transform: translateX(-50%);
+      width: calc(100% - 24px); max-width: 456px;
+      background: var(--surface2);
+      border: 1px solid rgba(52,211,153,0.35);
+      border-radius: 20px; padding: 16px 18px;
+      box-shadow: var(--shadow); z-index: 500;
+      animation: sheetUp 0.4s cubic-bezier(0.34,1.3,0.64,1);
+      text-align: center;
+    }
+    #install-banner.visible { display: block; }
+    .ib-inner { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 12px; }
+    .ib-icon { font-size: 2.2rem; }
+    .ib-text strong { font-size: 0.92rem; display: block; color: var(--text); }
+    .ib-text small  { font-size: 0.72rem; color: var(--muted); }
+    .ib-actions { display: flex; gap: 8px; justify-content: center; }
+    .btn-inst {
+      flex: 1; max-width: 160px;
+      background: linear-gradient(135deg, var(--green-dk), var(--green));
+      border: none; border-radius: 100px;
+      color: #fff; font-family: var(--ff-body); font-size: 0.84rem; font-weight: 700;
+      padding: 10px; cursor: pointer; transition: transform 0.2s;
+    }
+    .btn-inst:hover { transform: scale(1.04); }
+    .btn-dis {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 100px; color: var(--muted);
+      font-family: var(--ff-body); font-size: 0.84rem;
+      padding: 10px 18px; cursor: pointer;
+    }
+
+    /* Tap ripple */
+    .ripple-effect {
+      position: absolute; border-radius: 50%;
+      background: rgba(52,211,153,0.3);
+      transform: scale(0); animation: rippleAnim 0.6s linear;
+      pointer-events: none;
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    .hidden { display: none !important; }
+
+    /* View sections */
+    .view-section { display: none; flex: 1; overflow-y: auto; }
+    .view-section.active { display: flex; flex-direction: column; }
+    #view-garden { overflow: hidden; display: none; flex: 1; flex-direction: column; }
+    #view-garden.active { display: flex; }
+  </style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<canvas id="confetti"></canvas>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-left">
+      <div class="date-pill">🌿 <span id="hdr-date"></span></div>
+    </div>
+    <div class="brand">
+      <div class="brand-name">Leafy</div>
+      <div class="brand-sub">Plant Care Tracker</div>
+    </div>
+    <div class="header-right">
+      <button class="btn-add-top" onclick="openAdd()" aria-label="Add plant">＋</button>
+    </div>
+  </header>
+
+  <!-- STREAK -->
+  <div class="streak-bar">
+    <div class="streak-badge">
+      <span class="streak-fire">🔥</span>
+      <span id="streak-count">0</span>&nbsp;day streak
+    </div>
+  </div>
+
+  <!-- GARDEN VIEW -->
+  <div id="view-garden" class="active">
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search-input" type="text" placeholder="Search plants…" oninput="onSearch()"/>
+        <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-strip">
+      <div class="stat-pill">
+        <span class="sp-icon">🪴</span>
+        <div class="sp-val" id="st-total">0</div>
+        <div class="sp-lbl">Plants</div>
+      </div>
+      <div class="stat-pill urgent">
+        <span class="sp-icon">💧</span>
+        <div class="sp-val" id="st-due">0</div>
+        <div class="sp-lbl">Need Water</div>
+      </div>
+      <div class="stat-pill healthy">
+        <span class="sp-icon">✨</span>
+        <div class="sp-val" id="st-thriving">0</div>
+        <div class="sp-lbl">Thriving</div>
+      </div>
+    </div>
+
+    <!-- FILTER TABS -->
+    <div class="filter-row">
+      <button class="ftab active" data-f="all"       onclick="setFilter('all')">🌿 All</button>
+      <button class="ftab"        data-f="due"        onclick="setFilter('due')">💧 Due</button>
+      <button class="ftab"        data-f="thriving"   onclick="setFilter('thriving')">✨ Thriving</button>
+      <button class="ftab"        data-f="needs-help" onclick="setFilter('needs-help')">🌡 Needs Help</button>
+    </div>
+
+    <!-- PLANT GRID -->
+    <div class="plants-scroll">
+      <div class="plants-grid" id="plants-grid"></div>
+    </div>
+  </div>
+
+  <!-- SCHEDULE VIEW -->
+  <div id="view-schedule" class="view-section">
+    <div class="schedule-view" style="flex:1;overflow-y:auto">
+      <h2>Watering Schedule</h2>
+      <div class="week-strip" id="week-strip"></div>
+      <div class="schedule-list" id="schedule-list"></div>
+    </div>
+  </div>
+
+  <!-- TIPS VIEW -->
+  <div id="view-tips" class="view-section">
+    <div class="tips-view" style="flex:1">
+      <h2>Care Tips</h2>
+      <div id="tips-list"></div>
+    </div>
+  </div>
+
+  <!-- SETTINGS VIEW -->
+  <div id="view-settings" class="view-section">
+    <div class="settings-view" style="flex:1">
+      <h2>Settings</h2>
+      <div class="setting-row">
+        <div><div class="setting-label">🔔 Notifications</div><div class="setting-sub">Daily watering reminders</div></div>
+        <button class="toggle" id="notif-toggle" onclick="toggleNotif()"></button>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">📳 Haptic Feedback</div><div class="setting-sub">Vibrate on watering</div></div>
+        <button class="toggle on" id="haptic-toggle" onclick="toggleHaptic()"></button>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">🎉 Confetti</div><div class="setting-sub">Celebrate milestones</div></div>
+        <button class="toggle on" id="confetti-toggle" onclick="toggleConfetti()"></button>
+      </div>
+      <div class="setting-row">
+        <div><div class="setting-label">🌿 Sample Plants</div><div class="setting-sub">Restore default plants</div></div>
+        <button class="btn-save" style="width:auto;padding:8px 18px;font-size:0.78rem" onclick="restoreSamples()">Restore</button>
+      </div>
+      <button class="btn-danger" onclick="clearAllData()">🗑 Clear All Data</button>
+      <div class="app-version">Leafy v3.0 · Made with 💚</div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-view="garden" onclick="navTo('garden')">
+      <span class="nb-icon">🪴</span><span class="nb-lbl">Garden</span>
+    </button>
+    <button class="nav-btn" data-view="schedule" onclick="navTo('schedule')">
+      <span class="nb-icon">📅</span><span class="nb-lbl">Schedule</span>
+    </button>
+    <button class="nav-btn" data-view="tips" onclick="navTo('tips')">
+      <span class="nb-icon">💡</span><span class="nb-lbl">Tips</span>
+    </button>
+    <button class="nav-btn" data-view="settings" onclick="navTo('settings')">
+      <span class="nb-icon">⚙️</span><span class="nb-lbl">Settings</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ADD / EDIT SHEET -->
+<div class="overlay" id="add-overlay" onclick="overlayClick(event,'add-overlay')">
+  <div class="sheet" id="add-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div style="width:32px"></div>
+      <span class="sheet-title" id="sheet-mode-title">New Plant</span>
+      <button class="btn-close" onclick="closeAdd()">✕</button>
+    </div>
+    <div class="sheet-body">
+      <div>
+        <label class="field-lbl" style="text-align:center">Choose an Emoji</label>
+        <div class="emoji-row" id="emoji-row"></div>
+      </div>
+
+      <div>
+        <label class="field-lbl" for="inp-name">Plant Name *</label>
+        <input class="field-input" id="inp-name" type="text" placeholder="e.g. Monstera, Fiddle Leaf…" maxlength="40"/>
+      </div>
+
+      <div>
+        <label class="field-lbl" for="inp-species">Species / Variety</label>
+        <input class="field-input" id="inp-species" type="text" placeholder="e.g. Monstera deliciosa" maxlength="60"/>
+      </div>
+
+      <div class="slider-wrap">
+        <label class="field-lbl" style="text-align:center">Water Every</label>
+        <div class="water-freq-display"><span id="freq-num">7</span> days</div>
+        <div class="water-freq-label">Drag to set frequency</div>
+        <input type="range" id="inp-water" min="1" max="60" value="7" oninput="updateFreq()"/>
+      </div>
+
+      <div>
+        <label class="field-lbl" for="inp-sunlight">Sunlight</label>
+        <select class="field-input" id="inp-sunlight">
+          <option value="Full sun">☀️ Full Sun</option>
+          <option value="Partial sun" selected>🌤 Partial Sun</option>
+          <option value="Shade">🌑 Shade</option>
+          <option value="Indoor">🏠 Indoor</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="field-lbl" style="text-align:center">Health Status</label>
+        <div class="health-row">
+          <button class="health-btn sel" data-h="thriving"   onclick="selHealth('thriving')">✨ Thriving</button>
+          <button class="health-btn"     data-h="okay"       onclick="selHealth('okay')">🙂 Okay</button>
+          <button class="health-btn"     data-h="needs-help" onclick="selHealth('needs-help')">🌡 Needs Help</button>
+          <button class="health-btn"     data-h="sick"       onclick="selHealth('sick')">😟 Sick</button>
+        </div>
+      </div>
+
+      <div>
+        <label class="field-lbl" for="inp-notes">Care Notes</label>
+        <textarea class="field-input" id="inp-notes" placeholder="Fertilise monthly, mist leaves, repot in spring…"></textarea>
+      </div>
+
+      <button class="btn-save" onclick="savePlant()">🌿 Save Plant</button>
+      <button class="btn-delete hidden" id="btn-delete" onclick="deletePlant()">🗑 Remove Plant</button>
+    </div>
+  </div>
+</div>
+
+<!-- DETAIL SHEET -->
+<div class="overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
+  <div class="sheet" id="detail-sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-header">
+      <div style="width:32px"></div>
+      <span class="sheet-title">Plant Details</span>
+      <button class="btn-close" onclick="closeDetail()">✕</button>
+    </div>
+    <div class="sheet-body" id="detail-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner">
+  <div class="ib-inner">
+    <div class="ib-icon">🌱</div>
+    <div class="ib-text">
+      <strong>Install Leafy</strong>
+      <small>Add to home screen for offline access</small>
+    </div>
+  </div>
+  <div class="ib-actions">
+    <button class="btn-inst" onclick="installApp()">📲 Install</button>
+    <button class="btn-dis"  onclick="dismissInstall()">Later</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   FLOATING PARTICLES
+═══════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('particles');
+  const ctx = canvas.getContext('2d');
+  let W, H;
+  const particles = [];
+  const LEAFS = ['🍃','🌿','🍀','🌱','✨','🌾'];
+
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+
+  for (let i = 0; i < 18; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: -0.15 - Math.random() * 0.25,
+      size: 9 + Math.random() * 13,
+      emoji: LEAFS[Math.floor(Math.random() * LEAFS.length)],
+      opacity: 0.1 + Math.random() * 0.18,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.018,
+      wave: Math.random() * Math.PI * 2,
+      waveAmp: 0.2 + Math.random() * 0.3
+    });
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.wave += 0.01;
+      p.x += p.vx + Math.sin(p.wave) * p.waveAmp;
+      p.y += p.vy;
+      p.rot += p.rotSpeed;
+      if (p.y < -30) { p.y = H + 30; p.x = Math.random() * W; }
+      if (p.x < -30) p.x = W + 30;
+      if (p.x > W + 30) p.x = -30;
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.font = `${p.size}px serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(p.emoji, 0, 0);
+      ctx.restore();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ═══════════════════════════════════════
+   CONFETTI
+═══════════════════════════════════════ */
+const confettiCanvas = document.getElementById('confetti');
+const confettiCtx = confettiCanvas.getContext('2d');
+let confettiPieces = [];
+
+function resizeConfetti() {
+  confettiCanvas.width = window.innerWidth;
+  confettiCanvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeConfetti);
+resizeConfetti();
+
+function launchConfetti(x, y) {
+  if (!settings.confetti) return;
+  const cx = x || confettiCanvas.width / 2;
+  const cy = y || confettiCanvas.height * 0.4;
+  const colors = ['#34D399','#6EE7B7','#22D3EE','#FCD34D','#A78BFA','#86EFAC','#F0ABFC'];
+  for (let i = 0; i < 70; i++) {
+    const angle = (Math.random() * Math.PI * 2);
+    const speed = 4 + Math.random() * 9;
+    confettiPieces.push({
+      x: cx, y: cy,
+      vx: Math.cos(angle) * speed * 0.8,
+      vy: Math.sin(angle) * speed - 6,
+      w: 4 + Math.random() * 7,
+      h: 8 + Math.random() * 8,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.25,
+      life: 1, shape: Math.random() > 0.5 ? 'rect' : 'circle'
+    });
+  }
+  animateConfetti();
+}
+
+function animateConfetti() {
+  confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+  confettiPieces = confettiPieces.filter(p => p.life > 0);
+  confettiPieces.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.28; p.vx *= 0.99;
+    p.rot += p.rotSpeed; p.life -= 0.013;
+    confettiCtx.save();
+    confettiCtx.globalAlpha = Math.max(0, p.life);
+    confettiCtx.translate(p.x, p.y);
+    confettiCtx.rotate(p.rot);
+    confettiCtx.fillStyle = p.color;
+    if (p.shape === 'circle') {
+      confettiCtx.beginPath();
+      confettiCtx.arc(0, 0, p.w / 2, 0, Math.PI * 2);
+      confettiCtx.fill();
+    } else {
+      confettiCtx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+    }
+    confettiCtx.restore();
+  });
+  if (confettiPieces.length > 0) requestAnimationFrame(animateConfetti);
+}
+
+/* ═══════════════════════════════════════
+   DATA & SETTINGS
+═══════════════════════════════════════ */
+const EMOJIS = ['🪴','🌿','🌱','🌸','🌺','🌻','🌹','🍀','🌾','🎋','🎍','🌵','🌴','🌳','🍃','🍂','🍁','🌷','🌼','💐','🫐','🍋','🌞','🎄'];
+
+const TIPS = [
+  { icon:'💧', title:'Water Deeply, Not Often', text:'Deep watering encourages roots to grow downward, making plants more drought-resistant. Let the top inch of soil dry out before watering again.' },
+  { icon:'☀️', title:'Know Your Light', text:'Most houseplants thrive in bright, indirect light. Direct sun through glass can scorch leaves — diffuse it with a sheer curtain.' },
+  { icon:'🌡️', title:'Temperature Matters', text:'Most tropical plants prefer 60–80°F (15–27°C). Keep them away from cold drafts, AC vents, and radiators.' },
+  { icon:'🪱', title:'Soil Health is Key', text:'Repot every 1–2 years with fresh potting mix. Good drainage prevents root rot — always choose pots with drainage holes.' },
+  { icon:'🌬️', title:'Humidity Boost', text:'Tropical plants love humidity. Mist leaves, group plants together, or place a pebble tray with water beneath the pot.' },
+  { icon:'✂️', title:'Prune for Growth', text:'Removing dead or yellowing leaves encourages new growth and keeps your plant looking its best. Clean your scissors between plants.' },
+  { icon:'🧪', title:'Feed During Growth', text:'Fertilise during spring and summer when plants are actively growing. Avoid feeding in winter — they\'re resting!' },
+  { icon:'🐛', title:'Check for Pests', text:'Inspect leaves regularly, especially undersides. Wipe with neem oil solution for spider mites, mealybugs, or aphids.' },
+];
+
+function daysAgo(n) {
+  const d = new Date(); d.setDate(d.getDate() - n);
+  return d.toISOString().split('T')[0];
+}
+
+const SAMPLE = [
+  { id:1, emoji:'🪴', name:'Monstera', species:'Monstera deliciosa', waterDays:7, sunlight:'Partial sun', health:'thriving', notes:'Mist weekly. Loves humidity. Wipe leaves monthly.', lastWatered: daysAgo(3), waterLog:[] },
+  { id:2, emoji:'🌵', name:'Cactus',   species:'Cereus hildmannianus', waterDays:14, sunlight:'Full sun',  health:'okay',     notes:'Very low water. Sandy soil.', lastWatered: daysAgo(2), waterLog:[] },
+  { id:3, emoji:'🌸', name:'Peace Lily',species:'Spathiphyllum',      waterDays:5, sunlight:'Shade',      health:'needs-help',notes:'Leaves drooping — check soil moisture.', lastWatered: daysAgo(7), waterLog:[] },
+];
+
+let plants = JSON.parse(localStorage.getItem('leafy_plants') || 'null') || SAMPLE;
+let settings = JSON.parse(localStorage.getItem('leafy_settings') || '{}');
+settings = { haptic: true, confetti: true, ...settings };
+
+let editId = null;
+let selEmoji = EMOJIS[0];
+let selHealthVal = 'thriving';
+let currentFilter = 'all';
+let searchQuery = '';
+
+function save() { localStorage.setItem('leafy_plants', JSON.stringify(plants)); }
+function saveSettings() { localStorage.setItem('leafy_settings', JSON.stringify(settings)); }
+
+/* ═══════════════════════════════════════
+   STREAK
+═══════════════════════════════════════ */
+function getStreak() {
+  const logs = [];
+  plants.forEach(p => (p.waterLog||[]).forEach(d => logs.push(d)));
+  if (!logs.length) return 0;
+  const unique = [...new Set(logs)].sort().reverse();
+  let streak = 0;
+  const today = new Date(); today.setHours(0,0,0,0);
+  for (let i = 0; i < unique.length; i++) {
+    const d = new Date(unique[i]); d.setHours(0,0,0,0);
+    if (Math.round((today - d) / 86400000) === i) streak++;
+    else break;
+  }
+  return streak;
+}
+function updateStreak() { document.getElementById('streak-count').textContent = getStreak(); }
+
+/* ═══════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════ */
+function onSearch() {
+  searchQuery = document.getElementById('search-input').value.trim().toLowerCase();
+  document.getElementById('search-clear').classList.toggle('show', !!searchQuery);
+  render();
+}
+function clearSearch() {
+  document.getElementById('search-input').value = '';
+  searchQuery = '';
+  document.getElementById('search-clear').classList.remove('show');
+  render();
+}
+
+/* ═══════════════════════════════════════
+   INIT
+═══════════════════════════════════════ */
+window.addEventListener('DOMContentLoaded', () => {
+  const now = new Date();
+  document.getElementById('hdr-date').textContent = now.toLocaleDateString('en', { weekday:'short', month:'short', day:'numeric' });
+  buildEmojiPicker();
+  render();
+  updateStreak();
+  renderTips();
+  updateSlider();
+  applySettings();
+
+  const params = new URLSearchParams(location.search);
+  if (params.get('action') === 'add') openAdd();
+  if (params.get('filter') === 'due') setFilter('due');
+});
+
+/* ═══════════════════════════════════════
+   RENDER
+═══════════════════════════════════════ */
+function render() {
+  updateStats();
+  updateStreak();
+  const grid = document.getElementById('plants-grid');
+  let list = plants;
+
+  if (searchQuery) {
+    list = list.filter(p =>
+      p.name.toLowerCase().includes(searchQuery) ||
+      (p.species||'').toLowerCase().includes(searchQuery)
+    );
+  }
+  if (currentFilter === 'due') list = list.filter(p => getDaysDue(p) <= 0);
+  else if (currentFilter === 'thriving') list = list.filter(p => p.health === 'thriving');
+  else if (currentFilter === 'needs-help') list = list.filter(p => p.health === 'needs-help' || p.health === 'sick');
+
+  if (!list.length) {
+    grid.innerHTML = `<div class="empty-state">
+      <span class="es-emoji">🌱</span>
+      <h3>${searchQuery ? 'No matches' : 'Garden is empty'}</h3>
+      <p>${searchQuery ? 'Try a different search term.' : 'Start your plant collection by adding your first plant!'}</p>
+      ${!searchQuery ? '<button class="btn-empty-add" onclick="openAdd()">＋ Add First Plant</button>' : ''}
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map((p,i) => {
+    const due = getDaysDue(p);
+    const pct = Math.max(0, Math.min(100, (due / p.waterDays) * 100));
+    const barCls = pct < 25 ? 'dry' : pct < 50 ? 'low' : '';
+    const cardCls = due < 0 ? 'overdue' : due === 0 ? 'due-today' : '';
+    const urgDot = due < 0 ? 'overdue' : due === 0 ? 'today' : '';
+    const dueLabel = due < 0 ? `${Math.abs(due)}d overdue` : due === 0 ? 'Water today!' : `Water in ${due}d`;
+    return `<div class="plant-card ${cardCls} health-${p.health}" style="animation-delay:${i*0.07}s"
+        onclick="openDetail(${p.id})" ondblclick="event.stopPropagation();quickWater(${p.id},event)">
+      ${urgDot ? `<div class="urgency-dot ${urgDot}"></div>` : ''}
+      <div class="plant-emoji-wrap">
+        <span class="plant-emoji">${p.emoji}</span>
+        <div class="health-dot-ring"></div>
+      </div>
+      <div class="plant-name">${esc(p.name)}</div>
+      <div class="plant-species">${esc(p.species||'Unknown species')}</div>
+      <div class="water-bar-wrap"><div class="water-bar ${barCls}" style="width:${pct}%"></div></div>
+      <span class="water-badge">💧 ${dueLabel}</span>
+    </div>`;
+  }).join('');
+}
+
+function updateStats() {
+  animateNum('st-total', plants.length);
+  animateNum('st-due', plants.filter(p => getDaysDue(p) <= 0).length);
+  animateNum('st-thriving', plants.filter(p => p.health === 'thriving').length);
+}
+function animateNum(id, target) {
+  const el = document.getElementById(id);
+  if (parseInt(el.textContent) === target) return;
+  el.textContent = target;
+  el.style.transform = 'scale(1.4) translateY(-2px)';
+  setTimeout(() => el.style.transform = 'scale(1)', 350);
+}
+
+function getDaysDue(p) {
+  if (!p.lastWatered) return 0;
+  const last = new Date(p.lastWatered);
+  const next = new Date(last); next.setDate(next.getDate() + p.waterDays);
+  const now = new Date(); now.setHours(0,0,0,0);
+  return Math.round((next - now) / 86400000);
+}
+
+/* ═══════════════════════════════════════
+   QUICK WATER (double-tap)
+═══════════════════════════════════════ */
+function quickWater(id, event) {
+  const p = plants.find(p => p.id === id); if (!p) return;
+  p.lastWatered = today();
+  p.waterLog = [...(p.waterLog||[]), today()].slice(-30);
+  save(); render();
+  showToast(`💧 ${p.name} watered!`);
+  if (event) launchConfetti(event.clientX, event.clientY);
+  else launchConfetti();
+  if (settings.haptic && navigator.vibrate) navigator.vibrate([80,40,80]);
+}
+
+/* ═══════════════════════════════════════
+   FILTER
+═══════════════════════════════════════ */
+function setFilter(f) {
+  currentFilter = f;
+  document.querySelectorAll('.ftab').forEach(t => t.classList.toggle('active', t.dataset.f === f));
+  render();
+}
+
+/* ═══════════════════════════════════════
+   EMOJI PICKER
+═══════════════════════════════════════ */
+function buildEmojiPicker() {
+  document.getElementById('emoji-row').innerHTML = EMOJIS.map(e =>
+    `<button class="ep-btn${e===selEmoji?' sel':''}" onclick="pickEmoji('${e}')">${e}</button>`
+  ).join('');
+}
+function pickEmoji(e) {
+  selEmoji = e;
+  document.querySelectorAll('.ep-btn').forEach(b => b.classList.toggle('sel', b.textContent === e));
+}
+
+/* ═══════════════════════════════════════
+   HEALTH
+═══════════════════════════════════════ */
+function selHealth(h) {
+  selHealthVal = h;
+  document.querySelectorAll('.health-btn').forEach(b => b.classList.toggle('sel', b.dataset.h === h));
+}
+
+/* ═══════════════════════════════════════
+   FREQUENCY SLIDER
+═══════════════════════════════════════ */
+function updateFreq() {
+  const val = document.getElementById('inp-water').value;
+  document.getElementById('freq-num').textContent = val;
+  updateSlider();
+}
+function updateSlider() {
+  const inp = document.getElementById('inp-water');
+  const pct = ((inp.value - 1) / (60 - 1)) * 100;
+  inp.style.setProperty('--pct', pct + '%');
+}
+
+/* ═══════════════════════════════════════
+   ADD / EDIT
+═══════════════════════════════════════ */
+function openAdd() {
+  editId = null; selEmoji = EMOJIS[0]; selHealthVal = 'thriving';
+  document.getElementById('sheet-mode-title').textContent = 'New Plant';
+  document.getElementById('inp-name').value    = '';
+  document.getElementById('inp-species').value = '';
+  document.getElementById('inp-water').value   = 7;
+  document.getElementById('inp-sunlight').value= 'Partial sun';
+  document.getElementById('inp-notes').value   = '';
+  document.getElementById('btn-delete').classList.add('hidden');
+  buildEmojiPicker(); selHealth('thriving'); updateFreq();
+  document.getElementById('add-overlay').classList.add('open');
+}
+
+function openEdit(id) {
+  const p = plants.find(p => p.id === id); if (!p) return;
+  closeDetail(); editId = id;
+  selEmoji = p.emoji; selHealthVal = p.health;
+  document.getElementById('sheet-mode-title').textContent = 'Edit Plant';
+  document.getElementById('inp-name').value    = p.name;
+  document.getElementById('inp-species').value = p.species||'';
+  document.getElementById('inp-water').value   = p.waterDays;
+  document.getElementById('inp-sunlight').value= p.sunlight;
+  document.getElementById('inp-notes').value   = p.notes||'';
+  document.getElementById('btn-delete').classList.remove('hidden');
+  buildEmojiPicker(); selHealth(p.health); updateFreq();
+  document.getElementById('add-overlay').classList.add('open');
+}
+
+function closeAdd() { document.getElementById('add-overlay').classList.remove('open'); }
+
+function savePlant() {
+  const name = document.getElementById('inp-name').value.trim();
+  if (!name) { showToast('⚠️ Please enter a plant name'); return; }
+  const plant = {
+    id: editId || Date.now(),
+    emoji: selEmoji, name,
+    species: document.getElementById('inp-species').value.trim(),
+    waterDays: Math.max(1, parseInt(document.getElementById('inp-water').value)||7),
+    sunlight: document.getElementById('inp-sunlight').value,
+    health: selHealthVal,
+    notes: document.getElementById('inp-notes').value.trim(),
+    lastWatered: editId ? plants.find(p=>p.id===editId)?.lastWatered || today() : today(),
+    waterLog: editId ? plants.find(p=>p.id===editId)?.waterLog || [] : []
+  };
+  if (editId) {
+    plants = plants.map(p => p.id === editId ? plant : p);
+    showToast('✅ Plant updated!');
+  } else {
+    plants.unshift(plant);
+    showToast('🌱 Plant added!');
+    launchConfetti();
+  }
+  save(); render(); closeAdd();
+}
+
+function deletePlant() {
+  if (!confirm('Remove this plant from your garden?')) return;
+  plants = plants.filter(p => p.id !== editId);
+  save(); render(); closeAdd();
+  showToast('🗑 Plant removed');
+}
+
+function today() { return new Date().toISOString().split('T')[0]; }
+
+/* ═══════════════════════════════════════
+   DETAIL VIEW
+═══════════════════════════════════════ */
+function openDetail(id) {
+  const p = plants.find(p => p.id === id); if (!p) return;
+  const due = getDaysDue(p);
+  const dLabel = due < 0 ? `${Math.abs(due)} days overdue!` : due === 0 ? 'Water today!' : `In ${due} days`;
+  const hColors = { thriving: ['#34D399','rgba(52,211,153,0.15)'], okay: ['#22D3EE','rgba(34,211,238,0.15)'], 'needs-help': ['#FBBF24','rgba(251,191,36,0.15)'], sick: ['#F87171','rgba(248,113,113,0.15)'] };
+  const hLabels = { thriving:'✨ Thriving', okay:'🙂 Okay', 'needs-help':'🌡 Needs Help', sick:'😟 Sick' };
+  const [hCol, hBg] = hColors[p.health] || ['#6EE7B7', 'rgba(52,211,153,0.1)'];
+
+  // Ring calc
+  const pct = Math.max(0, Math.min(1, due / p.waterDays));
+  const r = 45; const circ = 2 * Math.PI * r;
+  const offset = circ * (1 - pct);
+  const ringColor = due < 0 ? '#F87171' : due === 0 ? '#FBBF24' : '#34D399';
+
+  const logs = (p.waterLog||[]).slice(-6).reverse().map(d =>
+    `<div class="log-item"><span>💧</span> Watered <span class="li-date">${new Date(d).toLocaleDateString('en',{month:'short',day:'numeric'})}</span></div>`
+  ).join('');
+
+  document.getElementById('detail-body').innerHTML = `
+    <div class="detail-hero">
+      <span class="detail-emoji">${p.emoji}</span>
+      <div class="detail-name">${esc(p.name)}</div>
+      <div class="detail-species">${esc(p.species||'Unknown species')}</div>
+      <span class="health-badge" style="background:${hBg};color:${hCol}">${hLabels[p.health]||p.health}</span>
+    </div>
+    <div class="water-ring-wrap">
+      <div class="water-ring-container">
+        <svg class="water-ring-svg" viewBox="0 0 100 100">
+          <circle class="water-ring-bg" cx="50" cy="50" r="${r}"/>
+          <circle class="water-ring-fill" cx="50" cy="50" r="${r}"
+            stroke="${ringColor}" stroke-dasharray="${circ}" stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="water-ring-center">
+          <div class="water-ring-days" style="color:${ringColor}">${due < 0 ? '!' : due}</div>
+          <div class="water-ring-lbl">${due < 0 ? 'OVERDUE' : due === 0 ? 'TODAY' : 'DAYS LEFT'}</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-box"><div class="ib-lbl">🌤 Sunlight</div><div class="ib-val">${p.sunlight}</div></div>
+      <div class="info-box"><div class="ib-lbl">🔄 Frequency</div><div class="ib-val">Every ${p.waterDays}d</div></div>
+    </div>
+    ${p.notes ? `<div class="note-box">💬 ${esc(p.notes)}</div>` : ''}
+    <div class="log-section">
+      <div class="log-title">Watering History</div>
+      <div class="log-list">${logs || '<div style="color:var(--muted);font-size:0.8rem;padding:10px;text-align:center">No watering logs yet</div>'}</div>
+    </div>
+    <button class="btn-water-now" onclick="waterNow(${p.id})">💧 Water Now</button>
+    <button class="btn-save" style="background:linear-gradient(135deg,var(--green-dim),var(--green-dk))" onclick="openEdit(${p.id})">✏️ Edit Plant</button>
+  `;
+  document.getElementById('detail-overlay').classList.add('open');
+}
+
+function closeDetail() { document.getElementById('detail-overlay').classList.remove('open'); }
+
+function waterNow(id) {
+  const p = plants.find(p => p.id === id); if (!p) return;
+  p.lastWatered = today();
+  p.waterLog = [...(p.waterLog||[]), today()].slice(-30);
+  save(); render(); closeDetail();
+  showToast(`💧 ${p.name} watered!`);
+  launchConfetti();
+  if (settings.haptic && navigator.vibrate) navigator.vibrate([100,50,100]);
+}
+
+/* ═══════════════════════════════════════
+   SCHEDULE VIEW
+═══════════════════════════════════════ */
+function renderSchedule() {
+  // Week strip
+  const strip = document.getElementById('week-strip');
+  const now = new Date(); now.setHours(0,0,0,0);
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = '';
+  for (let i = -1; i <= 5; i++) {
+    const d = new Date(now); d.setDate(now.getDate() + i);
+    const isToday = i === 0;
+    const dayPlants = plants.filter(p => {
+      const due = getDaysDue(p);
+      return due === i;
+    });
+    const dots = dayPlants.map(p => {
+      const c = { thriving:'#34D399', okay:'#22D3EE', 'needs-help':'#FBBF24', sick:'#F87171' }[p.health]||'#34D399';
+      return `<div class="day-dot" style="background:${c}" title="${p.name}"></div>`;
+    }).join('');
+    html += `<div class="day-col${isToday?' today-col':''}">
+      <div class="day-name">${days[d.getDay()]}</div>
+      <div class="day-num">${d.getDate()}</div>
+      <div class="day-dots">${dots}</div>
+    </div>`;
+  }
+  strip.innerHTML = html;
+
+  // List sorted by due
+  const sorted = [...plants].sort((a,b) => getDaysDue(a) - getDaysDue(b));
+  document.getElementById('schedule-list').innerHTML = sorted.map((p,i) => {
+    const due = getDaysDue(p);
+    let badgeCls, badgeTxt;
+    if (due < 0)     { badgeCls='overdue'; badgeTxt=`${Math.abs(due)}d overdue`; }
+    else if (due===0){ badgeCls='today';   badgeTxt='Today'; }
+    else if (due<=3) { badgeCls='soon';    badgeTxt=`In ${due}d`; }
+    else             { badgeCls='later';   badgeTxt=`In ${due}d`; }
+    const nextDate = new Date(); nextDate.setDate(nextDate.getDate() + due);
+    return `<div class="sched-item" style="animation-delay:${i*0.05}s" onclick="openDetail(${p.id})">
+      <div class="sched-emoji">${p.emoji}</div>
+      <div class="sched-info">
+        <div class="sched-name">${esc(p.name)}</div>
+        <div class="sched-date">${p.species||'Unknown species'} · ${due===0?'Today':nextDate.toLocaleDateString('en',{month:'short',day:'numeric'})}</div>
+      </div>
+      <span class="sched-badge ${badgeCls}">${badgeTxt}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ═══════════════════════════════════════
+   TIPS
+═══════════════════════════════════════ */
+function renderTips() {
+  document.getElementById('tips-list').innerHTML = TIPS.map((t, i) =>
+    `<div class="tip-card" style="animation-delay:${i*0.08}s">
+      <span class="tip-icon">${t.icon}</span>
+      <div class="tip-title">${t.title}</div>
+      <div class="tip-text">${t.text}</div>
+    </div>`
+  ).join('');
+}
+
+/* ═══════════════════════════════════════
+   SETTINGS
+═══════════════════════════════════════ */
+function applySettings() {
+  document.getElementById('haptic-toggle').classList.toggle('on', settings.haptic);
+  document.getElementById('confetti-toggle').classList.toggle('on', settings.confetti);
+}
+function toggleHaptic() {
+  settings.haptic = !settings.haptic;
+  document.getElementById('haptic-toggle').classList.toggle('on', settings.haptic);
+  saveSettings(); showToast(settings.haptic ? '📳 Haptic on' : '🔇 Haptic off');
+}
+function toggleConfetti() {
+  settings.confetti = !settings.confetti;
+  document.getElementById('confetti-toggle').classList.toggle('on', settings.confetti);
+  saveSettings(); showToast(settings.confetti ? '🎉 Confetti on' : '😶 Confetti off');
+}
+function toggleNotif() {
+  const tog = document.getElementById('notif-toggle');
+  if (!tog.classList.contains('on')) {
+    Notification.requestPermission().then(p => {
+      if (p === 'granted') { tog.classList.add('on'); showToast('🔔 Notifications enabled!'); }
+      else showToast('❌ Notifications blocked');
+    });
+  } else { tog.classList.remove('on'); showToast('🔕 Notifications off'); }
+}
+function restoreSamples() {
+  if (!confirm('Add sample plants to your garden?')) return;
+  const newSamples = SAMPLE.map(s => ({ ...s, id: Date.now() + Math.random() }));
+  plants = [...newSamples, ...plants];
+  save(); render(); showToast('🌿 Sample plants added!');
+}
+function clearAllData() {
+  if (!confirm('Delete ALL plants and data? This cannot be undone.')) return;
+  plants = []; save(); render();
+  showToast('🗑 All data cleared');
+}
+
+/* ═══════════════════════════════════════
+   NAV
+═══════════════════════════════════════ */
+function navTo(tab) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.toggle('active', b.dataset.view === tab));
+  document.querySelectorAll('[id^="view-"]').forEach(el => {
+    el.classList.toggle('active', el.id === `view-${tab}`);
+  });
+  if (tab === 'schedule') renderSchedule();
+}
+
+/* ═══════════════════════════════════════
+   UTILS
+═══════════════════════════════════════ */
+function overlayClick(e, id) {
+  if (e.target.id === id) document.getElementById(id).classList.remove('open');
+}
+function esc(s='') {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+let toastTimer = null;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ═══════════════════════════════════════
+   SERVICE WORKER
+═══════════════════════════════════════ */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js')
+    .then(r => console.log('[Leafy] SW registered', r.scope))
+    .catch(e => console.warn('[Leafy] SW error', e));
+}
+
+/* ═══════════════════════════════════════
+   PWA INSTALL
+═══════════════════════════════════════ */
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault(); deferredPrompt = e;
+  if (!sessionStorage.getItem('leafy_install_dismissed')) {
+    setTimeout(() => document.getElementById('install-banner').classList.add('visible'), 4000);
+  }
+});
+function installApp() {
+  document.getElementById('install-banner').classList.remove('visible');
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then(r => {
+      if (r.outcome === 'accepted') { showToast('🌿 Leafy installed!'); launchConfetti(); }
+      deferredPrompt = null;
+    });
+  }
+}
+function dismissInstall() {
+  document.getElementById('install-banner').classList.remove('visible');
+  sessionStorage.setItem('leafy_install_dismissed', '1');
+}
+window.addEventListener('appinstalled', () => { showToast('✅ App installed!'); deferredPrompt = null; });
+
+if ('Notification' in window && Notification.permission === 'default') {
+  setTimeout(() => {
+    if (plants.some(p => getDaysDue(p) <= 0)) {
+      Notification.requestPermission();
+    }
+  }, 12000);
+}
+</script>
+</body>
+</html>

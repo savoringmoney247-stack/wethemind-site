@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Paper Workshop — PDF Tools</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{
+  --ink:#101a23;
+  --ink-2:#182530;
+  --ink-3:#1f2f3c;
+  --paper:#f1e8d6;
+  --paper-2:#e7dbbd;
+  --paper-shadow:#c9bb95;
+  --amber:#e8a33d;
+  --amber-dark:#c9822a;
+  --stamp:#c1443c;
+  --stamp-dark:#9c342e;
+  --sage:#5c7f6b;
+  --sage-dark:#456052;
+  --text-dark:#2b2320;
+  --text-mute:#5b5044;
+  --text-light:#f1e8d6;
+  --font-display:'Fraunces', serif;
+  --font-ui:'Space Grotesk', sans-serif;
+  --font-body:'Inter', sans-serif;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse 900px 500px at 50% -10%, rgba(232,163,61,0.16), transparent 60%),
+    radial-gradient(ellipse 1200px 800px at 85% 110%, rgba(92,127,107,0.10), transparent 55%),
+    linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 45%, var(--ink-3) 100%);
+  font-family:var(--font-body);
+  color:var(--text-light);
+  padding:0 0 80px;
+}
+::selection{background:var(--amber); color:var(--ink);}
+
+/* ---------- header ---------- */
+.desk-header{
+  max-width:1180px;
+  margin:0 auto;
+  padding:54px 24px 20px;
+  text-align:center;
+  position:relative;
+}
+.lamp-glow{
+  position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+  width:640px; height:280px; pointer-events:none;
+  background:radial-gradient(ellipse at 50% 0%, rgba(232,163,61,0.28), transparent 70%);
+  filter:blur(2px);
+}
+.eyebrow{
+  font-family:var(--font-ui); font-size:12.5px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--amber); font-weight:600; position:relative;
+}
+.eyebrow::before, .eyebrow::after{content:"✂";  margin:0 10px; opacity:.7; font-size:11px;}
+h1.title{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:clamp(2.6rem, 6vw, 4.4rem);
+  margin:14px 0 10px;
+  letter-spacing:-0.01em;
+  color:var(--text-light);
+  position:relative;
+}
+h1.title em{
+  font-style:italic; font-weight:500; color:var(--amber);
+}
+.subtitle{
+  font-family:var(--font-body); font-size:16.5px; color:#c9c0ac; max-width:560px; margin:0 auto;
+  line-height:1.6;
+}
+.subtitle b{color:var(--paper); font-weight:600;}
+
+/* ---------- tabs (folder tabs on a paper stack) ---------- */
+.tabs{
+  max-width:1180px; margin:38px auto 0; padding:0 24px;
+  display:flex; gap:6px; flex-wrap:wrap; justify-content:center;
+  position:relative; z-index:2;
+}
+.tab-btn{
+  font-family:var(--font-ui); font-weight:600; font-size:14px;
+  background:var(--paper-2); color:var(--text-mute);
+  border:none; padding:14px 20px 16px;
+  border-radius:12px 12px 0 0;
+  cursor:pointer;
+  transform:translateY(8px);
+  transition:transform .18s ease, background .18s ease, color .18s ease;
+  display:flex; align-items:center; gap:8px;
+  box-shadow:0 -2px 0 rgba(0,0,0,0.05) inset;
+}
+.tab-btn .ic{font-size:16px;}
+.tab-btn:hover{ transform:translateY(2px); color:var(--text-dark);}
+.tab-btn.active{
+  background:var(--paper); color:var(--text-dark);
+  transform:translateY(0);
+  box-shadow:0 -10px 24px rgba(0,0,0,0.25);
+}
+
+/* ---------- main paper panel ---------- */
+main{
+  max-width:1180px; margin:0 auto; padding:0 24px;
+}
+.panel{
+  display:none;
+  background:var(--paper);
+  border-radius:6px 22px 22px 22px;
+  padding:40px clamp(20px,4vw,52px) 48px;
+  position:relative;
+  box-shadow:0 30px 60px -20px rgba(0,0,0,0.55), 0 2px 0 rgba(255,255,255,0.4) inset;
+  color:var(--text-dark);
+}
+.panel.active{display:block; animation:riseIn .35s cubic-bezier(.2,.8,.3,1);}
+@keyframes riseIn{from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);}}
+.panel::before{
+  content:""; position:absolute; inset:0; border-radius:inherit;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,0.015) 0 2px, transparent 2px 4px);
+  pointer-events:none;
+}
+.panel-head{ display:flex; align-items:flex-start; justify-content:space-between; gap:20px; flex-wrap:wrap; margin-bottom:28px;}
+.panel-head h2{
+  font-family:var(--font-display); font-size:clamp(1.6rem,3vw,2.2rem); margin:0 0 6px; font-weight:700;
+}
+.panel-head p{ margin:0; color:var(--text-mute); max-width:520px; font-size:14.5px; line-height:1.55;}
+.panel-tag{
+  font-family:var(--font-ui); font-size:11.5px; letter-spacing:.14em; text-transform:uppercase;
+  background:var(--ink); color:var(--paper); padding:7px 13px; border-radius:20px; white-space:nowrap;
+  transform:rotate(-2deg);
+}
+
+/* ---------- dropzone ---------- */
+.dropzone{
+  border:2.5px dashed var(--paper-shadow);
+  border-radius:16px;
+  padding:36px 20px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .15s, background .15s, transform .1s;
+  background:rgba(255,255,255,0.25);
+  position:relative;
+}
+.dropzone:hover{border-color:var(--amber-dark); background:rgba(255,255,255,0.4);}
+.dropzone.drag{ border-color:var(--sage); background:rgba(92,127,107,0.12); transform:scale(1.01);}
+.dropzone .dz-icon{font-size:34px; display:block; margin-bottom:10px;}
+.dropzone .dz-title{font-family:var(--font-ui); font-weight:600; font-size:16px; margin-bottom:4px;}
+.dropzone .dz-sub{font-size:13px; color:var(--text-mute);}
+.dropzone input{display:none;}
+
+/* ---------- file cards / grid ---------- */
+.card-row{ display:flex; flex-wrap:wrap; gap:14px; margin-top:22px;}
+.file-card{
+  background:#fffdf8;
+  border-radius:10px;
+  padding:12px 14px 12px 12px;
+  width:190px;
+  box-shadow:0 8px 18px -8px rgba(43,35,32,0.35), 0 0 0 1px rgba(0,0,0,0.04);
+  cursor:grab;
+  position:relative;
+  transition:transform .15s, box-shadow .15s;
+  display:flex; flex-direction:column; gap:8px;
+}
+.file-card:hover{transform:translateY(-3px) rotate(-0.6deg); box-shadow:0 14px 26px -10px rgba(43,35,32,0.45);}
+.file-card.dragging{opacity:.35;}
+.file-card .badge{
+  position:absolute; top:-8px; left:-8px; background:var(--ink); color:var(--paper);
+  font-family:var(--font-ui); font-size:11px; font-weight:700; width:22px; height:22px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+}
+.file-card .thumb{
+  width:100%; height:110px; border-radius:6px; background:var(--paper-2); overflow:hidden;
+  display:flex; align-items:center; justify-content:center; font-size:26px; color:var(--text-mute);
+}
+.file-card .thumb img{width:100%; height:100%; object-fit:cover;}
+.file-card .fname{font-size:12.5px; font-weight:600; word-break:break-word; line-height:1.3;}
+.file-card .fmeta{font-size:11px; color:var(--text-mute); font-family:var(--font-ui);}
+.file-card .rm{
+  position:absolute; top:-8px; right:-8px; background:var(--stamp); color:#fff; border:none;
+  width:22px; height:22px; border-radius:50%; font-size:13px; cursor:pointer; line-height:1;
+  display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* ---------- buttons ---------- */
+.btn{
+  font-family:var(--font-ui); font-weight:600; font-size:14.5px;
+  border:none; border-radius:10px; padding:14px 26px; cursor:pointer;
+  display:inline-flex; align-items:center; gap:9px;
+  transition:transform .12s, box-shadow .12s, filter .12s;
+}
+.btn:active{transform:translateY(1px) scale(.985);}
+.btn:disabled{opacity:.45; cursor:not-allowed;}
+.btn-primary{ background:linear-gradient(180deg, var(--amber), var(--amber-dark)); color:var(--ink); box-shadow:0 8px 18px -6px rgba(201,130,42,0.6);}
+.btn-primary:hover:not(:disabled){filter:brightness(1.05); transform:translateY(-1px);}
+.btn-danger{ background:linear-gradient(180deg,#d15a52,var(--stamp-dark)); color:#fff; box-shadow:0 8px 18px -6px rgba(156,52,46,0.55);}
+.btn-ghost{ background:transparent; color:var(--text-dark); border:1.5px solid rgba(43,35,32,0.25);}
+.btn-ghost:hover{background:rgba(43,35,32,0.06);}
+.btn-sage{ background:linear-gradient(180deg,#719f88,var(--sage-dark)); color:#fff; box-shadow:0 8px 18px -6px rgba(69,96,82,0.5);}
+.actions-row{display:flex; gap:12px; flex-wrap:wrap; margin-top:26px; align-items:center;}
+.hint{font-size:12.5px; color:var(--text-mute); margin-top:6px;}
+
+/* ---------- empty state ---------- */
+.empty-state{ text-align:center; padding:30px 10px; color:var(--text-mute); font-size:13.5px;}
+
+/* ---------- thumbnail grid (split/delete) ---------- */
+.thumb-grid{ display:flex; flex-wrap:wrap; gap:14px; margin-top:24px;}
+.page-tile{
+  width:128px; cursor:pointer; position:relative; background:#fffdf8; border-radius:8px; padding:6px;
+  box-shadow:0 6px 14px -8px rgba(43,35,32,0.4), 0 0 0 1px rgba(0,0,0,0.04);
+  transition:transform .12s;
+}
+.page-tile:hover{transform:translateY(-2px);}
+.page-tile canvas, .page-tile img{width:100%; display:block; border-radius:4px; background:#fff;}
+.page-tile .pg-num{
+  font-family:var(--font-ui); font-size:11px; font-weight:600; text-align:center; margin-top:5px; color:var(--text-mute);
+}
+.page-tile.selected{outline:3px solid var(--sage); outline-offset:2px;}
+.page-tile.selected::after{
+  content:"✓"; position:absolute; top:4px; right:4px; background:var(--sage); color:#fff;
+  width:20px; height:20px; border-radius:50%; font-size:12px; display:flex; align-items:center; justify-content:center;
+}
+.page-tile.marked{filter:grayscale(.5) brightness(.85);}
+.page-tile.marked::after{
+  content:"✕"; position:absolute; inset:0; margin:auto; width:34px; height:34px; background:var(--stamp);
+  color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:17px; font-weight:700;
+  box-shadow:0 4px 10px rgba(0,0,0,0.35);
+}
+
+/* ---------- editor canvases (add text / redact) ---------- */
+.editor-wrap{ margin-top:22px;}
+.editor-toolbar{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:16px; font-family:var(--font-ui); font-size:13.5px;}
+.editor-toolbar .pagenav{ display:flex; align-items:center; gap:8px; background:#fffdf8; padding:6px 8px; border-radius:10px; box-shadow:0 0 0 1px rgba(0,0,0,0.05);}
+.editor-toolbar .pagenav button{ background:var(--ink); color:var(--paper); border:none; width:28px; height:28px; border-radius:6px; cursor:pointer; font-size:14px;}
+.editor-toolbar .pagenav button:disabled{opacity:.35; cursor:not-allowed;}
+.canvas-stage{
+  position:relative; display:inline-block; max-width:100%; background:#fff; border-radius:4px;
+  box-shadow:0 20px 40px -18px rgba(0,0,0,0.5);
+  border:1px solid rgba(0,0,0,0.06);
+}
+.canvas-stage canvas{ display:block; max-width:100%; height:auto; border-radius:4px; cursor:crosshair;}
+.stage-overlay{ position:absolute; inset:0; }
+
+.text-box{
+  position:absolute; min-width:26px; min-height:20px; padding:2px 5px;
+  outline:1.5px dashed rgba(92,127,107,0.7); background:rgba(255,255,255,0.0);
+  cursor:move; white-space:nowrap;
+}
+.text-box[data-active="1"]{ outline:1.5px solid var(--sage); background:rgba(255,255,255,0.4);}
+.text-box .txt{ outline:none; cursor:text; }
+.text-box .mini-toolbar{
+  position:absolute; bottom:100%; left:0; margin-bottom:6px; display:none; gap:4px; background:var(--ink);
+  padding:5px 6px; border-radius:8px; box-shadow:0 6px 14px rgba(0,0,0,0.35); white-space:nowrap;
+}
+.text-box[data-active="1"] .mini-toolbar{display:flex;}
+.mini-toolbar button{ background:var(--ink-3); color:var(--paper); border:none; width:22px; height:22px; border-radius:5px; cursor:pointer; font-size:12px;}
+.mini-toolbar .swatch{ width:16px; height:16px; border-radius:50%; cursor:pointer; border:1.5px solid rgba(255,255,255,0.5); padding:0;}
+
+.redact-box{
+  position:absolute; background:rgba(193,68,60,0.35); border:1.5px solid var(--stamp); border-radius:2px;
+}
+.redact-box .rm2{
+  position:absolute; top:-9px; right:-9px; background:var(--stamp); color:#fff; border:none; width:18px; height:18px;
+  border-radius:50%; font-size:11px; cursor:pointer; line-height:1;
+}
+
+.field-row{display:flex; align-items:center; gap:8px;}
+.field-row label{color:var(--text-mute); font-size:12.5px;}
+.field-row input[type=color]{ width:26px; height:26px; border:none; border-radius:50%; overflow:hidden; padding:0; background:none; cursor:pointer;}
+.field-row input[type=range]{accent-color:var(--sage);}
+
+/* ---------- stamp success overlay ---------- */
+#stamp-overlay{
+  position:fixed; inset:0; display:none; align-items:center; justify-content:center; z-index:999; pointer-events:none;
+}
+.stamp-mark{
+  font-family:var(--font-ui); font-weight:700; font-size:38px; letter-spacing:.05em; color:var(--stamp);
+  border:6px solid var(--stamp); border-radius:14px; padding:18px 40px; transform:rotate(-8deg) scale(0.4);
+  opacity:0; text-transform:uppercase; background:rgba(241,232,214,0.9);
+  box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+.stamp-mark.show{ animation:stampIn .55s cubic-bezier(.2,1.4,.4,1) forwards;}
+@keyframes stampIn{
+  0%{opacity:0; transform:rotate(-8deg) scale(2.2);}
+  55%{opacity:1; transform:rotate(-8deg) scale(0.92);}
+  70%{transform:rotate(-8deg) scale(1.04);}
+  100%{opacity:1; transform:rotate(-8deg) scale(1);}
+}
+
+.footer-note{
+  max-width:1180px; margin:34px auto 0; padding:0 26px; text-align:center; color:#8b8371; font-size:12.5px; font-family:var(--font-ui);
+}
+.footer-note b{color:var(--paper-2);}
+
+@media (max-width:640px){
+  .tabs{gap:4px;}
+  .tab-btn{padding:11px 13px 13px; font-size:12.5px;}
+  .panel{padding:28px 16px 36px;}
+}
+</style>
+</head>
+<body>
+
+<div class="desk-header">
+  <div class="lamp-glow"></div>
+  <div class="eyebrow">Every tool below runs in your browser</div>
+  <h1 class="title">The Paper <em>Workshop</em></h1>
+  <p class="subtitle">Merge, split, stitch and mark up your PDFs like paper on a desk. <b>Nothing you upload ever leaves this tab</b> — no servers, no accounts, no waiting on uploads.</p>
+</div>
+
+<nav class="tabs" id="tabs">
+  <button class="tab-btn active" data-tool="merge"><span class="ic">📎</span>Merge PDFs</button>
+  <button class="tab-btn" data-tool="img2pdf"><span class="ic">🖼️</span>JPG → PDF</button>
+  <button class="tab-btn" data-tool="split"><span class="ic">✂️</span>Split PDF</button>
+  <button class="tab-btn" data-tool="delete"><span class="ic">🗑️</span>Delete pages</button>
+  <button class="tab-btn" data-tool="addtext"><span class="ic">✒️</span>Add text</button>
+  <button class="tab-btn" data-tool="redact"><span class="ic">🧽</span>Erase text</button>
+</nav>
+
+<main>
+
+  <!-- ===================== MERGE ===================== -->
+  <section class="panel active" id="panel-merge">
+    <div class="panel-head">
+      <div>
+        <h2>Merge PDFs</h2>
+        <p>Drop in as many PDFs as you like, drag the cards into the order you want, and stitch them into one file.</p>
+      </div>
+      <div class="panel-tag">Stack &amp; staple</div>
+    </div>
+    <div class="dropzone" id="merge-drop">
+      <span class="dz-icon">📎</span>
+      <div class="dz-title">Drop PDFs here, or click to browse</div>
+      <div class="dz-sub">You can add more at any time — reorder by dragging</div>
+      <input type="file" id="merge-input" accept="application/pdf,.pdf" multiple>
+    </div>
+    <div class="card-row" id="merge-list"></div>
+    <div class="empty-state" id="merge-empty">An empty desk. Drop a few PDFs above to get started.</div>
+    <div class="actions-row">
+      <button class="btn btn-primary" id="merge-btn" disabled>📎 Merge &amp; download</button>
+      <button class="btn btn-ghost" id="merge-clear" style="display:none;">Clear all</button>
+    </div>
+  </section>
+
+  <!-- ===================== IMG2PDF ===================== -->
+  <section class="panel" id="panel-img2pdf">
+    <div class="panel-head">
+      <div>
+        <h2>JPG / PNG → PDF</h2>
+        <p>Turn a handful of photos or scans into one tidy, print-ready PDF. Drag to set the page order.</p>
+      </div>
+      <div class="panel-tag">Photo album</div>
+    </div>
+    <div class="dropzone" id="img-drop">
+      <span class="dz-icon">🖼️</span>
+      <div class="dz-title">Drop images here, or click to browse</div>
+      <div class="dz-sub">JPG and PNG supported — each image becomes one page</div>
+      <input type="file" id="img-input" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple>
+    </div>
+    <div class="card-row" id="img-list"></div>
+    <div class="empty-state" id="img-empty">No photos on the desk yet. Drop some images above.</div>
+    <div class="actions-row">
+      <button class="btn btn-primary" id="img-btn" disabled>🖼️ Convert &amp; download PDF</button>
+      <button class="btn btn-ghost" id="img-clear" style="display:none;">Clear all</button>
+    </div>
+  </section>
+
+  <!-- ===================== SPLIT ===================== -->
+  <section class="panel" id="panel-split">
+    <div class="panel-head">
+      <div>
+        <h2>Split a PDF</h2>
+        <p>Upload one PDF, click the pages you want, then pull them out as one file or as separate pages in a zip.</p>
+      </div>
+      <div class="panel-tag">Cut along the line</div>
+    </div>
+    <div class="dropzone" id="split-drop">
+      <span class="dz-icon">✂️</span>
+      <div class="dz-title">Drop a PDF here, or click to browse</div>
+      <div class="dz-sub">One file at a time for splitting</div>
+      <input type="file" id="split-input" accept="application/pdf,.pdf">
+    </div>
+    <div id="split-body" style="display:none;">
+      <div class="actions-row" style="margin-top:22px;">
+        <button class="btn btn-ghost" id="split-all">Select all</button>
+        <button class="btn btn-ghost" id="split-none">Clear selection</button>
+        <span class="hint" id="split-count" style="margin-left:auto;"></span>
+      </div>
+      <div class="thumb-grid" id="split-grid"></div>
+      <div class="actions-row">
+        <button class="btn btn-primary" id="split-one" disabled>📄 Download selected as one PDF</button>
+        <button class="btn btn-sage" id="split-zip" disabled>🗂️ Download each page (ZIP)</button>
+        <button class="btn btn-ghost" id="split-reset">Start over</button>
+      </div>
+    </div>
+    <div class="empty-state" id="split-empty">Nothing on the cutting board yet. Drop a PDF above.</div>
+  </section>
+
+  <!-- ===================== DELETE PAGES ===================== -->
+  <section class="panel" id="panel-delete">
+    <div class="panel-head">
+      <div>
+        <h2>Delete pages</h2>
+        <p>Upload a PDF, tap the pages you don't need, and download the trimmed-down result.</p>
+      </div>
+      <div class="panel-tag">Tear it out</div>
+    </div>
+    <div class="dropzone" id="delete-drop">
+      <span class="dz-icon">🗑️</span>
+      <div class="dz-title">Drop a PDF here, or click to browse</div>
+      <div class="dz-sub">One file at a time</div>
+      <input type="file" id="delete-input" accept="application/pdf,.pdf">
+    </div>
+    <div id="delete-body" style="display:none;">
+      <div class="actions-row" style="margin-top:22px;">
+        <span class="hint" id="delete-count"></span>
+      </div>
+      <div class="thumb-grid" id="delete-grid"></div>
+      <div class="actions-row">
+        <button class="btn btn-danger" id="delete-btn" disabled>🗑️ Remove marked pages &amp; download</button>
+        <button class="btn btn-ghost" id="delete-reset">Start over</button>
+      </div>
+    </div>
+    <div class="empty-state" id="delete-empty">Nothing to trim yet. Drop a PDF above.</div>
+  </section>
+
+  <!-- ===================== ADD TEXT ===================== -->
+  <section class="panel" id="panel-addtext">
+    <div class="panel-head">
+      <div>
+        <h2>Add text</h2>
+        <p>Click anywhere on the page to drop a text box, type, drag it into place, then bake it into the PDF.</p>
+      </div>
+      <div class="panel-tag">Pen &amp; ink</div>
+    </div>
+    <div class="dropzone" id="addtext-drop">
+      <span class="dz-icon">✒️</span>
+      <div class="dz-title">Drop a PDF here, or click to browse</div>
+      <div class="dz-sub">One file at a time</div>
+      <input type="file" id="addtext-input" accept="application/pdf,.pdf">
+    </div>
+    <div id="addtext-body" style="display:none;" class="editor-wrap">
+      <div class="editor-toolbar">
+        <div class="pagenav">
+          <button id="at-prev">‹</button>
+          <span id="at-pageinfo" style="min-width:90px; text-align:center;">Page 1 of 1</span>
+          <button id="at-next">›</button>
+        </div>
+        <div class="field-row"><span>Click the page to add a text box · double‑click a box to type</span></div>
+      </div>
+      <div class="canvas-stage" id="at-stage">
+        <canvas id="at-canvas"></canvas>
+        <div class="stage-overlay" id="at-overlay"></div>
+      </div>
+      <div class="actions-row">
+        <button class="btn btn-primary" id="at-apply" disabled>✒️ Bake text &amp; download</button>
+        <button class="btn btn-ghost" id="at-reset">Start over</button>
+      </div>
+      <p class="hint">Tip: click a box once to select it (shows a mini toolbar for size &amp; color), double‑click to edit the words.</p>
+    </div>
+    <div class="empty-state" id="addtext-empty">No page open yet. Drop a PDF above.</div>
+  </section>
+
+  <!-- ===================== REDACT / ERASE TEXT ===================== -->
+  <section class="panel" id="panel-redact">
+    <div class="panel-head">
+      <div>
+        <h2>Erase / delete text</h2>
+        <p>Drag a box over anything you want gone — a name, a paragraph, a stamp — and it's painted over for good.</p>
+      </div>
+      <div class="panel-tag">White‑out</div>
+    </div>
+    <div class="dropzone" id="redact-drop">
+      <span class="dz-icon">🧽</span>
+      <div class="dz-title">Drop a PDF here, or click to browse</div>
+      <div class="dz-sub">One file at a time</div>
+      <input type="file" id="redact-input" accept="application/pdf,.pdf">
+    </div>
+    <div id="redact-body" style="display:none;" class="editor-wrap">
+      <div class="editor-toolbar">
+        <div class="pagenav">
+          <button id="rd-prev">‹</button>
+          <span id="rd-pageinfo" style="min-width:90px; text-align:center;">Page 1 of 1</span>
+          <button id="rd-next">›</button>
+        </div>
+        <div class="field-row">
+          <label>Cover colour</label>
+          <input type="color" id="rd-color" value="#ffffff">
+        </div>
+        <div class="field-row"><span>Click and drag over the text to erase it</span></div>
+      </div>
+      <div class="canvas-stage" id="rd-stage">
+        <canvas id="rd-canvas"></canvas>
+        <div class="stage-overlay" id="rd-overlay"></div>
+      </div>
+      <div class="actions-row">
+        <button class="btn btn-primary" id="rd-apply" disabled>🧽 Apply &amp; download</button>
+        <button class="btn btn-ghost" id="rd-reset">Start over</button>
+      </div>
+    </div>
+    <div class="empty-state" id="redact-empty">No page open yet. Drop a PDF above.</div>
+  </section>
+
+</main>
+
+<p class="footer-note">Built for <b>Mr. KC's</b> desk — merges, splits and marks up paper the old-fashioned way, just faster. All processing happens locally in your browser.</p>
+
+<div id="stamp-overlay"><div class="stamp-mark" id="stamp-mark">Done!</div></div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+const { PDFDocument, rgb, StandardFonts } = PDFLib;
+
+/* ---------------- helpers ---------------- */
+let uidCounter = 1;
+const uid = () => uidCounter++;
+
+function readAsArrayBuffer(file){
+  return new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = () => rej(r.error);
+    r.readAsArrayBuffer(file);
+  });
+}
+function readAsDataURL(file){
+  return new Promise((res, rej)=>{
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.onerror = () => rej(r.error);
+    r.readAsDataURL(file);
+  });
+}
+function downloadBlob(bytes, filename, mime){
+  const blob = new Blob([bytes], {type: mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url), 4000);
+}
+function fmtBytes(n){
+  if(n < 1024) return n + ' B';
+  if(n < 1024*1024) return (n/1024).toFixed(1) + ' KB';
+  return (n/1024/1024).toFixed(1) + ' MB';
+}
+function hexToRgb01(hex){
+  hex = hex.replace('#','');
+  const r = parseInt(hex.substring(0,2),16)/255;
+  const g = parseInt(hex.substring(2,4),16)/255;
+  const b = parseInt(hex.substring(4,6),16)/255;
+  return {r,g,b};
+}
+function showStamp(text){
+  const overlay = document.getElementById('stamp-overlay');
+  const mark = document.getElementById('stamp-mark');
+  mark.textContent = text || 'Done!';
+  mark.classList.remove('show'); void mark.offsetWidth;
+  overlay.style.display = 'flex';
+  mark.classList.add('show');
+  setTimeout(()=>{ overlay.style.display='none'; }, 1300);
+}
+function setBtnBusy(btn, busyLabel, normalLabel){
+  btn.dataset.normal = normalLabel !== undefined ? normalLabel : btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '⏳ ' + busyLabel;
+}
+function unsetBtnBusy(btn){
+  btn.disabled = false;
+  btn.innerHTML = btn.dataset.normal;
+}
+
+/* generic draggable-card reorder within a container */
+function enableReorder(container, onReorder){
+  let dragIdx = null;
+  container.addEventListener('dragstart', e=>{
+    const card = e.target.closest('.file-card');
+    if(!card) return;
+    dragIdx = Number(card.dataset.idx);
+    card.classList.add('dragging');
+  });
+  container.addEventListener('dragend', e=>{
+    const card = e.target.closest('.file-card');
+    if(card) card.classList.remove('dragging');
+  });
+  container.addEventListener('dragover', e=>{
+    e.preventDefault();
+    const card = e.target.closest('.file-card');
+    if(!card || dragIdx===null) return;
+    const overIdx = Number(card.dataset.idx);
+    if(overIdx === dragIdx) return;
+    onReorder(dragIdx, overIdx);
+    dragIdx = overIdx;
+  });
+}
+
+/* generic dropzone wiring */
+function wireDropzone(dz, input, onFiles){
+  dz.addEventListener('click', ()=> input.click());
+  input.addEventListener('change', ()=>{ onFiles(Array.from(input.files)); input.value=''; });
+  ['dragenter','dragover'].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.add('drag'); }));
+  ['dragleave','drop'].forEach(ev=> dz.addEventListener(ev, e=>{ e.preventDefault(); dz.classList.remove('drag'); }));
+  dz.addEventListener('drop', e=>{
+    const files = Array.from(e.dataTransfer.files || []);
+    if(files.length) onFiles(files);
+  });
+}
+
+/* ---------------- tabs ---------------- */
+document.getElementById('tabs').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab-btn');
+  if(!btn) return;
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('panel-' + btn.dataset.tool).classList.add('active');
+});
+
+/* ================================================================
+   MERGE
+   ================================================================ */
+(function(){
+  let files = []; // {id, name, size, bytes(Uint8Array), doc(PDFDocument), pages}
+  const drop = document.getElementById('merge-drop');
+  const input = document.getElementById('merge-input');
+  const list = document.getElementById('merge-list');
+  const empty = document.getElementById('merge-empty');
+  const btn = document.getElementById('merge-btn');
+  const clearBtn = document.getElementById('merge-clear');
+
+  async function addFiles(fileList){
+    for(const f of fileList){
+      if(!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') continue;
+      try{
+        const buf = await readAsArrayBuffer(f);
+        const bytes = new Uint8Array(buf);
+        const doc = await PDFDocument.load(bytes, {ignoreEncryption:true});
+        // Cache the parsed document so merge doesn't have to re-parse the
+        // same bytes a second time later — parsing is the expensive part.
+        files.push({id: uid(), name: f.name, size: f.size, bytes, doc, pages: doc.getPageCount()});
+      }catch(err){
+        alert('Could not read "' + f.name + '" — is it a valid PDF?');
+      }
+    }
+    render();
+  }
+
+  function render(){
+    list.innerHTML = '';
+    empty.style.display = files.length ? 'none' : 'block';
+    clearBtn.style.display = files.length ? 'inline-flex' : 'none';
+    btn.disabled = files.length === 0;
+    files.forEach((f, idx)=>{
+      const card = document.createElement('div');
+      card.className = 'file-card';
+      card.draggable = true;
+      card.dataset.idx = idx;
+      card.innerHTML = `
+        <div class="badge">${idx+1}</div>
+        <button class="rm" title="Remove" data-id="${f.id}">×</button>
+        <div class="thumb">📄</div>
+        <div class="fname">${f.name}</div>
+        <div class="fmeta">${f.pages} page${f.pages===1?'':'s'} · ${fmtBytes(f.size)}</div>`;
+      list.appendChild(card);
+    });
+  }
+
+  list.addEventListener('click', e=>{
+    const rm = e.target.closest('.rm');
+    if(!rm) return;
+    files = files.filter(f=>f.id !== Number(rm.dataset.id));
+    render();
+  });
+
+  enableReorder(list, (from, to)=>{
+    const [moved] = files.splice(from,1);
+    files.splice(to,0,moved);
+    render();
+  });
+
+  clearBtn.addEventListener('click', ()=>{ files=[]; render(); });
+  wireDropzone(drop, input, addFiles);
+
+  btn.addEventListener('click', async ()=>{
+    if(files.length===0) return;
+    setBtnBusy(btn, 'Stitching pages together…');
+    try{
+      const merged = await PDFDocument.create();
+      for(const f of files){
+        // Reuse the already-parsed document instead of calling
+        // PDFDocument.load(f.bytes) again — halves the parse work on merge.
+        const copied = await merged.copyPages(f.doc, f.doc.getPageIndices());
+        copied.forEach(p=>merged.addPage(p));
+      }
+      const bytes = await merged.save();
+      downloadBlob(bytes, 'merged.pdf', 'application/pdf');
+      showStamp('Merged!');
+    }catch(err){
+      console.error(err);
+      alert('Something went wrong while merging: ' + err.message);
+    }finally{
+      unsetBtnBusy(btn);
+    }
+  });
+})();
+
+/* ================================================================
+   JPG / PNG -> PDF
+   ================================================================ */
+(function(){
+  let files = []; // {id, name, size, bytes, type, dataURL, w, h}
+  const drop = document.getElementById('img-drop');
+  const input = document.getElementById('img-input');
+  const list = document.getElementById('img-list');
+  const empty = document.getElementById('img-empty');
+  const btn = document.getElementById('img-btn');
+  const clearBtn = document.getElementById('img-clear');
+
+  function loadImageSize(dataURL){
+    return new Promise(res=>{
+      const img = new Image();
+      img.onload = ()=> res({w:img.naturalWidth, h:img.naturalHeight});
+      img.src = dataURL;
+    });
+  }
+
+  async function addFiles(fileList){
+    for(const f of fileList){
+      if(!/^image\/(jpeg|png)$/.test(f.type)) continue;
+      const buf = await readAsArrayBuffer(f);
+      const dataURL = await readAsDataURL(f);
+      const {w,h} = await loadImageSize(dataURL);
+      files.push({id: uid(), name: f.name, size: f.size, bytes: new Uint8Array(buf), type: f.type, dataURL, w, h});
+    }
+    render();
+  }
+
+  function render(){
+    list.innerHTML = '';
+    empty.style.display = files.length ? 'none' : 'block';
+    clearBtn.style.display = files.length ? 'inline-flex' : 'none';
+    btn.disabled = files.length === 0;
+    files.forEach((f, idx)=>{
+      const card = document.createElement('div');
+      card.className = 'file-card';
+      card.draggable = true;
+      card.dataset.idx = idx;
+      card.innerHTML = `
+        <div class="badge">${idx+1}</div>
+        <button class="rm" title="Remove" data-id="${f.id}">×</button>
+        <div class="thumb"><img src="${f.dataURL}" alt=""></div>
+        <div class="fname">${f.name}</div>
+        <div class="fmeta">${f.w}×${f.h} · ${fmtBytes(f.size)}</div>`;
+      list.appendChild(card);
+    });
+  }
+
+  list.addEventListener('click', e=>{
+    const rm = e.target.closest('.rm');
+    if(!rm) return;
+    files = files.filter(f=>f.id !== Number(rm.dataset.id));
+    render();
+  });
+
+  enableReorder(list, (from, to)=>{
+    const [moved] = files.splice(from,1);
+    files.splice(to,0,moved);
+    render();
+  });
+
+  clearBtn.addEventListener('click', ()=>{ files=[]; render(); });
+  wireDropzone(drop, input, addFiles);
+
+  btn.addEventListener('click', async ()=>{
+    if(files.length===0) return;
+    setBtnBusy(btn, 'Laying out pages…');
+    try{
+      const doc = await PDFDocument.create();
+      const PAGE_W = 595.28, PAGE_H = 841.89, MARGIN = 24;
+      for(const f of files){
+        const embedded = f.type === 'image/png'
+          ? await doc.embedPng(f.bytes)
+          : await doc.embedJpg(f.bytes);
+        const maxW = PAGE_W - MARGIN*2, maxH = PAGE_H - MARGIN*2;
+        // Scale down to fit the page, but never scale up past 1.
+        const scale = Math.min(maxW/embedded.width, maxH/embedded.height, 1);
+        const w = embedded.width * scale, h = embedded.height * scale;
+        const page = doc.addPage([PAGE_W, PAGE_H]);
+        page.drawImage(embedded, {
+          x: (PAGE_W - w)/2, y: (PAGE_H - h)/2, width: w, height: h
+        });
+      }
+      const bytes = await doc.save();
+      downloadBlob(bytes, 'images.pdf', 'application/pdf');
+      showStamp('Converted!');
+    }catch(err){
+      console.error(err);
+      alert('Something went wrong while converting: ' + err.message);
+    }finally{
+      unsetBtnBusy(btn);
+    }
+  });
+})();
+
+/* ================================================================
+   shared: render pdf.js thumbnails for a bytes buffer
+   ================================================================ */
+async function renderThumbnails(bytes, targetWidth){
+  const loadingTask = pdfjsLib.getDocument({data: bytes.slice()});
+  const pdf = await loadingTask.promise;
+  const thumbs = [];
+  for(let i=1;i<=pdf.numPages;i++){
+    const page = await pdf.getPage(i);
+    const vp1 = page.getViewport({scale:1});
+    const scale = targetWidth / vp1.width;
+    const viewport = page.getViewport({scale});
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    await page.render({canvasContext: ctx, viewport}).promise;
+    thumbs.push(canvas.toDataURL('image/png'));
+  }
+  return {pdf, numPages: pdf.numPages, thumbs};
+}
+
+/* ================================================================
+   SPLIT
+   ================================================================ */
+(function(){
+  let bytes = null, numPages = 0, selected = new Set();
+  const drop = document.getElementById('split-drop');
+  const input = document.getElementById('split-input');
+  const body = document.getElementById('split-body');
+  const empty = document.getElementById('split-empty');
+  const grid = document.getElementById('split-grid');
+  const countEl = document.getElementById('split-count');
+  const oneBtn = document.getElementById('split-one');
+  const zipBtn = document.getElementById('split-zip');
+
+  async function loadFile(file){
+    const buf = await readAsArrayBuffer(file);
+    bytes = new Uint8Array(buf);
+    selected = new Set();
+    drop.style.display = 'none';
+    body.style.display = 'block';
+    empty.style.display = 'none';
+    grid.innerHTML = '<div class="empty-state">Fanning out the pages…</div>';
+    const {numPages: n, thumbs} = await renderThumbnails(bytes, 260);
+    numPages = n;
+    grid.innerHTML = '';
+    thumbs.forEach((src, i)=>{
+      const tile = document.createElement('div');
+      tile.className = 'page-tile';
+      tile.dataset.page = i+1;
+      tile.innerHTML = `<img src="${src}" alt="Page ${i+1}"><div class="pg-num">Page ${i+1}</div>`;
+      grid.appendChild(tile);
+    });
+    updateCount();
+  }
+
+  function updateCount(){
+    countEl.textContent = selected.size + ' of ' + numPages + ' page' + (numPages===1?'':'s') + ' selected';
+    oneBtn.disabled = selected.size === 0;
+    zipBtn.disabled = selected.size === 0;
+  }
+
+  grid.addEventListener('click', e=>{
+    const tile = e.target.closest('.page-tile');
+    if(!tile) return;
+    const p = Number(tile.dataset.page);
+    if(selected.has(p)){ selected.delete(p); tile.classList.remove('selected'); }
+    else { selected.add(p); tile.classList.add('selected'); }
+    updateCount();
+  });
+
+  document.getElementById('split-all').addEventListener('click', ()=>{
+    selected = new Set(Array.from({length:numPages}, (_,i)=>i+1));
+    grid.querySelectorAll('.page-tile').forEach(t=>t.classList.add('selected'));
+    updateCount();
+  });
+  document.getElementById('split-none').addEventListener('click', ()=>{
+    selected.clear();
+    grid.querySelectorAll('.page-tile').forEach(t=>t.classList.remove('selected'));
+    updateCount();
+  });
+  document.getElementById('split-reset').addEventListener('click', ()=>{
+    bytes=null; numPages=0; selected=new Set();
+    body.style.display='none'; empty.style.display='block'; drop.style.display='block';
+    grid.innerHTML='';
+  });
+
+  wireDropzone(drop, input, files=>{ if(files[0]) loadFile(files[0]); });
+
+  oneBtn.addEventListener('click', async ()=>{
+    setBtnBusy(oneBtn, 'Cutting…');
+    try{
+      const src = await PDFDocument.load(bytes, {ignoreEncryption:true});
+      const out = await PDFDocument.create();
+      const idxs = Array.from(selected).sort((a,b)=>a-b).map(p=>p-1);
+      const copied = await out.copyPages(src, idxs);
+      copied.forEach(p=>out.addPage(p));
+      const outBytes = await out.save();
+      downloadBlob(outBytes, 'split.pdf', 'application/pdf');
+      showStamp('Split!');
+    }catch(err){ console.error(err); alert('Split failed: '+err.message); }
+    finally{ unsetBtnBusy(oneBtn); }
+  });
+
+  zipBtn.addEventListener('click', async ()=>{
+    setBtnBusy(zipBtn, 'Packing pages…');
+    try{
+      // Parse the source once and reuse it for every page instead of
+      // re-loading PDFDocument.load(bytes) inside the loop.
+      const src = await PDFDocument.load(bytes, {ignoreEncryption:true});
+      const zip = new JSZip();
+      const idxs = Array.from(selected).sort((a,b)=>a-b);
+      for(const p of idxs){
+        const out = await PDFDocument.create();
+        const [copied] = await out.copyPages(src, [p-1]);
+        out.addPage(copied);
+        const outBytes = await out.save();
+        zip.file('page-' + String(p).padStart(3,'0') + '.pdf', outBytes);
+      }
+      const blob = await zip.generateAsync({type:'blob'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'pages.zip'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 4000);
+      showStamp('Zipped!');
+    }catch(err){ console.error(err); alert('Zip export failed: '+err.message); }
+    finally{ unsetBtnBusy(zipBtn); }
+  });
+})();
+
+/* ================================================================
+   DELETE PAGES
+   ================================================================ */
+(function(){
+  let bytes = null, numPages = 0, marked = new Set();
+  const drop = document.getElementById('delete-drop');
+  const input = document.getElementById('delete-input');
+  const body = document.getElementById('delete-body');
+  const empty = document.getElementById('delete-empty');
+  const grid = document.getElementById('delete-grid');
+  const countEl = document.getElementById('delete-count');
+  const delBtn = document.getElementById('delete-btn');
+
+  async function loadFile(file){
+    const buf = await readAsArrayBuffer(file);
+    bytes = new Uint8Array(buf);
+    marked = new Set();
+    drop.style.display = 'none';
+    body.style.display = 'block';
+    empty.style.display = 'none';
+    grid.innerHTML = '<div class="empty-state">Spreading the pages out…</div>';
+    const {numPages: n, thumbs} = await renderThumbnails(bytes, 260);
+    numPages = n;
+    grid.innerHTML = '';
+    thumbs.forEach((src, i)=>{
+      const tile = document.createElement('div');
+      tile.className = 'page-tile';
+      tile.dataset.page = i+1;
+      tile.innerHTML = `<img src="${src}" alt="Page ${i+1}"><div class="pg-num">Page ${i+1}</div>`;
+      grid.appendChild(tile);
+    });
+    updateCount();
+  }
+
+  function updateCount(){
+    countEl.textContent = marked.size + ' of ' + numPages + ' page' + (numPages===1?'':'s') + ' marked for removal';
+    delBtn.disabled = marked.size === 0;
+  }
+
+  grid.addEventListener('click', e=>{
+    const tile = e.target.closest('.page-tile');
+    if(!tile) return;
+    const p = Number(tile.dataset.page);
+    if(marked.has(p)){ marked.delete(p); tile.classList.remove('marked'); }
+    else { marked.add(p); tile.classList.add('marked'); }
+    updateCount();
+  });
+
+  document.getElementById('delete-reset').addEventListener('click', ()=>{
+    bytes=null; numPages=0; marked=new Set();
+    body.style.display='none'; empty.style.display='block'; drop.style.display='block';
+    grid.innerHTML='';
+  });
+
+  wireDropzone(drop, input, files=>{ if(files[0]) loadFile(files[0]); });
+
+  delBtn.addEventListener('click', async ()=>{
+    if(marked.size === numPages){
+      alert("That would delete every page — leave at least one behind.");
+      return;
+    }
+    setBtnBusy(delBtn, 'Removing pages…');
+    try{
+      const src = await PDFDocument.load(bytes, {ignoreEncryption:true});
+      const out = await PDFDocument.create();
+      const keep = [];
+      for(let p=1;p<=numPages;p++) if(!marked.has(p)) keep.push(p-1);
+      const copied = await out.copyPages(src, keep);
+      copied.forEach(p=>out.addPage(p));
+      const outBytes = await out.save();
+      downloadBlob(outBytes, 'trimmed.pdf', 'application/pdf');
+      showStamp('Trimmed!');
+    }catch(err){ console.error(err); alert('Delete failed: '+err.message); }
+    finally{ unsetBtnBusy(delBtn); }
+  });
+})();
+
+/* ================================================================
+   ADD TEXT  (native-scale canvas: 1 canvas px == 1 pdf pt)
+   ================================================================ */
+(function(){
+  let bytes=null, pdfDoc=null, numPages=0, curPage=1;
+  let boxesByPage = {}; // page -> [{id, x, y, text, size, color}]  x,y = top-left in pt
+  let activeBox = null;
+  // Single shared drag state + a single pair of window listeners, registered
+  // ONCE below, instead of a fresh pair of window listeners per text box.
+  // The old version leaked a mousemove/mouseup handler for every box ever
+  // created, so the page got slower the more boxes you added.
+  let dragState = null; // {b, el, offX, offY}
+  const PRESET_COLORS = ['#2b2320','#c1443c','#5c7f6b','#1d4e89','#a8712c'];
+
+  const drop = document.getElementById('addtext-drop');
+  const input = document.getElementById('addtext-input');
+  const body = document.getElementById('addtext-body');
+  const empty = document.getElementById('addtext-empty');
+  const stage = document.getElementById('at-stage');
+  const canvas = document.getElementById('at-canvas');
+  const overlay = document.getElementById('at-overlay');
+  const pageinfo = document.getElementById('at-pageinfo');
+  const prevBtn = document.getElementById('at-prev');
+  const nextBtn = document.getElementById('at-next');
+  const applyBtn = document.getElementById('at-apply');
+
+  async function loadFile(file){
+    const buf = await readAsArrayBuffer(file);
+    bytes = new Uint8Array(buf);
+    pdfDoc = await pdfjsLib.getDocument({data: bytes.slice()}).promise;
+    numPages = pdfDoc.numPages;
+    curPage = 1;
+    boxesByPage = {};
+    drop.style.display='none'; body.style.display='block'; empty.style.display='none';
+    applyBtn.disabled = false;
+    await renderPage();
+  }
+
+  async function renderPage(){
+    const page = await pdfDoc.getPage(curPage);
+    const viewport = page.getViewport({scale:1});
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    await page.render({canvasContext: ctx, viewport}).promise;
+    pageinfo.textContent = 'Page ' + curPage + ' of ' + numPages;
+    prevBtn.disabled = curPage<=1; nextBtn.disabled = curPage>=numPages;
+    drawBoxes();
+  }
+
+  function drawBoxes(){
+    overlay.innerHTML = '';
+    activeBox = null;
+    dragState = null;
+    const list = boxesByPage[curPage] || [];
+    list.forEach(b=> overlay.appendChild(buildBoxEl(b)));
+  }
+
+  function buildBoxEl(b){
+    const el = document.createElement('div');
+    el.className = 'text-box';
+    el.dataset.id = b.id;
+    positionBoxEl(el, b);
+    el.innerHTML = `
+      <div class="mini-toolbar">
+        <button data-act="smaller">A-</button>
+        <button data-act="bigger">A+</button>
+        ${PRESET_COLORS.map(c=>`<button class="swatch" data-color="${c}" style="background:${c}"></button>`).join('')}
+        <button data-act="del">✕</button>
+      </div>
+      <div class="txt" contenteditable="true" style="font-size:${b.size}px; color:${b.color}; font-family:Helvetica, Arial, sans-serif;">${b.text}</div>`;
+
+    el.querySelector('.txt').addEventListener('input', e=>{ b.text = e.target.innerText; });
+    el.querySelector('.txt').addEventListener('dblclick', e=>{ e.stopPropagation(); setActive(el); e.target.focus(); });
+
+    el.querySelector('.mini-toolbar').addEventListener('click', e=>{
+      const act = e.target.dataset.act;
+      const color = e.target.dataset.color;
+      if(act==='del'){
+        boxesByPage[curPage] = boxesByPage[curPage].filter(x=>x.id!==b.id);
+        if(dragState && dragState.el===el) dragState = null;
+        el.remove();
+        return;
+      }
+      if(act==='bigger'){ b.size = Math.min(96, b.size+2); }
+      if(act==='smaller'){ b.size = Math.max(6, b.size-2); }
+      if(color){ b.color = color; }
+      const txt = el.querySelector('.txt');
+      txt.style.fontSize = b.size+'px';
+      txt.style.color = b.color;
+    });
+
+    // Single mousedown handler: selects the box, and — unless the click
+    // landed on the toolbar or an actively-focused text field — starts a
+    // drag using the shared window-level listeners below.
+    el.addEventListener('mousedown', e=>{
+      if(e.target.classList.contains('txt') && el.dataset.active==='1' && document.activeElement===e.target){
+        return; // let typing/caret placement happen
+      }
+      setActive(el);
+      if(e.target.closest('.mini-toolbar')) return;
+      const rect = overlay.getBoundingClientRect();
+      dragState = {
+        b, el,
+        offX: e.clientX - rect.left - (b.x/canvas.width)*rect.width,
+        offY: e.clientY - rect.top - (b.y/canvas.height)*rect.height
+      };
+      e.preventDefault();
+    });
+
+    return el;
+  }
+
+  function positionBoxEl(el, b){
+    el.style.left = (b.x/canvas.width*100) + '%';
+    el.style.top = (b.y/canvas.height*100) + '%';
+  }
+
+  function setActive(el){
+    overlay.querySelectorAll('.text-box').forEach(x=>x.dataset.active='0');
+    el.dataset.active='1';
+    activeBox = el;
+  }
+
+  // Registered once for the lifetime of the page — not per text box.
+  window.addEventListener('mousemove', e=>{
+    if(!dragState) return;
+    const rect = overlay.getBoundingClientRect();
+    let nx = (e.clientX - rect.left - dragState.offX) / rect.width * canvas.width;
+    let ny = (e.clientY - rect.top - dragState.offY) / rect.height * canvas.height;
+    nx = Math.max(0, Math.min(canvas.width-10, nx));
+    ny = Math.max(0, Math.min(canvas.height-10, ny));
+    dragState.b.x = nx; dragState.b.y = ny;
+    positionBoxEl(dragState.el, dragState.b);
+  });
+  window.addEventListener('mouseup', ()=>{ dragState = null; });
+
+  overlay.addEventListener('click', e=>{
+    if(e.target !== overlay) return; // only empty-space clicks create a box
+    const rect = overlay.getBoundingClientRect();
+    const x = (e.clientX-rect.left)/rect.width*canvas.width;
+    const y = (e.clientY-rect.top)/rect.height*canvas.height;
+    const b = {id: uid(), x, y, text:'Type here', size:18, color:'#2b2320'};
+    boxesByPage[curPage] = boxesByPage[curPage] || [];
+    boxesByPage[curPage].push(b);
+    const el = buildBoxEl(b);
+    overlay.appendChild(el);
+    setActive(el);
+    const txt = el.querySelector('.txt');
+    setTimeout(()=>{ txt.focus(); document.execCommand('selectAll', false, null); }, 30);
+  });
+
+  prevBtn.addEventListener('click', ()=>{ if(curPage>1){ curPage--; renderPage(); } });
+  nextBtn.addEventListener('click', ()=>{ if(curPage<numPages){ curPage++; renderPage(); } });
+
+  document.getElementById('at-reset').addEventListener('click', ()=>{
+    bytes=null; pdfDoc=null; numPages=0; curPage=1; boxesByPage={}; dragState=null;
+    body.style.display='none'; empty.style.display='block'; drop.style.display='block';
+    applyBtn.disabled = true;
+  });
+
+  wireDropzone(drop, input, files=>{ if(files[0]) loadFile(files[0]); });
+
+  applyBtn.addEventListener('click', async ()=>{
+    setBtnBusy(applyBtn, 'Baking text in…');
+    try{
+      const doc = await PDFDocument.load(bytes, {ignoreEncryption:true});
+      const font = await doc.embedFont(StandardFonts.Helvetica);
+      const pages = doc.getPages();
+      for(const [pageNumStr, list] of Object.entries(boxesByPage)){
+        const pageNum = Number(pageNumStr);
+        const page = pages[pageNum-1];
+        const ph = page.getHeight();
+        for(const b of list){
+          if(!b.text || !b.text.trim()) continue;
+          const {r,g,bl} = (()=>{ const c = hexToRgb01(b.color); return {r:c.r,g:c.g,bl:c.b}; })();
+          const lines = b.text.split('\n');
+          lines.forEach((line, li)=>{
+            page.drawText(line, {
+              x: b.x,
+              y: ph - b.y - b.size*(li+1)*1.15,
+              size: b.size,
+              font,
+              color: rgb(r,g,bl)
+            });
+          });
+        }
+      }
+      const outBytes = await doc.save();
+      downloadBlob(outBytes, 'annotated.pdf', 'application/pdf');
+      showStamp('Baked in!');
+    }catch(err){ console.error(err); alert('Adding text failed: '+err.message); }
+    finally{ unsetBtnBusy(applyBtn); }
+  });
+})();
+
+/* ================================================================
+   ERASE / REDACT TEXT (draw white/colored boxes over content)
+   ================================================================ */
+(function(){
+  let bytes=null, pdfDoc=null, numPages=0, curPage=1;
+  let rectsByPage = {}; // page -> [{id,x,y,w,h}] top-left pt coords
+
+  const drop = document.getElementById('redact-drop');
+  const input = document.getElementById('redact-input');
+  const body = document.getElementById('redact-body');
+  const empty = document.getElementById('redact-empty');
+  const canvas = document.getElementById('rd-canvas');
+  const overlay = document.getElementById('rd-overlay');
+  const pageinfo = document.getElementById('rd-pageinfo');
+  const prevBtn = document.getElementById('rd-prev');
+  const nextBtn = document.getElementById('rd-next');
+  const applyBtn = document.getElementById('rd-apply');
+  const colorInput = document.getElementById('rd-color');
+
+  async function loadFile(file){
+    const buf = await readAsArrayBuffer(file);
+    bytes = new Uint8Array(buf);
+    pdfDoc = await pdfjsLib.getDocument({data: bytes.slice()}).promise;
+    numPages = pdfDoc.numPages;
+    curPage = 1;
+    rectsByPage = {};
+    drop.style.display='none'; body.style.display='block'; empty.style.display='none';
+    applyBtn.disabled = false;
+    await renderPage();
+  }
+
+  async function renderPage(){
+    const page = await pdfDoc.getPage(curPage);
+    const viewport = page.getViewport({scale:1});
+    canvas.width = viewport.width; canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d');
+    await page.render({canvasContext: ctx, viewport}).promise;
+    pageinfo.textContent = 'Page ' + curPage + ' of ' + numPages;
+    prevBtn.disabled = curPage<=1; nextBtn.disabled = curPage>=numPages;
+    drawRects();
+  }
+
+  function drawRects(){
+    overlay.innerHTML = '';
+    (rectsByPage[curPage] || []).forEach(r => overlay.appendChild(buildRectEl(r)));
+  }
+
+  function buildRectEl(r){
+    const el = document.createElement('div');
+    el.className = 'redact-box';
+    el.style.left = (r.x/canvas.width*100)+'%';
+    el.style.top = (r.y/canvas.height*100)+'%';
+    el.style.width = (r.w/canvas.width*100)+'%';
+    el.style.height = (r.h/canvas.height*100)+'%';
+    el.style.background = r.color + '59';
+    el.style.borderColor = r.color;
+    const rm = document.createElement('button');
+    rm.className = 'rm2'; rm.textContent='✕';
+    rm.addEventListener('click', ()=>{
+      rectsByPage[curPage] = rectsByPage[curPage].filter(x=>x.id!==r.id);
+      el.remove();
+    });
+    el.appendChild(rm);
+    return el;
+  }
+
+  let drawing=false, startX=0, startY=0, tempEl=null;
+  overlay.addEventListener('mousedown', e=>{
+    if(e.target.closest('.redact-box')) return;
+    drawing = true;
+    const rect = overlay.getBoundingClientRect();
+    startX = e.clientX-rect.left; startY = e.clientY-rect.top;
+    tempEl = document.createElement('div');
+    tempEl.className = 'redact-box';
+    tempEl.style.borderColor = colorInput.value;
+    tempEl.style.background = colorInput.value+'59';
+    overlay.appendChild(tempEl);
+  });
+  overlay.addEventListener('mousemove', e=>{
+    if(!drawing || !tempEl) return;
+    const rect = overlay.getBoundingClientRect();
+    const curX = e.clientX-rect.left, curY = e.clientY-rect.top;
+    const left = Math.min(startX,curX), top = Math.min(startY,curY);
+    const w = Math.abs(curX-startX), h = Math.abs(curY-startY);
+    tempEl.style.left = (left/rect.width*100)+'%';
+    tempEl.style.top = (top/rect.height*100)+'%';
+    tempEl.style.width = (w/rect.width*100)+'%';
+    tempEl.style.height = (h/rect.height*100)+'%';
+  });
+  window.addEventListener('mouseup', ()=>{
+    if(!drawing) return;
+    drawing = false;
+    if(tempEl){
+      const rect = overlay.getBoundingClientRect();
+      const w = parseFloat(tempEl.style.width)/100*rect.width;
+      const h = parseFloat(tempEl.style.height)/100*rect.height;
+      if(w < 4 || h < 4){ tempEl.remove(); tempEl=null; return; }
+      const leftPct = parseFloat(tempEl.style.left)/100;
+      const topPct = parseFloat(tempEl.style.top)/100;
+      const r = {
+        id: uid(),
+        x: leftPct*canvas.width,
+        y: topPct*canvas.height,
+        w: w/rect.width*canvas.width,
+        h: h/rect.height*canvas.height,
+        color: colorInput.value
+      };
+      rectsByPage[curPage] = rectsByPage[curPage] || [];
+      rectsByPage[curPage].push(r);
+      tempEl.remove();
+      overlay.appendChild(buildRectEl(r));
+      tempEl = null;
+    }
+  });
+
+  prevBtn.addEventListener('click', ()=>{ if(curPage>1){ curPage--; renderPage(); } });
+  nextBtn.addEventListener('click', ()=>{ if(curPage<numPages){ curPage++; renderPage(); } });
+
+  document.getElementById('rd-reset').addEventListener('click', ()=>{
+    bytes=null; pdfDoc=null; numPages=0; curPage=1; rectsByPage={};
+    body.style.display='none'; empty.style.display='block'; drop.style.display='block';
+    applyBtn.disabled = true;
+  });
+
+  wireDropzone(drop, input, files=>{ if(files[0]) loadFile(files[0]); });
+
+  applyBtn.addEventListener('click', async ()=>{
+    setBtnBusy(applyBtn, 'Whiting out…');
+    try{
+      const doc = await PDFDocument.load(bytes, {ignoreEncryption:true});
+      const pages = doc.getPages();
+      for(const [pageNumStr, list] of Object.entries(rectsByPage)){
+        const pageNum = Number(pageNumStr);
+        const page = pages[pageNum-1];
+        const ph = page.getHeight();
+        for(const r of list){
+          const c = hexToRgb01(r.color);
+          page.drawRectangle({
+            x: r.x,
+            y: ph - r.y - r.h,
+            width: r.w,
+            height: r.h,
+            color: rgb(c.r,c.g,c.b),
+            opacity: 1
+          });
+        }
+      }
+      const outBytes = await doc.save();
+      downloadBlob(outBytes, 'redacted.pdf', 'application/pdf');
+      showStamp('Erased!');
+    }catch(err){ console.error(err); alert('Erasing failed: '+err.message); }
+    finally{ unsetBtnBusy(applyBtn); }
+  });
+})();
+</script>
+</body>
+</html>
