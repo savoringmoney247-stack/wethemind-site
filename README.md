@@ -1,6 +1,8 @@
 # We The Mind — website
 
-Static site, hosted on GitHub Pages with a custom domain (`wethemind.com`, set via the `CNAME` file). No build step — every page is plain HTML, sharing one stylesheet (`style.css`) and one small currency-display script (`currency-shared.js`).
+Static site, hosted on GitHub Pages. No build step — every page is plain HTML, sharing one stylesheet (`style.css`) and one small currency-display script (`currency-shared.js`).
+
+**On links and the domain:** every internal link is a *relative* path (`../education/pricing/`, not `/education/pricing/`), so the site works correctly both on the default `username.github.io/wethemind-site/` URL and later on a custom domain — no link changes needed either way. `sitemap.xml`, `robots.txt`, and the canonical/OG/Twitter meta tags in each page's `<head>` currently point at `https://wethemind.com/` as a placeholder for when that domain is bought; update those (and add back a `CNAME` file) once it's live. Until then they're just inert — they don't affect how the site actually functions.
 
 ## Brand architecture
 
@@ -22,7 +24,7 @@ Every page carries a slim **umbrella bar** (dark strip, top of page) linking bet
 
 ## URL structure
 
-Clean, extensionless URLs throughout — every route is a folder containing an `index.html`, e.g. `/education/pricing/index.html` serves at `/education/pricing/`. All internal links are root-relative (`/education/pricing/`, `/style.css`), which requires the custom domain in `CNAME` to keep working — don't remove it without switching every link to relative paths first.
+Clean, extensionless URLs throughout — every route is a folder containing an `index.html`, e.g. `education/pricing/index.html` serves at `.../education/pricing/`. All internal links are relative paths (`../education/pricing/`, `../../style.css`, with the exact number of `../` depending on how deep the linking page sits), so the site works whether it's served from a domain root or from a GitHub Pages subpath like `username.github.io/wethemind-site/`.
 
 ## Folder map
 
@@ -54,6 +56,6 @@ Every form on the site (`demo-form`, `mass-session-form`, the four division "Not
 ## Adding a new division or page
 
 1. Create a folder with an `index.html` inside — that becomes the clean URL.
-2. Link `/style.css` and, if the page needs OG/Twitter tags, follow the pattern in any existing page's `<head>`.
+2. Link `style.css` with the right number of `../` for the new file's depth, and if the page needs OG/Twitter tags, follow the pattern in any existing page's `<head>`.
 3. Add the umbrella-bar block (copy it from any existing page) right after `<body>`.
 4. Add the new route to `sitemap.xml` and to the umbrella nav / footer on every page that lists divisions.
