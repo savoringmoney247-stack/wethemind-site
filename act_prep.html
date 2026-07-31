@@ -38,8 +38,6 @@ body{
   font-family:Georgia,'Times New Roman',serif;
   color:var(--graphite);
   background:
-    repeating-linear-gradient(0deg, transparent 0 27px, var(--rule) 27px 28px),
-    repeating-linear-gradient(90deg, transparent 0 27px, rgba(27,42,74,0.05) 27px 28px),
     radial-gradient(ellipse at top left, #FBF7E9 0%, var(--paper) 55%, var(--paper-deep) 100%);
   background-attachment:fixed;
   line-height:1.6;
@@ -93,7 +91,7 @@ body{
 
 /* ---------- hero ---------- */
 .vault-hero{
-  position:relative;
+  position:relative !important; z-index:1 !important; top:auto !important;
   max-width:1000px; margin:38px auto 10px; padding:46px 46px 40px;
   background:#FBF8ED; border:1px solid var(--ink); box-shadow:var(--shadow-lg);
 }
@@ -101,8 +99,8 @@ body{
 .vault-hero-eyebrow{font-size:12px; letter-spacing:0.32em; color:var(--red-pen); text-transform:uppercase; margin-bottom:14px; font-weight:700;}
 .vault-hero h1{font-size:clamp(28px,4.6vw,46px); margin:0 0 6px; line-height:1.1;}
 .vault-hero h1 .accent-word{color:var(--red-pen); font-style:italic; text-transform:none; letter-spacing:0; text-shadow:none;}
-.vault-hero p.lede{max-width:660px; font-size:16px; color:var(--ink-soft); margin:18px 0 26px;}
-.vault-hero-stats{display:flex; gap:18px; flex-wrap:wrap;}
+.vault-hero p.lede{max-width:660px; font-size:16px; color:var(--ink-soft); margin:18px auto 26px;}
+.vault-hero-stats{display:flex; gap:18px; flex-wrap:wrap; justify-content:center;}
 .stat{flex:1 1 150px; border:1px solid var(--rule); border-left:4px solid var(--ink); padding:14px 16px; background:rgba(255,255,255,0.5);}
 .stat b{display:block; font-size:20px; color:var(--ink);}
 .stat span{font-size:11.5px; letter-spacing:0.03em; color:var(--ink-soft);}
@@ -116,7 +114,7 @@ body{
 
 /* ---------- marketing generic ---------- */
 .marketing-section{max-width:1000px; margin:70px auto 0; padding:0 20px;}
-.marketing-head{max-width:660px; margin-bottom:30px;}
+.marketing-head{max-width:660px; margin:0 auto 30px;}
 .marketing-head .kicker{font-size:12px; letter-spacing:0.28em; color:var(--red-pen); text-transform:uppercase; font-weight:700; margin-bottom:10px;}
 .marketing-head h2{font-size:26px; margin:0 0 8px;}
 .marketing-head p{font-size:14.5px; color:var(--ink-soft); margin:0;}
@@ -219,7 +217,7 @@ body{
 .testi-card{background:#FBF8ED; border:1px solid var(--rule); padding:22px 22px 18px; box-shadow:var(--shadow-sm); position:relative;}
 .testi-card::before{content:"\201C"; position:absolute; top:6px; left:14px; font-size:44px; color:var(--accent-soft); font-family:Georgia,serif;}
 .testi-quote{font-style:italic; font-size:14px; position:relative; z-index:1; margin:14px 0 14px;}
-.testi-who{display:flex; align-items:center; gap:10px;}
+.testi-who{display:flex; align-items:center; gap:10px; justify-content:center;}
 .testi-avatar{width:36px; height:36px; border-radius:50%; border:1.5px solid var(--ink); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:var(--ink); background:var(--accent-soft); flex:0 0 auto;}
 .testi-name{font-size:13px; font-weight:700; color:var(--ink);}
 .testi-tag{font-size:11.5px; color:var(--ink-soft);}
@@ -267,6 +265,42 @@ body{
 ::selection{background:var(--gold); color:#fff;}
 @media (prefers-reduced-motion: reduce){*{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}}
 @media (max-width:640px){.vault-hero{padding:30px 20px;} .seal-badge{position:static; margin-bottom:16px; transform:none;} .section-facts{margin-left:0;}}
+
+/* ---------- force marketing/text blocks to center (per site owner request) ---------- */
+body, p, li, ul, ol, dl, dt, dd, h1, h2, h3, h4, h5, h6, span, div, section, article,
+header, footer, nav, label, a, td, th, blockquote, figcaption, small, strong, em, i, b,
+button, input, select, textarea,
+.price-card, .price-tagline, .price-num, .format-table th, .format-table td,
+.faq-q, .faq-a, .stamp-note, .page-header, .page-header p, .kicker,
+.marketing-head, .marketing-section, .eyebrow {
+  text-align: center !important;
+}
+
+/* ---------- keep the practice-problem cards left-aligned & professional ---------- */
+.card, .card-head, .qnum, .topic-pill, .statement, .choices, .choice,
+.feedback-line, .seal-hint, .vault-inner, .concept-box, .step, .step-text,
+.reference, .reference a {
+  text-align: left !important;
+}
+.card-head{ justify-content:flex-start; }
+.choices{ justify-content:flex-start; }
+.seal-row{ justify-content:flex-start; }
+.answer-stamp{ text-align:center !important; }
+
+/* ---------- pure white background (per site owner request) ---------- */
+body{
+  background:
+    radial-gradient(ellipse at top left, #FFFFFF 0%, #FFFFFF 55%, #FAFAFA 100%);
+}
+
+/* ---------- newsletter block: legible heading + a subscribe button that actually stands out ---------- */
+.newsletter h3.engraved{ color:var(--gold); text-shadow:none; }
+.newsletter .cta-btn.solid{
+  background:var(--gold); border-color:var(--gold); color:var(--ink); font-weight:700;
+}
+.newsletter .cta-btn.solid:hover{
+  background:#fff; border-color:#fff; color:var(--ink);
+}
 </style>
 </head>
 <body>
@@ -319,7 +353,7 @@ body{
   <div class="vault-hero-eyebrow">For ACT Math &amp; Science Test Day</div>
   <h1 class="engraved">Stay <span class="accent-word">Rational</span> Under Pressure</h1>
   <p class="lede">We The Mind's ACT Track drills the two sections that reward speed and pattern-reading most: Math and Science. Break wax seals to check your work, get comfortable reading data tables under a clock, and grab our free links to ACT's own official practice tests — no sketchy scans required.</p>
-  <div style="display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 26px;">
+  <div style="display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 26px; justify-content:center;">
     <a href="#pricing" class="cta-btn solid">Start Free Trial</a>
     <a href="#vault-title" class="cta-btn">Try a Free Problem</a>
   </div>
@@ -383,7 +417,7 @@ body{
 
 <div class="section-wrap" style="margin-top:56px;">
   <h2 class="engraved" style="font-size:22px;">The Practice Vault</h2>
-  <p style="font-size:14.5px; color:var(--ink-soft); max-width:660px;" id="vault-title">Nine original, ACT-style problems across Math and Science. Pick an answer, then break the seal for the concept, the full solution, and a reference for going deeper.</p>
+  <p style="font-size:14.5px; color:var(--ink-soft); max-width:660px; margin:0 auto;" id="vault-title">Nine original, ACT-style problems across Math and Science. Pick an answer, then break the seal for the concept, the full solution, and a reference for going deeper.</p>
 </div>
 
 <main id="main"></main>
@@ -420,7 +454,7 @@ body{
     <div class="price-card">
       <h3>Rational</h3>
       <div class="price-tagline">Whole, simple, and free — like a nice integer.</div>
-      <div class="price-num">$0<span>/forever</span></div>
+      <div class="price-num"><span data-usd="0">$0</span><span>/forever</span></div>
       <ul>
         <li>Official free-practice-test links, forever</li>
         <li>3 practice problems per section</li>
@@ -433,7 +467,7 @@ body{
       <span class="badge">Most Popular</span>
       <h3>Irrational</h3>
       <div class="price-tagline">Never-ending practice. Unlike π, fully worth it.</div>
-      <div class="price-num">$12<span>/month</span></div>
+      <div class="price-num"><span data-usd="12">$12</span><span>/month</span></div>
       <ul>
         <li>Everything in Rational</li>
         <li>Unlimited problems, Math and Science</li>
@@ -445,7 +479,7 @@ body{
     <div class="price-card">
       <h3>Complex</h3>
       <div class="price-tagline">Real progress, plus an imaginary amount of fun.</div>
-      <div class="price-num">$24<span>/month</span></div>
+      <div class="price-num"><span data-usd="24">$24</span><span>/month</span></div>
       <ul>
         <li>Everything in Irrational</li>
         <li>Full-length timed practice sections</li>
@@ -983,5 +1017,6 @@ async function loadProgress(){
 }
 loadProgress();
 </script>
+<script src="currency-shared.js"></script>
 </body>
 </html>

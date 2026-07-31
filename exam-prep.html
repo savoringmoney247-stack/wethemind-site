@@ -16,8 +16,6 @@
 body{
   margin:0; font-family:Georgia,'Times New Roman',serif; color:var(--graphite);
   background:
-    repeating-linear-gradient(0deg, transparent 0 27px, var(--rule) 27px 28px),
-    repeating-linear-gradient(90deg, transparent 0 27px, rgba(27,42,74,0.05) 27px 28px),
     radial-gradient(ellipse at top left, #FBF7E9 0%, var(--paper) 55%, var(--paper-deep) 100%);
   background-attachment:fixed; line-height:1.6; min-height:100vh;
 }
@@ -42,10 +40,20 @@ body{
 .card .tagline{font-size:13px; font-style:italic; color:var(--red-pen); margin-bottom:14px;}
 .card p{font-size:14px; color:var(--graphite); margin:0 0 18px; flex:1;}
 .card .go{
-  align-self:flex-start; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
+  align-self:center; font-size:12.5px; letter-spacing:0.06em; text-transform:uppercase;
   padding:9px 18px; border:1.5px solid var(--ink); border-radius:4px; color:var(--ink); transition:all .2s ease;
 }
 .card:hover .go{background:var(--ink); color:var(--paper);}
+
+/* ---------- force every text element to center (per site owner request) ---------- */
+body, p, li, ul, ol, dl, dt, dd, h1, h2, h3, h4, h5, h6, span, div, section, article,
+header, footer, nav, label, a, td, th, blockquote, figcaption, small, strong, em, i, b,
+button, input, select, textarea, .card, .card p, .card h2, .card .tagline, .card .go,
+.price-card, .price-tagline, .price-num, .format-table th, .format-table td,
+.faq-q, .faq-a, .choice, .stamp-note, .page-header, .page-header p, .kicker,
+.marketing-head, .marketing-section, .eyebrow {
+  text-align: center !important;
+}
 </style>
 </head>
 <body>

@@ -230,7 +230,7 @@
                 <select id="session_type" name="session_type" required>
                   <option value="Free 30-Minute Demo">Free 30-Minute Demo</option>
                   <option value="Group Session Trial">Group Session Trial</option>
-                  <option value="Single Problem-Solving Session">Single Problem-Solving Session ($20)</option>
+                  <option value="Single Problem-Solving Session" data-usd-inline="20" data-usd-label="Single Problem-Solving Session">Single Problem-Solving Session ($20)</option>
                 </select>
               </div>
               <div class="form-row">
@@ -733,5 +733,6 @@ document.addEventListener('DOMContentLoaded', function(){
   wireSheetForm('mass-session-form', 'mass-session-success', 'New Mass Session request — We the Mind', 'Sending…', 'Request My Free Spot');
 </script>
 
+<script src="currency-shared.js"></script>
 </body>
 </html>

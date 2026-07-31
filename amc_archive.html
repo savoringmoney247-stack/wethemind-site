@@ -40,8 +40,6 @@ body{
   font-family:Georgia,'Times New Roman',serif;
   color:var(--graphite);
   background:
-    repeating-linear-gradient(0deg, transparent 0 27px, var(--rule) 27px 28px),
-    repeating-linear-gradient(90deg, transparent 0 27px, rgba(27,42,74,0.05) 27px 28px),
     radial-gradient(ellipse at top left, #FBF7E9 0%, var(--paper) 55%, var(--paper-deep) 100%);
   background-attachment:fixed;
   line-height:1.6;
@@ -95,7 +93,7 @@ body{
 
 /* ---------- hero ---------- */
 .vault-hero{
-  position:relative;
+  position:relative !important; z-index:1 !important; top:auto !important;
   max-width:1000px; margin:38px auto 10px; padding:46px 46px 40px;
   background:#FBF8ED;
   border:1px solid var(--ink);
@@ -116,9 +114,9 @@ body{
 }
 .vault-hero h1 .accent-word{color:var(--red-pen); font-style:italic; text-transform:none; letter-spacing:0; text-shadow:none;}
 .vault-hero p.lede{
-  max-width:640px; font-size:16.5px; color:var(--ink-soft); margin:18px 0 26px;
+  max-width:640px; font-size:16.5px; color:var(--ink-soft); margin:18px auto 26px;
 }
-.vault-hero-stats{display:flex; gap:18px; flex-wrap:wrap;}
+.vault-hero-stats{display:flex; gap:18px; flex-wrap:wrap; justify-content:center;}
 .stat{
   flex:1 1 150px; border:1px solid var(--rule); border-left:4px solid var(--ink);
   padding:14px 16px; background:rgba(255,255,255,0.5);
@@ -297,7 +295,7 @@ body{
 
 .tier-toggle{
   max-width:1000px; margin:26px auto 0; padding:0 20px;
-  display:flex; gap:10px; flex-wrap:wrap;
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
 }
 .tier-btn{
   font-family:Georgia,serif; font-size:12.5px; letter-spacing:0.08em; text-transform:uppercase;
@@ -313,7 +311,7 @@ body{
 }
 .ledger.active{display:table;}
 .ledger caption{
-  text-align:left; padding:14px 18px; font-size:13px; color:var(--ink-soft);
+  text-align:center; padding:14px 18px; font-size:13px; color:var(--ink-soft);
   border-bottom:1px solid var(--rule); caption-side:top;
 }
 .ledger th{
@@ -337,11 +335,11 @@ body{
   max-width:1000px; margin:70px auto 0; padding:0 20px;
 }
 .vault-title h2{font-size:22px; margin-bottom:6px;}
-.vault-title p{font-size:14.5px; color:var(--ink-soft); max-width:640px; margin:0;}
+.vault-title p{font-size:14.5px; color:var(--ink-soft); max-width:640px; margin:0 auto;}
 
 /* ---------- marketing: features ---------- */
 .marketing-section{max-width:1000px; margin:70px auto 0; padding:0 20px;}
-.marketing-head{max-width:640px; margin-bottom:30px;}
+.marketing-head{max-width:640px; margin:0 auto 30px;}
 .marketing-head .kicker{font-size:12px; letter-spacing:0.28em; color:var(--red-pen); text-transform:uppercase; font-weight:700; margin-bottom:10px;}
 .marketing-head h2{font-size:28px; margin:0 0 8px;}
 .marketing-head p{font-size:15px; color:var(--ink-soft); margin:0;}
@@ -367,7 +365,7 @@ body{
   font-family:Georgia,serif;
 }
 .testi-quote{font-style:italic; font-size:14.5px; position:relative; z-index:1; margin:14px 0 14px;}
-.testi-who{display:flex; align-items:center; gap:10px;}
+.testi-who{display:flex; align-items:center; gap:10px; justify-content:center;}
 .testi-avatar{
   width:36px; height:36px; border-radius:50%; border:1.5px solid var(--ink);
   display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700;
@@ -454,6 +452,42 @@ body{
   .seal-badge{position:static; margin-bottom:16px; transform:none;}
   .section-facts{margin-left:0;}
 }
+
+/* ---------- force marketing/text blocks to center (per site owner request) ---------- */
+body, p, li, ul, ol, dl, dt, dd, h1, h2, h3, h4, h5, h6, span, div, section, article,
+header, footer, nav, label, a, td, th, blockquote, figcaption, small, strong, em, i, b,
+button, input, select, textarea,
+.price-card, .price-tagline, .price-num, .format-table th, .format-table td,
+.faq-q, .faq-a, .stamp-note, .page-header, .page-header p, .kicker,
+.marketing-head, .marketing-section, .eyebrow {
+  text-align: center !important;
+}
+
+/* ---------- keep the practice-problem cards left-aligned & professional ---------- */
+.card, .card-head, .qnum, .topic-pill, .statement, .choices, .choice,
+.feedback-line, .seal-hint, .vault-inner, .concept-box, .step, .step-text,
+.reference, .reference a {
+  text-align: left !important;
+}
+.card-head{ justify-content:flex-start; }
+.choices{ justify-content:flex-start; }
+.seal-row{ justify-content:flex-start; }
+.answer-stamp{ text-align:center !important; }
+
+/* ---------- pure white background (per site owner request) ---------- */
+body{
+  background:
+    radial-gradient(ellipse at top left, #FFFFFF 0%, #FFFFFF 55%, #FAFAFA 100%);
+}
+
+/* ---------- newsletter block: legible heading + a subscribe button that actually stands out ---------- */
+.newsletter h3.engraved{ color:var(--gold); text-shadow:none; }
+.newsletter .cta-btn.solid{
+  background:var(--gold); border-color:var(--gold); color:var(--ink); font-weight:700;
+}
+.newsletter .cta-btn.solid:hover{
+  background:#fff; border-color:#fff; color:var(--ink);
+}
 </style>
 </head>
 <body>
@@ -504,9 +538,9 @@ body{
   <div class="seal-badge">100%<br>Original<br>Content</div>
   <a href="#pricing" class="scoreboard" style="text-decoration:none; display:inline-block; margin-bottom:14px;">Score so far: <span id="scoreVal">0</span> / <span id="scoreMax">12</span></a>
   <div class="vault-hero-eyebrow">Math Prep That Doesn't Leave A Remainder</div>
-  <h1 class="engraved">Get <span class="accent-word">Radical</span> About Practice</h1>
+  <h1 class="engraved">Break The Seal On <span class="accent-word">Better Scores</span></h1>
   <p class="lede">We The Mind turns AMC 8 / 10 / 12 practice into something you actually want to open. Break wax seals to reveal step-by-step solutions, rack up your score, and grab a free year-by-year index of every real contest since 2015 — no strings, no asymptotes, no catch.</p>
-  <div style="display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 26px;">
+  <div style="display:flex; gap:14px; flex-wrap:wrap; margin:8px 0 26px; justify-content:center;">
     <a href="#pricing" class="cta-btn solid">Start Free Trial</a>
     <a href="#vault-title" class="cta-btn">Try a Free Problem</a>
   </div>
@@ -547,8 +581,9 @@ body{
     </div>
   </div>
 </section>
+<div class="archive-intro">
   <h2 class="engraved" style="font-size:24px;">The Real Archive, 2015 – 2025</h2>
-  <p style="font-size:14.5px; color:var(--ink-soft); max-width:680px;">Every row below links directly to the Art of Problem Solving Wiki, which hosts the actual official problems, answer keys, and community solutions for each contest — free, and maintained by the people who discuss them. Nothing on this page reproduces the contest text itself.</p>
+  <p style="font-size:14.5px; color:var(--ink-soft); max-width:680px; margin:0 auto;">Every row below links directly to the Art of Problem Solving Wiki, which hosts the actual official problems, answer keys, and community solutions for each contest — free, and maintained by the people who discuss them. Nothing on this page reproduces the contest text itself.</p>
   <div class="archive-note">
     <b>A note on copyright:</b> AMC problems are copyrighted by the Mathematical Association of America. This index links out to them rather than reproducing them here. If a link ever looks off (AoPS occasionally renames a page), search "<span style="white-space:nowrap;">[year] AMC [8/10/12] AoPS wiki</span>" and you'll land on it in one try.
   </div>
@@ -628,7 +663,7 @@ body{
     <div class="price-card">
       <h3>Rational</h3>
       <div class="price-tagline">Whole, simple, and free — like a nice integer.</div>
-      <div class="price-num">$0<span>/forever</span></div>
+      <div class="price-num"><span data-usd="0">$0</span><span>/forever</span></div>
       <ul>
         <li>Full free archive index (2015–2025)</li>
         <li>3 practice problems per tier</li>
@@ -641,7 +676,7 @@ body{
       <span class="badge">Most Popular</span>
       <h3>Irrational</h3>
       <div class="price-tagline">Never-ending practice. Unlike π, fully worth it.</div>
-      <div class="price-num">$9<span>/month</span></div>
+      <div class="price-num"><span data-usd="9">$9</span><span>/month</span></div>
       <ul>
         <li>Everything in Rational</li>
         <li>Unlimited practice problems, all tiers</li>
@@ -653,7 +688,7 @@ body{
     <div class="price-card">
       <h3>Complex</h3>
       <div class="price-tagline">Real progress, plus an imaginary amount of fun.</div>
-      <div class="price-num">$19<span>/month</span></div>
+      <div class="price-num"><span data-usd="19">$19</span><span>/month</span></div>
       <ul>
         <li>Everything in Irrational</li>
         <li>1-on-1 problem walkthroughs</li>
@@ -1309,5 +1344,6 @@ async function loadProgress(){
 }
 loadProgress();
 </script>
+<script src="currency-shared.js"></script>
 </body>
 </html>
