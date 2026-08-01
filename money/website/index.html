@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Savoring Money | Personal Finance &amp; Tech Education</title>
+<meta name="description" content="Savoring Money teaches budgeting, investing, credit, crypto, and AI-powered money skills for teens and adults — with a live compound-interest calculator, free resources, and math tutoring demos through our partner, We The Mind.">
+<meta property="og:title" content="Savoring Money | Personal Finance &amp; Tech Education">
+<meta property="og:description" content="Budgeting, investing, credit, crypto, and AI money skills for the next generation — plus live math tutoring demos through our partner, We The Mind.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="../assets/logo-full.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Savoring Money | Personal Finance &amp; Tech Education">
+<meta name="twitter:description" content="Budgeting, investing, credit, crypto, and AI money skills for the next generation — plus live math tutoring demos through our partner, We The Mind.">
+<meta name="twitter:image" content="../assets/logo-full.png">
+<link rel="icon" type="image/png" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script>MathJax={tex:{inlineMath:[['$','$']],displayMath:[['$$','$$']]},options:{skipHtmlTags:['script','noscript','style','textarea']}};</script>
+<link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<div class="umbrella-bar"><div class="wrap umbrella-bar-inner"><a href="../../" class="umbrella-brand">We The Mind</a><nav class="umbrella-nav"><a href="../../education/">Education</a><a href="../" class="active">Savoring Money</a><a href="../../tech/">Tech</a><a href="../../tools/">Tools</a><a href="../../academy/">Academy</a><a href="../../blog/">Blog</a><a href="../../about/">About</a><a href="../../contact/">Contact</a></nav></div></div>
+
+<!-- Shared brand logo icon (circuit-board brain + pi + coin + rising chart) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sm-logo-icon" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#0d375a"/>
+    <path d="M20 20c-4 0-7 3-7 7 0 3 2 5 2 5-3 1-5 4-5 7 0 4 3 7 7 7h2c1 3 4 5 7 5h14c3 0 6-2 7-5h2c4 0 7-3 7-7 0-3-2-6-5-7 0 0 2-2 2-5 0-4-3-7-7-7-1-3-4-5-7-5H27c-3 0-6 2-7 5z" fill="none" stroke="#c9a348" stroke-width="1.6" stroke-linejoin="round"/>
+    <g stroke="#c9a348" stroke-width="1.2" stroke-linecap="round" opacity="0.85">
+      <line x1="17" y1="27" x2="12" y2="27"/>
+      <line x1="17" y1="37" x2="12" y2="39"/>
+      <line x1="47" y1="27" x2="52" y2="25"/>
+      <line x1="47" y1="37" x2="52" y2="39"/>
+      <line x1="32" y1="16" x2="32" y2="11"/>
+    </g>
+    <g fill="#c9a348">
+      <circle cx="12" cy="27" r="1.6"/>
+      <circle cx="12" cy="39" r="1.6"/>
+      <circle cx="52" cy="25" r="1.6"/>
+      <circle cx="52" cy="39" r="1.6"/>
+      <circle cx="32" cy="11" r="1.6"/>
+    </g>
+    <text x="32" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" fill="#c9a348" text-anchor="middle">&#960;</text>
+    <circle cx="46" cy="18" r="7" fill="#c9a348" stroke="#0d375a" stroke-width="1"/>
+    <text x="46" y="21.5" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#0d375a" text-anchor="middle">$</text>
+    <polyline points="14,46 22,40 28,44 40,32" fill="none" stroke="#00e5a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="40,32 33.5,33.5 38.5,38" fill="#00e5a0"/>
+  </symbol>
+</svg>
+
+<!-- Animated background -->
+<div class="bg-aura">
+  <div class="aura-orb"></div>
+  <div class="aura-orb"></div>
+  <div class="aura-orb"></div>
+</div>
+<canvas id="particleCanvas"></canvas>
+
+<!-- ═══════════════════════════════════════
+     NAV
+═══════════════════════════════════════ -->
+<nav id="nav">
+  <a href="../website/" class="nav-logo brand-logo">
+    <img class="brand-icon" src="../assets/logo-icon.png" width="32" height="32" alt="Savoring Money logo">
+    <span class="brand-word">SAVORING <em>MONEY</em></span>
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="#why-us">Why Us</a>
+    <a href="#academy">Pillars</a>
+    <a href="#courses">Courses</a>
+    <a href="#viewer">Live Lesson</a>
+    <a href="#calculator">Calculator</a>
+    <a href="#vault">Resources</a>
+    <a href="#book-demo" class="nav-cta">Book Free Demo →</a>
+  </div>
+  <button class="hamburger" id="hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════════════════════════════════════
+     HERO
+═══════════════════════════════════════ -->
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div class="hero-inner" style="position:relative;z-index:1;">
+    <div class="hero-eyebrow">
+      <div class="live-pill"></div>
+      Global EdTech Excellence · Grade 1–12, Adults &amp; Beyond
+    </div>
+    <h1>
+      <span class="h1-line1">The Polymath's</span>
+      <span class="h1-line2">Kitchen</span>
+    </h1>
+    <p class="hero-sub">
+      Where Personal Finance &amp; Technology are served with real-world flavour.
+      Interactive lessons, live calculators, and worksheets — all under one roof.
+      (Want live math tutoring too? We partner with <strong style="color:var(--gold-dim)">We The Mind</strong> for that.)
+    </p>
+    <div class="hero-btns">
+      <a href="#book-demo" class="btn-gold">📅 Book Free Demo</a>
+      <a href="#courses" class="btn-ghost">Explore Courses</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num" data-target="12">0</div><div class="stat-label">Courses Offered</div></div>
+      <div class="stat"><div class="stat-num" data-target="8">0</div><div class="stat-label">Pillars of Mastery</div></div>
+      <div class="stat"><div class="stat-num" data-target="4">0</div><div class="stat-label">Skill Areas</div></div>
+      <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Curiosity</div></div>
+    </div>
+  </div>
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker" id="ticker">
+    <span class="ticker-item">Compound Interest</span>
+    <span class="ticker-item">Financial Literacy</span>
+    <span class="ticker-item">Investing Basics</span>
+    <span class="ticker-item">Crypto & Blockchain</span>
+    <span class="ticker-item">Stock Markets</span>
+    <span class="ticker-item">Excel & Python</span>
+    <span class="ticker-item">EdTech Leadership</span>
+    <span class="ticker-item">Teen Budgeting</span>
+    <span class="ticker-item">Spoken English</span>
+    <span class="ticker-item">GenAI & Future Skills</span>
+    <span class="ticker-item">Science Grades 1–12</span>
+    <span class="ticker-item">Credit & Debt Management</span>
+    <span class="ticker-item">Compound Interest</span>
+    <span class="ticker-item">Financial Literacy</span>
+    <span class="ticker-item">Investing Basics</span>
+    <span class="ticker-item">Crypto & Blockchain</span>
+    <span class="ticker-item">Stock Markets</span>
+    <span class="ticker-item">Excel & Python</span>
+    <span class="ticker-item">EdTech Leadership</span>
+    <span class="ticker-item">Teen Budgeting</span>
+    <span class="ticker-item">Spoken English</span>
+    <span class="ticker-item">GenAI & Future Skills</span>
+    <span class="ticker-item">Science Grades 1–12</span>
+    <span class="ticker-item">Credit & Debt Management</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     WHY CHOOSE US
+═══════════════════════════════════════ -->
+<section class="usp-section" id="why-us">
+  <div class="section-head reveal">
+    <div class="section-tag">Our Edge</div>
+    <h2>Why Choose the Academy?</h2>
+    <p>Six pillars of differentiation that make our students genuinely better prepared for the real world.</p>
+  </div>
+  <div class="usp-grid reveal">
+
+    <div class="usp-card">
+      <span class="usp-number">01</span>
+      <div class="usp-icon-wrap">🎯</div>
+      <h3>Personalised Learning</h3>
+      <p>Custom learning plans built around each student's unique strengths, gaps, and goals. No one-size-fits-all.</p>
+    </div>
+
+    <div class="usp-card">
+      <span class="usp-number">02</span>
+      <div class="usp-icon-wrap">🌐</div>
+      <h3>Global Money Fluency</h3>
+      <p>Financial concepts adapted for learners in the US, UK, India, Australia &amp; beyond — one money vocabulary, everywhere.</p>
+    </div>
+
+    <div class="usp-card">
+      <span class="usp-number">03</span>
+      <div class="usp-icon-wrap">🏗️</div>
+      <h3>Real-Life Application</h3>
+      <p>Finance and technology taught using real-world scenarios, live calculators, and situations students actually encounter.</p>
+    </div>
+
+    <div class="usp-card">
+      <span class="usp-number">04</span>
+      <div class="usp-icon-wrap">📈</div>
+      <h3>Performance Tracking</h3>
+      <p>Regular assessments, detailed progress reports, and parent dashboards — full transparency at every step.</p>
+    </div>
+
+    <div class="usp-card">
+      <span class="usp-number">05</span>
+      <div class="usp-icon-wrap">💰</div>
+      <h3>Financial Literacy Focus</h3>
+      <p>Students learn the money skills schools never teach — budgeting, investing, credit, and wealth building.</p>
+    </div>
+
+    <div class="usp-card">
+      <span class="usp-number">06</span>
+      <div class="usp-icon-wrap">🕐</div>
+      <h3>Flexible Global Timings</h3>
+      <p>Global-friendly schedules designed for students in the US, UK, Australia, India, and everywhere between.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     ACADEMY PILLARS
+═══════════════════════════════════════ -->
+<section class="section pillars-bg" id="academy">
+  <div class="section-head reveal">
+    <div class="section-tag">The Academy</div>
+    <h2>Eight Pillars of the Polymath</h2>
+    <p>A multidisciplinary framework blending real-world financial intelligence with future-ready technology.</p>
+  </div>
+  <div class="bento-grid reveal">
+
+    <div class="bento-card featured">
+      <span class="card-icon">💰</span>
+      <div class="card-badge">Core Mission</div>
+      <h3>Financial Literacy</h3>
+      <p>Structured courses for teens and adults: Banking, Credit, Stocks, and Digital Assets. Making wealth concepts digestible, actionable, and empowering.</p>
+    </div>
+
+    <div class="bento-card">
+      <span class="card-icon">🎓</span>
+      <div class="card-badge">Leadership</div>
+      <h3>EdTech Operations</h3>
+      <p>Senior Teacher Management &amp; Recruitment for global platforms — at scale.</p>
+    </div>
+
+    <div class="bento-card wide">
+      <span class="card-icon">💻</span>
+      <div class="card-badge">Technology</div>
+      <h3>Web Dev &amp; AI Integration</h3>
+      <p>Building educational calculators, Odoo integrations, and AI-powered learning tools using HTML, CSS, JavaScript, and Google Apps Script. The classroom of the future — built today, taught tomorrow.</p>
+    </div>
+
+    <div class="bento-card">
+      <span class="card-icon">🎥</span>
+      <div class="card-badge">Strategy</div>
+      <h3>Digital Content</h3>
+      <p>Research-based video editing (DaVinci Resolve) and structured storytelling for our <a href="https://www.youtube.com/@savoringmoney" target="_blank" rel="noopener" style="color:var(--gold-dim);">YouTube channel</a>.</p>
+    </div>
+
+    <div class="bento-card">
+      <span class="card-icon">🚀</span>
+      <div class="card-badge">Business</div>
+      <h3>Entrepreneurship</h3>
+      <p>From growing a private tuition franchise to e-commerce. Sales strategy and Google Ads with measurable ROI.</p>
+    </div>
+
+    <div class="bento-card">
+      <span class="card-icon">🌐</span>
+      <div class="card-badge">Polyglot</div>
+      <h3>Languages</h3>
+      <p>Fluent in English, Hindi, Bengali.</p>
+      <div class="lang-progress">
+        <div class="lang-progress-row"><span>Japanese · N5 Conversational</span><span>35%</span></div>
+        <div class="prog-track"><div class="prog-bar" id="langBar" style="width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="bento-card">
+      <span class="card-icon">🎨</span>
+      <div class="card-badge">Design</div>
+      <h3>Instructional Design</h3>
+      <p>Crafting worksheets with LaTeX and Canva. Story-based frameworks that make students genuinely <em>want</em> to learn.</p>
+    </div>
+
+    <div class="bento-card">
+      <span class="card-icon">🧠</span>
+      <div class="card-badge">Thinking</div>
+      <h3>Analytical Power</h3>
+      <p>Simplifying international standards into digestible, interactive modules. Where complexity meets clarity.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     COURSES
+═══════════════════════════════════════ -->
+<section class="courses-section" id="courses">
+  <div class="section-head reveal">
+    <div class="section-tag">What We Teach</div>
+    <h2>Our Full Course Catalogue</h2>
+    <p>Personal finance and future-ready tech skills — comprehensive programmes for every learner.</p>
+  </div>
+
+  <div class="course-tabs reveal" id="courseTabs">
+    <button class="ctab active" data-filter="all">All Courses</button>
+    <button class="ctab" data-filter="finance">💰 Finance</button>
+    <button class="ctab" data-filter="science">🔬 Science</button>
+    <button class="ctab" data-filter="english">🗣️ English</button>
+    <button class="ctab" data-filter="tech">🤖 Tech</button>
+  </div>
+
+  <div class="courses-grid reveal" id="coursesGrid">
+
+    <div class="course-card" data-cat="finance">
+      <span class="course-emoji">📒</span>
+      <div class="course-flag">Finance · Foundations</div>
+      <h3>Budgeting &amp; Cash Flow Mastery</h3>
+      <p>Build a budget that survives real life — income tracking, the anti-budget method, and habits that stick past month one.</p>
+    </div>
+
+    <div class="course-card" data-cat="finance">
+      <span class="course-emoji">📈</span>
+      <div class="course-flag">Finance · Investing</div>
+      <h3>Investing &amp; Stock Market Basics</h3>
+      <p>From opening your first brokerage account to reading an index fund fact sheet — investing fundamentals without the jargon.</p>
+    </div>
+
+    <div class="course-card" data-cat="finance">
+      <span class="course-emoji">💳</span>
+      <div class="course-flag">Finance · Credit</div>
+      <h3>Credit &amp; Debt Management</h3>
+      <p>How credit scores actually work, avoiding high-interest debt traps, and paying down what you owe with a real plan.</p>
+    </div>
+
+    <div class="course-card" data-cat="finance">
+      <span class="course-emoji">🧾</span>
+      <div class="course-flag">Finance · Planning</div>
+      <h3>Taxes &amp; Retirement Planning</h3>
+      <p>Demystifying tax basics and long-term retirement vehicles so compounding has decades to work in your favour.</p>
+    </div>
+
+    <div class="course-card" data-cat="finance">
+      <span class="course-emoji">🪙</span>
+      <div class="course-flag">Finance · Digital Assets</div>
+      <h3>Crypto &amp; Blockchain Basics</h3>
+      <p>What blockchain actually solves, how to evaluate digital assets critically, and how to avoid the most common scams.</p>
+    </div>
+
+    <div class="course-card" data-cat="tech">
+      <span class="course-emoji">📊</span>
+      <div class="course-flag">Tech · Analysis</div>
+      <h3>Excel &amp; Python for Finance</h3>
+      <p>Model budgets and portfolios in Excel, then automate the boring parts with beginner-friendly Python scripts.</p>
+    </div>
+
+    <div class="course-card" data-cat="tech">
+      <span class="course-emoji">🤖</span>
+      <div class="course-flag">Tech · AI</div>
+      <h3>AI Tools for Money Management</h3>
+      <p>Using AI assistants responsibly for budgeting, expense tracking, and financial research — without the hallucinated advice.</p>
+    </div>
+
+    <div class="course-card" data-cat="finance">
+      <span class="course-emoji">💹</span>
+      <div class="course-flag">Finance · Students</div>
+      <h3>Financial Literacy for Teens</h3>
+      <p>Saving, budgeting, banking, investing, and credit awareness — the money skills schools never teach. Grades 6–12.</p>
+    </div>
+
+    <div class="course-card" data-cat="finance">
+      <span class="course-emoji">💼</span>
+      <div class="course-flag">Finance · Adults</div>
+      <h3>Adult Financial Planning</h3>
+      <p>Wealth planning, investment fundamentals, tax basics, and the path to financial independence for working adults.</p>
+    </div>
+
+    <div class="course-card" data-cat="science">
+      <span class="course-emoji">🔬</span>
+      <div class="course-flag">Science · Grades 1–12</div>
+      <h3>Physics, Chemistry &amp; Biology</h3>
+      <p>Concept-first science teaching with lab-style demonstrations, diagrams, and curriculum-aligned practice for all boards.</p>
+    </div>
+
+    <div class="course-card" data-cat="english">
+      <span class="course-emoji">🗣️</span>
+      <div class="course-flag">English</div>
+      <h3>Spoken English &amp; Communication</h3>
+      <p>Grammar, pronunciation, public speaking, and interview preparation — designed for both students and working professionals.</p>
+    </div>
+
+    <div class="course-card" data-cat="tech">
+      <span class="course-emoji">🤖</span>
+      <div class="course-flag">Technology</div>
+      <h3>GenAI &amp; Future Skills</h3>
+      <p>AI tools, prompt engineering, and practical real-world AI applications — preparing students for the jobs of tomorrow.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     DEMO CTA STRIP
+═══════════════════════════════════════ -->
+<div class="demo-strip">
+  <div class="demo-border-t"></div>
+  <div class="demo-border-b"></div>
+  <h2>Start Your Learning Journey <em>Today</em></h2>
+  <p>Book a free 30-minute demo class — no commitment, no cost. Just great teaching.</p>
+  <div class="demo-btns">
+    <a href="#book-demo" class="btn-emerald">📅 Book Free Demo Class</a>
+    <a href="#courses" class="btn-ghost">Browse All Courses</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     LIVE LESSON VIEWER
+═══════════════════════════════════════ -->
+<section class="viewer-section" id="viewer">
+  <div style="max-width:1200px;margin:0 auto 48px;position:relative;z-index:1;" class="reveal">
+    <div class="section-tag">Live Classroom</div>
+    <h2 style="font-size:clamp(2rem,4vw,3rem);color:var(--text);letter-spacing:-0.02em;">Module 4.2: Compound Interest</h2>
+  </div>
+  <div class="viewer-grid">
+    <div class="reveal left">
+      <div class="viewer-tag">
+        <span class="rec-dot"></span>
+        Recording Available
+      </div>
+      <h2 class="viewer-title">The <span>Power of Exponents</span> in Wealth Building</h2>
+      <div class="video-box">
+        <div class="video-inner">
+          <div class="play-ring">
+            <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+          </div>
+          <div class="video-meta">
+            <a href="https://www.youtube.com/@savoringmoney" target="_blank" rel="noopener" style="color:inherit;">Watch on our YouTube Channel &rarr;</a><br>
+            <span style="opacity:.5;font-size:.72rem;">Module 4.2 · 18 min · HD</span>
+          </div>
+        </div>
+      </div>
+      <p class="viewer-desc">
+        We explore how mathematical exponents quietly govern the growth of wealth. Using real stock market data, we apply the compound interest formula step by step — and discover why starting <em style="color:var(--gold-dim)">early</em> is the single most powerful financial decision a teenager can make.
+      </p>
+    </div>
+    <div class="interact-panel reveal right">
+      <div>
+        <h3>Interactive Taste Test ⭐</h3>
+        <p>Solve the problem below to earn your Michelin Star in Finance</p>
+      </div>
+      <div class="math-card">
+        <strong>Problem: Compound Interest</strong>
+        <p>You invest <strong style="color:var(--gold-dim)">₹10,000</strong> at an annual rate of <strong style="color:var(--emerald)">8%</strong>, compounded <strong style="color:var(--cyan)">12×/year</strong>. Find the value after <strong style="color:var(--violet)">5 years</strong>:</p>
+        <p style="text-align:center;margin:10px 0;font-size:1rem;">$$A = P\!\left(1 + \frac{r}{n}\right)^{nt}$$</p>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+          <label style="font-size:.73rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);">Your answer (₹) — round to 2 decimals</label>
+          <input type="number" id="mathAns" class="math-input" placeholder="e.g. 14898.46" step="0.01">
+          <button class="submit-btn" onclick="checkAnswer()">Submit Answer</button>
+          <button class="hint-btn" onclick="showHint()">💡 Need a hint?</button>
+        </div>
+        <div id="feedback" class="feedback-msg"></div>
+      </div>
+      <div>
+        <p style="font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;">Lesson Resources</p>
+        <div class="resource-list">
+          <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="resource-link">📂 Request Formula Sheet via WhatsApp</a>
+          <a href="#calculator" class="resource-link">🔢 Open Live Calculator Below</a>
+          <a href="#vault" class="resource-link">📝 Browse Worksheet Vault</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     CALCULATOR
+═══════════════════════════════════════ -->
+<section class="calc-section" id="calculator">
+  <div class="section-head reveal">
+    <div class="section-tag">Live Tool</div>
+    <h2>Compound Interest Calculator</h2>
+    <p>Adjust sliders and watch your wealth compound in real time.</p>
+  </div>
+  <div class="calc-grid reveal">
+    <div class="calc-panel">
+      <div class="calc-field">
+        <div class="calc-label"><span>Principal Amount</span><span id="pLabel">₹10,000</span></div>
+        <input type="number" class="calc-input" id="cP" value="10000" oninput="calcCI();document.getElementById('pLabel').textContent='₹'+Number(this.value).toLocaleString('en-IN')">
+      </div>
+      <div class="calc-field">
+        <div class="calc-label"><span>Annual Interest Rate</span><span id="rLabel">8.0%</span></div>
+        <input type="range" class="calc-range" id="cR" min="1" max="30" value="8" step="0.5" oninput="calcCI();document.getElementById('rLabel').textContent=this.value+'%'">
+      </div>
+      <div class="calc-field">
+        <div class="calc-label"><span>Compounding Frequency</span><span></span></div>
+        <select class="calc-input" id="cN" onchange="calcCI()">
+          <option value="1">Annually (1×/yr)</option>
+          <option value="2">Semi-Annually (2×/yr)</option>
+          <option value="4">Quarterly (4×/yr)</option>
+          <option value="12" selected>Monthly (12×/yr)</option>
+          <option value="365">Daily (365×/yr)</option>
+        </select>
+      </div>
+      <div class="calc-field">
+        <div class="calc-label"><span>Time Period</span><span id="tLabel">5 years</span></div>
+        <input type="range" class="calc-range" id="cT" min="1" max="40" value="5" oninput="calcCI();document.getElementById('tLabel').textContent=this.value+' yr'">
+      </div>
+      <div class="formula-box" id="formulaBox">Calculating…</div>
+    </div>
+    <div class="calc-results">
+      <div class="result-main">
+        <div class="result-label">Final Amount After Interest</div>
+        <div class="result-amount" id="rAmount">₹ —</div>
+      </div>
+      <div class="breakdown">
+        <div class="breakdown-row"><span class="b-label">Principal Invested</span><span class="b-val" id="bP">—</span></div>
+        <div class="breakdown-row"><span class="b-label">Total Interest Earned</span><span class="b-val accent" id="bI">—</span></div>
+        <div class="breakdown-row"><span class="b-label">Interest / Principal</span><span class="b-val gold" id="bRatio">—</span></div>
+        <div class="breakdown-row"><span class="b-label">Effective Annual Rate</span><span class="b-val" id="bEAR">—</span></div>
+      </div>
+      <div class="bar-chart-wrap">
+        <div class="bar-chart-label">Principal vs Interest Split</div>
+        <div class="bar-chart">
+          <div class="bar-p" id="barP" style="width:50%"></div>
+          <div class="bar-i" id="barI" style="width:50%"></div>
+        </div>
+        <div class="bar-legend">
+          <span class="bl-p">Principal</span>
+          <span class="bl-i">Interest</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION STRIP -->
+<div class="mission-strip">
+  <div class="mission-border-top"></div>
+  <div class="mission-border-bot"></div>
+  <p class="mission-quote">"Financial literacy is not the pursuit of <em>wealth</em> — it is the pursuit of <em>freedom</em>."</p>
+  <p class="mission-attr">— The Global Polymath Academy</p>
+</div>
+
+<!-- ═══════════════════════════════════════
+     WORKSHEET VAULT
+═══════════════════════════════════════ -->
+<section class="vault-section" id="vault">
+  <div class="section-head reveal">
+    <div class="section-tag">The Vault</div>
+    <h2>Worksheet &amp; Resource Library</h2>
+    <p>Curated materials for every learner — from teen budgeters to future investors. No files hosted here — request any item and we'll send it over WhatsApp.</p>
+  </div>
+  <div class="vault-scroll reveal">
+    <div class="ws-card">
+      <span class="ws-icon">📈</span>
+      <div class="ws-tag">Investing</div>
+      <h4>Investing Fundamentals Q&amp;A Bank</h4>
+      <p>Diagnostic questions covering index funds, diversification, risk tolerance, and reading a brokerage statement.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+    <div class="ws-card">
+      <span class="ws-icon">💹</span>
+      <div class="ws-tag">Finance</div>
+      <h4>Teen Budget Tracker</h4>
+      <p>The "Anti-Budget" system — simple, flexible, and built for Grades 9–12 financial habits.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+    <div class="ws-card">
+      <span class="ws-icon">📊</span>
+      <div class="ws-tag">Technology</div>
+      <h4>Excel Formulas Cheat Sheet</h4>
+      <p>The Excel functions every budget or portfolio tracker actually needs — no fluff, just the ones you'll reuse.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+    <div class="ws-card">
+      <span class="ws-icon">💻</span>
+      <div class="ws-tag">Technology</div>
+      <h4>HTML/CSS Cheat Sheet</h4>
+      <p>Compact reference for building your first educational web app — beginner friendly.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+    <div class="ws-card">
+      <span class="ws-icon">🏦</span>
+      <div class="ws-tag">Finance</div>
+      <h4>Banking Basics Workbook</h4>
+      <p>From savings accounts to credit scores — a complete guided workbook for teens.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+    <div class="ws-card">
+      <span class="ws-icon">📈</span>
+      <div class="ws-tag">Investing</div>
+      <h4>Intro to Stock Market</h4>
+      <p>NSE/BSE fundamentals, reading candlestick charts, and understanding market indices.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+    <div class="ws-card">
+      <span class="ws-icon">🔬</span>
+      <div class="ws-tag">Science</div>
+      <h4>Science Concept Cards</h4>
+      <p>Physics, Chemistry &amp; Biology visual summary cards for exam preparation.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+    <div class="ws-card">
+      <span class="ws-icon">🗣️</span>
+      <div class="ws-tag">English</div>
+      <h4>Spoken English Drills</h4>
+      <p>Daily speaking exercises and grammar drills for confident communication in professional settings.</p>
+      <a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener" class="ws-btn">💬 Request via WhatsApp</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     LEARN ON YOUTUBE
+═══════════════════════════════════════ -->
+<section class="yt-strip">
+  <div class="yt-card reveal">
+    <div class="yt-icon">▶️</div>
+    <h2>All Our Personal Finance Lessons Live <span>on YouTube</span></h2>
+    <p>Budgeting, investing, credit, crypto — every personal-finance topic we teach is broken down in free video lessons. New uploads regularly, no signup required.</p>
+    <a href="https://www.youtube.com/@savoringmoney" target="_blank" rel="noopener" class="btn-youtube">▶ Watch on YouTube</a>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     BOOK A DEMO (We The Mind partnership)
+═══════════════════════════════════════ -->
+<section class="demo-form-section" id="book-demo">
+  <div class="section-head reveal">
+    <div class="section-tag">Live Tutoring</div>
+    <h2>Book a Free Math Tutoring Demo <span style="color:var(--gold-dim);">— powered by We The Mind</span></h2>
+    <p>Our personal-finance curriculum lives on YouTube and right here on this site. For live 1:1 or group <strong style="color:var(--emerald);">math tutoring</strong>, we partner with We The Mind — book your free demo below and their team will confirm your session.</p>
+  </div>
+  <div class="demo-form-wrap reveal">
+    <div class="demo-form-card">
+      <p class="demo-partner-note">Personal finance learning at Savoring Money is <strong>YouTube-first</strong> and always free. Live <strong>math tutoring demos</strong> are booked through our partner, <strong>We The Mind</strong>, using the form below.</p>
+      <form id="demo-form" data-endpoint="https://script.google.com/macros/s/AKfycbw4v7C_-phYjQUH38Gi4fWWzhpYgKZPggMOp4xah5FNHU3OL0Ifv0qni07jaNZh8zqW/exec">
+        <input type="hidden" name="utm_source" id="utm_source">
+        <input type="hidden" name="utm_medium" id="utm_medium">
+        <input type="hidden" name="utm_campaign" id="utm_campaign">
+        <div class="field">
+          <label for="session_type">What are you booking?</label>
+          <select id="session_type" name="session_type" required>
+            <option value="Free 30-Minute Demo">Free 30-Minute Demo</option>
+            <option value="Group Session Trial">Group Session Trial</option>
+            <option value="Single Problem-Solving Session">Single Problem-Solving Session ($20)</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="parent_name">Parent name</label><input type="text" id="parent_name" name="parent_name" required></div>
+          <div class="field"><label for="student_name">Student name</label><input type="text" id="student_name" name="student_name" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label for="email">Email</label><input type="email" id="email" name="email" required></div>
+          <div class="field"><label for="phone">Phone (with country code)</label><input type="tel" id="phone" name="phone" required></div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="curriculum">Curriculum / board</label>
+            <select id="curriculum" name="curriculum" required>
+              <option value="">Select one</option>
+              <optgroup label="School Boards"><option>CBSE</option><option>ICSE / ISC</option><option>IB Diploma</option><option>IGCSE (Cambridge)</option><option>A-Levels</option><option>US Common Core</option><option>Australian ACARA</option><option>Singapore O/A-Level</option><option>Canadian Provincial</option><option>UAE MOE / KHDA</option></optgroup>
+              <optgroup label="US Tests & AP"><option>SAT</option><option>ACT</option><option>AP Courses</option></optgroup>
+              <optgroup label="Competitive / Grad-Entrance"><option>GATE</option><option>CSIR NET</option></optgroup>
+              <optgroup label="University Level"><option>University Math</option><option>University Physics/Chemistry</option><option>University Computer Science</option></optgroup>
+              <option>Other — I'll specify below</option>
+            </select>
+          </div>
+          <div class="field"><label for="grade">Grade / year</label><input type="text" id="grade" name="grade" placeholder="e.g. Grade 10" required></div>
+        </div>
+        <div class="field"><label for="notes">Subject, problems to solve, or group size</label><input type="text" id="notes" name="notes" placeholder="e.g. IB DP Maths AA HL — functions, or 'group of 5'" required></div>
+        <div class="field" id="problem_file_field" style="display:none;">
+          <label for="problem_file">Upload your problem(s) — photo, PDF, or document <span style="font-weight:400;">(max 10 MB)</span></label>
+          <input type="file" id="problem_file" name="problem_file" accept=".png,.jpg,.jpeg,.pdf,.doc,.docx">
+          <p class="form-footnote" id="problem_file_error" style="display:none; color:var(--rose);">That file is over 10 MB — please upload something smaller.</p>
+        </div>
+        <button type="submit" class="btn btn-primary form-submit">Book My Free Session</button>
+        <p class="form-footnote">By submitting, you agree to be contacted about scheduling your free session. We don't share your details with advertisers.</p>
+      </form>
+      <div id="form-success" style="display:none;">Thanks — we've got your request, noted and ready to grow. Look out for a confirmation email with your session time shortly.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="brand-logo">
+        <img class="brand-icon" src="../assets/logo-icon.png" width="30" height="30" alt="Savoring Money logo">
+        <span class="brand-word">Savoring <em>Money</em></span>
+      </div>
+      <p>Empowering the next generation to earn, spend, and grow with confidence. A multidisciplinary academy where money meets technology meets the real world.</p>
+      <div class="fbadges">
+        <span class="fbadge">English</span>
+        <span class="fbadge">हिन्दी</span>
+        <span class="fbadge">বাংলা</span>
+        <span class="fbadge">日本語 N5</span>
+        <span class="fbadge">Budgeting</span>
+        <span class="fbadge">Investing</span>
+        <span class="fbadge">Crypto</span>
+        <span class="fbadge">Excel</span>
+        <span class="fbadge">Python</span>
+        <span class="fbadge">AI Tools</span>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h5>Academy</h5>
+      <ul>
+        <li><a href="#why-us">Why Choose Us</a></li>
+        <li><a href="#academy">Eight Pillars</a></li>
+        <li><a href="#courses">All Courses</a></li>
+        <li><a href="#viewer">Live Lessons</a></li>
+        <li><a href="#calculator">Calculator</a></li>
+        <li><a href="#vault">Resource Vault</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Courses</h5>
+      <ul>
+        <li><a href="#courses">Budgeting &amp; Cash Flow</a></li>
+        <li><a href="#courses">Investing Basics</a></li>
+        <li><a href="#courses">Credit &amp; Debt</a></li>
+        <li><a href="#courses">Crypto &amp; Blockchain</a></li>
+        <li><a href="#courses">Financial Literacy</a></li>
+        <li><a href="#courses">AI &amp; Tech Tools</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Connect</h5>
+      <ul>
+        <li><a href="https://www.youtube.com/@savoringmoney" target="_blank" rel="noopener">YouTube Channel</a></li>
+        <li><a href="https://instagram.com/savoringmoney" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a href="https://www.linkedin.com/company/savoring-money/" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://whatsapp.com/channel/0029VbCPOKT7YSd4kdergp0B" target="_blank" rel="noopener">WhatsApp Channel</a></li>
+        <li><a href="#book-demo">Book Free Demo</a></li>
+        <li><a href="#book-demo">Enroll Now</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Savoring Money · The Global Polymath Academy</p>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════ -->
+<script>
+/* ─── PARTICLE CANVAS ─── */
+(function(){
+  const canvas = document.getElementById('particleCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize);
+  resize();
+  class Particle {
+    constructor(){
+      this.x  = Math.random()*W; this.y = Math.random()*H;
+      this.vx = (Math.random()-.5)*.35; this.vy = (Math.random()-.5)*.35;
+      this.r  = Math.random()*1.5+.5;
+      this.col = Math.random()>.5
+        ? `rgba(201,163,72,${(Math.random()*.4+.1).toFixed(2)})`
+        : `rgba(20,81,131,${(Math.random()*.3+.08).toFixed(2)})`;
+    }
+    update(){ this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>W)this.vx*=-1; if(this.y<0||this.y>H)this.vy*=-1; }
+    draw(){ ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fillStyle=this.col; ctx.fill(); }
+  }
+  for(let i=0;i<90;i++) particles.push(new Particle());
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{ p.update(); p.draw(); });
+    for(let i=0;i<particles.length;i++){
+      for(let j=i+1;j<particles.length;j++){
+        const dx=particles[i].x-particles[j].x, dy=particles[i].y-particles[j].y;
+        const d=Math.sqrt(dx*dx+dy*dy);
+        if(d<130){
+          const alpha=(1-d/130)*.12;
+          ctx.beginPath(); ctx.moveTo(particles[i].x,particles[i].y); ctx.lineTo(particles[j].x,particles[j].y);
+          ctx.strokeStyle=`rgba(201,163,72,${alpha})`; ctx.lineWidth=1; ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ─── NAV ─── */
+window.addEventListener('scroll',()=>{ document.getElementById('nav').classList.toggle('solid', window.scrollY>40); });
+document.getElementById('hamburger').addEventListener('click',()=>{ document.getElementById('navLinks').classList.toggle('open'); });
+document.querySelectorAll('.nav-links a').forEach(a=>{ a.addEventListener('click',()=>document.getElementById('navLinks').classList.remove('open')); });
+
+/* ─── SCROLL REVEAL ─── */
+const revealEls = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('visible'); ro.unobserve(e.target); }});
+},{threshold:0.1});
+revealEls.forEach(el=>ro.observe(el));
+
+/* ─── LANG BAR ─── */
+const langRO = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting){ document.getElementById('langBar').style.width='35%'; langRO.unobserve(e.target); }});
+},{threshold:0.5});
+langRO.observe(document.getElementById('langBar'));
+
+/* ─── COUNTER ANIMATION ─── */
+document.querySelectorAll('.stat-num[data-target]').forEach(el=>{
+  const target = parseInt(el.dataset.target);
+  const start = () => {
+    let count = 0;
+    const step = Math.ceil(target/30);
+    const id = setInterval(()=>{
+      count = Math.min(count+step, target);
+      el.textContent = count+'+';
+      if(count>=target) clearInterval(id);
+    },50);
+  };
+  const cRO = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ start(); cRO.unobserve(el); }});
+  },{threshold:0.5});
+  cRO.observe(el);
+});
+
+/* ─── COURSE FILTER TABS ─── */
+document.getElementById('courseTabs').addEventListener('click', function(e){
+  const tab = e.target.closest('.ctab');
+  if(!tab) return;
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  tab.classList.add('active');
+  const filter = tab.dataset.filter;
+  document.querySelectorAll('.course-card').forEach(card=>{
+    if(filter === 'all' || card.dataset.cat === filter){
+      card.classList.remove('hidden');
+    } else {
+      card.classList.add('hidden');
+    }
+  });
+});
+
+/* ─── MATH PROBLEM ─── */
+const CORRECT = 10000 * Math.pow(1 + 0.08/12, 12*5);
+function checkAnswer(){
+  const raw = parseFloat(document.getElementById('mathAns').value);
+  const fb  = document.getElementById('feedback');
+  if(isNaN(raw)){ fb.className='feedback-msg hint'; fb.textContent='Please enter a number first!'; return; }
+  const diff = Math.abs(raw - CORRECT);
+  if(diff<=1){
+    fb.className='feedback-msg correct';
+    fb.innerHTML=`⭐ Correct! A ≈ ₹${CORRECT.toFixed(2)} — Michelin Star unlocked!`;
+  } else if(diff<=600){
+    fb.className='feedback-msg hint';
+    fb.innerHTML=`Almost! You got ₹${raw.toFixed(2)}. The answer is near ₹14,898. Check your exponent!`;
+  } else {
+    fb.className='feedback-msg wrong';
+    fb.innerHTML=`Not quite (₹${raw.toFixed(2)}). Try: P=10000, r=0.08, n=12, t=5. Step: 1+r/n = 1.00667`;
+  }
+}
+function showHint(){
+  const fb=document.getElementById('feedback');
+  fb.className='feedback-msg hint';
+  fb.innerHTML=`💡 Step 1: r÷n = 0.08÷12 = 0.006667<br>Step 2: (1.006667)^60 ≈ 1.489846<br>Step 3: 10,000 × 1.489846 = ?`;
+}
+
+/* ─── CALCULATOR ─── */
+function fmt(n){ return n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function calcCI(){
+  const P = parseFloat(document.getElementById('cP').value)||0;
+  const r = parseFloat(document.getElementById('cR').value)/100||0;
+  const n = parseInt(document.getElementById('cN').value);
+  const t = parseInt(document.getElementById('cT').value);
+  if(P<=0) return;
+  const A = P * Math.pow(1+r/n, n*t);
+  const interest = A - P;
+  const EAR = (Math.pow(1+r/n,n)-1)*100;
+  const amtEl = document.getElementById('rAmount');
+  amtEl.textContent = '₹ '+fmt(A);
+  amtEl.classList.remove('bump'); void amtEl.offsetWidth; amtEl.classList.add('bump');
+  document.getElementById('bP').textContent     = '₹ '+fmt(P);
+  document.getElementById('bI').textContent     = '₹ '+fmt(interest);
+  document.getElementById('bRatio').textContent = (interest/P*100).toFixed(1)+'%';
+  document.getElementById('bEAR').textContent   = EAR.toFixed(4)+'%';
+  document.getElementById('barP').style.width   = (P/A*100)+'%';
+  document.getElementById('barI').style.width   = (interest/A*100)+'%';
+  document.getElementById('formulaBox').innerHTML =
+    `A = ${fmt(P)} × (1 + ${(r/n).toFixed(6)})^${n*t}<br>`+
+    `A = ${fmt(P)} × ${Math.pow(1+r/n,n*t).toFixed(6)}<br>`+
+    `<strong style="color:var(--gold-dim)">A = ₹ ${fmt(A)}</strong>`;
+}
+calcCI();
+
+/* ─── BOOK-A-DEMO FORM (We The Mind partnership) ─── */
+function wireSheetForm(formId, successId, subjectLine, submittingLabel, defaultLabel) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  const successDiv = document.getElementById(successId);
+  const endpoint = form.dataset.endpoint;
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (!endpoint || endpoint.includes('YOUR_GOOGLE_APPS_SCRIPT_URL')) {
+      window.location.href = 'mailto:hello@savoringmoney.com?subject=' + encodeURIComponent(subjectLine);
+      return;
+    }
+    const btn = form.querySelector('.form-submit');
+    const originalLabel = btn.textContent;
+    btn.textContent = submittingLabel;
+    btn.disabled = true;
+    const formData = new FormData(form);
+    fetch(endpoint, { method: 'POST', mode: 'no-cors', body: formData })
+      .then(function () {
+        form.style.display = 'none';
+        if (successDiv) successDiv.style.display = 'block';
+      })
+      .catch(function () {
+        btn.textContent = originalLabel;
+        btn.disabled = false;
+      });
+  });
+}
+document.addEventListener('DOMContentLoaded', function () {
+  wireSheetForm('demo-form', 'form-success', 'New free math demo request — Savoring Money', 'Booking…', 'Book My Free Session');
+});
+</script>
+<script src="../../sound.js" defer></script>
+</body>
+</html>

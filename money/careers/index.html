@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Careers | Savoring Money — The Global Polymath Academy</title>
+<link rel="icon" type="image/png" href="../assets/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/favicon-180.png">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Cabinet+Grotesk:wght@300;400;500;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<style>
+/* ═══════════════════════════════════════
+   CAREERS PAGE — PAGE-SPECIFIC STYLES
+   (shared tokens, reset, nav, hero, buttons, footer live in style.css)
+═══════════════════════════════════════ */
+.nav-right{display:flex;align-items:center;gap:12px;}
+.nav-back{color:var(--text2);text-decoration:none;font-size:.85rem;font-weight:500;padding:7px 15px;border-radius:30px;border:1px solid rgba(13,55,90,.1);transition:color .2s;}
+.nav-back:hover{color:var(--text);}
+.hero{padding:120px 5% 80px;}
+.hero-eyebrow{color:var(--emerald);background:rgba(201,163,72,.1);border-color:rgba(201,163,72,.25);}
+.scroll-line{background:linear-gradient(var(--emerald),transparent);}
+.hero-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:44px;padding-top:36px;border-top:1px solid rgba(13,55,90,.07);animation:fadeUp .8s .4s var(--ease) both;}
+.hero-pill{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:8px 18px;border-radius:30px;}
+.pill-contract{background:rgba(255,255,255,.5);color:var(--violet);border:1.5px solid #000;}
+.pill-part{background:rgba(255,255,255,.5);color:var(--gold-dim);border:1.5px solid #000;}
+.pill-freelance{background:rgba(255,255,255,.5);color:var(--emerald);border:1.5px solid #000;}
+.pill-commission{background:rgba(255,255,255,.5);color:var(--rose);border:1.5px solid #000;}
+.founder-section{position:relative;z-index:1;padding:80px 5%;background:var(--bg2);}
+.founder-card{max-width:820px;margin:0 auto;background:linear-gradient(135deg,#0a2035,#0d2740);border:1px solid rgba(20,81,131,.3);border-radius:28px;padding:48px;display:grid;grid-template-columns:auto 1fr;gap:36px;align-items:start;position:relative;overflow:hidden;}
+.founder-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--emerald),var(--gold));}
+.founder-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--emerald));display:flex;align-items:center;justify-content:center;font-size:2rem;flex-shrink:0;}
+.founder-quote{font-family:'Cormorant Garamond',serif;font-size:1.35rem;font-style:italic;color:#f4f6f9;line-height:1.65;margin-bottom:16px;}
+.founder-name{font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold2);}
+.founder-title{font-size:.78rem;color:#b9c6d4;margin-top:2px;}
+.section-tag.gold{color:var(--gold-dim);}
+.roles-section{background:var(--bg);padding:100px 5%;position:relative;z-index:1;}
+.role-filter{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:44px;}
+.rfab{font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:8px 20px;border-radius:30px;background:rgba(13,55,90,.04);border:1px solid rgba(13,55,90,.08);color:var(--text3);cursor:pointer;transition:all .2s var(--spring);}
+.rfab:hover,.rfab.active{background:rgba(201,163,72,.1);border-color:rgba(201,163,72,.3);color:var(--gold-dim);transform:translateY(-2px);}
+.roles-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:1100px;margin:0 auto;}
+.role-card{background:var(--tint-blue);border-radius:20px;padding:30px;border:2px solid #000;position:relative;overflow:hidden;transition:transform .3s var(--spring),box-shadow .3s;}
+.role-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(180deg,var(--gold),var(--emerald));transform:scaleY(0);transform-origin:top;transition:transform .4s var(--ease);}
+.role-card:hover{transform:translateY(-5px);box-shadow:0 20px 50px rgba(20,81,131,.15);}
+.role-card:hover::before{transform:scaleY(1);}
+.role-card:nth-child(odd){background:var(--tint-gold);}
+.role-card.hidden{display:none;}
+.role-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;gap:12px;}
+.role-title{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:700;color:var(--text);}
+.role-badge{font-size:.63rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.badge-part{background:rgba(255,255,255,.6);color:var(--gold-dim);border:1.5px solid #000;}
+.badge-contract{background:rgba(255,255,255,.6);color:var(--violet);border:1.5px solid #000;}
+.badge-freelance{background:rgba(255,255,255,.6);color:var(--emerald);border:1.5px solid #000;}
+.badge-commission{background:rgba(255,255,255,.6);color:var(--rose);border:1.5px solid #000;}
+.role-meta{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:14px;}
+.role-meta span{font-size:.78rem;color:var(--text3);}
+.role-desc{font-size:.87rem;color:var(--text2);line-height:1.72;margin-bottom:18px;}
+.role-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px;}
+.role-tag{font-size:.68rem;font-weight:600;padding:3px 10px;border-radius:12px;background:rgba(13,55,90,.04);border:1px solid rgba(13,55,90,.07);color:var(--text3);}
+.role-footer{display:flex;justify-content:space-between;align-items:center;}
+.role-dept{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);}
+.apply-btn{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:700;color:#0d1b2a;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;padding:9px 20px;border-radius:20px;cursor:pointer;transition:transform .2s var(--spring);text-decoration:none;}
+.apply-btn:hover{transform:scale(1.06);}
+.process-section{background:var(--bg2);padding:100px 5%;position:relative;z-index:1;}
+.process-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:0;max-width:1100px;margin:0 auto;position:relative;}
+.process-steps::before{content:'';position:absolute;top:36px;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(201,163,72,.25),var(--emerald-dim),rgba(201,163,72,.25),transparent);}
+.process-step{text-align:center;padding:0 20px;position:relative;z-index:1;}
+.step-circle{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin:0 auto 20px;transition:transform .3s var(--spring);}
+.process-step:nth-child(1) .step-circle{background:rgba(201,163,72,.08);border:1px solid rgba(201,163,72,.2);}
+.process-step:nth-child(2) .step-circle{background:rgba(201,163,72,.1);border:1px solid rgba(201,163,72,.25);}
+.process-step:nth-child(3) .step-circle{background:rgba(20,81,131,.1);border:1px solid rgba(20,81,131,.25);}
+.process-step:nth-child(4) .step-circle{background:rgba(20,81,131,.1);border:1px solid rgba(20,81,131,.25);}
+.process-step:hover .step-circle{transform:scale(1.12);}
+.step-num{font-family:'DM Mono',monospace;font-size:.65rem;color:var(--text3);margin-bottom:8px;}
+.process-step h4{font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:8px;}
+.process-step p{font-size:.82rem;color:var(--text2);line-height:1.65;}
+.apply-section{background:var(--bg);padding:100px 5%;position:relative;z-index:1;}
+.apply-wrap{max-width:760px;margin:0 auto;}
+.apply-card{background:var(--tint-gold);border-radius:28px;padding:48px;border:2px solid #000;position:relative;overflow:hidden;}
+.apply-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--emerald),var(--violet));}
+.form-group{margin-bottom:22px;}
+.form-group label{display:block;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);margin-bottom:8px;}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 18px;background:var(--surface2);border:1px solid rgba(13,55,90,.08);border-radius:12px;color:var(--text);font-family:'Cabinet Grotesk',sans-serif;font-size:.9rem;outline:none;transition:border-color .2s;appearance:none;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:rgba(201,163,72,.4);box-shadow:0 0 0 3px rgba(201,163,72,.08);}
+.form-group textarea{resize:vertical;min-height:120px;}
+.form-group select option{background:var(--surface2);}
+.upload-zone{border:2px dashed rgba(13,55,90,.1);border-radius:12px;padding:32px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s;position:relative;}
+.upload-zone:hover,.upload-zone.dragover{border-color:rgba(201,163,72,.4);background:rgba(201,163,72,.04);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;}
+.upload-icon{font-size:2rem;margin-bottom:10px;}
+.upload-zone p{font-size:.85rem;color:var(--text2);}
+.upload-zone span{font-size:.75rem;color:var(--text3);display:block;margin-top:4px;}
+.upload-filename{font-size:.82rem;color:var(--emerald);margin-top:8px;display:none;}
+.form-note{text-align:center;font-size:.75rem;color:var(--text3);margin-top:14px;}
+.success-msg{display:none;text-align:center;padding:32px;background:rgba(201,163,72,.08);border:1px solid rgba(201,163,72,.25);border-radius:16px;margin-top:20px;}
+.success-msg h3{font-size:1.6rem;color:var(--emerald);margin-bottom:8px;}
+.success-msg p{font-size:.9rem;color:var(--text2);}
+.footer-grid{grid-template-columns:2fr 1fr 1fr;}
+@media(max-width:1024px){.roles-grid{grid-template-columns:1fr;}.process-steps{grid-template-columns:repeat(2,1fr);gap:40px;}.process-steps::before{display:none;}}
+@media(max-width:768px){.founder-card{grid-template-columns:1fr;}.process-steps{grid-template-columns:1fr;}.apply-card{padding:28px 22px;}.roles-section,.process-section,.apply-section,.founder-section{padding:70px 5%;}}
+</style>
+</head>
+<body>
+<div class="umbrella-bar"><div class="wrap umbrella-bar-inner"><a href="../../" class="umbrella-brand">We The Mind</a><nav class="umbrella-nav"><a href="../../education/">Education</a><a href="../" class="active">Savoring Money</a><a href="../../tech/">Tech</a><a href="../../tools/">Tools</a><a href="../../academy/">Academy</a><a href="../../blog/">Blog</a><a href="../../about/">About</a><a href="../../contact/">Contact</a></nav></div></div>
+<div class="bg-aura"><div class="aura-orb"></div><div class="aura-orb"></div><div class="aura-orb"></div></div>
+
+<!-- Shared brand logo icon (circuit-board brain + pi + coin + rising chart) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="sm-logo-icon" viewBox="0 0 64 64">
+    <circle cx="32" cy="32" r="30" fill="#0d375a"/>
+    <path d="M20 20c-4 0-7 3-7 7 0 3 2 5 2 5-3 1-5 4-5 7 0 4 3 7 7 7h2c1 3 4 5 7 5h14c3 0 6-2 7-5h2c4 0 7-3 7-7 0-3-2-6-5-7 0 0 2-2 2-5 0-4-3-7-7-7-1-3-4-5-7-5H27c-3 0-6 2-7 5z" fill="none" stroke="#c9a348" stroke-width="1.6" stroke-linejoin="round"/>
+    <g stroke="#c9a348" stroke-width="1.2" stroke-linecap="round" opacity="0.85">
+      <line x1="17" y1="27" x2="12" y2="27"/>
+      <line x1="17" y1="37" x2="12" y2="39"/>
+      <line x1="47" y1="27" x2="52" y2="25"/>
+      <line x1="47" y1="37" x2="52" y2="39"/>
+      <line x1="32" y1="16" x2="32" y2="11"/>
+    </g>
+    <g fill="#c9a348">
+      <circle cx="12" cy="27" r="1.6"/>
+      <circle cx="12" cy="39" r="1.6"/>
+      <circle cx="52" cy="25" r="1.6"/>
+      <circle cx="52" cy="39" r="1.6"/>
+      <circle cx="32" cy="11" r="1.6"/>
+    </g>
+    <text x="32" y="42" font-family="Georgia, 'Times New Roman', serif" font-size="25" font-weight="700" fill="#c9a348" text-anchor="middle">&#960;</text>
+    <circle cx="46" cy="18" r="7" fill="#c9a348" stroke="#0d375a" stroke-width="1"/>
+    <text x="46" y="21.5" font-family="Arial, sans-serif" font-size="9" font-weight="700" fill="#0d375a" text-anchor="middle">$</text>
+    <polyline points="14,46 22,40 28,44 40,32" fill="none" stroke="#00e5a0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <polygon points="40,32 33.5,33.5 38.5,38" fill="#00e5a0"/>
+  </symbol>
+</svg>
+
+<nav id="nav">
+  <a href="../website/" class="nav-logo brand-logo">
+    <img class="brand-icon" src="../assets/logo-icon.png" width="32" height="32" alt="Savoring Money logo">
+    <span class="brand-word">SAVORING <em>MONEY</em></span>
+  </a>
+  <div class="nav-right"><a href="../website/" class="nav-back">← Main Site</a><a href="#apply" class="nav-cta">Apply Now →</a></div>
+</nav>
+<section class="hero" id="home">
+  <div class="hero-grid"></div>
+  <div style="position:relative;z-index:1;">
+    <div class="hero-eyebrow"><div class="live-pill"></div>Flexible Roles · No Full-Time Commitment Required</div>
+    <h1><span class="h1-line1">Grow With Us,</span><span class="h1-line2">On Your Terms</span></h1>
+    <p class="hero-sub">Savoring Money is an early-stage EdTech academy. We can't offer full-time salaries yet — but we offer meaningful work, real flexibility, and the chance to shape financial education from the ground up.</p>
+    <div class="hero-btns"><a href="#roles" class="btn-gold">🍽️ See Open Roles</a><a href="#apply" class="btn-ghost">Apply Now</a></div>
+    <div class="hero-pills"><span class="hero-pill pill-part">⏰ Part-Time</span><span class="hero-pill pill-freelance">🌿 Freelance</span><span class="hero-pill pill-contract">📋 Contract</span><span class="hero-pill pill-commission">💸 Commission</span></div>
+  </div>
+  <div class="scroll-cue"><div class="scroll-line"></div><span>Scroll</span></div>
+</section>
+<section class="founder-section">
+  <div class="founder-card reveal">
+    <div class="founder-avatar">🧑‍🍳</div>
+    <div>
+      <p class="founder-quote">"We're at the beginning of something meaningful. We can't pay full-time salaries yet — and we'd rather be honest about that than pretend otherwise. What we offer is real: autonomy, purpose, a say in how we build, and a front-row seat to growing an EdTech brand from scratch. If that excites you, we want to hear from you."</p>
+      <div class="founder-name">Founder, Savoring Money</div>
+      <div class="founder-title">The Global Polymath Academy</div>
+    </div>
+  </div>
+</section>
+<div class="ticker-wrap">
+  <div class="ticker">
+    <div class="ticker-item">Part-time tutors</div><div class="ticker-item">Freelance writers</div><div class="ticker-item">Contract developers</div><div class="ticker-item">Commission-based marketers</div><div class="ticker-item">Flexible hours</div><div class="ticker-item">Remote work</div><div class="ticker-item">Real impact</div><div class="ticker-item">Early-stage opportunity</div>
+    <div class="ticker-item">Part-time tutors</div><div class="ticker-item">Freelance writers</div><div class="ticker-item">Contract developers</div><div class="ticker-item">Commission-based marketers</div><div class="ticker-item">Flexible hours</div><div class="ticker-item">Remote work</div><div class="ticker-item">Real impact</div><div class="ticker-item">Early-stage opportunity</div>
+  </div>
+</div>
+<section class="roles-section" id="roles">
+  <div class="section-head reveal"><span class="section-tag gold">Open Positions</span><h2>Flexible Roles,<br>Serious Work</h2><p>All roles are flexible by design — part-time, freelance, contract or commission-based. You set your hours; we set the bar high on outcomes.</p></div>
+  <div class="role-filter">
+    <button class="rfab active" data-filter="all">All</button>
+    <button class="rfab" data-filter="teaching">Teaching</button>
+    <button class="rfab" data-filter="content">Content</button>
+    <button class="rfab" data-filter="tech">Tech & Design</button>
+    <button class="rfab" data-filter="growth">Growth</button>
+    <button class="rfab" data-filter="ops">Operations</button>
+  </div>
+  <div class="roles-grid">
+    <div class="role-card reveal" data-dept="teaching">
+      <div class="role-top"><div class="role-title">Fintech Educator</div><span class="role-badge badge-part">Part-Time</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ 5–10 hrs/week</span><span>💰 ₹400–700/hr</span></div>
+      <p class="role-desc">Run live sessions on budgeting apps, digital banking, crypto basics and AI-powered money tools. Build genuine relationships with students and make fintech feel approachable.</p>
+      <div class="role-tags"><span class="role-tag">Fintech</span><span class="role-tag">Digital Banking</span><span class="role-tag">Crypto Basics</span><span class="role-tag">Online Teaching</span></div>
+      <div class="role-footer"><span class="role-dept">Teaching</span><a href="#apply" class="apply-btn" onclick="selectRole('Fintech Educator')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="teaching">
+      <div class="role-top"><div class="role-title">Personal Finance Mentor</div><span class="role-badge badge-part">Part-Time</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ 4–8 hrs/week</span><span>💰 ₹500–800/hr</span></div>
+      <p class="role-desc">Guide adult learners through budgeting, investing and compound interest in approachable, jargon-free sessions. 1-on-1 or small groups.</p>
+      <div class="role-tags"><span class="role-tag">Personal Finance</span><span class="role-tag">Mentoring</span><span class="role-tag">Budgeting</span><span class="role-tag">Investing</span></div>
+      <div class="role-footer"><span class="role-dept">Teaching</span><a href="#apply" class="apply-btn" onclick="selectRole('Personal Finance Mentor')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="content">
+      <div class="role-top"><div class="role-title">Curriculum Writer</div><span class="role-badge badge-freelance">Freelance</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ Project-based</span><span>💰 ₹1,200–2,000/hr</span></div>
+      <p class="role-desc">Develop lesson plans, worksheets and module content for our personal finance and tech courses. Paid per module delivered — clear scope, no surprises.</p>
+      <div class="role-tags"><span class="role-tag">Instructional Design</span><span class="role-tag">Finance</span><span class="role-tag">IB / CBSE</span><span class="role-tag">Writing</span></div>
+      <div class="role-footer"><span class="role-dept">Content</span><a href="#apply" class="apply-btn" onclick="selectRole('Curriculum Writer')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="content">
+      <div class="role-top"><div class="role-title">Social Media Content Creator</div><span class="role-badge badge-part">Part-Time</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ 5–8 hrs/week</span><span>💰 ₹300–500/hr</span></div>
+      <p class="role-desc">Create reels, carousels and posts that make financial education exciting on Instagram, YouTube Shorts and LinkedIn. Scripts + visuals.</p>
+      <div class="role-tags"><span class="role-tag">Short-form Video</span><span class="role-tag">Copywriting</span><span class="role-tag">Instagram</span><span class="role-tag">Finance</span></div>
+      <div class="role-footer"><span class="role-dept">Content</span><a href="#apply" class="apply-btn" onclick="selectRole('Social Media Content Creator')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="content">
+      <div class="role-top"><div class="role-title">Investment Content Creator</div><span class="role-badge badge-freelance">Freelance</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ Project-based</span><span>💰 ₹800–1,400/hr</span></div>
+      <p class="role-desc">Produce explainer videos, newsletters and social breakdowns on stocks, index funds and portfolio basics. Turn market complexity into content people actually finish reading.</p>
+      <div class="role-tags"><span class="role-tag">Investing</span><span class="role-tag">Video Scripts</span><span class="role-tag">Newsletters</span><span class="role-tag">Market Research</span></div>
+      <div class="role-footer"><span class="role-dept">Content</span><a href="#apply" class="apply-btn" onclick="selectRole('Investment Content Creator')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="tech">
+      <div class="role-top"><div class="role-title">Web Developer</div><span class="role-badge badge-contract">Contract</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ Project-based</span><span>💰 ₹800–1,500/hr</span></div>
+      <p class="role-desc">Build and maintain website features, landing pages and interactive tools. Paid per milestone — scope defined upfront, no open-ended commitments.</p>
+      <div class="role-tags"><span class="role-tag">HTML/CSS/JS</span><span class="role-tag">React</span><span class="role-tag">Responsive Design</span><span class="role-tag">Performance</span></div>
+      <div class="role-footer"><span class="role-dept">Tech & Design</span><a href="#apply" class="apply-btn" onclick="selectRole('Web Developer')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="tech">
+      <div class="role-top"><div class="role-title">UI/UX Designer</div><span class="role-badge badge-freelance">Freelance</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ Project-based</span><span>💰 ₹700–1,200/hr</span></div>
+      <p class="role-desc">Design beautiful, brand-consistent pages, course interfaces and marketing materials. Clear briefs, creative freedom, deliverable-based pay.</p>
+      <div class="role-tags"><span class="role-tag">Figma</span><span class="role-tag">Branding</span><span class="role-tag">UI Design</span><span class="role-tag">Prototyping</span></div>
+      <div class="role-footer"><span class="role-dept">Tech & Design</span><a href="#apply" class="apply-btn" onclick="selectRole('UI/UX Designer')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="growth">
+      <div class="role-top"><div class="role-title">Student Acquisition Partner</div><span class="role-badge badge-commission">Commission</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ Flexible</span><span>💰 ₹500–1,500 per enrolment</span></div>
+      <p class="role-desc">Bring students to Savoring Money through your network or social presence. Generous commission per confirmed enrolment. Zero cap on earnings.</p>
+      <div class="role-tags"><span class="role-tag">Sales</span><span class="role-tag">Network</span><span class="role-tag">Community</span><span class="role-tag">EdTech</span></div>
+      <div class="role-footer"><span class="role-dept">Growth</span><a href="#apply" class="apply-btn" onclick="selectRole('Student Acquisition Partner')">Apply →</a></div>
+    </div>
+    <div class="role-card reveal" data-dept="ops">
+      <div class="role-top"><div class="role-title">Student Support Assistant</div><span class="role-badge badge-part">Part-Time</span></div>
+      <div class="role-meta"><span>📍 Remote</span><span>⏰ 8–12 hrs/week</span><span>💰 ₹200–350/hr</span></div>
+      <p class="role-desc">Handle student queries, scheduling and onboarding via WhatsApp and email. Be the warm, reliable face of Savoring Money for new learners.</p>
+      <div class="role-tags"><span class="role-tag">Support</span><span class="role-tag">Scheduling</span><span class="role-tag">WhatsApp</span><span class="role-tag">Onboarding</span></div>
+      <div class="role-footer"><span class="role-dept">Operations</span><a href="#apply" class="apply-btn" onclick="selectRole('Student Support Assistant')">Apply →</a></div>
+    </div>
+  </div>
+</section>
+<section class="process-section" id="process">
+  <div class="section-head reveal"><span class="section-tag">Hiring Process</span><h2>Simple, Fast,<br>Respectful</h2><p>No endless rounds. Application to offer in under 2 weeks.</p></div>
+  <div class="process-steps">
+    <div class="process-step reveal"><div class="step-circle">📝</div><div class="step-num">STEP 01</div><h4>Apply Below</h4><p>Takes 5 minutes. We read every application and respond within 3 business days.</p></div>
+    <div class="process-step reveal"><div class="step-circle">☎️</div><div class="step-num">STEP 02</div><h4>Quick Chat</h4><p>A 20-minute call to understand your experience, availability and what you're looking for.</p></div>
+    <div class="process-step reveal"><div class="step-circle">🍽️</div><div class="step-num">STEP 03</div><h4>Paid Mini Task</h4><p>A short, paid taster assignment so we can see your work — and you can evaluate us too.</p></div>
+    <div class="process-step reveal"><div class="step-circle">🤝</div><div class="step-num">STEP 04</div><h4>Agreement</h4><p>A clear contract with scope, rate and expectations defined upfront — no surprises.</p></div>
+  </div>
+</section>
+<section class="apply-section" id="apply">
+  <div class="section-head reveal"><span class="section-tag">Applications Open</span><h2>Let's Start<br>a Conversation</h2><p>Tell us who you are and what excites you. We'll take it from there.</p></div>
+  <div class="apply-wrap">
+    <div class="apply-card reveal">
+      <div class="form-row">
+        <div class="form-group"><label>First Name *</label><input type="text" id="fname" placeholder="Your first name"></div>
+        <div class="form-group"><label>Last Name *</label><input type="text" id="lname" placeholder="Your last name"></div>
+      </div>
+      <div class="form-group"><label>Email Address *</label><input type="email" id="email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Phone / WhatsApp</label><input type="tel" id="phone" placeholder="+91 98765 43210"></div>
+      <div class="form-group">
+        <label>Role Applying For *</label>
+        <select id="role-select">
+          <option value="">— Select a position —</option>
+          <option>Fintech Educator</option><option>Personal Finance Mentor</option><option>Curriculum Writer</option><option>Social Media Content Creator</option><option>Investment Content Creator</option><option>Web Developer</option><option>UI/UX Designer</option><option>Student Acquisition Partner</option><option>Student Support Assistant</option><option>Other / Open Application</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Availability *</label>
+        <select id="availability">
+          <option value="">— Hours available per week —</option>
+          <option>2–5 hours/week</option><option>5–10 hours/week</option><option>10–20 hours/week</option><option>Project-based only</option>
+        </select>
+      </div>
+      <div class="form-group"><label>LinkedIn / Portfolio</label><input type="url" id="portfolio" placeholder="https://your-link.com"></div>
+      <div class="form-group"><label>Why Savoring Money? *</label><textarea id="motivation" placeholder="What draws you to this role? Early-stage is messy and exciting — tell us why that appeals to you."></textarea></div>
+      <div class="form-group">
+        <label>CV / Portfolio (optional)</label>
+        <div class="upload-zone" id="uploadZone">
+          <input type="file" id="cvFile" accept=".pdf,.doc,.docx,.zip" onchange="handleFileUpload(this)">
+          <div class="upload-icon">📄</div>
+          <p>Drop your file here or click to browse</p>
+          <span>PDF, DOC, DOCX or ZIP · Max 5MB</span>
+          <div class="upload-filename" id="uploadFilename"></div>
+        </div>
+      </div>
+      <button class="form-submit" onclick="submitApplication()">🍽️ Submit My Application</button>
+      <p class="form-note">Every application gets a reply. We respect your time.</p>
+    </div>
+    <div class="success-msg" id="successMsg">
+      <div style="font-size:3rem;margin-bottom:12px;">🎉</div>
+      <h3>Application Received!</h3>
+      <p>Thank you for applying to Savoring Money. We'll be in touch within 3 business days. We appreciate your patience — we're a small, growing team.</p>
+    </div>
+  </div>
+</section>
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="brand-logo">
+        <img class="brand-icon" src="../assets/logo-icon.png" width="30" height="30" alt="Savoring Money logo">
+        <span class="brand-word">Savoring <em>Money</em></span>
+      </div>
+      <p>Where Personal Finance &amp; Technology are served with real-world flavour. Building the Global Polymath Academy from the ground up.</p>
+      <div class="fbadges"><span class="fbadge">Early Stage</span><span class="fbadge">Remote</span><span class="fbadge">Flexible</span><span class="fbadge">Hiring Now</span></div>
+    </div>
+    <div class="footer-col"><h5>Careers</h5><ul><li><a href="#roles">Open Roles</a></li><li><a href="#process">Our Process</a></li><li><a href="#apply">Apply Now</a></li></ul></div>
+    <div class="footer-col"><h5>Company</h5><ul><li><a href="#">About Us</a></li><li><a href="#">Our Courses</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><p>© 2025 Savoring Money · The Global Polymath Academy. All rights reserved.</p><p>Privacy Policy · Terms</p></div>
+</footer>
+<script>
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('solid',window.scrollY>40);});
+const ro=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting){el.target.classList.add('visible');ro.unobserve(el.target);}});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>ro.observe(el));
+document.querySelectorAll('.rfab').forEach(btn=>{btn.addEventListener('click',function(){document.querySelectorAll('.rfab').forEach(b=>b.classList.remove('active'));this.classList.add('active');const f=this.dataset.filter;document.querySelectorAll('.role-card').forEach(c=>{c.classList.toggle('hidden',f!=='all'&&c.dataset.dept!==f);});});});
+const uz=document.getElementById('uploadZone');
+uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('dragover');});
+uz.addEventListener('dragleave',()=>uz.classList.remove('dragover'));
+uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('dragover');if(e.dataTransfer.files[0])showFn(e.dataTransfer.files[0].name);});
+function handleFileUpload(i){if(i.files[0])showFn(i.files[0].name);}
+function showFn(n){const el=document.getElementById('uploadFilename');el.textContent='✓ '+n;el.style.display='block';}
+function selectRole(r){document.getElementById('role-select').value=r;}
+function submitApplication(){
+  const f=document.getElementById('fname').value.trim(),e=document.getElementById('email').value.trim(),r=document.getElementById('role-select').value,m=document.getElementById('motivation').value.trim();
+  if(!f||!e||!r||!m){alert('Please fill in all required fields (marked with *).');return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)){alert('Please enter a valid email address.');return;}
+  const card=document.querySelector('.apply-card');
+  card.style.opacity='0';card.style.transform='translateY(-10px)';card.style.transition='opacity .4s,transform .4s';
+  setTimeout(()=>{card.style.display='none';const msg=document.getElementById('successMsg');msg.style.display='block';msg.scrollIntoView({behavior:'smooth',block:'center'});},400);
+}
+</script>
+<script src="../../sound.js" defer></script>
+</body>
+</html>
