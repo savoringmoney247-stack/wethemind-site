@@ -52,6 +52,19 @@ html{scroll-behavior:smooth;}
 .umbrella-nav{ display:flex; gap:16px; flex-wrap:wrap; }
 .umbrella-nav a{ color:var(--tint-gold); text-decoration:none; text-transform:uppercase; letter-spacing:.03em; font-weight:600; transition:color .15s ease; }
 .umbrella-nav a:hover, .umbrella-nav a.active{ color:var(--gold2); }
+/* Below ~900px the 8 links no longer fit on one row; wrapping would get clipped by
+   this bar's fixed height, hiding every link but the brand. Scroll horizontally instead
+   so every link stays reachable no matter how narrow the screen gets. */
+@media (max-width:900px){
+  .umbrella-bar .wrap{ padding:0 16px; }
+  .umbrella-bar-inner{
+    justify-content:flex-start; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none; gap:20px;
+  }
+  .umbrella-bar-inner::-webkit-scrollbar{ display:none; }
+  .umbrella-nav{ flex-wrap:nowrap; gap:16px; }
+  .umbrella-brand, .umbrella-nav a{ flex:none; white-space:nowrap; }
+}
 
 body{
   font-family:'Cabinet Grotesk',sans-serif;
