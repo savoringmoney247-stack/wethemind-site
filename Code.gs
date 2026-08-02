@@ -45,10 +45,21 @@ var HEADERS = [
   'Notes / Topic',
   'Preferred Date',
   'Problem File Link',
+  'Referred By',
   'UTM Source',
   'UTM Medium',
   'UTM Campaign'
 ];
+
+/**
+ * REFERRAL CREDITS (manual, by design — this is a small tutoring business,
+ * not worth automating credit issuance for).
+ * Whenever "Referred By" is filled in on a booking, check it against past
+ * rows: if that name/email has booked and PAID before, both the new
+ * student and the referrer get one free session credit. Just eyeball the
+ * "Referred By" column periodically and apply credits yourself — there's
+ * no code to write for this part, only a habit to keep.
+ */
 
 function doPost(e) {
   var sheet = getOrCreateSheet_();
@@ -84,6 +95,7 @@ function doPost(e) {
     data.notes || '',
     data.preferred_date || '',
     fileLink,
+    data.referred_by || '',
     data.utm_source || '',
     data.utm_medium || '',
     data.utm_campaign || ''

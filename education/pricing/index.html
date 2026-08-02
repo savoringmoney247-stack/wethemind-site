@@ -17,6 +17,17 @@
 <style>
 /* Page-specific: pricing page overrides of shared components */
 .stamp-note{ margin-top:28px; color:#6b6558; font-size:.92rem; text-align:center; }
+.pdf-download-banner{
+  display:flex; align-items:center; gap:20px; flex-wrap:wrap; justify-content:center; text-align:center;
+  background:var(--paper-2); border:2px dashed var(--gold); border-radius:12px; padding:26px 30px;
+  text-decoration:none; color:inherit; margin:0;
+  transition:transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+.pdf-download-banner:hover{ transform:translateY(-3px); box-shadow:var(--shadow); background:#fff; }
+.pdf-icon{ font-size:2rem; flex:none; }
+.pdf-download-text{ display:flex; flex-direction:column; align-items:center; gap:4px; text-align:center; }
+.pdf-download-text strong{ font-size:1.05rem; color:var(--ink); }
+.pdf-download-text span{ color:#6b6558; font-size:.88rem; max-width:50ch; }
 .squad-card{
   background:#fff; border:1px solid var(--line); border-radius:10px; padding:22px 18px; text-align:center;
   transition:transform .2s ease, box-shadow .2s ease;
@@ -58,6 +69,7 @@
 .currency-select:focus{ outline:2px solid var(--gold); outline-offset:2px; }
 .currency-note{ font-size:.78rem; color:#cfd9e8; text-align:center; margin:2.6em auto 0; max-width:60ch; }
 </style>
+<script src="../../analytics.js" defer></script>
 </head>
 <body>
 <div class="umbrella-bar"><div class="wrap umbrella-bar-inner"><a href="../../" class="umbrella-brand">We The Mind</a><nav class="umbrella-nav"><a href="../../education/" class="active">Education</a><a href="../../money/">Savoring Money</a><a href="../../tech/">Tech</a><a href="../../tools/">Tools</a><a href="../../academy/">Academy</a><a href="../../blog/">Blog</a><a href="../../about/">About</a><a href="../../contact/">Contact</a></nav></div></div>
@@ -220,6 +232,19 @@
       </div>
 
       <p class="stamp-note">Every package — solo, group, single session, or a free live class — starts the same way: reach out and we'll take it from there.</p>
+    </div>
+  </section>
+
+  <section style="padding-top:0;">
+    <div class="wrap">
+      <div class="pdf-download-banner" style="border-color:var(--gold);">
+        <span class="pdf-icon">&#127873;</span>
+        <span class="pdf-download-text">
+          <strong>Refer a Friend — You Both Get a Free Session</strong>
+          <span>Know a family who'd benefit? When they book a paid package and mention your name or email on their booking form, you each get one session credit — no limit on how many friends you refer.</span>
+        </span>
+        <a href="../#book-demo" class="offer-cta">Refer Someone Now &rarr;</a>
+      </div>
     </div>
   </section>
 

@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Blog — Coming Soon | We The Mind</title>
-<meta name="description" content="We The Mind's Blog — study tips, exam strategy, money basics, and tech explainers, all in one place. Coming soon.">
+<title>Blog — Study Tips, Board Guidance & Money Basics | We The Mind</title>
+<meta name="description" content="Practical guides on study habits, choosing a board or exam, SAT prep, and personal finance basics — written by the people who actually teach this stuff.">
 <link rel="canonical" href="https://wethemind.com/blog/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Blog — Coming Soon | We The Mind">
-<meta property="og:description" content="Study tips, exam strategy, money basics, and tech explainers, all in one place. Coming soon.">
+<meta property="og:title" content="Blog — Study Tips, Board Guidance & Money Basics | We The Mind">
+<meta property="og:description" content="Practical guides on study habits, choosing a board or exam, SAT prep, and personal finance basics.">
 <meta property="og:url" content="https://wethemind.com/blog/">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="../style.css">
@@ -16,15 +16,23 @@
 .division-hero{ padding:88px 0 64px; text-align:center; background:var(--ink); }
 .division-hero .eyebrow{ color:var(--gold); justify-content:center; }
 .division-hero h1{ color:#fff; font-size:clamp(2rem,4vw,2.8rem); margin-bottom:.5em; }
-.division-hero p{ color:#cfd9e8; max-width:52ch; margin:0 auto 1.6em; }
-.topic-grid{ display:flex; flex-wrap:wrap; gap:16px; justify-content:center; }
-.topic-chip{
-  display:flex; align-items:center; gap:10px; padding:14px 20px; border-radius:12px; border:1px solid var(--line);
-  background:#fff; font-weight:600; font-size:.92rem; flex:0 1 220px;
+.division-hero p{ color:#cfd9e8; max-width:56ch; margin:0 auto; }
+.post-grid{ display:flex; flex-wrap:wrap; gap:22px; justify-content:center; }
+.post-card{
+  display:flex; flex-direction:column; background:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:28px; text-decoration:none; color:inherit; flex:1 1 320px; max-width:400px;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
 }
-.notify-form{ max-width:480px; margin:0 auto; }
-#notify-success{ display:none; padding:20px; background:#e9f1ec; border:1px solid var(--green); color:var(--green); border-radius:2px; font-size:.92rem; max-width:480px; margin:0 auto; text-align:center; }
+.post-card:hover{ transform:translateY(-6px); box-shadow:var(--shadow); border-color:var(--accent); }
+.post-card .post-tag{
+  display:inline-block; align-self:flex-start; font-size:.68rem; text-transform:uppercase; letter-spacing:.06em;
+  color:#fff; background:var(--accent); padding:4px 12px; border-radius:20px; margin-bottom:14px; font-weight:700;
+}
+.post-card h3{ font-size:1.2rem; margin-bottom:.4em; }
+.post-card p{ color:#6b6558; font-size:.92rem; margin-bottom:16px; flex:1; }
+.post-card .post-cta{ font-size:.78rem; text-transform:uppercase; letter-spacing:.05em; color:var(--accent); font-weight:700; }
 </style>
+<script src="../analytics.js" defer></script>
 </head>
 <body>
 <div class="ambient-bg" aria-hidden="true">
@@ -64,46 +72,44 @@
   <section class="division-hero">
     <div class="wrap">
       <span class="eyebrow">We The Mind · Blog</span>
-      <h1>Blog — Coming Soon</h1>
-      <p>One place for everything we write — study tips, exam strategy, money basics, and tech explainers. We're building it now.</p>
+      <h1>Study Tips, Board Guidance &amp; Money Basics</h1>
+      <p>Practical, no-fluff writing from the people who actually teach this stuff every day — not generic advice recycled from somewhere else.</p>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">What's Coming</span>
-        <h2>What This Division Will Cover</h2>
-      </div>
-      <div class="topic-grid">
-        <div class="topic-chip">&#128218; Study Tips</div>
-        <div class="topic-chip">&#127919; Exam Strategy</div>
-        <div class="topic-chip">&#128176; Money Basics</div>
-        <div class="topic-chip">&#128187; Tech Explainers</div>
-      </div>
-    </div>
-  </section>
+      <div class="post-grid">
 
-  <section style="background:var(--paper-2);">
-    <div class="wrap">
-      <div class="section-head">
-        <span class="eyebrow">Get Notified</span>
-        <h2>Be First to Know When the Blog Launches</h2>
-        <p>Leave your name and email — we'll let you know the moment this division goes live. No spam, just the one email.</p>
+        <a href="grade-9-study-habits/" class="post-card" style="--accent:var(--stamp-red);">
+          <span class="post-tag">Study Tips</span>
+          <h3>5 Study Habits That Actually Move the Needle in Grade 9</h3>
+          <p>Most study advice is generic. Here's what actually separates students who build a strong foundation from those who spend Grade 11 relearning Grade 9.</p>
+          <span class="post-cta">Read the Guide &rarr;</span>
+        </a>
+
+        <a href="choosing-the-right-board/" class="post-card" style="--accent:var(--blue);">
+          <span class="post-tag">Board &amp; Exam Guidance</span>
+          <h3>CBSE vs IB vs IGCSE: How to Actually Choose</h3>
+          <p>Comparison charts don't tell you which board fits your child. Here's the actual decision framework, past the marketing copy.</p>
+          <span class="post-cta">Read the Guide &rarr;</span>
+        </a>
+
+        <a href="sat-math-score-tips/" class="post-card" style="--accent:var(--violet);">
+          <span class="post-tag">SAT Prep</span>
+          <h3>How to Raise Your SAT Math Score by 100+ Points</h3>
+          <p>The specific, high-leverage changes that move a Math score — plus a free full-length practice exam to test where you actually stand.</p>
+          <span class="post-cta">Read the Guide &rarr;</span>
+        </a>
+
+        <a href="start-investing-as-a-student/" class="post-card" style="--accent:var(--leaf);">
+          <span class="post-tag">Money Basics</span>
+          <h3>How to Start Investing as a Student, With Almost No Money</h3>
+          <p>You don't need ₹50,000 or a finance degree to start. Here's the actual first step, explained the way we wish someone had explained it to us.</p>
+          <span class="post-cta">Read the Guide &rarr;</span>
+        </a>
+
       </div>
-      <form id="notify-form" class="notify-form" data-endpoint="https://script.google.com/macros/s/AKfycbw4v7C_-phYjQUH38Gi4fWWzhpYgKZPggMOp4xah5FNHU3OL0Ifv0qni07jaNZh8zqW/exec">
-        <input type="hidden" name="session_type" value="Blog Interest">
-        <div class="field">
-          <label for="notify-name">Your name</label>
-          <input type="text" id="notify-name" name="student_name" required>
-        </div>
-        <div class="field">
-          <label for="notify-email">Email</label>
-          <input type="email" id="notify-email" name="email" required>
-        </div>
-        <button type="submit" class="btn btn-primary form-submit" style="width:100%; justify-content:center;">Notify Me</button>
-      </form>
-      <div id="notify-success">Thanks — we'll email you the moment the blog launches.</div>
     </div>
   </section>
 </main>
@@ -127,29 +133,6 @@ document.addEventListener('DOMContentLoaded', function(){
     burger.addEventListener('click', function(){
       var isOpen = nav.classList.toggle('nav-open');
       burger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-    });
-  }
-
-  var form = document.getElementById('notify-form');
-  var successBox = document.getElementById('notify-success');
-  if(form){
-    form.addEventListener('submit', function(e){
-      e.preventDefault();
-      var endpoint = form.getAttribute('data-endpoint');
-      var submitBtn = form.querySelector('.form-submit');
-      var formData = new FormData(form);
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending…';
-      fetch(endpoint, { method:'POST', mode:'no-cors', body:formData })
-        .then(function(){
-          form.style.display = 'none';
-          successBox.style.display = 'block';
-        })
-        .catch(function(){
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Notify Me';
-          alert('Something went wrong — please try again, or email hello@wethemind.com directly.');
-        });
     });
   }
 });
