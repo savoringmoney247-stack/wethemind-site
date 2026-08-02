@@ -38,10 +38,16 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
 
-/* ---------- Umbrella brand bar (We The Mind, above Savoring Money's own nav) ---------- */
-.umbrella-bar .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; }
-.umbrella-bar{ background:var(--navy); color:var(--tint-gold); font-size:.74rem; }
-.umbrella-bar-inner{ display:flex; align-items:center; justify-content:center; padding:8px 0; gap:28px; flex-wrap:wrap; text-align:center; }
+/* ---------- Umbrella brand bar (We The Mind, above Savoring Money's own nav) ----------
+   Fixed above Savoring Money's own fixed nav (which sits at top:0), so the site nav
+   below is shifted down by this bar's height (see --umbrella-h and the nav{} override). */
+:root{ --umbrella-h: 34px; }
+.umbrella-bar{
+  position:fixed; top:0; left:0; right:0; z-index:1001;
+  background:var(--navy); color:var(--tint-gold); font-size:.72rem; height:var(--umbrella-h);
+}
+.umbrella-bar .wrap{ max-width:1180px; margin:0 auto; padding:0 28px; height:100%; }
+.umbrella-bar-inner{ display:flex; align-items:center; justify-content:center; height:100%; gap:28px; flex-wrap:wrap; text-align:center; overflow:hidden; }
 .umbrella-brand{ color:var(--gold); font-weight:700; text-decoration:none; letter-spacing:.06em; text-transform:uppercase; font-size:.72rem; flex:none; }
 .umbrella-nav{ display:flex; gap:16px; flex-wrap:wrap; }
 .umbrella-nav a{ color:var(--tint-gold); text-decoration:none; text-transform:uppercase; letter-spacing:.03em; font-weight:600; transition:color .15s ease; }
@@ -53,6 +59,7 @@ body{
   color:var(--text);
   overflow-x:hidden;
   min-height:100vh;
+  padding-top:var(--umbrella-h);
 }
 h1,h2,h3,h4{font-family:'Cormorant Garamond',serif;line-height:1.1;}
 ::-webkit-scrollbar{width:5px;}
@@ -92,7 +99,7 @@ footer .brand-logo{margin-bottom:12px;}
    NAVIGATION
 ═══════════════════════════════════════ */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:1000;
+  position:fixed;top:var(--umbrella-h);left:0;right:0;z-index:1000;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 5%;height:70px;
   background:rgba(255,255,255,.7);
