@@ -10,7 +10,7 @@
    Until you do that, this file intentionally loads nothing — no requests,
    no tracking, no console errors. */
 (function () {
-  var GA_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // <-- replace with your real Measurement ID
+  var GA_MEASUREMENT_ID = 'G-P2NRMK4P7E';
 
   if (!GA_MEASUREMENT_ID || GA_MEASUREMENT_ID.indexOf('XXXX') !== -1) return;
 
