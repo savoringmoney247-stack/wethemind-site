@@ -43,31 +43,31 @@
 .currency-bar{ display:flex; align-items:center; justify-content:center; gap:14px; margin-top:28px; flex-wrap:wrap; }
 .currency-bar label{ font-size:.85rem; color:#cfd9e8; font-weight:600; }
 .currency-select{
-  font: inherit; font-size:.92rem; font-weight:700; padding:10px 36px 10px 18px; border-radius:30px;
-  border:1.5px solid var(--gold);
+  font: inherit; font-size:.78rem; font-weight:700; padding:7px 30px; border-radius:20px;
+  border:1.5px solid var(--gold); text-align:center; text-align-last:center;
   /* Both the arrow icon AND the fill are background-image layers, so they must be declared
      together (comma-separated) — declaring background-image a second time was wiping the
      gradient out entirely, leaving the control with no fill (so the dark page behind it
      showed through and the dark text became invisible against it). */
   background-color:#fdf6e3;
   background-image:
-    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23142238'/></svg>"),
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='9' height='5'><path d='M0 0l4.5 5 4.5-5z' fill='%23142238'/></svg>"),
     linear-gradient(135deg,#fff,#fdf6e3);
   background-repeat:no-repeat, no-repeat;
-  background-position:right 16px center, 0 0;
-  background-size:10px 6px, 100% 100%;
+  background-position:right 12px center, 0 0;
+  background-size:9px 5px, 100% 100%;
   /* Fixed (not theme-variable) text color: this control always sits on a light
      gradient background, so its text must stay dark in both light and dark mode
      or it becomes unreadable against the light fill. */
   color:#142238 !important;
   cursor:pointer; appearance:none;
-  box-shadow:0 8px 20px -8px rgba(254,186,2,.55), inset 0 1px 0 rgba(255,255,255,.8);
+  box-shadow:0 6px 16px -8px rgba(254,186,2,.55), inset 0 1px 0 rgba(255,255,255,.8);
   transition:transform .2s ease, box-shadow .2s ease;
 }
-.currency-select option{ color:#142238; background:#fff; }
-.currency-select:hover{ transform:translateY(-2px); box-shadow:0 12px 26px -8px rgba(254,186,2,.7), inset 0 1px 0 rgba(255,255,255,.8); }
+.currency-select option{ color:#142238; background:#fff; text-align:center; }
+.currency-select:hover{ transform:translateY(-2px) scale(1.03); box-shadow:0 10px 22px -8px rgba(254,186,2,.7), inset 0 1px 0 rgba(255,255,255,.8); }
 .currency-select:focus{ outline:2px solid var(--gold); outline-offset:2px; }
-.currency-note{ font-size:.78rem; color:#cfd9e8; text-align:center; margin:2.6em auto 0; max-width:60ch; }
+.currency-note{ font-size:.78rem; color:#cfd9e8; text-align:center; margin:56px auto 0; max-width:60ch; }
 .pay-grid{ display:flex; flex-wrap:wrap; gap:22px; justify-content:center; }
 .pay-card{
   background:#fff; border:1px solid var(--line); border-radius:12px; padding:28px 26px; text-align:center;
@@ -259,7 +259,7 @@
           <span class="pay-badge">International</span>
           <img src="../../assets/payments/paypal-qr.svg" alt="Scan to pay We The Mind via PayPal" width="168" height="168" loading="lazy">
           <h4>Pay via PayPal</h4>
-          <p>Scan the code, or use <a href="https://www.paypal.me/kingshuk46" target="_blank" rel="noopener">paypal.me/kingshuk46</a> directly.</p>
+          <p>Scan the code, or <a href="https://www.paypal.me/kingshuk46" target="_blank" rel="noopener">tap here to open the payment page</a> directly.</p>
         </div>
         <div class="pay-card">
           <span class="pay-badge">India</span>
@@ -268,12 +268,19 @@
           <p>Scan with any UPI app — PhonePe, Google Pay, or Paytm all work.</p>
         </div>
       </div>
-      <p class="pay-note">After paying, drop us a quick message on <a href="https://wa.me/917478147260">WhatsApp</a> with a screenshot — we'll confirm your sessions within a few hours.</p>
+      <p class="pay-note">After paying, drop us a quick message on <a href="https://wa.me/917478147260">WhatsApp</a> with a screenshot — we'll confirm your sessions within a few hours. PayPal and PhonePe both send you an official payment receipt straight to your email or app the moment the transaction completes, so you'll always have a record.</p>
+      <div class="pdf-download-banner" style="border-color:var(--leaf); margin-top:24px;">
+        <span class="pdf-icon">&#128176;</span>
+        <span class="pdf-download-text">
+          <strong>Our Refund Policy — Fair, No Fine Print</strong>
+          <span>Haven't started your first paid session yet? Get a full refund, minus the small non-refundable fee PayPal/PhonePe charges us to process the original payment (typically 2-4%) — we don't add a single rupee or cent on top. Already started your package? Any sessions you haven't used yet are refunded on a straight pro-rata basis, no questions asked.</span>
+        </span>
+      </div>
     </div>
   </section>
 
-  <section style="padding-top:0;">
-    <div class="wrap">
+  <section style="padding-top:0; min-height:220px; display:flex; align-items:center;">
+    <div class="wrap" style="width:100%;">
       <div class="pdf-download-banner" style="border-color:var(--gold);">
         <span class="pdf-icon">&#127873;</span>
         <span class="pdf-download-text">
@@ -531,13 +538,13 @@ document.addEventListener('DOMContentLoaded', function(){
   // All figures are set independently per currency to stay affordable and
   // competitive in each region — not a straight currency conversion.
   var PRICES = {
-    USD: { ind10:15,  ind25:12,  ind50:9,   baseSingle:18,  groupSmall:10,  groupStd:7,   groupFull:5,   singleProblem:20  },
+    USD: { ind10:17,  ind25:13,  ind50:10,  baseSingle:20,  groupSmall:11,  groupStd:8,   groupFull:6,   singleProblem:22  },
     INR: { ind10:579, ind25:429, ind50:359, baseSingle:649, groupSmall:359, groupStd:259, groupFull:189, singleProblem:719 },
-    GBP: { ind10:12,  ind25:10,  ind50:8,   baseSingle:14,  groupSmall:8,   groupStd:6,   groupFull:4,   singleProblem:15  },
-    EUR: { ind10:13,  ind25:11,  ind50:8,   baseSingle:15,  groupSmall:9,   groupStd:6,   groupFull:5,   singleProblem:17  },
-    CAD: { ind10:19,  ind25:15,  ind50:11,  baseSingle:22,  groupSmall:13,  groupStd:9,   groupFull:6,   singleProblem:25  },
-    AUD: { ind10:21,  ind25:17,  ind50:13,  baseSingle:24,  groupSmall:14,  groupStd:10,  groupFull:7,   singleProblem:28  },
-    NZD: { ind10:22,  ind25:18,  ind50:14,  baseSingle:25,  groupSmall:15,  groupStd:11,  groupFull:8,   singleProblem:30  },
+    GBP: { ind10:13,  ind25:11,  ind50:9,   baseSingle:15,  groupSmall:9,   groupStd:7,   groupFull:4,   singleProblem:17  },
+    EUR: { ind10:14,  ind25:12,  ind50:9,   baseSingle:17,  groupSmall:10,  groupStd:7,   groupFull:6,   singleProblem:19  },
+    CAD: { ind10:21,  ind25:17,  ind50:12,  baseSingle:24,  groupSmall:14,  groupStd:10,  groupFull:7,   singleProblem:28  },
+    AUD: { ind10:23,  ind25:19,  ind50:14,  baseSingle:26,  groupSmall:15,  groupStd:11,  groupFull:8,   singleProblem:31  },
+    NZD: { ind10:24,  ind25:20,  ind50:15,  baseSingle:28,  groupSmall:17,  groupStd:12,  groupFull:9,   singleProblem:33  },
     AED: { ind10:55,  ind25:45,  ind50:33,  baseSingle:65,  groupSmall:37,  groupStd:26,  groupFull:18,  singleProblem:72  },
     SAR: { ind10:56,  ind25:45,  ind50:34,  baseSingle:68,  groupSmall:38,  groupStd:27,  groupFull:19,  singleProblem:75  },
     QAR: { ind10:55,  ind25:44,  ind50:33,  baseSingle:66,  groupSmall:37,  groupStd:26,  groupFull:18,  singleProblem:73  },
