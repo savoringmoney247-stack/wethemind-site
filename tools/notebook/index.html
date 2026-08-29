@@ -25,7 +25,7 @@ body.tm-afternoon{ --cream:#f5f0e8;--cream-dk:#ede7d9;--surface:#faf7f2;--accent
 body.tm-evening{ --cream:#f5ece3;--cream-dk:#ecdfd0;--surface:#faf3ea;--accent:#c8603a; }
 body.tm-night{ --cream:#e9e6e2;--cream-dk:#dcd8d2;--surface:#f1efec;--accent:#6b4fa0; }
 body{transition:background-color 900ms ease}
-#header,#toolbar,#statusbar,.wbc,#meet-panel{transition:background-color 900ms ease,border-color 900ms ease}
+#header,#toolbar,#statusbar,.wbc{transition:background-color 900ms ease,border-color 900ms ease}
 html,body{width:100%;height:100%;overflow:hidden;font-family:'DM Mono',monospace;background:var(--cream-dk)}
 *{cursor:none!important}
 #cur{position:fixed;left:0;top:0;pointer-events:none;z-index:9999;width:8px;height:8px;border-radius:50%;background:var(--ink);transform:translate3d(-50%,-50%,0);transition:background .15s;will-change:transform}
@@ -295,46 +295,9 @@ body.sidebar-expanded .side-mark{align-self:flex-start;margin-left:3px}
 @keyframes driftBlob3{from{transform:translate(0,0) scale(1)}to{transform:translate(3vw,-3vw) scale(0.95)}}
 @media (prefers-reduced-motion: reduce){.blob{animation:none!important}}
 @keyframes pdot{0%,100%{opacity:.65;transform:scale(1)}50%{opacity:1;transform:scale(1.35)}}
-@keyframes livepip{0%,100%{opacity:1;box-shadow:0 0 0 2px rgba(74,222,128,.3)}50%{opacity:.6;box-shadow:0 0 0 5px rgba(74,222,128,.1)}}
 @keyframes ripple{0%{transform:translate(-50%,-50%) scale(0);opacity:.4}100%{transform:translate(-50%,-50%) scale(1);opacity:0}}
 .ripple{position:fixed;pointer-events:none;z-index:9000;border-radius:50%;animation:ripple .55s ease-out forwards}
 
-/* ── MEETING SWITCH ── */
-#meet-switch{
-  position:fixed;bottom:48px;right:22px;z-index:8500;
-  display:flex;align-items:center;gap:8px;
-  padding:10px 16px;border-radius:40px;
-  background:var(--ink);color:var(--cream);
-  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.07em;
-  border:none;box-shadow:0 4px 20px rgba(28,23,17,.28),0 0 0 1px rgba(28,23,17,.08);
-  transition:background .18s,transform .18s,box-shadow .18s;opacity:.92;
-}
-#meet-switch:hover{background:#2e2820;transform:translateY(-2px);box-shadow:0 8px 28px rgba(28,23,17,.34);opacity:1;}
-#meet-switch .pip{
-  width:8px;height:8px;border-radius:50%;background:#4ade80;flex-shrink:0;
-  box-shadow:0 0 0 2px rgba(74,222,128,.3);animation:livepip 1.6s ease-in-out infinite;
-}
-#meet-panel{
-  position:fixed;bottom:96px;right:22px;z-index:8500;
-  background:var(--surface);border:1px solid var(--border-m);border-radius:14px;
-  padding:16px 18px 14px;width:236px;
-  box-shadow:0 8px 32px rgba(28,23,17,.16);
-  display:none;flex-direction:column;gap:10px;
-  animation:panelin .2s ease both;
-}
-@keyframes panelin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-#meet-panel.open{display:flex;}
-#meet-panel-title{font-size:10px;color:var(--ink-h);letter-spacing:.1em;text-transform:uppercase;padding-bottom:4px;border-bottom:1px solid var(--border);}
-#meet-panel-steps{font-size:11px;color:var(--ink-m);line-height:1.75;display:flex;flex-direction:column;gap:3px;}
-#meet-panel-steps .step{display:flex;gap:8px;align-items:flex-start;}
-#meet-panel-steps .snum{color:var(--accent);font-size:10px;min-width:14px;padding-top:1px;flex-shrink:0;}
-#meet-panel-close{
-  align-self:stretch;margin-top:2px;font-family:'DM Mono',monospace;
-  font-size:10px;color:var(--ink-m);letter-spacing:.07em;text-transform:uppercase;
-  border:1px solid var(--border-m);background:var(--cream);border-radius:6px;
-  padding:6px;text-align:center;
-}
-#meet-panel-close:hover{background:var(--cream-dk);color:var(--ink);}
 </style>
 </head>
 <body>
@@ -344,21 +307,6 @@ body.sidebar-expanded .side-mark{align-self:flex-start;margin-left:3px}
 <div id="cur"></div>
 <div id="thint"></div>
 
-<!-- MEETING SWITCH BUTTON + PANEL -->
-<button id="meet-switch" onclick="toggleMeetPanel()">
-  <span class="pip"></span>
-  <span>Switch to Whiteboard</span>
-</button>
-<div id="meet-panel">
-  <div id="meet-panel-title">📺 In a meeting? Here's how</div>
-  <div id="meet-panel-steps">
-    <div class="step"><span class="snum">①</span><span>Keep this file open in your browser (Edge / Chrome)</span></div>
-    <div class="step"><span class="snum">②</span><span>In Meet / Zoom / Teams — click <em>Share</em>, then choose <strong>Window</strong> (not screen)</span></div>
-    <div class="step"><span class="snum">③</span><span>Pick the browser window with this whiteboard</span></div>
-    <div class="step"><span class="snum">④</span><span>Switch between your PDF and this tab freely — only this window is shared ✓</span></div>
-  </div>
-  <button id="meet-panel-close" onclick="toggleMeetPanel()">Got it ✕</button>
-</div>
 
 <div id="format-panel">
   <div class="fmt-title">Page format</div>
@@ -573,12 +521,6 @@ function tick(){
 }
 tick();setInterval(tick,1000);
 
-/* ── MEETING SWITCH ── */
-var meetPanelOpen=false;
-function toggleMeetPanel(){
-  meetPanelOpen=!meetPanelOpen;
-  document.getElementById('meet-panel').classList.toggle('open',meetPanelOpen);
-}
 
 /* ── CURSOR ── */
 var curEl=document.getElementById('cur');
