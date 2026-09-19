@@ -54,9 +54,11 @@
   --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box;}
+[hidden]{display:none!important;}
 html,body{height:100%;}
+html{-webkit-text-size-adjust:100%;}
 body{margin:0;background:var(--paper);color:var(--ink-900);font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;overflow:hidden;}
-.app{display:flex;flex-direction:column;height:100%;}
+.app{display:flex;flex-direction:column;height:100%;height:100dvh;}
 
 /* ---------- header ---------- */
 .hdr{
@@ -263,6 +265,40 @@ button{font:inherit;cursor:pointer;}
   .searchwrap{flex:1 1 auto;}
   .brand span{display:none;}
 }
+
+/* ---------- responsive: phone / tablet / touch ---------- */
+.toolbar{overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.toolbar::-webkit-scrollbar{display:none;}
+.toolbar>*{flex:0 0 auto;}
+@media (max-width:900px){
+  .hdr{padding-left:12px;padding-right:12px;gap:8px;}
+  .toolbar{flex-wrap:nowrap;padding:6px 12px;}
+  .props{flex-wrap:nowrap;}
+  .filepill{max-width:110px;}
+  .outlinepanel{top:auto;right:8px;left:8px;width:auto;max-height:55vh;}
+  .stage{padding:20px 8px 96px;gap:22px;}
+}
+@media (max-width:560px){
+  .btn{padding:7px 10px;}
+  .hdr-actions{gap:6px;}
+  .hdr-actions .btn:not(.btn-icon):not(.btn-primary):not(.installbtn){font-size:0;gap:0;padding:7px;width:34px;height:34px;justify-content:center;}
+  .hdr-actions .btn:not(.btn-icon):not(.btn-primary):not(.installbtn) svg{width:16px;height:16px;}
+  .filepill{display:none;}
+  .empty{padding:32px 18px;margin:16px auto;}
+  .toast{max-width:calc(100vw - 32px);text-align:center;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);}
+}
+@media (pointer:coarse){
+  .tool-btn{width:40px;height:40px;}
+  .btn-icon{width:40px;height:40px;}
+  .swatch,.customswatch{width:26px;height:26px;}
+  .range{height:28px;}
+  .thumb-del,.thumb-rotate{display:flex;}
+  .thumb-del{width:22px;height:22px;}
+  .thumb-rotate{width:24px;height:24px;}
+  .el .grip,.el .resize,.el .del{width:26px;height:26px;}
+  .railtab{width:22px;}
+}
+@media (hover:none){.thumb-del,.thumb-rotate{display:flex;}}
 </style>
 </head>
 <body>
@@ -548,7 +584,7 @@ function findPage(id){ return pages.find(p=>p.id===id); }
 /* ---------------- opening a pdf ---------------- */
 openBtn.addEventListener("click", ()=>openInput.click());
 emptyOpenBtn.addEventListener("click", ()=>openInput.click());
-emptyBlankBtn.addEventListener("click", ()=>{ addBlankPage(); showToast("Blank writing page added"); });
+emptyBlankBtn.addEventListener("click", ()=>{ addBlankPage(); });
 
 openInput.addEventListener("change", async (e)=>{
   const file = e.target.files[0];
@@ -594,7 +630,6 @@ async function loadImageFile(file){
     filepill.textContent = file.name;
     filepill.title = file.name;
     startWorkspace();
-    showToast("Image opened — mark it up like a page, then download a copy");
   }catch(err){
     console.error(err);
     showToast("Couldn't open that image.");
@@ -643,7 +678,6 @@ async function loadPdfFile(file){
     startWorkspace();
     buildSearchIndex();
     buildOutline();
-    showToast("Opened — the original file on your computer is untouched");
   }catch(err){
     console.error(err);
     showToast("Couldn't open that PDF (it may be corrupted, password-protected, or use an unsupported encoding). Try re-scanning or re-saving it and opening again.");
@@ -664,7 +698,7 @@ function startWorkspace(){
 
 function computeInitialScale(){
   if (!pages.length) return;
-  const avail = Math.max(280, stageWrap.clientWidth - 64);
+  const avail = Math.max(160, stageWrap.clientWidth - (stageWrap.clientWidth < 700 ? 24 : 64));
   const w = pages[0].widthPt;
   ui.scale = Math.min(1.6, Math.max(0.4, avail / w));
   zoomLabel.textContent = Math.round(ui.scale*100) + "%";
@@ -943,7 +977,7 @@ document.addEventListener("keydown", (e)=>{
 
 /* ---------------- rail collapse ---------------- */
 const railTab = $("#railTab");
-let railCollapsed = false;
+let railCollapsed = window.matchMedia("(max-width:700px)").matches;
 railTab.addEventListener("click", ()=>{
   railCollapsed = !railCollapsed;
   rail.classList.toggle("collapsed", railCollapsed);
@@ -1704,7 +1738,6 @@ exportBtn.addEventListener("click", async ()=>{
     const blob = new Blob([bytes], {type:"application/pdf"});
     const filename = (originalBytes ? originalName : "notes") + "-annotated.pdf";
     saveBlob(blob, filename);
-    showToast("Downloaded — your original PDF is unchanged.");
   }catch(err){
     console.error(err);
     showToast("Something went wrong building the PDF.");
@@ -1857,7 +1890,7 @@ installBtn.addEventListener("click", async ()=>{
   await deferredInstallPrompt.userChoice;
   deferredInstallPrompt = null;
 });
-window.addEventListener("appinstalled", ()=>{ installBtn.hidden = true; showToast("Installed — Marginalia now opens like any other app."); });
+window.addEventListener("appinstalled", ()=>{ installBtn.hidden = true; });
 
 // File Handling API: lets the OS launch this installed app directly with a chosen .pdf
 if ("launchQueue" in window){
