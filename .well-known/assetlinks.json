@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.wethemind.marginalia",
+      "sha256_cert_fingerprints": [
+        "93:8B:21:F9:9B:53:30:00:1F:68:A8:33:5D:67:03:CC:73:AD:29:2C:FF:E9:21:AB:C8:DB:96:97:14:44:75:91"
+      ]
+    }
+  }
+]
