@@ -140,12 +140,12 @@ button{font:inherit;cursor:pointer;}
 }
 @media (max-width:560px){.rail{width:76px;padding:8px 6px;}}
 .thumb{
-  border:1.5px solid var(--line);border-radius:6px;overflow:hidden;cursor:pointer;
-  background:#fff;position:relative;aspect-ratio:auto;
+  border:1.5px solid var(--line);border-radius:4px;overflow:hidden;cursor:pointer;
+  background:#fff;position:relative;flex:0 0 auto;aspect-ratio:1/1.414;
+  box-shadow:0 1px 3px rgba(36,20,20,.12);
 }
 .thumb.current{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft);}
-.thumb canvas,.thumb .blankface{display:block;width:100%;height:auto;background:#fff;}
-.thumb .blankface{aspect-ratio:1/1.414;background:repeating-linear-gradient(var(--surface-2),var(--surface-2) 27%,transparent 0,transparent 33%);}
+.thumb canvas,.thumb .blankface{display:block;position:absolute;inset:0;width:100%;height:100%;background:#fff;}
 .thumb-num{
   position:absolute;bottom:3px;right:4px;font-family:"IBM Plex Mono",monospace;font-size:9px;
   background:rgba(0,0,0,.55);color:#fff;padding:1px 4px;border-radius:4px;
@@ -498,6 +498,7 @@ const ui = {
   textFont: "Helvetica",
   coverColor: "#ffffff",
   selected: null,      // {pageId, kind:'text'|'image'|'shape', id}
+  autoFit: true,
 };
 
 let undoStack = [], redoStack = [];
@@ -642,7 +643,7 @@ async function loadImageFile(file){
     originalName = file.name.replace(/\.(png|jpe?g|webp)$/i,"") || "document";
     pages = []; undoStack = []; redoStack = []; ui.selected = null;
     for (const k in pdfProxies) delete pdfProxies[k];
-    for (const k in domRefs) delete domRefs[k];
+    clearWorkspaceDom();
     pdfDocProxy = null;
     pageTextItemsCache = Object.create(null); searchMatches = []; searchMatchIndex = -1;
     searchWrap.hidden = true; searchInput.value = ""; outlineToggleBtn.hidden = true; outlinePanel.hidden = true;
@@ -667,6 +668,11 @@ class FileRangeTransport extends pdfjsLib.PDFDataRangeTransport {
       .then(b=> this.onDataRange(begin, new Uint8Array(b)));
   }
 }
+// Remove the previous document's pages/thumbnails from the screen before a new one loads.
+function clearWorkspaceDom(){
+  for (const k in domRefs){ try{ domRefs[k].pageEl.remove(); domRefs[k].thumbBox.remove(); }catch(e){} delete domRefs[k]; }
+  thumbQueue.length = 0;
+}
 const yieldToUI = () => new Promise(r=> setTimeout(r, 0));
 
 async function loadPdfFile(file){
@@ -679,7 +685,7 @@ async function loadPdfFile(file){
     pages = []; undoStack = []; redoStack = []; lastSnap = null; pendingBefore = null; ui.selected = null;
     dimCache.length = 0;
     for (const k in pdfProxies) delete pdfProxies[k];
-    for (const k in domRefs) delete domRefs[k];
+    clearWorkspaceDom();
     pageTextItemsCache = Object.create(null); searchMatches = []; searchMatchIndex = -1;
     searchWrap.hidden = true; searchInput.value = ""; outlineToggleBtn.hidden = true; outlinePanel.hidden = true;
 
@@ -771,13 +777,29 @@ function startWorkspace(){
   updatePageNavUI();
 }
 
+// Slides and phone-shaped pages (16:9, 4:3, 9:16 ...) are shown whole; document-shaped
+// pages (A4, Letter ...) fit the width so text stays readable.
 function computeInitialScale(){
   if (!pages.length) return;
-  const avail = Math.max(160, stageWrap.clientWidth - (stageWrap.clientWidth < 700 ? 24 : 64));
-  const w = pages[0].widthPt;
-  ui.scale = Math.min(1.6, Math.max(0.4, avail / w));
+  const narrow = stageWrap.clientWidth < 700;
+  const availW = Math.max(160, stageWrap.clientWidth - (narrow ? 24 : 64));
+  const availH = Math.max(160, stageWrap.clientHeight - (narrow ? 32 : 56));
+  const p = pages[0];
+  const ratio = p.widthPt / p.heightPt;
+  const wFit = availW / p.widthPt, hFit = availH / p.heightPt;
+  const wholePage = ratio >= 1.2 || ratio <= 0.62;
+  const fit = wholePage ? Math.min(wFit, hFit) : wFit;
+  ui.scale = Math.min(1.6, Math.max(0.2, fit));
   zoomLabel.textContent = Math.round(ui.scale*100) + "%";
 }
+let fitTimer = null;
+window.addEventListener("resize", ()=>{
+  clearTimeout(fitTimer);
+  fitTimer = setTimeout(()=>{
+    if (!ui.autoFit || !pages.length) return;
+    computeInitialScale(); layoutAllForZoom();
+  }, 200);
+});
 
 /* ---------------- building / reconciling DOM ---------------- */
 function reconcileAndRenderAll(){
@@ -802,6 +824,7 @@ function reconcileAndRenderAll(){
     // order in stage
     if (prevPageEl) prevPageEl.after(refs.pageEl); else stage.insertBefore(refs.pageEl, stage.firstChild && stage.firstChild.id==="emptyState" ? null : stage.firstChild);
     if (prevThumb) prevThumb.after(refs.thumbBox); else rail.insertBefore(refs.thumbBox, rail.firstChild);
+    if (!refs.thumbObserved){ refs.thumbObserved = true; setThumbAspect(ps); observeThumb(ps); }
     prevPageEl = refs.pageEl; prevThumb = refs.thumbBox;
     refs.badge.textContent = (idx+1) + (ps.kind==="blank" ? " · writing page" : "");
     layoutPage(ps);
@@ -943,24 +966,83 @@ async function ensurePdfPageRendered(ps){
     }
   }
 }
+function setThumbAspect(ps){
+  const refs = domRefs[ps.id]; if (!refs) return;
+  const rot = ((ps.rotation||0)/90)%4;
+  const swap = rot===1 || rot===3 || rot===-1 || rot===-3;
+  const w = swap ? ps.heightPt : ps.widthPt, h = swap ? ps.widthPt : ps.heightPt;
+  refs.thumbBox.style.aspectRatio = (w||595.28) + " / " + (h||841.89);
+}
+// Thumbnails are drawn on demand as they scroll into view, at small size, so a
+// 1000-page file never shows empty placeholders and never renders everything at once.
+const thumbQueue = []; let thumbActive = 0;
+let thumbIO = null;
+function observeThumb(ps){
+  const refs = domRefs[ps.id];
+  if (!refs || ps.kind !== "pdf") return;
+  if (!thumbIO){
+    thumbIO = new IntersectionObserver((entries)=>{
+      for (const e of entries){
+        if (!e.isIntersecting) continue;
+        const id = e.target.dataset.id;
+        thumbIO.unobserve(e.target);
+        thumbQueue.push(id);
+      }
+      pumpThumbs();
+    }, {root: rail, rootMargin: "400px 0px"});
+  }
+  thumbIO.observe(refs.thumbBox);
+}
+async function pumpThumbs(){
+  while (thumbActive < 2 && thumbQueue.length){
+    const id = thumbQueue.shift();
+    const ps = findPage(id);
+    if (!ps || !domRefs[id]) continue;
+    thumbActive++;
+    drawThumbFromPdf(ps).catch(err=> console.warn("thumb failed", err)).finally(()=>{ thumbActive--; pumpThumbs(); });
+  }
+}
+async function drawThumbFromPdf(ps){
+  const refs = domRefs[ps.id];
+  if (!refs || refs.thumbDrawn) return;
+  const proxy = await getProxyFor(ps);
+  if (!proxy || !domRefs[ps.id]) return;
+  const tw = 168;                              // 2x of the 84px display width
+  const vp = proxy.getViewport({scale: tw/ps.widthPt});
+  const off = document.createElement("canvas");
+  off.width = Math.ceil(vp.width); off.height = Math.ceil(vp.height);
+  await proxy.render({canvasContext: off.getContext("2d", {alpha:false}), viewport: vp}).promise;
+  if (!domRefs[ps.id]) return;
+  paintThumb(ps, off);
+  refs.thumbDrawn = true;
+}
+function paintThumb(ps, src){
+  const refs = domRefs[ps.id]; if (!refs) return;
+  setThumbAspect(ps);
+  const rot = ((ps.rotation||0)/90)%4;
+  const swap = rot===1 || rot===3 || rot===-1 || rot===-3;
+  const tw = 168, th = Math.round(tw * ps.heightPt/ps.widthPt);
+  const c = refs.thumbInner;
+  c.width = swap?th:tw; c.height = swap?tw:th;
+  const tctx = c.getContext("2d");
+  tctx.fillStyle = "#fff"; tctx.fillRect(0,0,c.width,c.height);
+  tctx.save();
+  tctx.translate(c.width/2, c.height/2);
+  tctx.rotate((ps.rotation||0)*Math.PI/180);
+  tctx.drawImage(src, -tw/2, -th/2, tw, th);
+  tctx.restore();
+}
 function renderThumb(ps){
   const refs = domRefs[ps.id];
   if (!refs || (ps.kind !== "pdf" && ps.kind !== "image")) return;
-  const tw = 84, th = Math.round(tw * ps.heightPt/ps.widthPt);
-  const rot = ((ps.rotation||0)/90)%4;
-  const swap = rot===1 || rot===3;
-  refs.thumbInner.width = swap?th:tw; refs.thumbInner.height = swap?tw:th;
-  const tctx = refs.thumbInner.getContext("2d");
-  tctx.save();
-  tctx.translate(refs.thumbInner.width/2, refs.thumbInner.height/2);
-  tctx.rotate((ps.rotation||0)*Math.PI/180);
-  tctx.drawImage(refs.canvasEl, -tw/2, -th/2, tw, th);
-  tctx.restore();
+  paintThumb(ps, refs.canvasEl);
+  refs.thumbDrawn = true;
 }
 
 /* ---------------- layout (zoom) ---------------- */
 function layoutPage(ps){
   const refs = domRefs[ps.id];
+  if (refs && refs.thumbBox) setThumbAspect(ps);
   const w = ps.widthPt*ui.scale, h = ps.heightPt*ui.scale;
   refs.pageInner.style.width = w+"px";
   refs.pageInner.style.height = h+"px";
@@ -997,8 +1079,8 @@ function layoutAllForZoom(){
   pages.forEach(layoutPage);
   layoutSearchHighlights();
 }
-zoomIn.addEventListener("click", ()=>{ ui.scale = Math.min(3, +(ui.scale*1.15).toFixed(3)); layoutAllForZoom(); });
-zoomOut.addEventListener("click", ()=>{ ui.scale = Math.max(0.3, +(ui.scale/1.15).toFixed(3)); layoutAllForZoom(); });
+zoomIn.addEventListener("click", ()=>{ ui.autoFit = false; ui.scale = Math.min(3, +(ui.scale*1.15).toFixed(3)); layoutAllForZoom(); });
+zoomOut.addEventListener("click", ()=>{ ui.autoFit = false; ui.scale = Math.max(0.3, +(ui.scale/1.15).toFixed(3)); layoutAllForZoom(); });
 
 /* ---------------- rotate (toolbar button = rotate current page) ---------------- */
 const rotateBtn = $("#rotateBtn");
@@ -1738,6 +1820,16 @@ async function buildSearchIndex(token){
   }
 }
 
+// Geometry of just the matched characters inside a text run (not the whole run).
+const measureCtx = document.createElement("canvas").getContext("2d");
+function wordBox(it, start, len){
+  const str = it.str;
+  measureCtx.font = "100px sans-serif";
+  const total = measureCtx.measureText(str).width || 1;
+  const before = measureCtx.measureText(str.slice(0, start)).width;
+  const upto = measureCtx.measureText(str.slice(0, start+len)).width;
+  return { x: it.x + it.w * (before/total), w: Math.max(2, it.w * ((upto-before)/total)) };
+}
 function runSearch(query){
   searchMatches = []; searchMatchIndex = -1;
   const q = query.trim().toLowerCase();
@@ -1751,7 +1843,8 @@ function runSearch(query){
         while (true){
           const found = s.indexOf(q, from);
           if (found === -1) break;
-          searchMatches.push({pageId: ps.id, x: it.x, y: it.y, w: it.w, h: it.h});
+          const box = wordBox(it, found, q.length);
+          searchMatches.push({pageId: ps.id, x: box.x, y: it.y, w: box.w, h: it.h});
           from = found + q.length;
         }
       });
@@ -1795,7 +1888,9 @@ function jumpToSearchMatch(i){
   searchHighlightEls.forEach((el,idx)=> el && el.classList.toggle("current", idx===searchMatchIndex));
   const m = searchMatches[searchMatchIndex];
   const refs = domRefs[m.pageId];
-  if (refs) refs.pageEl.scrollIntoView({behavior:"smooth", block:"center"});
+  const hl = searchHighlightEls[searchMatchIndex];
+  if (hl) hl.scrollIntoView({behavior:"smooth", block:"center", inline:"center"});
+  else if (refs) refs.pageEl.scrollIntoView({behavior:"smooth", block:"center"});
   updateSearchCount();
 }
 
