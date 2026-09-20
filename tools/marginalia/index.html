@@ -123,6 +123,13 @@ button{font:inherit;cursor:pointer;}
 .customswatch{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line-strong);padding:0;overflow:hidden;background:conic-gradient(red,orange,yellow,green,blue,violet,red);}
 .customswatch input{opacity:0;width:100%;height:100%;cursor:pointer;}
 .range{width:80px;accent-color:var(--accent);}
+.tonerows{display:flex;flex-direction:column;gap:3px;align-items:flex-start;}
+.tonerow{display:flex;align-items:center;gap:8px;}
+.tonelabel{width:48px;}
+.pctwrap{display:flex;align-items:center;gap:6px;}
+.pctnum{width:52px;font-size:12px;padding:4px 6px;border:1px solid var(--line-strong);border-radius:6px;background:var(--surface);color:var(--ink-900);font-family:"IBM Plex Mono",monospace;}
+.pctprev{width:54px;height:28px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
+.pctbar{display:block;width:44px;border-radius:99px;}
 .proplabel{font-size:11px;color:var(--ink-400);white-space:nowrap;}
 
 /* ---------- body layout ---------- */
@@ -469,7 +476,9 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = "pdf.worker.min.js";
 const PDFLib_ = window.PDFLib;
 
 /* ---------------- state ---------------- */
-let originalBytes = null;      // ArrayBuffer, never mutated, never re-sliced in place
+let originalBytes = null;      // legacy flag, unused (the source is read lazily from originalFile)
+let originalFile = null;       // the File the user opened; bytes are only read when exporting
+let loadToken = 0;
 let originalName = "document.pdf";
 let pdfDocProxy = null;
 const pdfProxies = Object.create(null);   // pageId -> pdf.js page proxy (kind:pdf)
@@ -481,6 +490,8 @@ const ui = {
   scale: 1,
   inkColor: "#c0392b",
   penWidth: 3,
+  penPct: 11,
+  hiPct: 23,
   highlighterColor: "#ffe066",
   textSize: 17,
   textBold: false,
@@ -491,57 +502,70 @@ const ui = {
 
 let undoStack = [], redoStack = [];
 let pendingBefore = null;
-let actionDepth = 0;      // supports nested begin/end pairs without clobbering each other
+let lastSnap = null;
+const MAX_HISTORY = 500;
 let idCounter = 0;
 const genId = () => "e" + (++idCounter) + Math.random().toString(36).slice(2,7);
+const dimCache = [];   // pdfPageIndex -> {w,h}; real page sizes, re-applied after any undo/redo
 
-function snapshotJSON(){ return JSON.stringify(pages); }
-// beginAction/endAction can be nested (e.g. focusing a text box while a drag
-// from another element is still finishing). Only the OUTERMOST pair takes the
-// snapshot and commits it — a naive single-variable version silently dropped
-// in-progress edits whenever a second action started before the first ended,
-// which is what caused annotations to vanish with no way to undo them back.
+// A snapshot is one JSON string per page. Identical pages share the same string
+// with the previous snapshot, so hundreds of undo steps only cost the pages that changed.
+function snapshot(){
+  const pool = new Map();
+  if (lastSnap) for (const str of lastSnap) pool.set(str, str);
+  const snap = pages.map(p=>{ const str = JSON.stringify(p); return pool.get(str) || str; });
+  lastSnap = snap;
+  return snap;
+}
+function sameSnap(a,b){
+  if (a.length !== b.length) return false;
+  for (let i=0;i<a.length;i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+// Every edit is its own history step. Starting a new edit first closes any edit
+// still open, so steps never merge into one giant undo (which used to wipe the
+// whole page in one Ctrl+Z and let a stray blur erase the redo history).
 function beginAction(){
-  if (actionDepth === 0) pendingBefore = snapshotJSON();
-  actionDepth++;
+  if (pendingBefore !== null) endAction();
+  pendingBefore = snapshot();
 }
 function endAction(force){
-  actionDepth = Math.max(0, actionDepth-1);
-  if (actionDepth > 0) return; // still inside an outer action; wait for it to close
   if (pendingBefore === null) return;
   const before = pendingBefore; pendingBefore = null;
-  const now = snapshotJSON();
-  if (force || before !== now){
+  const now = snapshot();
+  if (force || !sameSnap(before, now)){
     undoStack.push(before);
-    if (undoStack.length > 120) undoStack.shift();
+    if (undoStack.length > MAX_HISTORY) undoStack.shift();
     redoStack = [];
   }
   updateUndoRedoButtons();
 }
-// Safety net: if an action is left open (tab switch, app backgrounded mid-edit,
-// contenteditable blur missed on some touch browsers) flush it so nothing is lost silently.
-function flushPendingAction(){
-  if (actionDepth > 0 || pendingBefore !== null){
-    actionDepth = 0;
-    endAction(true);
-  }
-}
+function flushPendingAction(){ endAction(); }
 document.addEventListener("visibilitychange", ()=>{ if (document.hidden) flushPendingAction(); });
 window.addEventListener("blur", flushPendingAction);
 window.addEventListener("beforeunload", flushPendingAction);
-function undo(){
-  if (!undoStack.length) return;
-  redoStack.push(snapshotJSON());
-  pages = JSON.parse(undoStack.pop());
+function restoreSnapshot(snap){
+  pages = snap.map(str=>JSON.parse(str));
+  for (const p of pages){
+    if (p.kind === "pdf" && dimCache[p.pdfPageIndex]){ p.widthPt = dimCache[p.pdfPageIndex].w; p.heightPt = dimCache[p.pdfPageIndex].h; }
+  }
+  lastSnap = snap;
+  ui.selected = null;
   reconcileAndRenderAll();
+  for (const p of pages) if (domRefs[p.id]) layoutPage(p);
   updateUndoRedoButtons();
 }
+function undo(){
+  endAction();                    // close an open edit (e.g. a text box) as its own step first
+  if (!undoStack.length) return;
+  redoStack.push(snapshot());
+  restoreSnapshot(undoStack.pop());
+}
 function redo(){
+  endAction();
   if (!redoStack.length) return;
-  undoStack.push(snapshotJSON());
-  pages = JSON.parse(redoStack.pop());
-  reconcileAndRenderAll();
-  updateUndoRedoButtons();
+  undoStack.push(snapshot());
+  restoreSnapshot(redoStack.pop());
 }
 function updateUndoRedoButtons(){
   undoBtn.disabled = !undoStack.length;
@@ -614,7 +638,7 @@ async function loadImageFile(file){
     const scaleDown = Math.min(1, maxDim / Math.max(dims.w, dims.h));
     const w = dims.w*scaleDown, h = dims.h*scaleDown;
 
-    originalBytes = null;              // no source PDF to preserve — export builds a fresh PDF
+    originalBytes = null; originalFile = null; loadToken++;   // no source PDF to preserve — export builds a fresh PDF
     originalName = file.name.replace(/\.(png|jpe?g|webp)$/i,"") || "document";
     pages = []; undoStack = []; redoStack = []; ui.selected = null;
     for (const k in pdfProxies) delete pdfProxies[k];
@@ -636,51 +660,102 @@ async function loadImageFile(file){
   }
 }
 
+class FileRangeTransport extends pdfjsLib.PDFDataRangeTransport {
+  constructor(file, initial){ super(file.size, initial); this.file = file; }
+  requestDataRange(begin, end){
+    this.file.slice(begin, Math.min(end, this.file.size)).arrayBuffer()
+      .then(b=> this.onDataRange(begin, new Uint8Array(b)));
+  }
+}
+const yieldToUI = () => new Promise(r=> setTimeout(r, 0));
+
 async function loadPdfFile(file){
+  const token = ++loadToken;
   try{
-    const buf = await file.arrayBuffer();
-    originalBytes = buf;               // pristine, kept forever, only ever copied for reading
+    originalFile = file;               // never read fully into memory: pdf.js pulls only the byte ranges it needs
+    originalBytes = null;
     originalName = file.name.replace(/\.pdf$/i,"") || "document";
 
-    // reset workspace
-    pages = []; undoStack = []; redoStack = []; ui.selected = null;
+    pages = []; undoStack = []; redoStack = []; lastSnap = null; pendingBefore = null; ui.selected = null;
+    dimCache.length = 0;
     for (const k in pdfProxies) delete pdfProxies[k];
     for (const k in domRefs) delete domRefs[k];
     pageTextItemsCache = Object.create(null); searchMatches = []; searchMatchIndex = -1;
     searchWrap.hidden = true; searchInput.value = ""; outlineToggleBtn.hidden = true; outlinePanel.hidden = true;
 
-    // Robust load: disable range/streaming quirks that sometimes choke on large
-    // scanned PDFs, and surface a real error instead of a silent "couldn't read".
-    const loadingTask = pdfjsLib.getDocument({
-      data: buf.slice(0),
+    const head = new Uint8Array(await file.slice(0, 1<<17).arrayBuffer());
+    let loadingTask = pdfjsLib.getDocument({
+      range: new FileRangeTransport(file, head),
+      length: file.size,
+      rangeChunkSize: 1<<20,
       disableAutoFetch: true,
       disableStream: true,
       isEvalSupported: false,
     });
-    pdfDocProxy = await loadingTask.promise;
-    for (let i=1;i<=pdfDocProxy.numPages;i++){
-      let proxy, vp;
-      try{
-        proxy = await pdfDocProxy.getPage(i);
-        vp = proxy.getViewport({scale:1});
-      }catch(pageErr){
-        console.error("Page "+i+" failed to load, skipping:", pageErr);
-        continue; // don't let one bad page abort the whole document
-      }
-      const ps = newPdfPageState(i-1, vp.width, vp.height);
-      pdfProxies[ps.id] = proxy;
-      pages.push(ps);
+    try{
+      pdfDocProxy = await loadingTask.promise;
+    }catch(rangeErr){
+      if (file.size > 400*1024*1024) throw rangeErr;   // a full read would need too much memory
+      console.warn("Range loading failed, falling back to full read:", rangeErr);
+      loadingTask = pdfjsLib.getDocument({ data: new Uint8Array(await file.arrayBuffer()), isEvalSupported:false });
+      pdfDocProxy = await loadingTask.promise;
     }
-    if (!pages.length) throw new Error("No readable pages found in this PDF.");
+    if (token !== loadToken) return;
+
+    // Only the first page is fetched before the screen appears; every other page
+    // starts with the first page's size and is measured in the background.
+    const first = await pdfDocProxy.getPage(1);
+    const fvp = first.getViewport({scale:1});
+    const n = pdfDocProxy.numPages;
+    dimCache[0] = {w:fvp.width, h:fvp.height};
+    for (let i=0;i<n;i++){
+      const d = dimCache[i] || dimCache[0];
+      pages.push(newPdfPageState(i, d.w, d.h));
+    }
+    pdfProxies[pages[0].id] = first;
     filepill.hidden = false;
     filepill.textContent = file.name;
     filepill.title = file.name;
     startWorkspace();
-    buildSearchIndex();
+    measurePagesInBackground(token);
+    buildSearchIndex(token);
     buildOutline();
   }catch(err){
     console.error(err);
     showToast("Couldn't open that PDF (it may be corrupted, password-protected, or use an unsupported encoding). Try re-scanning or re-saving it and opening again.");
+  }
+}
+
+async function getProxyFor(ps){
+  if (pdfProxies[ps.id]) return pdfProxies[ps.id];
+  if (!pdfDocProxy || ps.kind !== "pdf") return null;
+  try{
+    const pr = await pdfDocProxy.getPage(ps.pdfPageIndex+1);
+    pdfProxies[ps.id] = pr;
+    return pr;
+  }catch(err){ console.error("Page "+(ps.pdfPageIndex+1)+" failed to load:", err); return null; }
+}
+
+// Measure real page sizes after the first screen is up; fix layout only if a page differs.
+async function measurePagesInBackground(token){
+  const n = pages.length;
+  for (let i=1;i<n;i++){
+    if (token !== loadToken) return;
+    try{
+      const pr = await pdfDocProxy.getPage(i+1);
+      const vp = pr.getViewport({scale:1});
+      dimCache[i] = {w:vp.width, h:vp.height};
+      for (const ps of pages){
+        if (ps.kind==="pdf" && ps.pdfPageIndex===i){
+          if (!pdfProxies[ps.id]) pdfProxies[ps.id] = pr;
+          if (Math.abs(ps.widthPt-vp.width)>0.5 || Math.abs(ps.heightPt-vp.height)>0.5){
+            ps.widthPt = vp.width; ps.heightPt = vp.height;
+            if (domRefs[ps.id]){ layoutPage(ps); domRefs[ps.id].pdfRenderedAt = null; }
+          }
+        }
+      }
+    }catch(e){ /* skip a bad page; it still shows as a blank sheet */ }
+    if (i % 25 === 0) await yieldToUI();
   }
 }
 
@@ -689,7 +764,7 @@ function startWorkspace(){
   toolbar.hidden = false;
   rail.hidden = false;
   railTab.hidden = false;
-  searchToggleBtn.hidden = !originalBytes;
+  searchToggleBtn.hidden = !originalFile;
   exportBtn.disabled = pages.length === 0;
   computeInitialScale();
   reconcileAndRenderAll();
@@ -831,8 +906,8 @@ async function ensurePdfPageRendered(ps){
     else refs.canvasEl.addEventListener("load", ()=> renderThumb(ps), {once:true});
     return;
   }
-  const proxy = pdfProxies[ps.id];
-  if (!proxy) return;
+  const proxy = await getProxyFor(ps);
+  if (!proxy || !domRefs[ps.id]) return;
   try{
     let dpr = renderDPR();
     const viewport = proxy.getViewport({scale: ui.scale*dpr});
@@ -1063,7 +1138,12 @@ function mountText(ps, m){
   positionEl(node, m, "text");
   refs.overlay.appendChild(node);
 
-  content.addEventListener("input", ()=>{ m.text = content.textContent; });
+  let typeTimer = null;
+  content.addEventListener("input", ()=>{
+    m.text = content.textContent;
+    clearTimeout(typeTimer);
+    typeTimer = setTimeout(()=>{ if (document.activeElement === content){ endAction(); beginAction(); } }, 700);
+  });
   content.addEventListener("focus", ()=>{ beginAction(); selectEl(ps.id,"text",m.id,node); });
   content.addEventListener("blur", ()=>{ endAction(); });
   content.addEventListener("pointerdown", (e)=> e.stopPropagation());
@@ -1203,7 +1283,7 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
       const isHi = ui.tool === "highlighter";
       beginAction();
       const stroke = {id:genId(), tool: ui.tool, color: isHi?ui.highlighterColor:ui.inkColor,
-                       width: isHi?16:ui.penWidth, opacity: isHi?0.42:1, points:[{x:px,y:py}]};
+                       width: isHi?hiPx(ui.hiPct):penPx(ui.penPct), opacity: isHi?0.42:1, points:[{x:px,y:py}]};
       ps.strokes.push(stroke);
       const ctx = inkCanvas.getContext("2d");
       inner.setPointerCapture(e.pointerId);
@@ -1416,7 +1496,12 @@ const INK_COLORS = [
   "#2f7d4f","#7bbf8e",    // green: deep, soft
   "#c97a1d","#e7b25f",    // amber: deep, soft
 ];
-const HI_COLORS = ["#fef08a","#bdf0c4","#c9e4ff","#ffd3ea","#fcb902"];
+const PEN_LIGHT  = ["#f4a6a3","#9ec5f0","#a6dcb6","#f5cf94","#c9b6ec","#f2a9cf"];
+const PEN_MEDIUM = ["#e5181c","#2461a8","#2f7d4f","#c97a1d","#7d4fb8","#c2378a"];
+const HI_LIGHT   = ["#fff3a3","#c9f2d0","#d6eafe","#ffdcef","#ead9ff","#ffe1c2"];
+const HI_MEDIUM  = ["#fcd34d","#86d99a","#7fb8f2","#f59ac6","#b892f0","#f5a25d"];
+const penPx = pct => +(0.5 + pct/100*23.5).toFixed(2);   // 1% ~ 0.7px ... 100% = 24px
+const hiPx  = pct => +(6 + pct/100*44).toFixed(2);       // 1% ~ 6px  ... 100% = 50px
 const COVER_COLORS = ["#ffffff","#f2f1eb","#241414"];
 const FONT_FACES = [
   {label:"Sans", pdf:"Helvetica", css:"'IBM Plex Sans',sans-serif"},
@@ -1453,11 +1538,12 @@ function renderProps(){
     addBoldToggle(ui.textBold, v=> ui.textBold=v);
   } else if (ui.tool === "pen"){
     addLabel("Pen");
-    addSwatchRow(INK_COLORS, ui.inkColor, c=> ui.inkColor=c);
-    addRange("Width", ui.penWidth, 1, 12, v=> ui.penWidth=v);
+    addToneRows([["Dark",INK_COLORS],["Medium",PEN_MEDIUM],["Light",PEN_LIGHT]], ui.inkColor, c=> ui.inkColor=c);
+    addPercentWidth("Width", ui.penPct, v=>{ ui.penPct=v; }, penPx, ()=>ui.inkColor, false);
   } else if (ui.tool === "highlighter"){
     addLabel("Highlighter");
-    addSwatchRow(HI_COLORS, ui.highlighterColor, c=> ui.highlighterColor=c, true);
+    addToneRows([["Light",HI_LIGHT],["Medium",HI_MEDIUM]], ui.highlighterColor, c=> ui.highlighterColor=c, true);
+    addPercentWidth("Width", ui.hiPct, v=>{ ui.hiPct=v; }, hiPx, ()=>ui.highlighterColor, true);
   } else if (ui.tool === "cover"){
     addLabel("Cover colour");
     addSwatchRow(COVER_COLORS, ui.coverColor, c=> ui.coverColor=c, true);
@@ -1481,6 +1567,56 @@ function addSwatchRow(colors, active, onPick, isLight){
   inp.addEventListener("input", ()=>{ onPick(inp.value); renderProps(); });
   custom.appendChild(inp); row.appendChild(custom);
   propsEl.appendChild(row);
+}
+function addToneRows(groups, active, onPick, isLight){
+  const box = document.createElement("div"); box.className = "tonerows";
+  groups.forEach(([name, colors])=>{
+    const line = document.createElement("div"); line.className = "tonerow";
+    const lab = document.createElement("span"); lab.className = "proplabel tonelabel"; lab.textContent = name;
+    line.appendChild(lab);
+    const row = document.createElement("div"); row.className = "swatchrow";
+    colors.forEach(c=>{
+      const b = document.createElement("button");
+      b.className = "swatch" + (c.toLowerCase()===String(active).toLowerCase() ? " active":"");
+      b.style.background = c; b.title = name + " " + c;
+      b.style.border = "1.5px solid " + (isLight || name==="Light" ? "var(--line-strong)" : "rgba(0,0,0,.15)");
+      b.addEventListener("click", ()=>{ onPick(c); renderProps(); });
+      row.appendChild(b);
+    });
+    line.appendChild(row); box.appendChild(line);
+  });
+  const custom = document.createElement("label"); custom.className="customswatch"; custom.title="Custom colour";
+  const inp = document.createElement("input"); inp.type="color"; inp.value = String(active).length===7?active:"#c0392b";
+  inp.addEventListener("input", ()=>{ onPick(inp.value); renderProps(); });
+  custom.appendChild(inp);
+  box.appendChild(custom);
+  propsEl.appendChild(box);
+}
+// Width as a percentage: slider + typeable number + live preview of the real stroke thickness.
+function addPercentWidth(label, pct, onChange, toPx, getColor, isHi){
+  addLabel(label);
+  const wrap = document.createElement("div"); wrap.className = "pctwrap";
+  const r = document.createElement("input"); r.type="range"; r.className="range"; r.min=1; r.max=100; r.value=pct;
+  const num = document.createElement("input"); num.type="number"; num.className="pctnum"; num.min=1; num.max=100; num.step=1; num.value=pct;
+  const sign = document.createElement("span"); sign.className="proplabel"; sign.textContent="%";
+  const prev = document.createElement("div"); prev.className="pctprev";
+  const bar = document.createElement("span"); bar.className="pctbar";
+  prev.appendChild(bar);
+  function paint(v){
+    bar.style.height = Math.min(26, toPx(v)) + "px";
+    bar.style.background = getColor();
+    bar.style.opacity = isHi ? .5 : 1;
+  }
+  function set(v, fromNum){
+    v = Math.max(1, Math.min(100, Math.round(+v || 1)));
+    onChange(v); r.value = v; if (!fromNum) num.value = v; paint(v);
+  }
+  r.addEventListener("input", ()=> set(r.value));
+  num.addEventListener("input", ()=>{ if (num.value !== "") set(num.value, true); });
+  num.addEventListener("change", ()=> set(num.value));
+  paint(pct);
+  wrap.append(r, num, sign, prev);
+  propsEl.appendChild(wrap);
 }
 function addRange(label, val, min, max, onChange){
   addLabel(label);
@@ -1581,11 +1717,13 @@ let searchMatches = [];   // {pageId, x,y,w,h}
 let searchMatchIndex = -1;
 let searchHighlightEls = [];
 
-async function buildSearchIndex(){
+async function buildSearchIndex(token){
   pageTextItemsCache = Object.create(null);
-  for (const ps of pages){
+  for (const ps of pages.slice()){
+    if (token !== undefined && token !== loadToken) return;
     if (ps.kind !== "pdf") continue;
-    const proxy = pdfProxies[ps.id];
+    await yieldToUI();
+    const proxy = await getProxyFor(ps);
     if (!proxy) continue;
     try{
       const tc = await proxy.getTextContent();
@@ -1736,7 +1874,7 @@ exportBtn.addEventListener("click", async ()=>{
   try{
     const bytes = await buildExportPdf();
     const blob = new Blob([bytes], {type:"application/pdf"});
-    const filename = (originalBytes ? originalName : "notes") + "-annotated.pdf";
+    const filename = (originalFile ? originalName : "notes") + "-annotated.pdf";
     saveBlob(blob, filename);
   }catch(err){
     console.error(err);
@@ -1757,7 +1895,7 @@ function saveBlob(blob, filename){
 }
 
 async function buildExportPdf(){
-  const pdfDoc = originalBytes ? await PDFLib_.PDFDocument.load(originalBytes.slice(0)) : await PDFLib_.PDFDocument.create();
+  const pdfDoc = originalFile ? await PDFLib_.PDFDocument.load(await originalFile.arrayBuffer()) : await PDFLib_.PDFDocument.create();
   const fontSet = {
     Helvetica:   { regular: await pdfDoc.embedFont(PDFLib_.StandardFonts.Helvetica),   bold: await pdfDoc.embedFont(PDFLib_.StandardFonts.HelveticaBold) },
     TimesRoman:  { regular: await pdfDoc.embedFont(PDFLib_.StandardFonts.TimesRoman),  bold: await pdfDoc.embedFont(PDFLib_.StandardFonts.TimesRomanBold) },
@@ -1774,7 +1912,7 @@ async function buildExportPdf(){
     return img;
   }
 
-  const existing = originalBytes ? pdfDoc.getPages() : [];
+  const existing = originalFile ? pdfDoc.getPages() : [];
   for (const ps of pages){
     let page;
     if (ps.kind === "pdf"){
