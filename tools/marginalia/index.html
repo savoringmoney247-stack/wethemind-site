@@ -246,6 +246,9 @@ button{font:inherit;cursor:pointer;}
 .toast.show{opacity:1;transform:translate(-50%,-6px);}
 ::selection{background:var(--accent-soft);}
 .installbtn[hidden]{display:none;}
+/* Not the active window: the app is completely inert (no hover effects, tooltips, pointer, drawing). */
+body.inactive .app, body.inactive .app *{pointer-events:none!important;}
+body.inactive{cursor:default;}
 
 /* ---------- brand mark ---------- */
 .brandmark{width:26px;height:26px;border-radius:6px;flex:0 0 auto;display:block;}
@@ -689,11 +692,53 @@ const searchToggleBtn = $("#searchToggleBtn"), searchWrap = $("#searchWrap"), se
 const outlineToggleBtn = $("#outlineToggleBtn"), outlinePanel = $("#outlinePanel"), outlineBody = $("#outlineBody");
 const tplText = $("#tplTextEl"), tplImg = $("#tplImgEl"), tplShape = $("#tplShapeEl");
 
+let appActive = true;
+let deferredToast = null;
 function showToast(msg){
+  if (!appActive){ deferredToast = msg; return; }
   toast.textContent = msg; toast.classList.add("show");
   clearTimeout(showToast._t);
   showToast._t = setTimeout(()=>toast.classList.remove("show"), 2600);
 }
+
+/* ---------------- only react while this is the window being used ---------------- */
+// Tracks whether Marginalia is the focused, visible window. While it is not (you are in another
+// app, a meeting window, a picture-in-picture, a system dialog...), the pointer cannot move,
+// draw, hover or click anything here, and no message or dialog is shown by this app.
+let pointerIsDown = false, lastDown = null;
+["pointerdown","pointerup","pointercancel"].forEach(t=> window.addEventListener(t, (e)=>{
+  if (t === "pointerdown"){ if (appActive){ pointerIsDown = true; lastDown = {target:e.target, id:e.pointerId, type:e.pointerType}; } }
+  else pointerIsDown = false;
+}, true));
+function endInteractionsNow(){
+  // If a stroke / drag was in progress when focus left, finish it exactly where it was
+  // so nothing keeps drawing or dragging when the pointer comes back.
+  if (pointerIsDown && lastDown && lastDown.target && lastDown.target.isConnected){
+    const opts = {bubbles:true, cancelable:true, pointerId:lastDown.id, pointerType:lastDown.type || "mouse", isPrimary:true};
+    try{ lastDown.target.dispatchEvent(new PointerEvent("pointerup", opts)); }catch(e){}
+  }
+  pointerIsDown = false; lastDown = null;
+}
+function syncActive(){
+  const a = document.hasFocus() && !document.hidden;
+  if (a === appActive) return;
+  if (!a) endInteractionsNow();
+  appActive = a;
+  document.body.classList.toggle("inactive", !a);
+  if (a && deferredToast){ const m = deferredToast; deferredToast = null; showToast(m); }
+}
+window.addEventListener("focus", syncActive);
+window.addEventListener("blur", syncActive);
+document.addEventListener("visibilitychange", syncActive);
+setInterval(syncActive, 400);      // safety net for platforms that skip a focus event
+// Belt and braces: block pointer/touch/wheel input at the very top while inactive.
+["pointermove","pointerdown","mousemove","mousedown","touchstart","touchmove","wheel","click","dblclick","contextmenu","dragstart","dragenter","dragover"].forEach(t=>{
+  window.addEventListener(t, (e)=>{
+    if (!appActive || !document.hasFocus()){ e.stopImmediatePropagation(); }
+  }, {capture:true, passive:true});
+});
+document.body.classList.toggle("inactive", !(document.hasFocus() && !document.hidden));
+appActive = document.hasFocus() && !document.hidden;
 
 /* ---------------- page state helpers ---------------- */
 const A4 = {w:595.28, h:841.89};
@@ -1728,6 +1773,7 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
       inner.setPointerCapture(e.pointerId);
       drawLiveStroke(ps, stroke);
       function move(ev){
+        if (!appActive) return;
         const r = inner.getBoundingClientRect();
         const list = (ev.getCoalescedEvents && ev.getCoalescedEvents().length) ? ev.getCoalescedEvents() : [ev];
         let added = false;
