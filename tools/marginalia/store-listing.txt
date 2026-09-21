@@ -1,0 +1,46 @@
+SHORT DESCRIPTION (max 80 characters — currently 78)
+------------------------------------------------------
+Mark up any PDF — highlight, annotate, cover text, add images. No sign-up.
+
+
+FULL DESCRIPTION (max 4000 characters)
+------------------------------------------------------
+Marginalia is a simple, fast PDF markup tool for anyone who needs to annotate, edit, or mark up a document without touching the original file.
+
+No account. No sign-up. No uploads to a server — everything happens right on your device.
+
+WHAT YOU CAN DO
+• Highlight text and passages
+• Add sticky-note style annotations and comments
+• Cover existing text and retype over it
+• Insert images anywhere on a page
+• Add extra blank writing pages to any PDF
+• Rotate, reorder, and navigate pages easily
+• Search across the whole document
+• Zoom in/out and use a clean, distraction-free reading view
+• Full undo/redo support, so you can experiment freely
+• Export your marked-up PDF, ready to share or print
+
+WHO IT'S FOR
+Teachers marking up worksheets, students annotating study material, professionals reviewing contracts and reports, or anyone who just needs to write on a PDF without installing a full desktop suite.
+
+PRIVACY-FIRST BY DESIGN
+Marginalia works entirely on the files you open — locally, on your device. Nothing is uploaded, stored, or shared. Your documents stay yours.
+
+Marginalia is built and maintained by We The Mind (wethemind.com).
+
+
+CATEGORY
+------------------------------------------------------
+Productivity (or Tools, if Productivity isn't available)
+
+
+CONTACT / SUPPORT EMAIL
+------------------------------------------------------
+support@wethemind.com
+
+
+APP ICON / FEATURE GRAPHIC
+------------------------------------------------------
+Use icon-512.png from the Marginalia site files as the app icon (already 512x512).
+Feature graphic (1024x500) still needs to be created — flag this separately if you want help designing one.
