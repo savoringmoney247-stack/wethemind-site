@@ -193,6 +193,9 @@ button{font:inherit;cursor:pointer;}
 
 .stage-wrap{flex:1 1 auto;overflow:auto;background:var(--paper);}
 .stage{display:flex;flex-direction:column;align-items:center;gap:36px;padding:40px 16px 120px;min-height:100%;}
+.stage-wrap.horiz{overflow-x:auto;overflow-y:hidden;}
+.stage-wrap.horiz .stage{flex-direction:row;align-items:center;min-height:0;min-width:100%;padding:16px 40vw;gap:48px;height:100%;}
+.stage-wrap.horiz .stage .opening{flex:0 0 auto;}
 
 .page{position:relative;}
 .page-inner{position:relative;background:#fff;box-shadow:var(--shadow);border-radius:2px;}
@@ -261,6 +264,9 @@ body.inactive{cursor:default;}
 .searchnav{border:none;background:none;color:var(--ink-600);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:6px;flex:0 0 auto;}
 .searchnav:hover{background:var(--surface);color:var(--ink-900);}
 .searchnav svg{width:14px;height:14px;}
+.searchopt{border:1px solid transparent;background:none;color:var(--ink-400);font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;width:26px;height:22px;border-radius:6px;flex:0 0 auto;}
+.searchopt:hover{background:var(--surface);color:var(--ink-900);}
+.searchopt.on{background:var(--accent-soft);color:var(--accent);border-color:var(--accent);}
 .match-highlight{position:absolute;background:var(--accent-2);opacity:.45;border-radius:2px;pointer-events:none;}
 .match-highlight.current{background:var(--accent);opacity:.55;}
 
@@ -355,6 +361,8 @@ body.inactive{cursor:default;}
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
       <input type="text" id="searchInput" placeholder="Find text…" autocomplete="off">
       <span class="searchcount" id="searchCount"></span>
+      <button class="searchopt" id="searchCase" title="Match case" aria-pressed="false">Aa</button>
+      <button class="searchopt" id="searchWhole" title="Whole word" aria-pressed="false">"W"</button>
       <button class="searchnav" id="searchPrev" title="Previous match">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
       </button>
@@ -428,6 +436,15 @@ body.inactive{cursor:default;}
       </button>
       <button class="tool-btn" id="redoBtn" title="Redo">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
+      </button>
+    </div>
+    <div class="sep"></div>
+    <div class="tool-group">
+      <button class="tool-btn active" id="layoutVertBtn" title="Page down (scroll downward through the document)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="7" rx="1.2"/><rect x="6" y="14" width="12" height="7" rx="1.2"/><path d="M12 10.5v3"/></svg>
+      </button>
+      <button class="tool-btn" id="layoutHorizBtn" title="Page sideways (one page at a time, like a book)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="7" height="12" rx="1.2"/><rect x="14" y="6" width="7" height="12" rx="1.2"/><path d="M10.5 12h3"/></svg>
       </button>
     </div>
     <div class="sep"></div>
@@ -541,6 +558,7 @@ const ui = {
   coverColor: "#ffffff",
   selected: null,      // {pageId, kind:'text'|'image'|'shape', id}
   autoFit: true,
+  layout: "vertical",  // "vertical" (page down) or "horizontal" (page sideways)
 };
 
 let undoStack = [], redoStack = [];
@@ -764,9 +782,9 @@ function createDoc(name, file){
   const d = {
     id: ++docSeq, name, file, kind: file ? "pdf" : "blank", ready:false, fresh:true, closed:false, active:false,
     pages:[], undoStack:[], redoStack:[], lastSnap:null, dimCache:[], pdfDocProxy:null,
-    scale:1, autoFit:true, scrollTop:0,
+    scale:1, autoFit:true, scrollTop:0, layout:"vertical",
     stageEl: document.createElement("div"), railEl: document.createElement("nav"),
-    textCache: Object.create(null), searchMatches:[], searchMatchIndex:-1, searchHighlightEls:[], searchQuery:"",
+    textCache: Object.create(null), textJoin: Object.create(null), searchMatches:[], searchMatchIndex:-1, searchHighlightEls:[], searchQuery:"",
     outlineNodes:[], outlineBtnHidden:true, thumbIO:null, indexStarted:false, indexOnDemand:false
   };
   d.stageEl.className = "stage"; d.stageEl.hidden = true;
@@ -782,8 +800,8 @@ function saveCurDoc(){
   const d = curDoc; if (!d) return;
   endAction();
   d.undoStack = undoStack; d.redoStack = redoStack; d.lastSnap = lastSnap; d.dimCache = dimCache;
-  d.scale = ui.scale; d.autoFit = ui.autoFit; d.scrollTop = stageWrap.scrollTop;
-  d.textCache = pageTextItemsCache; d.searchMatches = searchMatches; d.searchMatchIndex = searchMatchIndex;
+  d.scale = ui.scale; d.autoFit = ui.autoFit; d.scrollTop = stageWrap.scrollTop; d.layout = ui.layout;
+  d.textCache = pageTextItemsCache; d.textJoin = pageTextJoin; d.searchMatches = searchMatches; d.searchMatchIndex = searchMatchIndex;
   d.searchHighlightEls = searchHighlightEls; d.searchQuery = searchInput.value;
   d.outlineNodes = Array.from(outlineBody.childNodes); d.outlineBtnHidden = outlineToggleBtn.hidden;
   d.active = false;
@@ -800,8 +818,9 @@ function activateDoc(d){
   curDoc = d; d.active = true;
   pages = d.pages; undoStack = d.undoStack; redoStack = d.redoStack; lastSnap = d.lastSnap; pendingBefore = null;
   dimCache = d.dimCache; pdfDocProxy = d.pdfDocProxy;
-  ui.scale = d.scale; ui.autoFit = d.autoFit; ui.selected = null;
-  pageTextItemsCache = d.textCache; searchMatches = d.searchMatches; searchMatchIndex = d.searchMatchIndex;
+  ui.scale = d.scale; ui.autoFit = d.autoFit; ui.layout = d.layout || "vertical"; ui.selected = null;
+  applyLayoutMode();
+  pageTextItemsCache = d.textCache; pageTextJoin = d.textJoin; searchMatches = d.searchMatches; searchMatchIndex = d.searchMatchIndex;
   searchHighlightEls = d.searchHighlightEls; searchInput.value = d.searchQuery; searchWrap.hidden = !d.searchQuery;
   outlineBody.replaceChildren.apply(outlineBody, d.outlineNodes); outlineToggleBtn.hidden = d.outlineBtnHidden; outlinePanel.hidden = true;
   originalFile = d.file; originalName = d.name;
@@ -828,8 +847,9 @@ function activateDoc(d){
 function showHome(){
   curDoc = null; pages = []; undoStack = []; redoStack = []; lastSnap = null; pendingBefore = null; dimCache = [];
   pdfDocProxy = null; originalFile = null; originalName = "document"; ui.selected = null;
-  pageTextItemsCache = Object.create(null); searchMatches = []; searchMatchIndex = -1; searchHighlightEls = [];
+  pageTextItemsCache = Object.create(null); pageTextJoin = Object.create(null); searchMatches = []; searchMatchIndex = -1; searchHighlightEls = [];
   searchWrap.hidden = true; searchInput.value = ""; outlineBody.replaceChildren(); outlineToggleBtn.hidden = true; outlinePanel.hidden = true;
+  ui.layout = "vertical"; applyLayoutMode();
   stage = homeStage; rail = null; homeStage.hidden = false; emptyState.hidden = false;
   toolbar.hidden = true; railWrap.hidden = true; railTab.hidden = true; searchToggleBtn.hidden = true;
   exportBtn.disabled = true; tabbar.hidden = true;
@@ -1168,7 +1188,7 @@ function buildPageDom(ps){
     del.addEventListener("click",(e)=>{ e.stopPropagation(); deleteBlankPage(ps.id); });
     thumbBox.appendChild(del);
   }
-  thumbBox.addEventListener("click", ()=>{ const r = domRefs[ps.id]; if (r) r.pageEl.scrollIntoView({behavior:"smooth", block:"start"}); });
+  thumbBox.addEventListener("click", ()=>{ const r = domRefs[ps.id]; if (r) r.pageEl.scrollIntoView({block:"start"}); });
   rail.appendChild(thumbBox);
 
   attachPageInteractions(ps, inner, overlay, inkCanvas);
@@ -1445,7 +1465,8 @@ function goToPageIndex(idx){
   idx = Math.max(0, Math.min(pages.length-1, idx));
   const ps = pages[idx];
   const refs = domRefs[ps.id];
-  if (refs) refs.pageEl.scrollIntoView({behavior:"smooth", block:"start"});
+  const horiz = ui.layout === "horizontal";
+  if (refs) refs.pageEl.scrollIntoView({block: horiz?"nearest":"start", inline: horiz?"center":"nearest"});
   // Set the input directly to the page we just targeted rather than waiting on a
   // scroll event — if the target page is already fully in view, scrollIntoView
   // fires no scroll event at all, so relying on that alone left the page number
@@ -1505,6 +1526,26 @@ function bindRailArrow(btn, dir){
   btn.addEventListener("click", ()=>{ if (!held && rail) rail.scrollBy({top: dir*rail.clientHeight*0.85, behavior:"smooth"}); });
 }
 bindRailArrow(railUp, -1); bindRailArrow(railDown, 1);
+
+/* ---------------- page layout: continuous vertical (default) or paged sideways ---------------- */
+const layoutVertBtn = $("#layoutVertBtn"), layoutHorizBtn = $("#layoutHorizBtn");
+function applyLayoutMode(){
+  const horiz = ui.layout === "horizontal";
+  stageWrap.classList.toggle("horiz", horiz);
+  layoutVertBtn.classList.toggle("active", !horiz);
+  layoutHorizBtn.classList.toggle("active", horiz);
+}
+function setLayoutMode(mode){
+  if (ui.layout === mode) return;
+  const cp = currentPage();
+  ui.layout = mode;
+  applyLayoutMode();
+  if (cp && domRefs[cp.id]) requestAnimationFrame(()=> domRefs[cp.id].pageEl.scrollIntoView({block:"nearest", inline:"nearest"}));
+}
+layoutVertBtn.addEventListener("click", ()=> setLayoutMode("vertical"));
+layoutHorizBtn.addEventListener("click", ()=> setLayoutMode("horizontal"));
+applyLayoutMode();
+
 
 /* ---------------- ink drawing (render) ---------------- */
 function applyStroke(ctx, s, k){
@@ -1923,21 +1964,25 @@ function imageDims(dataUrl){
   });
 }
 function currentPage(){
-  // pages are stacked top to bottom, so the one nearest the top of the view is found by binary search
+  // pages are stacked edge to edge (top-to-bottom, or left-to-right in sideways mode), so the
+  // one nearest the reading edge of the view is found by binary search.
   if (!pages.length) return null;
-  const top = stageWrap.getBoundingClientRect().top + 80;
+  const horiz = ui.layout === "horizontal";
+  const wb = stageWrap.getBoundingClientRect();
+  const target = horiz ? wb.left + wb.width/2 : wb.top + 80;
+  const at = (r)=> horiz ? (r.left + r.width/2) : r.top;
   let lo = 0, hi = pages.length - 1;
   while (lo < hi){
     const mid = (lo + hi) >> 1;
     const r = domRefs[pages[mid].id];
     if (!r){ lo = mid + 1; continue; }
-    if (r.pageEl.getBoundingClientRect().top < top) lo = mid + 1; else hi = mid;
+    if (at(r.pageEl.getBoundingClientRect()) < target) lo = mid + 1; else hi = mid;
   }
   let best = lo, bestD = Infinity;
   for (const i of [lo-1, lo]){
     if (i < 0 || i >= pages.length) continue;
     const r = domRefs[pages[i].id]; if (!r) continue;
-    const d = Math.abs(r.pageEl.getBoundingClientRect().top - top);
+    const d = Math.abs(at(r.pageEl.getBoundingClientRect()) - target);
     if (d < bestD){ bestD = d; best = i; }
   }
   return pages[best];
@@ -1954,7 +1999,7 @@ function addBlankPage(){
   endAction(true);
   if (wasEmpty || curDoc.fresh) startWorkspace();
   else { reconcileAndRenderAll(); updatePageNavUI(); }
-  requestAnimationFrame(()=> domRefs[ps.id].pageEl.scrollIntoView({behavior:"smooth"}));
+  requestAnimationFrame(()=> domRefs[ps.id].pageEl.scrollIntoView());
 }
 function deleteBlankPage(id){
   const ps = findPage(id);
@@ -2232,6 +2277,7 @@ stageWrap.addEventListener("scroll", ()=>{
 
 /* ---------------- full-text search ---------------- */
 let pageTextItemsCache = Object.create(null); // pageId -> [{str,x,y,w,h}] in page-point space, top-left origin
+let pageTextJoin = Object.create(null);       // pageId -> {text, map, items} — the searchable text
 let searchMatches = [];   // {pageId, x,y,w,h}
 let searchMatchIndex = -1;
 let searchHighlightEls = [];
@@ -2239,7 +2285,7 @@ let searchHighlightEls = [];
 async function buildSearchIndex(d){
   if (d.indexStarted) return;
   d.indexStarted = true;
-  const cache = d.textCache;
+  const cache = d.textCache, joins = d.textJoin;
   let done = 0;
   for (const ps of d.pages.slice()){
     if (d.closed) return;
@@ -2249,12 +2295,31 @@ async function buildSearchIndex(d){
     if (!proxy) continue;
     try{
       const tc = await proxy.getTextContent();
-      cache[ps.id] = tc.items.map(it=>{
+      const items = [];
+      let lastEndX = null, lastY = null;
+      for (const it of tc.items){
+        if (!it.str) continue;
         const heightPt = Math.hypot(it.transform[2], it.transform[3]) || it.height || 10;
         const x = it.transform[4];
         const yTop = ps.heightPt - (it.transform[5] + heightPt*0.85);
-        return { str: it.str, x, y: yTop, w: it.width||heightPt, h: heightPt*1.15 };
-      }).filter(it=>it.str && it.str.trim());
+        // A run that starts noticeably right of where the previous one ended, on the same
+        // line, is a real word gap even if the PDF didn't encode a literal space character.
+        const sameLine = lastY !== null && Math.abs(yTop - lastY) < heightPt*0.4;
+        const gap = sameLine && lastEndX !== null ? x - lastEndX : 0;
+        items.push({ str: it.str, x, y: yTop, w: it.width||heightPt, h: heightPt*1.15,
+                     newline: !sameLine, gap: gap > heightPt*0.18 });
+        lastEndX = x + (it.width||0); lastY = yTop;
+      }
+      cache[ps.id] = items.filter(it=>it.str.trim());
+      // One search string per page, in reading order, with an index back to the exact run
+      // (and character offset within it) for every character — so a match can be highlighted
+      // precisely even when it spans several runs.
+      let text = ""; const map = [];
+      items.forEach((it, idx)=>{
+        if (text && (it.newline || it.gap) && !/\s$/.test(text)) { text += " "; map.push(null); }
+        for (let c=0; c<it.str.length; c++){ text += it.str[c]; map.push({idx, c}); }
+      });
+      joins[ps.id] = { text: text.toLowerCase(), rawText: text, map, items };
     }catch(err){ /* text extraction failed for this page; search skips it */ }
     if (++done % 40 === 0 && curDoc === d && d.indexOnDemand) searchCount.textContent = "Indexing… " + done + "/" + d.pages.length;
   }
@@ -2263,24 +2328,28 @@ async function buildSearchIndex(d){
 // the search box: index big files the first time search is opened
 searchToggleBtn.addEventListener("click", ()=>{ if (curDoc && curDoc.indexOnDemand && !curDoc.indexStarted) buildSearchIndex(curDoc); });
 
+let matchCase = false, wholeWord = false;
+function isWordChar(c){ return c !== undefined && /[a-z0-9\u00c0-\u024f\u0400-\u04ff\u4e00-\u9fff]/i.test(c); }
 function runSearch(query){
   searchMatches = []; searchMatchIndex = -1;
-  const q = query.trim().toLowerCase();
+  const raw = query.trim();
+  const q = matchCase ? raw : raw.toLowerCase();
   if (q){
     pages.forEach(ps=>{
-      const items = pageTextItemsCache[ps.id];
-      if (!items) return;
-      items.forEach(it=>{
-        const s = it.str.toLowerCase();
-        let from = 0;
-        while (true){
-          const found = s.indexOf(q, from);
-          if (found === -1) break;
-          const box = wordBox(it, found, q.length);
-          searchMatches.push({pageId: ps.id, x: box.x, y: it.y, w: box.w, h: it.h});
-          from = found + q.length;
+      const j = pageTextJoin[ps.id];
+      if (!j || !j.text) return;
+      const hay = matchCase ? j.rawText : j.text;
+      let from = 0;
+      while (true){
+        const found = hay.indexOf(q, from);
+        if (found === -1) break;
+        if (!wholeWord || (!isWordChar(hay[found-1]) && !isWordChar(hay[found+q.length]))){
+          // One logical match keeps all its highlight boxes together (a phrase can span several
+          // text runs), so it counts and navigates as a single result, not one per run.
+          searchMatches.push({pageId: ps.id, boxes: matchBoxes(j, found, q.length)});
         }
-      });
+        from = found + Math.max(1, q.length);
+      }
     });
   }
   if (searchMatches.length) searchMatchIndex = 0;
@@ -2288,42 +2357,64 @@ function runSearch(query){
   updateSearchCount();
   if (searchMatchIndex >= 0) jumpToSearchMatch(searchMatchIndex);
 }
+// Turns a [start,start+len) range in a page's joined text into one highlight box per run it
+// touches, sized to exactly the matched characters within that run (proportional to the run's
+// own measured width — precise regardless of font, since it uses pdf.js's real glyph widths).
+function matchBoxes(join, start, len){
+  const boxes = []; let i = start;
+  while (i < start+len){
+    const m = join.map[i];
+    if (!m){ i++; continue; }
+    const it = join.items[m.idx];
+    let j = i, lastC = m.c;
+    while (j+1 < start+len && join.map[j+1] && join.map[j+1].idx === m.idx){ j++; lastC = join.map[j].c; }
+    const per = it.str.length ? it.w/it.str.length : it.w;
+    boxes.push({ x: it.x + per*m.c, y: it.y, w: Math.max(1.5, per*(lastC - m.c + 1)), h: it.h });
+    i = j+1;
+  }
+  return boxes;
+}
 
 function updateSearchCount(){
   searchCount.textContent = searchMatches.length ? (searchMatchIndex+1) + " / " + searchMatches.length : (searchInput.value ? "0 / 0" : "");
 }
 
 function renderSearchHighlights(){
-  searchHighlightEls.forEach(el=> el.remove());
+  searchHighlightEls.forEach(els=> els && els.forEach(el=> el.remove()));
   searchHighlightEls = searchMatches.map((m, i)=>{
     const refs = domRefs[m.pageId];
     if (!refs) return null;
-    const el = document.createElement("div");
-    el.className = "match-highlight" + (i===searchMatchIndex ? " current" : "");
-    refs.overlay.appendChild(el);
-    return el;
+    return m.boxes.map(()=>{
+      const el = document.createElement("div");
+      el.className = "match-highlight" + (i===searchMatchIndex ? " current" : "");
+      refs.overlay.appendChild(el);
+      return el;
+    });
   });
   layoutSearchHighlights();
 }
 function layoutSearchHighlights(){
   searchMatches.forEach((m,i)=>{
-    const el = searchHighlightEls[i];
-    if (!el) return;
-    el.style.left = (m.x*ui.scale)+"px";
-    el.style.top = (m.y*ui.scale)+"px";
-    el.style.width = (m.w*ui.scale)+"px";
-    el.style.height = (m.h*ui.scale)+"px";
+    const els = searchHighlightEls[i];
+    if (!els) return;
+    m.boxes.forEach((b, bi)=>{
+      const el = els[bi]; if (!el) return;
+      el.style.left = (b.x*ui.scale)+"px";
+      el.style.top = (b.y*ui.scale)+"px";
+      el.style.width = (b.w*ui.scale)+"px";
+      el.style.height = (b.h*ui.scale)+"px";
+    });
   });
 }
 function jumpToSearchMatch(i){
   if (!searchMatches.length) return;
   searchMatchIndex = ((i%searchMatches.length)+searchMatches.length)%searchMatches.length;
-  searchHighlightEls.forEach((el,idx)=> el && el.classList.toggle("current", idx===searchMatchIndex));
+  searchHighlightEls.forEach((els,idx)=> els && els.forEach(el=> el.classList.toggle("current", idx===searchMatchIndex)));
   const m = searchMatches[searchMatchIndex];
   const refs = domRefs[m.pageId];
-  const hl = searchHighlightEls[searchMatchIndex];
-  if (hl) hl.scrollIntoView({behavior:"smooth", block:"center", inline:"center"});
-  else if (refs) refs.pageEl.scrollIntoView({behavior:"smooth", block:"center"});
+  const els = searchHighlightEls[searchMatchIndex];
+  if (els && els[0]) els[0].scrollIntoView({block:"center", inline:"center"});
+  else if (refs) refs.pageEl.scrollIntoView({block:"center"});
   updateSearchCount();
 }
 
@@ -2331,6 +2422,9 @@ searchToggleBtn.addEventListener("click", ()=>{
   searchWrap.hidden = false;
   searchInput.focus();
 });
+const searchCaseBtn = $("#searchCase"), searchWholeBtn = $("#searchWhole");
+searchCaseBtn.addEventListener("click", ()=>{ matchCase = !matchCase; searchCaseBtn.classList.toggle("on", matchCase); if (searchInput.value) runSearch(searchInput.value); });
+searchWholeBtn.addEventListener("click", ()=>{ wholeWord = !wholeWord; searchWholeBtn.classList.toggle("on", wholeWord); if (searchInput.value) runSearch(searchInput.value); });
 searchClose.addEventListener("click", ()=>{
   searchWrap.hidden = true;
   searchInput.value = "";
