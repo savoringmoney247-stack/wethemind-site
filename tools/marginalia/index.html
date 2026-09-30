@@ -249,6 +249,45 @@ button{font:inherit;cursor:pointer;}
 .toast.show{opacity:1;transform:translate(-50%,-6px);}
 ::selection{background:var(--accent-soft);}
 .installbtn[hidden]{display:none;}
+.toast.promo{bottom:auto;top:calc(var(--hdrh,62px) + 14px);background:var(--ink-900);color:var(--paper);font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:8px;transition:opacity .35s ease,transform .35s ease;}
+.toast.promo::before{content:"✦";color:var(--accent-2);}
+.toast.promo.show{transform:translate(-50%,4px);}
+
+.orgwrap{position:fixed;inset:0;z-index:2000;background:rgba(28,17,17,.55);backdrop-filter:blur(3px);display:flex;flex-direction:column;}
+.orghdr{flex:0 0 auto;display:flex;align-items:center;gap:14px;padding:16px 22px;background:var(--surface);border-bottom:1px solid var(--line);}
+.orgtitle{font-family:"Fraunces",serif;font-weight:600;font-size:19px;color:var(--ink-900);}
+.orghint{font-size:12.5px;color:var(--ink-400);margin-right:auto;}
+.orggrid{flex:1 1 auto;overflow-y:auto;padding:26px;display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:22px;align-content:start;background:var(--paper);}
+.orgcard{position:relative;cursor:grab;user-select:none;}
+.orgcard.dragging{opacity:.35;}
+.orgcard .orgthumb{position:relative;aspect-ratio:1/1.414;background:#fff;border:2px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(36,20,20,.14);display:flex;align-items:center;justify-content:center;}
+.orgcard .orgthumb canvas{width:100%;height:100%;object-fit:contain;}
+.orgcard .orgthumb .blankface{width:100%;height:100%;background:repeating-linear-gradient(var(--surface-2),var(--surface-2) 27%,transparent 0,transparent 33%);}
+.orgcard .orgnum{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:700;background:rgba(36,20,20,.78);color:#fff;padding:2px 9px;border-radius:9px;}
+.orgcard .orgactions{position:absolute;top:6px;right:6px;display:flex;gap:4px;opacity:0;transition:opacity .12s;}
+.orgcard:hover .orgactions{opacity:1;}
+.orgcard .orgactions button{width:24px;height:24px;border-radius:50%;border:none;background:rgba(36,20,20,.78);color:#fff;display:flex;align-items:center;justify-content:center;}
+.orgcard .orgactions button:hover{background:var(--accent);}
+.orgcard .orgactions svg{width:13px;height:13px;}
+.orgcard.drop-left{box-shadow:-4px 0 0 0 var(--accent);}
+.orgcard.drop-right{box-shadow:4px 0 0 0 var(--accent);}
+.dlwrap{position:relative;display:flex;}
+.dlwrap .btn{border-radius:0;}
+.dlwrap #exportBtn{border-radius:10px 0 0 10px;}
+.dlcaret{border-radius:0 10px 10px 0!important;padding:11px 8px!important;border-left:1px solid rgba(255,255,255,.35)!important;}
+.dlcaret svg{width:14px;height:14px;transition:transform .15s;}
+.dlcaret.open svg{transform:rotate(180deg);}
+.dlmenu{position:absolute;top:calc(100% + 8px);right:0;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);width:260px;padding:8px;z-index:60;display:flex;flex-direction:column;gap:2px;}
+.dlmenu-item{display:block;width:100%;text-align:left;background:none;border:none;font:inherit;font-size:13px;color:var(--ink-900);padding:9px 10px;border-radius:8px;cursor:pointer;}
+.dlmenu-item:hover{background:var(--surface-2);}
+.dlmenu-sep{height:1px;background:var(--line);margin:4px 2px;}
+.dlmenu-label{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-400);padding:4px 10px 2px;}
+.dlmenu-list{max-height:200px;overflow-y:auto;display:flex;flex-direction:column;}
+.dlmenu-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;font-size:13px;color:var(--ink-900);cursor:pointer;}
+.dlmenu-row:hover{background:var(--surface-2);}
+.dlmenu-row input{margin:0;flex:0 0 auto;}
+.dlmenu-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dlmenu-go{width:100%;justify-content:center;margin-top:6px;font-size:12.5px;padding:8px;}
 /* Not the active window: the app is completely inert (no hover effects, tooltips, pointer, drawing). */
 body.inactive .app, body.inactive .app *{pointer-events:none!important;}
 body.inactive{cursor:default;}
@@ -257,9 +296,9 @@ body.inactive{cursor:default;}
 .brandmark{width:26px;height:26px;border-radius:6px;flex:0 0 auto;display:block;}
 
 /* ---------- search ---------- */
-.searchwrap{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:5px 10px;margin-left:6px;color:var(--ink-400);flex:0 1 260px;min-width:0;}
+.searchwrap{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:5px 12px;margin-left:6px;color:var(--ink-400);flex:1 1 460px;max-width:640px;min-width:0;}
 .searchwrap svg{width:14px;height:14px;flex:0 0 auto;}
-.searchwrap input{border:none;background:none;outline:none;font:inherit;font-size:14px;font-weight:600;color:var(--ink-900);-webkit-text-fill-color:var(--ink-900);opacity:1;flex:1 1 auto;min-width:0;}
+.searchwrap input{border:none;background:none;outline:none;font:inherit;font-size:14px;font-weight:600;color:var(--ink-900);-webkit-text-fill-color:var(--ink-900);opacity:1;flex:1 1 160px;min-width:60px;}
 .searchcount{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-400);white-space:nowrap;}
 .searchnav{border:none;background:none;color:var(--ink-600);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:6px;flex:0 0 auto;}
 .searchnav:hover{background:var(--surface);color:var(--ink-900);}
@@ -389,10 +428,23 @@ body.inactive{cursor:default;}
       <button class="btn btn-icon" id="outlineToggleBtn" title="Contents / chapters" hidden>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h16"/></svg>
       </button>
-      <button class="btn btn-primary" id="exportBtn" disabled title="Download the annotated copy">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
-        Download
-      </button>
+      <div class="dlwrap" id="dlWrap">
+        <button class="btn btn-primary" id="exportBtn" disabled title="Download this file">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+          Download
+        </button>
+        <button class="btn btn-primary dlcaret" id="dlMoreBtn" disabled title="More download options">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <div class="dlmenu" id="dlMenu" hidden>
+          <button class="dlmenu-item" id="dlThis">This file</button>
+          <button class="dlmenu-item" id="dlAll">All open files</button>
+          <div class="dlmenu-sep"></div>
+          <div class="dlmenu-label">Choose files</div>
+          <div class="dlmenu-list" id="dlList"></div>
+          <button class="btn btn-primary dlmenu-go" id="dlChosenGo">Download chosen</button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -452,6 +504,9 @@ body.inactive{cursor:default;}
       <button class="tool-btn" id="rotateBtn" title="Rotate current page 90°">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.2-6.9"/><path d="M21 3v6h-6"/></svg>
       </button>
+      <button class="tool-btn" id="organizeBtn" title="Organize pages — drag to reorder, duplicate, rotate or delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>
+      </button>
     </div>
     <div class="sep"></div>
     <div class="tool-group pagenav">
@@ -504,6 +559,16 @@ body.inactive{cursor:default;}
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="toast promo" id="promoToast"></div>
+
+<div class="orgwrap" id="orgWrap" hidden>
+  <div class="orghdr">
+    <div class="orgtitle">Organize pages</div>
+    <div class="orghint">Drag a page to reorder it</div>
+    <button class="btn btn-primary" id="orgDoneBtn">Done</button>
+  </div>
+  <div class="orggrid" id="orgGrid"></div>
+</div>
 
 <template id="tplTextEl">
   <div class="el text-el">
@@ -561,42 +626,41 @@ const ui = {
   layout: "vertical",  // "vertical" (page down) or "horizontal" (page sideways)
 };
 
-let undoStack = [], redoStack = [];
-let pendingBefore = null;
-let lastSnap = null;
+// Writing on one page never shows up in another page's undo/redo. Every page keeps its
+// own small history of its own content (strokes, text, images, shapes, rotation); adding or
+// removing a whole page is a separate, document-wide history since it isn't "writing".
+let pageHist = new Map();      // pageId -> {undo:[pageJSON,...], redo:[...]}
+let structHist = {undo:[], redo:[]};   // whole-document snapshots, for add/remove page only
+let pendingContent = null;     // {ps, before} — an in-progress edit on one page
+let pendingStruct = null;      // a whole-document snapshot taken before a structural change
+let lastEditedPageId = null;   // the page Ctrl+Z/Ctrl+Y target when nothing is mid-edit
 const MAX_HISTORY = 500;
 let idCounter = 0;
 const genId = () => "e" + (++idCounter) + Math.random().toString(36).slice(2,7);
 let dimCache = [];   // pdfPageIndex -> {w,h}; real page sizes of the current document, re-applied after undo/redo
 
-// A snapshot is one JSON string per page. Identical pages share the same string
-// with the previous snapshot, so hundreds of undo steps only cost the pages that changed.
-function snapshot(){
-  const pool = new Map();
-  if (lastSnap) for (const str of lastSnap) pool.set(str, str);
-  const snap = pages.map(p=>{ const str = JSON.stringify(p); return pool.get(str) || str; });
-  lastSnap = snap;
-  return snap;
+function pageHistOf(id){
+  let h = pageHist.get(id);
+  if (!h){ h = {undo:[], redo:[]}; pageHist.set(id, h); }
+  return h;
 }
-function sameSnap(a,b){
-  if (a.length !== b.length) return false;
-  for (let i=0;i<a.length;i++) if (a[i] !== b[i]) return false;
-  return true;
-}
-// Every edit is its own history step. Starting a new edit first closes any edit
-// still open, so steps never merge into one giant undo.
-function beginAction(){
-  if (pendingBefore !== null) endAction();
-  pendingBefore = snapshot();
+// Content edit on a single page. Starting a new edit first closes any edit still open —
+// on the SAME page or a different one — so steps never merge and never leak across pages.
+function beginAction(ps){
+  if (!ps) return;
+  if (pendingContent && pendingContent.ps !== ps) endAction();
+  if (!pendingContent) pendingContent = { ps, before: JSON.stringify(ps) };
+  lastEditedPageId = ps.id;
 }
 function endAction(force){
-  if (pendingBefore === null) return;
-  const before = pendingBefore; pendingBefore = null;
-  const now = snapshot();
-  if (force || !sameSnap(before, now)){
-    undoStack.push(before);
-    if (undoStack.length > MAX_HISTORY) undoStack.shift();
-    redoStack = [];
+  if (!pendingContent) return;
+  const { ps, before } = pendingContent; pendingContent = null;
+  const now = JSON.stringify(ps);
+  if (force || before !== now){
+    const h = pageHistOf(ps.id);
+    h.undo.push(before);
+    if (h.undo.length > MAX_HISTORY) h.undo.shift();
+    h.redo.length = 0;
     scheduleAutosave();
   }
   updateUndoRedoButtons();
@@ -605,10 +669,25 @@ function flushPendingAction(){ endAction(); }
 document.addEventListener("visibilitychange", ()=>{ if (document.hidden){ flushPendingAction(); saveAutosave(); } });
 window.addEventListener("blur", flushPendingAction);
 window.addEventListener("beforeunload", ()=>{ flushPendingAction(); saveAutosave(); });
-function restoreSnapshot(snap){
-  // Pages are updated IN PLACE and pages that did not change are left completely alone:
-  // each page's drawing handlers hold a reference to its page object, so swapping in
-  // new objects would send anything written afterwards to an orphaned copy.
+
+// Structural changes (a whole page added or removed) snapshot the entire document, the same
+// way all history used to work — kept separate so it never competes with a page's own undo.
+function structSnapshot(){ return pages.map(p=>JSON.stringify(p)); }
+function beginStructAction(){ endAction(); pendingStruct = structSnapshot(); }
+function endStructAction(force){
+  if (pendingStruct === null) return;
+  const before = pendingStruct; pendingStruct = null;
+  const now = structSnapshot();
+  const changed = before.length !== now.length || before.some((v,i)=>v!==now[i]);
+  if (force || changed){
+    structHist.undo.push(before);
+    if (structHist.undo.length > 200) structHist.undo.shift();
+    structHist.redo.length = 0;
+    scheduleAutosave();
+  }
+  updateUndoRedoButtons();
+}
+function restoreStruct(snap){
   const byId = new Map(pages.map(p=>[p.id, p]));
   const next = snap.map(str=>{
     const data = JSON.parse(str);
@@ -624,27 +703,63 @@ function restoreSnapshot(snap){
   for (const p of pages){
     if (p.kind === "pdf" && dimCache[p.pdfPageIndex]){ p.widthPt = dimCache[p.pdfPageIndex].w; p.heightPt = dimCache[p.pdfPageIndex].h; }
   }
-  lastSnap = snap;
   ui.selected = null;
   reconcileAndRenderAll();
   updateUndoRedoButtons();
   scheduleAutosave();
 }
+// Applies a single page's earlier (or later) content in place, touching nothing else on
+// the page and, crucially, no other page at all — that's what keeps undo isolated.
+function restorePageContent(ps, str){
+  const data = JSON.parse(str);
+  for (const k of Object.keys(ps)) delete ps[k];
+  Object.assign(ps, data);
+  if (ps.kind === "pdf" && dimCache[ps.pdfPageIndex]){ ps.widthPt = dimCache[ps.pdfPageIndex].w; ps.heightPt = dimCache[ps.pdfPageIndex].h; }
+  ui.selected = null;
+  const refs = domRefs[ps.id];
+  if (refs){ layoutPage(ps); rebuildOverlay(ps); if (refs.thumbDrawn){ refs.thumbDrawn = false; if (refs.thumbVisible) queueThumb(ps); } }
+  updateUndoRedoButtons();
+  scheduleAutosave();
+}
+function undoTarget(){
+  const id = (pendingContent && pendingContent.ps.id) || lastEditedPageId;
+  return id && pageHist.has(id) ? id : (currentPage() && currentPage().id);
+}
 function undo(){
-  endAction();                    // close an open edit (e.g. a text box) as its own step first
-  if (!undoStack.length) return;
-  redoStack.push(snapshot());
-  restoreSnapshot(undoStack.pop());
+  endAction();
+  const id = undoTarget();
+  const h = id && pageHist.get(id);
+  if (h && h.undo.length){
+    const ps = findPage(id);
+    h.redo.push(JSON.stringify(ps));
+    if (ps) restorePageContent(ps, h.undo.pop());
+    return;
+  }
+  if (structHist.undo.length){
+    structHist.redo.push(structSnapshot());
+    restoreStruct(structHist.undo.pop());
+  }
 }
 function redo(){
   endAction();
-  if (!redoStack.length) return;
-  undoStack.push(snapshot());
-  restoreSnapshot(redoStack.pop());
+  const id = undoTarget();
+  const h = id && pageHist.get(id);
+  if (h && h.redo.length){
+    const ps = findPage(id);
+    h.undo.push(JSON.stringify(ps));
+    if (ps) restorePageContent(ps, h.redo.pop());
+    return;
+  }
+  if (structHist.redo.length){
+    structHist.undo.push(structSnapshot());
+    restoreStruct(structHist.redo.pop());
+  }
 }
 function updateUndoRedoButtons(){
-  undoBtn.disabled = !(undoStack.length || pendingBefore !== null);
-  redoBtn.disabled = !redoStack.length;
+  const id = undoTarget();
+  const h = id && pageHist.get(id);
+  undoBtn.disabled = !((h && h.undo.length) || structHist.undo.length || pendingContent);
+  redoBtn.disabled = !((h && h.redo.length) || structHist.redo.length);
 }
 
 // Keep a copy of the markup in this browser so a crash, reload or accidental close never loses it.
@@ -712,6 +827,24 @@ const tplText = $("#tplTextEl"), tplImg = $("#tplImgEl"), tplShape = $("#tplShap
 
 let appActive = true;
 let deferredToast = null;
+const PROMO_LINES = [
+  "Mark up anything", "No file uploads", "Search every page", "Undo without limits",
+  "Reorder your pages", "Works fully offline", "Highlight and annotate", "Add extra pages",
+  "One file, no cloud", "Drop in your images",
+];
+let promoIdx = 0;
+const promoToast = $("#promoToast");
+function showPromo(){
+  if (!appActive) return;   // never pop anything up while this isn't the window in use
+  if (orgWrap && !orgWrap.hidden) return;
+  promoToast.textContent = PROMO_LINES[promoIdx % PROMO_LINES.length];
+  promoIdx++;
+  promoToast.classList.add("show");
+  clearTimeout(showPromo._t);
+  showPromo._t = setTimeout(()=> promoToast.classList.remove("show"), 3200);
+}
+setInterval(showPromo, 25000);
+
 function showToast(msg){
   if (!appActive){ deferredToast = msg; return; }
   toast.textContent = msg; toast.classList.add("show");
@@ -781,7 +914,7 @@ function docById(id){ return docs.find(d=>d.id===id); }
 function createDoc(name, file){
   const d = {
     id: ++docSeq, name, file, kind: file ? "pdf" : "blank", ready:false, fresh:true, closed:false, active:false,
-    pages:[], undoStack:[], redoStack:[], lastSnap:null, dimCache:[], pdfDocProxy:null,
+    pages:[], pageHist:new Map(), structHist:{undo:[],redo:[]}, lastEditedPageId:null, dimCache:[], pdfDocProxy:null,
     scale:1, autoFit:true, scrollTop:0, layout:"vertical",
     stageEl: document.createElement("div"), railEl: document.createElement("nav"),
     textCache: Object.create(null), textJoin: Object.create(null), searchMatches:[], searchMatchIndex:-1, searchHighlightEls:[], searchQuery:"",
@@ -799,7 +932,7 @@ function createDoc(name, file){
 function saveCurDoc(){
   const d = curDoc; if (!d) return;
   endAction();
-  d.undoStack = undoStack; d.redoStack = redoStack; d.lastSnap = lastSnap; d.dimCache = dimCache;
+  d.pageHist = pageHist; d.structHist = structHist; d.lastEditedPageId = lastEditedPageId; d.dimCache = dimCache;
   d.scale = ui.scale; d.autoFit = ui.autoFit; d.scrollTop = stageWrap.scrollTop; d.layout = ui.layout;
   d.textCache = pageTextItemsCache; d.textJoin = pageTextJoin; d.searchMatches = searchMatches; d.searchMatchIndex = searchMatchIndex;
   d.searchHighlightEls = searchHighlightEls; d.searchQuery = searchInput.value;
@@ -816,7 +949,7 @@ function activateDoc(d){
   if (curDoc === d){ renderTabs(); return; }
   saveCurDoc();
   curDoc = d; d.active = true;
-  pages = d.pages; undoStack = d.undoStack; redoStack = d.redoStack; lastSnap = d.lastSnap; pendingBefore = null;
+  pages = d.pages; pageHist = d.pageHist; structHist = d.structHist; lastEditedPageId = d.lastEditedPageId; pendingContent = null; pendingStruct = null;
   dimCache = d.dimCache; pdfDocProxy = d.pdfDocProxy;
   ui.scale = d.scale; ui.autoFit = d.autoFit; ui.layout = d.layout || "vertical"; ui.selected = null;
   applyLayoutMode();
@@ -833,26 +966,26 @@ function activateDoc(d){
   renderTabs();
   if (d.ready && d.fresh){ startWorkspace(); }
   else if (d.ready){
-    exportBtn.disabled = pages.length === 0;
+    exportBtn.disabled = pages.length === 0; dlMoreBtn.disabled = !docs.length;
     zoomLabel.textContent = Math.round(ui.scale*100) + "%";
     reconcileAndRenderAll();
     updatePageNavUI(); updateRailStatus();
     stageWrap.scrollTop = d.scrollTop;
     lastFitBox = "";
     scheduleRefit(false);
-  } else { exportBtn.disabled = true; }
+  } else { exportBtn.disabled = true; dlMoreBtn.disabled = true; }
   renderProps();
   updateUndoRedoButtons();
 }
 function showHome(){
-  curDoc = null; pages = []; undoStack = []; redoStack = []; lastSnap = null; pendingBefore = null; dimCache = [];
+  curDoc = null; pages = []; pageHist = new Map(); structHist = {undo:[],redo:[]}; lastEditedPageId = null; pendingContent = null; pendingStruct = null; dimCache = [];
   pdfDocProxy = null; originalFile = null; originalName = "document"; ui.selected = null;
   pageTextItemsCache = Object.create(null); pageTextJoin = Object.create(null); searchMatches = []; searchMatchIndex = -1; searchHighlightEls = [];
   searchWrap.hidden = true; searchInput.value = ""; outlineBody.replaceChildren(); outlineToggleBtn.hidden = true; outlinePanel.hidden = true;
   ui.layout = "vertical"; applyLayoutMode();
   stage = homeStage; rail = null; homeStage.hidden = false; emptyState.hidden = false;
   toolbar.hidden = true; railWrap.hidden = true; railTab.hidden = true; searchToggleBtn.hidden = true;
-  exportBtn.disabled = true; tabbar.hidden = true;
+  exportBtn.disabled = true; dlMoreBtn.disabled = true; tabbar.hidden = true;
   updateUndoRedoButtons();
 }
 function closeDoc(d){
@@ -1034,7 +1167,7 @@ function startWorkspace(){
   railWrap.hidden = false;
   railTab.hidden = false;
   searchToggleBtn.hidden = !originalFile;
-  exportBtn.disabled = pages.length === 0;
+  exportBtn.disabled = pages.length === 0; dlMoreBtn.disabled = !docs.length;
   ui.autoFit = true;
   computeInitialScale();
   reconcileAndRenderAll();
@@ -1083,7 +1216,7 @@ if (window.ResizeObserver) new ResizeObserver(()=> scheduleRefit(false)).observe
 
 /* ---------------- building / reconciling DOM ---------------- */
 function reconcileAndRenderAll(){
-  exportBtn.disabled = pages.length === 0;
+  exportBtn.disabled = pages.length === 0; dlMoreBtn.disabled = !docs.length;
   const seen = new Set(pages.map(p=>p.id));
   // remove DOM for pages of THIS document that no longer exist
   for (const id in domRefs){
@@ -1454,6 +1587,91 @@ rotateBtn.addEventListener("click", ()=>{
   if (ps) rotatePage(ps.id);
 });
 
+/* ---------------- organize pages (Canva-style grid: drag to reorder, duplicate, rotate, delete) ---------------- */
+const organizeBtn = $("#organizeBtn"), orgWrap = $("#orgWrap"), orgGrid = $("#orgGrid"), orgDoneBtn = $("#orgDoneBtn");
+let orgDragId = null;
+function openOrganize(){
+  if (!curDoc || !pages.length) return;
+  renderOrgGrid();
+  orgWrap.hidden = false;
+}
+function closeOrganize(){ orgWrap.hidden = true; orgGrid.innerHTML = ""; }
+organizeBtn.addEventListener("click", openOrganize);
+orgDoneBtn.addEventListener("click", closeOrganize);
+document.addEventListener("keydown", (e)=>{ if (e.key === "Escape" && !orgWrap.hidden) closeOrganize(); });
+
+function renderOrgGrid(){
+  orgGrid.innerHTML = "";
+  pages.forEach((ps, idx)=>{
+    const card = document.createElement("div");
+    card.className = "orgcard"; card.draggable = true; card.dataset.id = ps.id;
+    const thumb = document.createElement("div"); thumb.className = "orgthumb";
+    if (ps.kind === "blank") thumb.innerHTML = '<div class="blankface"></div>';
+    else { const c = document.createElement("canvas"); thumb.appendChild(c); orgPaint(ps, c); }
+    const num = document.createElement("div"); num.className = "orgnum"; num.textContent = idx+1;
+    const acts = document.createElement("div"); acts.className = "orgactions";
+    const mkBtn = (title, svg, fn)=>{ const b=document.createElement("button"); b.title=title; b.innerHTML=svg; b.addEventListener("click",(e)=>{ e.stopPropagation(); fn(); }); return b; };
+    acts.appendChild(mkBtn("Rotate", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.2-6.9"/><path d="M21 3v6h-6"/></svg>', ()=>{ rotatePage(ps.id); const c2=thumb.querySelector("canvas"); if (c2) orgPaint(ps, c2); }));
+    acts.appendChild(mkBtn("Duplicate", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/></svg>', ()=>duplicatePage(ps.id)));
+    if (ps.kind !== "pdf") acts.appendChild(mkBtn("Delete", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>', ()=>{ deleteBlankPage(ps.id); renderOrgGrid(); }));
+    card.append(thumb, num, acts);
+    card.addEventListener("click", ()=>{ const r = domRefs[ps.id]; if (r){ closeOrganize(); r.pageEl.scrollIntoView({block:"start"}); } });
+    card.addEventListener("dragstart", (e)=>{ orgDragId = ps.id; card.classList.add("dragging"); e.dataTransfer.effectAllowed = "move"; });
+    card.addEventListener("dragend", ()=>{ card.classList.remove("dragging"); orgGrid.querySelectorAll(".orgcard").forEach(c=>c.classList.remove("drop-left","drop-right")); });
+    card.addEventListener("dragover", (e)=>{
+      e.preventDefault();
+      if (orgDragId === ps.id) return;
+      const r = card.getBoundingClientRect(); const left = (e.clientX - r.left) < r.width/2;
+      card.classList.toggle("drop-left", left); card.classList.toggle("drop-right", !left);
+    });
+    card.addEventListener("dragleave", ()=> card.classList.remove("drop-left","drop-right"));
+    card.addEventListener("drop", (e)=>{
+      e.preventDefault();
+      const dropLeft = card.classList.contains("drop-left");
+      card.classList.remove("drop-left","drop-right");
+      if (orgDragId === null || orgDragId === ps.id) return;
+      movePage(orgDragId, ps.id, dropLeft);
+      renderOrgGrid();
+    });
+    orgGrid.appendChild(card);
+  });
+}
+function orgPaint(ps, canvas){
+  if (!canvas) return;
+  if (ps.kind === "image"){ canvas.width=140; canvas.height=198; const ctx=canvas.getContext("2d"); const img=new Image(); img.onload=()=>ctx.drawImage(img,0,0,140,198); img.src=ps.imgSrc; return; }
+  getProxyFor(ps).then(async proxy=>{
+    if (!proxy) return;
+    const vp = proxy.getViewport({scale: 140/ps.widthPt});
+    canvas.width = Math.ceil(vp.width); canvas.height = Math.ceil(vp.height);
+    const ctx = canvas.getContext("2d", {alpha:false}); ctx.fillStyle="#fff"; ctx.fillRect(0,0,canvas.width,canvas.height);
+    try{ await proxy.render({canvasContext: ctx, viewport: vp}).promise; }catch(e){}
+  });
+}
+// Reorders the live page array — a structural change, so it gets its own undo step.
+function movePage(dragId, targetId, before){
+  const from = pages.findIndex(p=>p.id===dragId); if (from < 0) return;
+  beginStructAction();
+  const [moved] = pages.splice(from, 1);
+  let to = pages.findIndex(p=>p.id===targetId);
+  if (!before) to += 1;
+  pages.splice(to, 0, moved);
+  endStructAction(true);
+  reconcileAndRenderAll();
+}
+function duplicatePage(id){
+  const ps = findPage(id); if (!ps) return;
+  beginStructAction();
+  const copy = JSON.parse(JSON.stringify(ps));
+  copy.id = genId();
+  (copy.texts||[]).forEach(m=>m.id=genId()); (copy.images||[]).forEach(m=>m.id=genId());
+  (copy.shapes||[]).forEach(m=>m.id=genId()); (copy.strokes||[]).forEach(m=>m.id=genId());
+  const at = pages.findIndex(p=>p.id===id);
+  pages.splice(at+1, 0, copy);
+  endStructAction(true);
+  reconcileAndRenderAll();
+  renderOrgGrid();
+}
+
 /* ---------------- page navigation: jump-to-page + arrow keys ---------------- */
 const pagePrevBtn = $("#pagePrevBtn"), pageNextBtn = $("#pageNextBtn"), pageJumpInput = $("#pageJumpInput"), pageCountLabel = $("#pageCountLabel");
 function currentPageIndex(){
@@ -1668,15 +1886,15 @@ function mountText(ps, m){
   content.addEventListener("input", ()=>{
     m.text = content.textContent;
     clearTimeout(typeTimer);
-    typeTimer = setTimeout(()=>{ if (document.activeElement === content){ endAction(); beginAction(); } }, 700);
+    typeTimer = setTimeout(()=>{ if (document.activeElement === content){ endAction(); beginAction(ps); } }, 700);
   });
-  content.addEventListener("focus", ()=>{ beginAction(); selectEl(ps.id,"text",m.id,node); });
+  content.addEventListener("focus", ()=>{ beginAction(ps); selectEl(ps.id,"text",m.id,node); });
   content.addEventListener("blur", ()=>{ endAction(); });
   content.addEventListener("pointerdown", (e)=> e.stopPropagation());
   node.addEventListener("pointerdown", (e)=>{ if (ui.tool==="select") selectEl(ps.id,"text",m.id,node); });
 
   node.querySelector(".del").addEventListener("click", (e)=>{
-    e.stopPropagation(); beginAction();
+    e.stopPropagation(); beginAction(ps);
     ps.texts = ps.texts.filter(t=>t.id!==m.id);
     endAction(true); node.remove(); deselectAll();
   });
@@ -1697,7 +1915,7 @@ function mountImage(ps, m){
     selectEl(ps.id,"image",m.id,node);
   });
   node.querySelector(".del").addEventListener("click", (e)=>{
-    e.stopPropagation(); beginAction();
+    e.stopPropagation(); beginAction(ps);
     ps.images = ps.images.filter(t=>t.id!==m.id);
     endAction(true); node.remove(); deselectAll();
   });
@@ -1717,7 +1935,7 @@ function mountShape(ps, m){
     selectEl(ps.id,"shape",m.id,node);
   });
   node.querySelector(".del").addEventListener("click", (e)=>{
-    e.stopPropagation(); beginAction();
+    e.stopPropagation(); beginAction(ps);
     ps.shapes = ps.shapes.filter(t=>t.id!==m.id);
     endAction(true); node.remove(); deselectAll();
   });
@@ -1731,7 +1949,7 @@ function makeDraggable(handle, ps, m, node, kind, opts){
     if (opts.excludeSelectors && opts.excludeSelectors.some(sel=>e.target.closest(sel))) return;
     e.preventDefault(); e.stopPropagation();
     selectEl(ps.id, kind, m.id, node);
-    beginAction();
+    beginAction(ps);
     const startX=e.clientX, startY=e.clientY, ox=m.x, oy=m.y;
     handle.setPointerCapture(e.pointerId);
     function move(ev){
@@ -1754,7 +1972,7 @@ function makeResizable(handle, ps, m, node, kind, opts){
   handle.addEventListener("pointerdown", (e)=>{
     e.preventDefault(); e.stopPropagation();
     selectEl(ps.id, kind, m.id, node);
-    beginAction();
+    beginAction(ps);
     const startX=e.clientX, startY=e.clientY, ow=m.w, oh=m.h||0;
     const ratio = (opts.lockAspect && oh) ? oh/ow : null;
     handle.setPointerCapture(e.pointerId);
@@ -1794,7 +2012,7 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
     if (ui.tool === "select"){ deselectAll(); return; }
 
     if (ui.tool === "text"){
-      beginAction();
+      beginAction(ps);
       const m = {id:genId(), x:px, y:py, w:200, fontSize:ui.textSize, color:ui.inkColor, bold:ui.textBold, font:ui.textFont, text:""};
       ps.texts.push(m);
       mountText(ps, m);
@@ -1807,7 +2025,7 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
 
     if (ui.tool === "pen" || ui.tool === "highlighter"){
       const isHi = ui.tool === "highlighter";
-      beginAction();
+      beginAction(ps);
       const stroke = {id:genId(), tool: ui.tool, color: isHi?ui.highlighterColor:ui.inkColor,
                        width: isHi?hiPx(ui.hiPct):penPx(ui.penPct), opacity: isHi?0.42:1, points:[{x:px,y:py}]};
       ps.strokes.push(stroke);
@@ -1841,7 +2059,7 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
     }
 
     if (ui.tool === "eraser"){
-      beginAction();
+      beginAction(ps);
       let removedAny = false;
       const radius = 12;
       function eraseAt(cx,cy){
@@ -1868,7 +2086,7 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
     }
 
     if (ui.tool === "cover"){
-      beginAction();
+      beginAction(ps);
       const m = {id:genId(), x:px, y:py, w:1, h:1, color: ui.coverColor};
       ps.shapes.push(m);
       const node = mountShapeLive(ps, m);
@@ -1906,7 +2124,7 @@ function mountShapeLive(ps, m){
     selectEl(ps.id,"shape",m.id,node);
   });
   node.querySelector(".del").addEventListener("click", (e)=>{
-    e.stopPropagation(); beginAction();
+    e.stopPropagation(); beginAction(ps);
     ps.shapes = ps.shapes.filter(t=>t.id!==m.id);
     endAction(true); node.remove(); deselectAll();
   });
@@ -1930,7 +2148,7 @@ imgInput.addEventListener("change", async (e)=>{
   const maxW = ps.widthPt*0.6;
   const w = Math.min(maxW, dims.w);
   const h = w * (dims.h/dims.w);
-  beginAction();
+  beginAction(ps);
   const m = {id:genId(), x:(ps.widthPt-w)/2, y:(ps.heightPt-h)/2, w, h, src:dataUrl};
   ps.images.push(m);
   mountImage(ps, m);
@@ -1991,12 +2209,16 @@ function currentPage(){
 /* ---------------- blank writing pages ---------------- */
 function addBlankPage(){
   if (!curDoc){ const nd = openNewDoc("Notes", null); nd.kind = "blank"; nd.ready = true; }
-  beginAction();
-  const last = pages[pages.length-1];
-  const ps = newBlankPageState(last ? last.widthPt : A4.w, last ? last.heightPt : A4.h);
+  beginStructAction();
+  // Inserted right after the page you're on — not always at the very end of the document —
+  // so adding a page while working on page 5 doesn't bury it after unrelated later pages.
+  const cur = currentPage();
+  const at = cur ? pages.indexOf(cur) : pages.length-1;
+  const ref = cur || pages[pages.length-1];
+  const ps = newBlankPageState(ref ? ref.widthPt : A4.w, ref ? ref.heightPt : A4.h);
   const wasEmpty = pages.length === 0;
-  pages.push(ps);
-  endAction(true);
+  pages.splice(at+1, 0, ps);
+  endStructAction(true);
   if (wasEmpty || curDoc.fresh) startWorkspace();
   else { reconcileAndRenderAll(); updatePageNavUI(); }
   requestAnimationFrame(()=> domRefs[ps.id].pageEl.scrollIntoView());
@@ -2004,15 +2226,16 @@ function addBlankPage(){
 function deleteBlankPage(id){
   const ps = findPage(id);
   if (!ps || (ps.kind !== "blank" && ps.kind !== "image")) return;
-  beginAction();
+  beginStructAction();
   { const di = pages.findIndex(p=>p.id===id); if (di >= 0) pages.splice(di, 1); }
-  endAction(true);
+  pageHist.delete(id);
+  endStructAction(true);
   reconcileAndRenderAll();
 }
 function rotatePage(id){
   const ps = findPage(id);
   if (!ps) return;
-  beginAction();
+  beginAction(ps);
   ps.rotation = ((ps.rotation||0) + 90) % 360;
   endAction(true);
   layoutPage(ps);
@@ -2205,7 +2428,7 @@ function addDeleteSelected(){
   b.addEventListener("click", ()=>{
     const sel = ui.selected; if (!sel) return;
     const ps = findPage(sel.pageId);
-    beginAction();
+    beginAction(ps);
     if (sel.kind==="text") ps.texts = ps.texts.filter(t=>t.id!==sel.id);
     if (sel.kind==="image") ps.images = ps.images.filter(t=>t.id!==sel.id);
     if (sel.kind==="shape") ps.shapes = ps.shapes.filter(t=>t.id!==sel.id);
@@ -2230,7 +2453,7 @@ stageWrap.addEventListener("pointerdown", (e)=>{
 document.addEventListener("keydown", (e)=>{
   if ((e.key==="Delete"||e.key==="Backspace") && ui.selected && document.activeElement.tagName!=="INPUT" && !document.activeElement.isContentEditable){
     const sel = ui.selected; const ps = findPage(sel.pageId);
-    beginAction();
+    beginAction(ps);
     if (sel.kind==="text") ps.texts = ps.texts.filter(t=>t.id!==sel.id);
     if (sel.kind==="image") ps.images = ps.images.filter(t=>t.id!==sel.id);
     if (sel.kind==="shape") ps.shapes = ps.shapes.filter(t=>t.id!==sel.id);
@@ -2485,24 +2708,69 @@ railFootBtn.addEventListener("click", addBlankPage);
 const railFoot = document.createElement("div"); railFoot.className="railfoot"; railFoot.appendChild(railFootBtn);
 document.getElementById("railFootHost").appendChild(railFoot);
 
-exportBtn.addEventListener("click", async ()=>{
-  if (!pages.length) return;
-  exportBtn.disabled = true;
-  const oldLabel = exportBtn.innerHTML;
-  exportBtn.textContent = "Preparing…";
+exportBtn.addEventListener("click", ()=>{ if (curDoc) downloadOneDoc(curDoc); });
+
+const dlWrap = $("#dlWrap"), dlMoreBtn = $("#dlMoreBtn"), dlMenu = $("#dlMenu"),
+      dlThis = $("#dlThis"), dlAll = $("#dlAll"), dlList = $("#dlList"), dlChosenGo = $("#dlChosenGo");
+function closeDlMenu(){ dlMenu.hidden = true; dlMoreBtn.classList.remove("open"); }
+dlMoreBtn.addEventListener("click", (e)=>{
+  e.stopPropagation();
+  if (!dlMenu.hidden){ closeDlMenu(); return; }
+  dlList.innerHTML = "";
+  docs.forEach(d=>{
+    const row = document.createElement("label"); row.className = "dlmenu-row";
+    const cb = document.createElement("input"); cb.type = "checkbox"; cb.checked = (d === curDoc); cb.dataset.docId = d.id;
+    const name = document.createElement("span"); name.textContent = d.name + (d.pages.length ? " · " + d.pages.length + "p" : "");
+    row.append(cb, name);
+    dlList.appendChild(row);
+  });
+  dlMenu.hidden = docs.length === 0;
+  dlMoreBtn.classList.toggle("open", !dlMenu.hidden);
+});
+document.addEventListener("click", (e)=>{ if (!dlWrap.contains(e.target)) closeDlMenu(); });
+dlThis.addEventListener("click", ()=>{ closeDlMenu(); if (curDoc) downloadOneDoc(curDoc); });
+dlAll.addEventListener("click", ()=>{ closeDlMenu(); downloadManyDocs(docs.slice()); });
+dlChosenGo.addEventListener("click", ()=>{
+  const ids = [...dlList.querySelectorAll("input:checked")].map(cb=>+cb.dataset.docId);
+  closeDlMenu();
+  downloadManyDocs(docs.filter(d=> ids.includes(d.id)));
+});
+
+async function downloadOneDoc(d){
+  const btn = exportBtn; const oldLabel = btn.innerHTML;
+  exportBtn.disabled = true; dlMoreBtn.disabled = true; btn.textContent = "Preparing…";
   try{
-    const bytes = await buildExportPdf();
-    const blob = new Blob([bytes], {type:"application/pdf"});
-    const filename = (originalFile ? originalName : "notes") + "-annotated.pdf";
-    saveBlob(blob, filename);
+    const bytes = await buildExportPdf(d);
+    saveBlob(new Blob([bytes], {type:"application/pdf"}), (d.file ? d.name : "notes") + "-annotated.pdf");
   }catch(err){
     console.error(err);
     showToast("Something went wrong building the PDF.");
   }finally{
-    exportBtn.disabled = false;
-    exportBtn.innerHTML = oldLabel;
+    exportBtn.disabled = !curDoc; dlMoreBtn.disabled = !docs.length; btn.innerHTML = oldLabel;
   }
-});
+}
+// Several files download as separate files, one per document — a browser has no built-in way
+// to hand back a single zip without a compression library, so each is saved individually
+// (Chrome/Edge may ask permission once for "multiple downloads", which is normal and one-time).
+async function downloadManyDocs(list){
+  if (!list.length) return;
+  const oldLabel = exportBtn.innerHTML;
+  exportBtn.disabled = true; dlMoreBtn.disabled = true;
+  try{
+    for (let i=0;i<list.length;i++){
+      const d = list[i];
+      exportBtn.textContent = "Preparing " + (i+1) + "/" + list.length + "…";
+      try{
+        const bytes = await buildExportPdf(d);
+        saveBlob(new Blob([bytes], {type:"application/pdf"}), (d.file ? d.name : "notes") + "-annotated.pdf");
+      }catch(err){ console.error("Export failed for", d.name, err); }
+      if (i < list.length-1) await new Promise(r=> setTimeout(r, 350));  // let each download register before the next
+    }
+    if (list.length > 1) showToast("Downloaded " + list.length + " files.");
+  }finally{
+    exportBtn.disabled = !curDoc; dlMoreBtn.disabled = !docs.length; exportBtn.innerHTML = oldLabel;
+  }
+}
 function saveBlob(blob, filename){
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -2513,8 +2781,8 @@ function saveBlob(blob, filename){
   setTimeout(()=> URL.revokeObjectURL(url), 4000);
 }
 
-async function buildExportPdf(){
-  const pdfDoc = originalFile ? await PDFLib_.PDFDocument.load(await originalFile.arrayBuffer()) : await PDFLib_.PDFDocument.create();
+async function buildExportPdf(d){
+  const pdfDoc = d.file ? await PDFLib_.PDFDocument.load(await d.file.arrayBuffer()) : await PDFLib_.PDFDocument.create();
   const fontSet = {
     Helvetica:   { regular: await pdfDoc.embedFont(PDFLib_.StandardFonts.Helvetica),   bold: await pdfDoc.embedFont(PDFLib_.StandardFonts.HelveticaBold) },
     TimesRoman:  { regular: await pdfDoc.embedFont(PDFLib_.StandardFonts.TimesRoman),  bold: await pdfDoc.embedFont(PDFLib_.StandardFonts.TimesRomanBold) },
@@ -2531,8 +2799,8 @@ async function buildExportPdf(){
     return img;
   }
 
-  const existing = originalFile ? pdfDoc.getPages() : [];
-  for (const ps of pages){
+  const existing = d.file ? pdfDoc.getPages() : [];
+  for (const ps of d.pages){
     let page;
     if (ps.kind === "pdf"){
       page = existing[ps.pdfPageIndex];
