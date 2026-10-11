@@ -20,9 +20,10 @@
 <link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<script>try{var _t=localStorage.getItem("marginalia-theme");if(_t==="dark"||_t==="light")document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"></noscript>
 <script src="pdf.min.js"></script>
-<script src="pdf-lib.min.js"></script>
 <style>
 :root{
   --paper:#fbf7ee; --surface:#ffffff; --surface-2:#fdf3e0;
@@ -204,7 +205,23 @@ button{font:inherit;cursor:pointer;}
 .page-inner canvas.ink-canvas,.page-inner canvas.live-canvas{position:absolute;inset:0;width:100%;height:100%;}
 .page-inner canvas.live-canvas{pointer-events:none;}
 .page-badge{position:absolute;top:-26px;left:0;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;background:var(--ink-900);color:var(--paper);padding:3px 10px;border-radius:7px;opacity:.9;pointer-events:none;white-space:nowrap;}
-.overlay{position:absolute;inset:0;}
+.overlay{position:absolute;inset:0;pointer-events:none;}
+.overlay .el{pointer-events:auto;}
+.imglayer{position:absolute;inset:0;pointer-events:none;}
+.imglayer .el{pointer-events:auto;}
+.page-inner canvas.ink-canvas{pointer-events:none;}
+/* While a drawing tool is active, images/text/shapes never grab the pointer — you can write straight over them. */
+.stage-wrap[data-tool="pen"] .el,.stage-wrap[data-tool="highlighter"] .el,.stage-wrap[data-tool="eraser"] .el,.stage-wrap[data-tool="cover"] .el{pointer-events:none!important;}
+.el .lock{position:absolute;top:-11px;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--ink-600);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;padding:0;box-shadow:0 1px 3px rgba(0,0,0,.25);touch-action:none;}
+.el .lock svg{width:11px;height:11px;}
+.el .lock .on{display:none;}
+.el.locked .lock{background:var(--accent);}
+.el.locked .lock .on{display:block;}
+.el.locked .lock .off{display:none;}
+.el.locked .resize{display:none;}
+.img-el.locked{cursor:default;}
+.dropveil{position:fixed;inset:0;z-index:3000;background:rgba(229,24,28,.10);border:3px dashed var(--accent);display:flex;align-items:center;justify-content:center;font-family:"Fraunces",serif;font-size:28px;font-weight:600;color:var(--accent);pointer-events:none;backdrop-filter:blur(2px);}
+.dropveil[hidden]{display:none;}
 
 .el{position:absolute;user-select:none;}
 .el .grip,.el .resize,.el .del{
@@ -413,6 +430,8 @@ body.inactive{cursor:default;}
       </button>
     </div>
     <div class="hdr-actions">
+      <button class="btn btn-icon" id="themeBtn" title="Dark mode" aria-label="Toggle dark mode"></button>
+      <button class="btn btn-icon" id="fsBtn" title="Full screen (F)" aria-label="Toggle full screen"></button>
       <button class="btn installbtn" id="installBtn" title="Install Marginalia as an app" hidden>
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v6M9 11l3 3 3-3"/></svg>
         Install
@@ -559,6 +578,7 @@ body.inactive{cursor:default;}
 </div>
 
 <div class="toast" id="toast"></div>
+<div class="dropveil" id="dropVeil" hidden>Drop to open</div>
 <div class="toast promo" id="promoToast"></div>
 
 <div class="orgwrap" id="orgWrap" hidden>
@@ -581,6 +601,7 @@ body.inactive{cursor:default;}
 <template id="tplImgEl">
   <div class="el img-el">
     <img draggable="false">
+    <button class="lock" title="Lock in place"><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
     <button class="del" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
     <button class="resize" title="Resize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 18 18 6M11 18h7v-7"/></svg></button>
   </div>
@@ -596,7 +617,29 @@ body.inactive{cursor:default;}
 (function(){
 "use strict";
 pdfjsLib.GlobalWorkerOptions.workerSrc = "pdf.worker.min.js";
-const PDFLib_ = window.PDFLib;
+// pdf-lib (half a megabyte) is only needed when a file is downloaded, so it loads in the
+// background after the app is up instead of delaying the first screen.
+let PDFLib_ = window.PDFLib || null;
+let pdfLibPromise = null;
+function loadPdfLib(){
+  if (PDFLib_) return Promise.resolve(PDFLib_);
+  if (!pdfLibPromise) pdfLibPromise = new Promise((res, rej)=>{
+    const sc = document.createElement("script");
+    sc.src = "pdf-lib.min.js";
+    sc.onload = ()=>{ PDFLib_ = window.PDFLib; res(PDFLib_); };
+    sc.onerror = ()=>{ pdfLibPromise = null; rej(new Error("Could not load the PDF writer.")); };
+    document.head.appendChild(sc);
+  });
+  return pdfLibPromise;
+}
+setTimeout(()=>{ loadPdfLib().catch(()=>{}); }, 2500);
+
+// Images live here, NOT inside page data: every undo step and autosave copies page data, and
+// a photo embedded in it multiplied memory use by hundreds of copies until the tab crashed.
+const imageStore = new Map();          // key -> data URL
+function storeImage(dataUrl){ const k = "img" + genId(); imageStore.set(k, dataUrl); return k; }
+const srcOfImg = (m)=> m.src || imageStore.get(m.imgKey) || "";
+const srcOfPage = (ps)=> ps.imgSrc || imageStore.get(ps.imgKey) || "";
 
 /* ---------------- state ---------------- */
 let originalBytes = null;      // legacy flag, unused (the source is read lazily from originalFile)
@@ -763,8 +806,8 @@ function updateUndoRedoButtons(){
 }
 
 // Keep a copy of the markup in this browser so a crash, reload or accidental close never loses it.
-let autosaveTimer = null;
-function scheduleAutosave(){ clearTimeout(autosaveTimer); autosaveTimer = setTimeout(saveAutosave, 900); }
+let autosaveTimer = null, autosaveDirty = false;
+function scheduleAutosave(){ autosaveDirty = true; clearTimeout(autosaveTimer); autosaveTimer = setTimeout(saveAutosave, 900); }
 function idbOpen(){
   return new Promise((res, rej)=>{
     try{
@@ -779,27 +822,56 @@ async function idbGet(key){ const db = await idbOpen(); return new Promise((res,
 async function idbSet(key,val){ const db = await idbOpen(); return new Promise((res,rej)=>{ const t = db.transaction("annots","readwrite"); t.objectStore("annots").put(val,key); t.oncomplete=()=>res(); t.onerror=()=>rej(t.error); }); }
 async function idbDel(key){ const db = await idbOpen(); return new Promise((res,rej)=>{ const t = db.transaction("annots","readwrite"); t.objectStore("annots").delete(key); t.oncomplete=()=>res(); t.onerror=()=>rej(t.error); }); }
 function autosaveKey(d){ return d && d.file ? ("f|" + d.file.name + "|" + d.file.size + "|" + d.file.lastModified) : null; }
+const savedImgKeys = new Set();
+function imgKeysOf(list){
+  const keys = new Set();
+  for (const p of list){ if (p.imgKey) keys.add(p.imgKey); for (const m of (p.images||[])) if (m.imgKey) keys.add(m.imgKey); }
+  return keys;
+}
+async function hydrateImages(list){
+  for (const k of imgKeysOf(list)){
+    if (imageStore.has(k)) continue;
+    try{ const v = await idbGet("img|" + k); if (v){ imageStore.set(k, v); savedImgKeys.add(k); } }catch(e){}
+  }
+}
+function notesKey(d){ return (!d.file && d.kind === "blank") ? "notes|main" : null; }
 async function saveAutosave(){
   const d = curDoc;
-  if (!d || !d.file || !d.ready) return;
-  const key = autosaveKey(d);
+  autosaveDirty = false;
+  if (!d || !d.ready) return;
+  const key = d.file ? autosaveKey(d) : notesKey(d);
+  if (!key) return;
   try{
-    const has = pages.some(p=> p.kind !== "pdf" || p.strokes.length || p.texts.length || p.images.length || p.shapes.length || p.rotation);
+    const naturalPdf = d.file && pages.every((p,i)=> p.kind === "pdf" && p.pdfPageIndex === i) && (!d.pdfDocProxy || pages.length === d.pdfDocProxy.numPages);
+    const has = pages.some(p=> p.strokes.length || p.texts.length || p.images.length || p.shapes.length || p.rotation)
+      || (d.file ? !naturalPdf : pages.length > 1);
     if (!has){ await idbDel(key); return; }
+    for (const k of imgKeysOf(pages)){
+      if (!savedImgKeys.has(k) && imageStore.has(k)){ await idbSet("img|" + k, imageStore.get(k)); savedImgKeys.add(k); }
+    }
     await idbSet(key, {name:d.name, savedAt:Date.now(), pages: pages.map(p=>JSON.stringify(p))});
   }catch(e){ /* storage unavailable (private window, quota) — editing still works */ }
 }
+// If anything ever goes wrong, write the work to disk first so nothing is lost.
+window.addEventListener("error", ()=>{ try{ flushPendingAction(); saveAutosave(); }catch(e){} });
+window.addEventListener("unhandledrejection", ()=>{ try{ flushPendingAction(); saveAutosave(); }catch(e){} });
+setInterval(()=>{ if (autosaveDirty && curDoc && curDoc.ready) saveAutosave(); }, 30000);
 function applyAutosave(d, saved){
   const list = saved.pages.map(str=>JSON.parse(str));
   const byIdx = new Map(d.pages.filter(p=>p.kind==="pdf").map(p=>[p.pdfPageIndex, p]));
   const out = []; let any = false;
+  const base = new Map(byIdx);
   for (const sp of list){
     if (sp.kind === "pdf"){
-      const p = byIdx.get(sp.pdfPageIndex);
-      if (!p) continue;
+      let p = byIdx.get(sp.pdfPageIndex);
+      if (p) byIdx.delete(sp.pdfPageIndex);
+      else {   // a duplicated page: another copy of the same source page
+        const src = base.get(sp.pdfPageIndex); if (!src) continue;
+        p = newPdfPageState(sp.pdfPageIndex, src.widthPt, src.heightPt, src.docId);
+      }
       p.strokes = sp.strokes||[]; p.texts = sp.texts||[]; p.images = sp.images||[]; p.shapes = sp.shapes||[]; p.rotation = sp.rotation||0;
       if (p.strokes.length||p.texts.length||p.images.length||p.shapes.length||p.rotation) any = true;
-      out.push(p); byIdx.delete(sp.pdfPageIndex);
+      out.push(p);
     } else { sp.id = genId(); out.push(sp); any = true; }
   }
   if (!out.length) return false;
@@ -807,6 +879,18 @@ function applyAutosave(d, saved){
   d.pages.length = 0; for (const p of out) d.pages.push(p);
   return any;
 }
+
+function auditVisiblePages(){
+  if (!curDoc || !curDoc.ready || document.hidden || !pages.length) return;
+  const cp = currentPage(); if (!cp) return;
+  const ci = pages.indexOf(cp);
+  for (let i = Math.max(0, ci-3); i <= Math.min(pages.length-1, ci+4); i++){
+    const ps = pages[i], r = domRefs[ps.id]; if (!r) continue;
+    if (!r.live) makeLive(ps);
+    else if (ps.kind === "pdf" && r.pdfKey !== renderKey(ps) && !r.queued && !r.renderTask) enqueuePdfRender(ps);
+  }
+}
+setInterval(auditVisiblePages, 1500);
 
 /* ---------------- dom refs ---------------- */
 const $ = (s,r) => (r||document).querySelector(s);
@@ -883,13 +967,65 @@ window.addEventListener("blur", syncActive);
 document.addEventListener("visibilitychange", syncActive);
 setInterval(syncActive, 400);      // safety net for platforms that skip a focus event
 // Belt and braces: block pointer/touch/wheel input at the very top while inactive.
-["pointermove","pointerdown","mousemove","mousedown","touchstart","touchmove","wheel","click","dblclick","contextmenu","dragstart","dragenter","dragover"].forEach(t=>{
+["pointermove","pointerdown","mousemove","mousedown","touchstart","touchmove","wheel","click","dblclick","contextmenu"].forEach(t=>{
   window.addEventListener(t, (e)=>{
     if (!appActive || !document.hasFocus()){ e.stopImmediatePropagation(); }
   }, {capture:true, passive:true});
 });
 document.body.classList.toggle("inactive", !(document.hasFocus() && !document.hidden));
 appActive = document.hasFocus() && !document.hidden;
+
+/* ---------------- dark mode + full screen ---------------- */
+const themeBtn = document.getElementById("themeBtn"), fsBtn = document.getElementById("fsBtn");
+const ICON_MOON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
+const ICON_SUN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const ICON_FS = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+const ICON_FS_EXIT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg>';
+function currentTheme(){
+  const t = document.documentElement.getAttribute("data-theme");
+  if (t === "dark" || t === "light") return t;
+  return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+function applyTheme(t, persist){
+  document.documentElement.setAttribute("data-theme", t);
+  themeBtn.innerHTML = t === "dark" ? ICON_SUN : ICON_MOON;
+  themeBtn.title = t === "dark" ? "Light mode" : "Dark mode";
+  themeBtn.classList.toggle("active", t === "dark");
+  document.querySelectorAll('meta[name="theme-color"]').forEach(m=>{ m.content = t === "dark" ? "#241414" : "#ffffff"; });
+  if (persist){ try{ localStorage.setItem("marginalia-theme", t); }catch(e){} }
+}
+themeBtn.addEventListener("click", ()=> applyTheme(currentTheme() === "dark" ? "light" : "dark", true));
+applyTheme(currentTheme(), false);
+
+const fsRoot = document.documentElement;
+const fsRequest = fsRoot.requestFullscreen || fsRoot.webkitRequestFullscreen;
+const fsExit = document.exitFullscreen || document.webkitExitFullscreen;
+const fsElement = ()=> document.fullscreenElement || document.webkitFullscreenElement;
+function updateFsButton(){
+  const on = !!fsElement();
+  fsBtn.innerHTML = on ? ICON_FS_EXIT : ICON_FS;
+  fsBtn.title = on ? "Exit full screen (F)" : "Full screen (F)";
+  fsBtn.classList.toggle("active", on);
+}
+function toggleFullscreen(){
+  if (!fsRequest) return;
+  try{
+    if (fsElement()){ fsExit.call(document); }
+    else { const p = fsRequest.call(fsRoot); if (p && p.catch) p.catch(()=>{}); }
+  }catch(e){}
+}
+fsBtn.hidden = !fsRequest;
+fsBtn.addEventListener("click", toggleFullscreen);
+document.addEventListener("fullscreenchange", updateFsButton);
+document.addEventListener("webkitfullscreenchange", updateFsButton);
+document.addEventListener("keydown", (e)=>{
+  if (e.key !== "f" && e.key !== "F") return;
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target;
+  if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT" || t.isContentEditable)) return;
+  e.preventDefault(); toggleFullscreen();
+});
+updateFsButton();
 
 /* ---------------- page state helpers ---------------- */
 const A4 = {w:595.28, h:841.89};
@@ -901,7 +1037,7 @@ function newBlankPageState(widthPt, heightPt){
   return {id:genId(), kind:"blank", pdfPageIndex:null, widthPt:widthPt||A4.w, heightPt:heightPt||A4.h, rotation:0, texts:[], images:[], shapes:[], strokes:[]};
 }
 function newImagePageState(widthPt, heightPt, src){
-  return {id:genId(), kind:"image", pdfPageIndex:null, widthPt, heightPt, rotation:0, imgSrc:src, texts:[], images:[], shapes:[], strokes:[]};
+  return {id:genId(), kind:"image", pdfPageIndex:null, widthPt, heightPt, rotation:0, imgKey:storeImage(src), texts:[], images:[], shapes:[], strokes:[]};
 }
 function findPage(id){ return pages.find(p=>p.id===id); }
 
@@ -998,7 +1134,7 @@ function closeDoc(d){
     if (r){ try{ releasePage(ps); if (d.thumbIO) d.thumbIO.unobserve(r.thumbBox); pageIO.unobserve(r.pageEl); }catch(e){} }
     delete domRefs[ps.id]; delete pdfProxies[ps.id];
   }
-  saveAutosave();
+  if (notesKey(d)) idbDel(notesKey(d)).catch(()=>{}); else saveAutosave();
   d.stageEl.remove(); d.railEl.remove();
   try{ if (d.pdfDocProxy) d.pdfDocProxy.destroy(); }catch(e){}
   docs.splice(idx, 1);
@@ -1110,7 +1246,7 @@ async function loadPdfFile(file){
     // bring back markup saved from an earlier session of this same file
     try{
       const saved = await idbGet(autosaveKey(d));
-      if (saved && !d.closed && applyAutosave(d, saved)) showToast("Restored your earlier markup on this file.");
+      if (saved && !d.closed){ await hydrateImages(saved.pages.map(x=>JSON.parse(x))); if (applyAutosave(d, saved)) showToast("Restored your earlier markup on this file."); }
     }catch(e){}
     if (d.closed) return;
 
@@ -1277,11 +1413,14 @@ function buildPageDom(ps){
     canvasEl.className = "pdf-canvas";
     canvasEl.draggable = false;
     canvasEl.style.objectFit = "fill";
-    canvasEl.src = ps.imgSrc;
+    canvasEl.src = srcOfPage(ps);
     inner.appendChild(canvasEl);
   } else {
     inner.style.background = "#fff";
   }
+  const imgLayer = document.createElement("div");
+  imgLayer.className = "imglayer";
+  inner.appendChild(imgLayer);
   const inkCanvas = document.createElement("canvas");
   inkCanvas.className = "ink-canvas";
   inkCanvas.width = 1; inkCanvas.height = 1;
@@ -1325,7 +1464,8 @@ function buildPageDom(ps){
   rail.appendChild(thumbBox);
 
   attachPageInteractions(ps, inner, overlay, inkCanvas);
-  const refs = {pageEl, pageInner:inner, canvasEl, inkCanvas, liveCanvas, overlay, badge, thumbBox, thumbInner, thumbNum:num,
+  if (isDrawTool(ui.tool)) inner.classList.add("tool-draw");
+  const refs = {pageEl, pageInner:inner, canvasEl, inkCanvas, liveCanvas, overlay, imgLayer, badge, thumbBox, thumbInner, thumbNum:num,
                 ps, doc:curDoc, live:false, pdfKey:null, thumbDrawn:false, thumbVisible:false, inkK:1};
   pageIO.observe(pageEl);
   return refs;
@@ -1595,23 +1735,41 @@ function openOrganize(){
   renderOrgGrid();
   orgWrap.hidden = false;
 }
-function closeOrganize(){ orgWrap.hidden = true; orgGrid.innerHTML = ""; }
+function closeOrganize(){ orgWrap.hidden = true; if (orgIO) orgIO.disconnect(); orgQueue.length = 0; orgGrid.innerHTML = ""; setTimeout(auditVisiblePages, 50); }
 organizeBtn.addEventListener("click", openOrganize);
 orgDoneBtn.addEventListener("click", closeOrganize);
 document.addEventListener("keydown", (e)=>{ if (e.key === "Escape" && !orgWrap.hidden) closeOrganize(); });
 
+let orgIO = null; const orgQueue = []; let orgActive = 0;
+function pumpOrg(){
+  while (orgActive < 3 && orgQueue.length){
+    const c = orgQueue.shift();
+    if (!c.isConnected) continue;
+    orgActive++;
+    Promise.resolve(orgPaint(c._ps, c)).catch(()=>{}).finally(()=>{ orgActive--; pumpOrg(); });
+  }
+}
 function renderOrgGrid(){
+  if (orgIO) orgIO.disconnect();
+  orgQueue.length = 0;
+  orgIO = new IntersectionObserver((entries)=>{
+    for (const e of entries){
+      if (!e.isIntersecting || e.target._painted) continue;
+      e.target._painted = true; orgIO.unobserve(e.target); orgQueue.push(e.target);
+    }
+    pumpOrg();
+  }, {root: orgGrid, rootMargin: "300px 0px"});
   orgGrid.innerHTML = "";
   pages.forEach((ps, idx)=>{
     const card = document.createElement("div");
     card.className = "orgcard"; card.draggable = true; card.dataset.id = ps.id;
     const thumb = document.createElement("div"); thumb.className = "orgthumb";
     if (ps.kind === "blank") thumb.innerHTML = '<div class="blankface"></div>';
-    else { const c = document.createElement("canvas"); thumb.appendChild(c); orgPaint(ps, c); }
+    else { const c = document.createElement("canvas"); c._ps = ps; thumb.appendChild(c); orgIO.observe(c); }
     const num = document.createElement("div"); num.className = "orgnum"; num.textContent = idx+1;
     const acts = document.createElement("div"); acts.className = "orgactions";
     const mkBtn = (title, svg, fn)=>{ const b=document.createElement("button"); b.title=title; b.innerHTML=svg; b.addEventListener("click",(e)=>{ e.stopPropagation(); fn(); }); return b; };
-    acts.appendChild(mkBtn("Rotate", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.2-6.9"/><path d="M21 3v6h-6"/></svg>', ()=>{ rotatePage(ps.id); const c2=thumb.querySelector("canvas"); if (c2) orgPaint(ps, c2); }));
+    acts.appendChild(mkBtn("Rotate", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.2-6.9"/><path d="M21 3v6h-6"/></svg>', ()=>{ rotatePage(ps.id); thumb.style.transform = "rotate(" + ((ps.rotation||0)) + "deg)"; }));
     acts.appendChild(mkBtn("Duplicate", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="1.5"/><path d="M4 16V5a1 1 0 0 1 1-1h11"/></svg>', ()=>duplicatePage(ps.id)));
     if (ps.kind !== "pdf") acts.appendChild(mkBtn("Delete", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>', ()=>{ deleteBlankPage(ps.id); renderOrgGrid(); }));
     card.append(thumb, num, acts);
@@ -1637,9 +1795,11 @@ function renderOrgGrid(){
   });
 }
 function orgPaint(ps, canvas){
-  if (!canvas) return;
-  if (ps.kind === "image"){ canvas.width=140; canvas.height=198; const ctx=canvas.getContext("2d"); const img=new Image(); img.onload=()=>ctx.drawImage(img,0,0,140,198); img.src=ps.imgSrc; return; }
-  getProxyFor(ps).then(async proxy=>{
+  if (!canvas) return Promise.resolve();
+  if (ps.kind === "image"){
+    return new Promise((res)=>{ canvas.width=140; canvas.height=198; const ctx=canvas.getContext("2d"); const img=new Image(); img.onload=()=>{ ctx.drawImage(img,0,0,140,198); res(); }; img.onerror=()=>res(); img.src=srcOfPage(ps); });
+  }
+  return getProxyFor(ps).then(async proxy=>{
     if (!proxy) return;
     const vp = proxy.getViewport({scale: 140/ps.widthPt});
     canvas.width = Math.ceil(vp.width); canvas.height = Math.ceil(vp.height);
@@ -1657,6 +1817,7 @@ function movePage(dragId, targetId, before){
   pages.splice(to, 0, moved);
   endStructAction(true);
   reconcileAndRenderAll();
+  setTimeout(auditVisiblePages, 60);
 }
 function duplicatePage(id){
   const ps = findPage(id); if (!ps) return;
@@ -1830,13 +1991,14 @@ function strokeHit(s, cx, cy, rad){
 function rebuildOverlay(ps){
   const refs = domRefs[ps.id];
   refs.overlay.innerHTML = "";
+  refs.imgLayer.innerHTML = "";
   ps.shapes.forEach(m => mountShape(ps, m));
   ps.images.forEach(m => mountImage(ps, m));
   ps.texts.forEach(m => mountText(ps, m));
 }
 function layoutOverlayElements(ps){
   const refs = domRefs[ps.id];
-  refs.overlay.querySelectorAll(".el").forEach(el=>{
+  [...refs.overlay.querySelectorAll(".el"), ...refs.imgLayer.querySelectorAll(".el")].forEach(el=>{
     const kind = el.dataset.kind, id = el.dataset.mid;
     const model = (kind==="text"?ps.texts:kind==="image"?ps.images:ps.shapes).find(m=>m.id===id);
     if (!model) return;
@@ -1906,9 +2068,14 @@ function mountImage(ps, m){
   const refs = domRefs[ps.id];
   const node = tplImg.content.firstElementChild.cloneNode(true);
   node.dataset.kind = "image"; node.dataset.mid = m.id;
-  node.querySelector("img").src = m.src;
+  node.querySelector("img").src = srcOfImg(m);
   positionEl(node, m, "image");
-  refs.overlay.appendChild(node);
+  node.classList.toggle("locked", !!m.locked);
+  refs.imgLayer.appendChild(node);
+  const lockBtn = node.querySelector(".lock");
+  lockBtn.title = m.locked ? "Unlock" : "Lock in place";
+  lockBtn.addEventListener("pointerdown", (e)=> e.stopPropagation());
+  lockBtn.addEventListener("click", (e)=>{ e.stopPropagation(); toggleImageLock(ps, m); });
   node.addEventListener("pointerdown", (e)=>{
     if (ui.tool!=="select") return;
     if (e.target.closest(".resize")||e.target.closest(".del")) return;
@@ -1919,7 +2086,7 @@ function mountImage(ps, m){
     ps.images = ps.images.filter(t=>t.id!==m.id);
     endAction(true); node.remove(); deselectAll();
   });
-  makeDraggable(node, ps, m, node, "image", {move:true, excludeSelectors:[".resize",".del"]});
+  makeDraggable(node, ps, m, node, "image", {move:true, excludeSelectors:[".resize",".del",".lock"]});
   makeResizable(node.querySelector(".resize"), ps, m, node, "image", {lockAspect:true});
 }
 
@@ -1944,9 +2111,19 @@ function mountShape(ps, m){
 }
 
 /* drag / resize helpers (pointer events, work for mouse/touch/pen) */
+function toggleImageLock(ps, m){
+  beginAction(ps);
+  m.locked = !m.locked;
+  endAction(true);
+  const refs = domRefs[ps.id];
+  const node = refs && refs.imgLayer.querySelector('[data-mid="'+m.id+'"]');
+  if (node){ node.classList.toggle("locked", !!m.locked); const b = node.querySelector(".lock"); if (b) b.title = m.locked ? "Unlock" : "Lock in place"; }
+  renderProps();
+}
 function makeDraggable(handle, ps, m, node, kind, opts){
   handle.addEventListener("pointerdown", (e)=>{
     if (opts.excludeSelectors && opts.excludeSelectors.some(sel=>e.target.closest(sel))) return;
+    if (kind === "image" && m.locked){ e.stopPropagation(); selectEl(ps.id, kind, m.id, node); return; }   // locked: select only, never moves
     e.preventDefault(); e.stopPropagation();
     selectEl(ps.id, kind, m.id, node);
     beginAction(ps);
@@ -2019,7 +2196,6 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
       endAction(true);
       const node = overlay.querySelector('.text-el[data-mid="'+m.id+'"] .content');
       setTimeout(()=>{ node.focus(); }, 0);
-      setTool("select");
       return;
     }
 
@@ -2102,8 +2278,6 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
         inner.removeEventListener("pointerup", up);
         inner.removeEventListener("pointercancel", up);
         endAction(true);
-        setTool("select");
-        selectEl(ps.id,"shape",m.id,node);
       }
       inner.addEventListener("pointermove", move);
       inner.addEventListener("pointerup", up);
@@ -2149,29 +2323,32 @@ imgInput.addEventListener("change", async (e)=>{
   const w = Math.min(maxW, dims.w);
   const h = w * (dims.h/dims.w);
   beginAction(ps);
-  const m = {id:genId(), x:(ps.widthPt-w)/2, y:(ps.heightPt-h)/2, w, h, src:dataUrl};
+  const m = {id:genId(), x:(ps.widthPt-w)/2, y:(ps.heightPt-h)/2, w, h, imgKey:storeImage(dataUrl)};
   ps.images.push(m);
   mountImage(ps, m);
   endAction(true);
   setTool("select");
-  const node = domRefs[ps.id].overlay.querySelector('.img-el[data-mid="'+m.id+'"]');
+  const node = domRefs[ps.id].imgLayer.querySelector('.img-el[data-mid="'+m.id+'"]');
   selectEl(ps.id,"image",m.id,node);
 });
 function normalizeImageToPng(file){
   return new Promise((resolve,reject)=>{
+    const url = URL.createObjectURL(file);
     const img = new Image();
-    const reader = new FileReader();
-    reader.onload = ()=>{ img.onload = ()=>{
-        const c = document.createElement("canvas");
-        c.width = img.naturalWidth; c.height = img.naturalHeight;
-        c.getContext("2d").drawImage(img,0,0);
-        resolve(c.toDataURL("image/png"));
-      };
-      img.onerror = reject;
-      img.src = reader.result;
+    img.onload = ()=>{
+      const MAX = 2400;                                    // plenty for print, small enough to stay fast
+      const k = Math.min(1, MAX / Math.max(img.naturalWidth, img.naturalHeight));
+      const w = Math.max(1, Math.round(img.naturalWidth*k)), h = Math.max(1, Math.round(img.naturalHeight*k));
+      const c = document.createElement("canvas"); c.width = w; c.height = h;
+      const ctx = c.getContext("2d");
+      const jpeg = /jpe?g/i.test(file.type) || /\.jpe?g$/i.test(file.name);
+      if (jpeg){ ctx.fillStyle = "#fff"; ctx.fillRect(0,0,w,h); }
+      ctx.drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      resolve(jpeg ? c.toDataURL("image/jpeg", 0.9) : c.toDataURL("image/png"));
     };
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+    img.onerror = ()=>{ URL.revokeObjectURL(url); reject(new Error("Unreadable image")); };
+    img.src = url;
   });
 }
 function imageDims(dataUrl){
@@ -2221,6 +2398,7 @@ function addBlankPage(){
   endStructAction(true);
   if (wasEmpty || curDoc.fresh) startWorkspace();
   else { reconcileAndRenderAll(); updatePageNavUI(); }
+  if (ui.tool !== "image") setTool(ui.tool);   // new pages pick up the active tool; nothing gets deselected
   requestAnimationFrame(()=> domRefs[ps.id].pageEl.scrollIntoView());
 }
 function deleteBlankPage(id){
@@ -2246,11 +2424,13 @@ function rotatePage(id){
 document.querySelectorAll(".tool-btn[data-tool]").forEach(btn=>{
   btn.addEventListener("click", ()=> setTool(btn.dataset.tool));
 });
+const isDrawTool = (t)=> t==="pen"||t==="highlighter"||t==="eraser"||t==="cover";
 function setTool(tool){
   ui.tool = tool;
+  stageWrap.dataset.tool = tool;
   document.querySelectorAll(".tool-btn[data-tool]").forEach(b=> b.classList.toggle("active", b.dataset.tool===tool));
   document.querySelectorAll(".page-inner").forEach(el=>{
-    el.classList.toggle("tool-draw", tool==="pen"||tool==="highlighter"||tool==="eraser"||tool==="cover");
+    el.classList.toggle("tool-draw", isDrawTool(tool));
   });
   if (tool === "image") imgInput.click();
   if (tool !== "select") deselectAll();
@@ -2290,6 +2470,13 @@ function renderProps(){
       addFontRow(m.font||"Helvetica", f=>{ m.font=f; refreshSelectedVisual(); });
       addSizeStepper(m.fontSize, 10, 64, v=>{ m.fontSize=v; refreshSelectedVisual(); });
       addBoldToggle(m.bold, v=>{ m.bold=v; refreshSelectedVisual(); });
+    } else if (sel.kind === "image"){
+      const m = ps.images.find(t=>t.id===sel.id); if(!m) return;
+      const lb = document.createElement("button"); lb.className = "btn";
+      lb.textContent = m.locked ? "Locked — click to unlock" : "Lock in place";
+      lb.addEventListener("click", ()=> toggleImageLock(ps, m));
+      propsEl.appendChild(lb);
+      addLabel(m.locked ? "Pen and highlighter write over it; it can't be moved" : "Draw over it with any tool");
     } else if (sel.kind === "shape"){
       const m = ps.shapes.find(t=>t.id===sel.id); if(!m) return;
       addLabel("Cover colour");
@@ -2442,7 +2629,8 @@ function refreshSelectedVisual(){
   const sel = ui.selected; if (!sel) return;
   const ps = findPage(sel.pageId);
   rebuildOverlay(ps);
-  const el = domRefs[ps.id].overlay.querySelector('[data-mid="'+sel.id+'"]');
+  const rr = domRefs[ps.id];
+  const el = rr.overlay.querySelector('[data-mid="'+sel.id+'"]') || rr.imgLayer.querySelector('[data-mid="'+sel.id+'"]');
   if (el) el.classList.add("selected");
 }
 
@@ -2782,6 +2970,7 @@ function saveBlob(blob, filename){
 }
 
 async function buildExportPdf(d){
+  await loadPdfLib();
   const pdfDoc = d.file ? await PDFLib_.PDFDocument.load(await d.file.arrayBuffer()) : await PDFLib_.PDFDocument.create();
   const fontSet = {
     Helvetica:   { regular: await pdfDoc.embedFont(PDFLib_.StandardFonts.Helvetica),   bold: await pdfDoc.embedFont(PDFLib_.StandardFonts.HelveticaBold) },
@@ -2794,22 +2983,38 @@ async function buildExportPdf(d){
   async function embedImage(dataUrl){
     if (imageCache.has(dataUrl)) return imageCache.get(dataUrl);
     const bytes = dataUrlToBytes(dataUrl);
-    const img = await pdfDoc.embedPng(bytes);
+    const img = /^data:image\/jpe?g/i.test(dataUrl) ? await pdfDoc.embedJpg(bytes) : await pdfDoc.embedPng(bytes);
     imageCache.set(dataUrl, img);
     return img;
   }
 
   const existing = d.file ? pdfDoc.getPages() : [];
+  // Pass 1: decide the page for every entry, in the exact order shown in the app. Added pages
+  // are created here; a duplicated page gets a clean copy (made before anything is drawn).
+  const used = new Set(); const entries = [];
   for (const ps of d.pages){
     let page;
     if (ps.kind === "pdf"){
-      page = existing[ps.pdfPageIndex];
+      const base = existing[ps.pdfPageIndex];
+      if (!base) continue;
+      if (!used.has(ps.pdfPageIndex)){ used.add(ps.pdfPageIndex); page = base; }
+      else { const cp = await pdfDoc.copyPages(pdfDoc, [ps.pdfPageIndex]); page = cp[0]; }
     } else {
       page = pdfDoc.addPage([ps.widthPt, ps.heightPt]);
-      if (ps.kind === "image"){
-        const embedded = await embedImage(ps.imgSrc);
-        page.drawImage(embedded, {x:0, y:0, width: ps.widthPt, height: ps.heightPt});
-      }
+    }
+    entries.push({ps, page});
+  }
+  // Put the pages into the document in that order (skipped when nothing moved).
+  const inPlace = entries.length === existing.length && entries.every((e,i)=> e.page === existing[i]);
+  if (!inPlace){
+    for (let i = pdfDoc.getPageCount()-1; i >= 0; i--) pdfDoc.removePage(i);
+    for (const e of entries) pdfDoc.addPage(e.page);
+  }
+  // Pass 2: draw each page's markup.
+  for (const {ps, page} of entries){
+    if (ps.kind === "image"){
+      const embedded = await embedImage(srcOfPage(ps));
+      page.drawImage(embedded, {x:0, y:0, width: ps.widthPt, height: ps.heightPt});
     }
     if (ps.rotation) page.setRotation(PDFLib_.degrees(ps.rotation));
     await drawAnnotations(page, ps, fontSet, embedImage);
@@ -2832,6 +3037,12 @@ function hexToRgb01(hex){
 
 async function drawAnnotations(page, ps, fontSet, embedImage){
   const H = page.getHeight();
+  // 0. images (they sit underneath the pen strokes)
+  for (const im of ps.images){
+    const src = srcOfImg(im); if (!src) continue;
+    const embedded = await embedImage(src);
+    page.drawImage(embedded, {x: im.x, y: H - im.y - im.h, width: im.w, height: im.h});
+  }
   // 1. cover shapes
   for (const s of ps.shapes){
     page.drawRectangle({
@@ -2852,11 +3063,6 @@ async function drawAnnotations(page, ps, fontSet, embedImage){
         lineCap: PDFLib_.LineCapStyle.Round,
       });
     }
-  }
-  // 3. images
-  for (const im of ps.images){
-    const embedded = await embedImage(im.src);
-    page.drawImage(embedded, {x: im.x, y: H - im.y - im.h, width: im.w, height: im.h});
   }
   // 4. text (on top)
   for (const t of ps.texts){
@@ -2930,15 +3136,42 @@ if ("launchQueue" in window){
   });
 }
 
-// Drag-and-drop a local PDF anywhere on the page to open it
-["dragenter","dragover"].forEach(evt=> window.addEventListener(evt, (e)=>{ e.preventDefault(); }));
+// Drag-and-drop: drop a PDF or image anywhere on the page, from any app, even when the window
+// isn't focused (dragging from the file manager never focuses it first).
+const dropVeil = document.getElementById("dropVeil");
+let dragDepth = 0;
+const hasFiles = (e)=> e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types || [], "Files") !== -1;
+window.addEventListener("dragenter", (e)=>{ if (!hasFiles(e)) return; e.preventDefault(); dragDepth++; dropVeil.hidden = false; });
+window.addEventListener("dragover", (e)=>{ if (!hasFiles(e)) return; e.preventDefault(); e.dataTransfer.dropEffect = "copy"; });
+window.addEventListener("dragleave", (e)=>{ if (!hasFiles(e)) return; dragDepth = Math.max(0, dragDepth-1); if (!dragDepth) dropVeil.hidden = true; });
 window.addEventListener("drop", async (e)=>{
-  e.preventDefault();
-  const files = Array.from((e.dataTransfer && e.dataTransfer.files) || []);
+  if (!hasFiles(e)) return;
+  e.preventDefault(); dragDepth = 0; dropVeil.hidden = true;
+  const files = Array.from(e.dataTransfer.files || []);
+  let rejected = 0;
   for (const file of files){
     if (file.type === "application/pdf" || /\.pdf$/i.test(file.name) || isImageFile(file)) await loadAnyFile(file);
+    else rejected++;
   }
+  if (rejected) showToast("Marginalia opens PDFs and images (PNG, JPG, WebP). " + rejected + (rejected === 1 ? " file was" : " files were") + " skipped.");
 });
+window.addEventListener("blur", ()=>{ dragDepth = 0; dropVeil.hidden = true; });
+
+// Bring back the last whiteboard (blank writing pages) if the app was closed or crashed.
+(async function restoreNotes(){
+  try{
+    const saved = await idbGet("notes|main");
+    if (!saved || !saved.pages || !saved.pages.length || docs.length) return;
+    const list = saved.pages.map(x=>JSON.parse(x));
+    await hydrateImages(list);
+    if (docs.length) return;
+    const d = openNewDoc("Notes", null); d.kind = "blank";
+    for (const p of list){ p.id = genId(); d.pages.push(p); }
+    d.ready = true;
+    startWorkspace();
+    showToast("Restored your whiteboard from last time.");
+  }catch(e){}
+})();
 
 })();
 </script>
