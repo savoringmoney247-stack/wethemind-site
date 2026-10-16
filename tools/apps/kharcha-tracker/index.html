@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f0f14" />
-  <meta name="description" content="Daily Earnings & Expense Tracker — Know where every rupee goes." />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Kharcha" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" />
-  <title>Kharcha — Daily Finance Tracker</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
 
-  <style>
+<html lang="en-US">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="#0f0f14" name="theme-color"/>
+<meta content="Daily Earnings &amp; Expense Tracker — Know where every rupee goes." name="description"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Kharcha" name="apple-mobile-web-app-title"/>
+<link href="manifest.json" rel="manifest"/>
+
+
+<title>Kharcha — Daily Finance Tracker</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&amp;family=DM+Mono:wght@400;500&amp;family=DM+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet"/>
+<style>
     /* ── TOKENS ───────────────────────────────────────── */
     :root {
       --bg:        #0f0f14;
@@ -457,151 +457,137 @@
       padding: 0 4px;
     }
   </style>
-</head>
-<body>
+<link href="https://wethemind.com/tools/apps/kharcha-tracker/" rel="canonical"/><meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/><meta content="website" property="og:type"/><meta content="Kharcha — Daily Finance Tracker" property="og:title"/><meta content="Daily Earnings &amp; Expense Tracker — Know where every rupee goes." property="og:description"/><meta content="https://wethemind.com/tools/apps/kharcha-tracker/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Kharcha — Daily Finance Tracker" name="twitter:title"/><meta content="Daily Earnings &amp; Expense Tracker — Know where every rupee goes." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><link href="https://wethemind.com/tools/apps/kharcha-tracker/" hreflang="en-us" rel="alternate"/><link href="https://wethemind.com/tools/apps/kharcha-tracker/" hreflang="x-default" rel="alternate"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://wethemind.com/"}, {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://wethemind.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Apps", "item": "https://wethemind.com/tools/apps/"}, {"@type": "ListItem", "position": 4, "name": "Kharcha Tracker", "item": "https://wethemind.com/tools/apps/kharcha-tracker/"}]}</script><link rel="apple-touch-icon" href="icon-192.png" /><link rel="icon" type="image/png" sizes="192x192" href="icon-192.png" /></head>
+<body><h1 class="sr-only">Kharcha</h1>
 <div class="app" id="app">
-
-  <!-- HEADER -->
-  <header>
-    <div class="logo">Kharcha <span>/ tracker</span></div>
-    <div class="date-pill" id="headerDate">—</div>
-  </header>
-
-  <!-- INSTALL BANNER -->
-  <div id="installBanner">
-    <p>Add <span>Kharcha</span> to your home screen for quick access.</p>
-    <button class="btn-install" id="installBtn">Install</button>
-    <button class="btn-dismiss" id="dismissInstall">✕</button>
-  </div>
-
-  <!-- DATE NAV -->
-  <div class="date-nav">
-    <button id="prevDay" title="Previous day">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <div class="nav-date" id="navDate" title="Pick a date">—</div>
-    <input type="date" id="datePicker" />
-    <button id="nextDay" title="Next day">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 6 15 12 9 18"/></svg>
-    </button>
-  </div>
-
-  <!-- SUMMARY CARD -->
-  <div class="summary">
-    <div class="summary-row">
-      <div class="summary-item">
-        <div class="summary-label">Earned</div>
-        <div class="summary-value earn" id="sumEarn">₹0</div>
-      </div>
-      <div class="divider"></div>
-      <div class="summary-item" style="text-align:right">
-        <div class="summary-label">Spent</div>
-        <div class="summary-value spend" id="sumSpend">₹0</div>
-      </div>
-    </div>
-    <div class="balance-row">
-      <div class="summary-label">Balance</div>
-      <div class="summary-value balance" id="sumBalance">₹0</div>
-    </div>
-    <div class="balance-bar">
-      <div class="balance-fill" id="balanceFill" style="width:50%"></div>
-    </div>
-  </div>
-
-  <!-- TABS -->
-  <div class="tabs">
-    <button class="tab-btn earn-tab active" data-tab="earn">＋ Earning</button>
-    <button class="tab-btn spend-tab" data-tab="spend">− Expense</button>
-    <button class="tab-btn history-tab" data-tab="history">↗ History</button>
-  </div>
-
-  <!-- EARN PANEL -->
-  <div class="panel active" id="panel-earn">
-    <div class="form-group">
-      <label>Description</label>
-      <input class="form-control" id="earnDesc" type="text" placeholder="Freelance work, salary…" />
-    </div>
-    <div class="row-2">
-      <div class="form-group">
-        <label>Amount (₹)</label>
-        <input class="form-control" id="earnAmt" type="number" min="0" placeholder="0" />
-      </div>
-      <div class="form-group">
-        <label>Category</label>
-        <select class="form-control" id="earnCat">
-          <option>💼 Salary</option>
-          <option>🧑‍💻 Freelance</option>
-          <option>📈 Investment</option>
-          <option>🎁 Gift</option>
-          <option>🏠 Rent Income</option>
-          <option>🤝 Business</option>
-          <option>💡 Other</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn-add earn" onclick="addTransaction('earn')">Add Earning</button>
-
-    <div class="tx-list" id="earnList"></div>
-  </div>
-
-  <!-- SPEND PANEL -->
-  <div class="panel" id="panel-spend">
-    <div class="form-group">
-      <label>Description</label>
-      <input class="form-control" id="spendDesc" type="text" placeholder="Groceries, rent, coffee…" />
-    </div>
-    <div class="row-2">
-      <div class="form-group">
-        <label>Amount (₹)</label>
-        <input class="form-control" id="spendAmt" type="number" min="0" placeholder="0" />
-      </div>
-      <div class="form-group">
-        <label>Category</label>
-        <select class="form-control" id="spendCat">
-          <option>🛒 Groceries</option>
-          <option>🍜 Food & Dining</option>
-          <option>🚌 Transport</option>
-          <option>🏠 Rent</option>
-          <option>💊 Health</option>
-          <option>🎮 Entertainment</option>
-          <option>👗 Shopping</option>
-          <option>💡 Utilities</option>
-          <option>📚 Education</option>
-          <option>🤝 Other</option>
-        </select>
-      </div>
-    </div>
-    <button class="btn-add spend" onclick="addTransaction('spend')">Add Expense</button>
-
-    <div class="tx-list" id="spendList"></div>
-  </div>
-
-  <!-- HISTORY PANEL -->
-  <div class="panel" id="panel-history">
-    <div id="historyContent"></div>
-  </div>
-
+<!-- HEADER -->
+<header>
+<div class="logo">Kharcha <span>/ tracker</span></div>
+<div class="date-pill" id="headerDate">—</div>
+</header>
+<!-- INSTALL BANNER -->
+<div id="installBanner">
+<p>Add <span>Kharcha</span> to your home screen for quick access.</p>
+<button class="btn-install" id="installBtn">Install</button>
+<button class="btn-dismiss" id="dismissInstall">✕</button>
 </div>
-
+<!-- DATE NAV -->
+<div class="date-nav">
+<button id="prevDay" title="Previous day">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+<div class="nav-date" id="navDate" title="Pick a date">—</div>
+<input id="datePicker" type="date"/>
+<button id="nextDay" title="Next day">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 6 15 12 9 18"></polyline></svg>
+</button>
+</div>
+<!-- SUMMARY CARD -->
+<div class="summary">
+<div class="summary-row">
+<div class="summary-item">
+<div class="summary-label">Earned</div>
+<div class="summary-value earn" id="sumEarn">₹0</div>
+</div>
+<div class="divider"></div>
+<div class="summary-item" style="text-align:right">
+<div class="summary-label">Spent</div>
+<div class="summary-value spend" id="sumSpend">₹0</div>
+</div>
+</div>
+<div class="balance-row">
+<div class="summary-label">Balance</div>
+<div class="summary-value balance" id="sumBalance">₹0</div>
+</div>
+<div class="balance-bar">
+<div class="balance-fill" id="balanceFill" style="width:50%"></div>
+</div>
+</div>
+<!-- TABS -->
+<div class="tabs">
+<button class="tab-btn earn-tab active" data-tab="earn">＋ Earning</button>
+<button class="tab-btn spend-tab" data-tab="spend">− Expense</button>
+<button class="tab-btn history-tab" data-tab="history">↗ History</button>
+</div>
+<!-- EARN PANEL -->
+<div class="panel active" id="panel-earn">
+<div class="form-group">
+<label>Description</label>
+<input class="form-control" id="earnDesc" placeholder="Freelance work, salary…" type="text"/>
+</div>
+<div class="row-2">
+<div class="form-group">
+<label>Amount (₹)</label>
+<input class="form-control" id="earnAmt" min="0" placeholder="0" type="number"/>
+</div>
+<div class="form-group">
+<label>Category</label>
+<select class="form-control" id="earnCat">
+<option>💼 Salary</option>
+<option>🧑‍💻 Freelance</option>
+<option>📈 Investment</option>
+<option>🎁 Gift</option>
+<option>🏠 Rent Income</option>
+<option>🤝 Business</option>
+<option>💡 Other</option>
+</select>
+</div>
+</div>
+<button class="btn-add earn" onclick="addTransaction('earn')">Add Earning</button>
+<div class="tx-list" id="earnList"></div>
+</div>
+<!-- SPEND PANEL -->
+<div class="panel" id="panel-spend">
+<div class="form-group">
+<label>Description</label>
+<input class="form-control" id="spendDesc" placeholder="Groceries, rent, coffee…" type="text"/>
+</div>
+<div class="row-2">
+<div class="form-group">
+<label>Amount (₹)</label>
+<input class="form-control" id="spendAmt" min="0" placeholder="0" type="number"/>
+</div>
+<div class="form-group">
+<label>Category</label>
+<select class="form-control" id="spendCat">
+<option>🛒 Groceries</option>
+<option>🍜 Food &amp; Dining</option>
+<option>🚌 Transport</option>
+<option>🏠 Rent</option>
+<option>💊 Health</option>
+<option>🎮 Entertainment</option>
+<option>👗 Shopping</option>
+<option>💡 Utilities</option>
+<option>📚 Education</option>
+<option>🤝 Other</option>
+</select>
+</div>
+</div>
+<button class="btn-add spend" onclick="addTransaction('spend')">Add Expense</button>
+<div class="tx-list" id="spendList"></div>
+</div>
+<!-- HISTORY PANEL -->
+<div class="panel" id="panel-history">
+<div id="historyContent"></div>
+</div>
+</div>
 <!-- BOTTOM NAV -->
 <nav>
-  <button class="nav-item active" data-nav="earn" onclick="switchNav('earn')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+<button class="nav-item active" data-nav="earn" onclick="switchNav('earn')">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
     Earn
   </button>
-  <button class="nav-item" data-nav="spend" onclick="switchNav('spend')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M12 6v6l4 2"/></svg>
+<button class="nav-item" data-nav="spend" onclick="switchNav('spend')">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
     Spend
   </button>
-  <button class="nav-item" data-nav="history" onclick="switchNav('history')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+<button class="nav-item" data-nav="history" onclick="switchNav('history')">
+<svg fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><rect height="7" rx="1" width="7" x="3" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="3"></rect><rect height="7" rx="1" width="7" x="3" y="14"></rect><rect height="7" rx="1" width="7" x="14" y="14"></rect></svg>
     History
   </button>
 </nav>
-
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
-
 <script>
 // ── STATE ──────────────────────────────────────────────
 const KEY = 'kharcha_v1';

@@ -1,71 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en-US">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex, nofollow" name="robots"/>
 <title>Student Dashboard — We The Mind Portal</title>
-<link rel="stylesheet" href="../assets/portal.css">
-</head>
+<link href="../assets/portal.css" rel="stylesheet"/>
+<meta content="Topics your mentor has covered with you, and how well they've landed." name="description"/><link href="https://wethemind.com/portal/student/" rel="canonical"/><meta content="website" property="og:type"/><meta content="Student Dashboard — We The Mind Portal" property="og:title"/><meta content="Topics your mentor has covered with you, and how well they've landed." property="og:description"/><meta content="https://wethemind.com/portal/student/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Student Dashboard — We The Mind Portal" name="twitter:title"/><meta content="Topics your mentor has covered with you, and how well they've landed." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><meta content="#E52421" name="theme-color"/><link href="../../assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="../../favicon.ico" rel="shortcut icon"/><link href="../../assets/apple-touch-icon.png" rel="apple-touch-icon"/></head>
 <body>
 <div class="portal-shell">
-  <aside class="portal-sidebar">
-    <a href="./" class="brand">We The Mind <span>Portal</span></a>
-    <span class="role-badge">Student</span>
-    <nav id="side-nav">
-      <a href="#" data-view="overview" class="active">📊 Overview</a>
-      <a href="#" data-view="classes">📚 My Classes</a>
-      <a href="#" data-view="progress">🌱 My Progress</a>
-    </nav>
-    <div class="sidebar-foot">
-      <div class="user-email" id="user-name"></div>
-      <button id="logout-btn" class="btn btn-ghost btn-sm" style="width:100%;">Log Out</button>
-    </div>
-  </aside>
-
-  <main class="portal-content">
-
-    <!-- OVERVIEW -->
-    <section id="view-overview">
-      <h1 class="page-title">Welcome Back</h1>
-      <p class="page-sub">Here's where things stand.</p>
-      <div class="stat-grid">
-        <div class="stat-card"><div class="icon icon-gold">🎟️</div><div class="num" id="stat-total">—</div><div class="lbl">Sessions Purchased</div></div>
-        <div class="stat-card"><div class="icon icon-blue">✅</div><div class="num" id="stat-used">—</div><div class="lbl">Sessions Used</div></div>
-        <div class="stat-card"><div class="icon icon-leaf">🎯</div><div class="num" id="stat-remaining">—</div><div class="lbl">Remaining</div></div>
-      </div>
-      <div class="card">
-        <h2>Next Up</h2>
-        <div id="next-class"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-    <!-- CLASSES -->
-    <section id="view-classes" style="display:none;">
-      <h1 class="page-title">My Classes</h1>
-      <p class="page-sub">Join right from here when it's time.</p>
-      <div class="card">
-        <div class="tab-row" id="class-tabs">
-          <button class="tab-btn active" data-status="scheduled">Upcoming</button>
-          <button class="tab-btn" data-status="completed">Completed</button>
-          <button class="tab-btn" data-status="cancelled">Cancelled</button>
-        </div>
-        <div id="classes-list"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-    <!-- PROGRESS -->
-    <section id="view-progress" style="display:none;">
-      <h1 class="page-title">My Progress</h1>
-      <p class="page-sub">Topics your mentor has covered with you, and how well they've landed.</p>
-      <div class="card">
-        <div id="progress-list"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-  </main>
+<aside class="portal-sidebar">
+<a class="brand" href="./">We The Mind <span>Portal</span></a>
+<span class="role-badge">Student</span>
+<nav id="side-nav">
+<a class="active" data-view="overview" href="#">📊 Overview</a>
+<a data-view="classes" href="#">📚 My Classes</a>
+<a data-view="progress" href="#">🌱 My Progress</a>
+</nav>
+<div class="sidebar-foot">
+<div class="user-email" id="user-name"></div>
+<button class="btn btn-ghost btn-sm" id="logout-btn" style="width:100%;">Log Out</button>
 </div>
-
+</aside>
+<main class="portal-content">
+<!-- OVERVIEW -->
+<section id="view-overview">
+<h1 class="page-title">Welcome Back</h1>
+<p class="page-sub">Here's where things stand.</p>
+<div class="stat-grid">
+<div class="stat-card"><div class="icon icon-gold">🎟️</div><div class="num" id="stat-total">—</div><div class="lbl">Sessions Purchased</div></div>
+<div class="stat-card"><div class="icon icon-blue">✅</div><div class="num" id="stat-used">—</div><div class="lbl">Sessions Used</div></div>
+<div class="stat-card"><div class="icon icon-leaf">🎯</div><div class="num" id="stat-remaining">—</div><div class="lbl">Remaining</div></div>
+</div>
+<div class="card">
+<h2>Next Up</h2>
+<div id="next-class"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+<!-- CLASSES -->
+<section id="view-classes" style="display:none;">
+<h1 class="page-title">My Classes</h1>
+<p class="page-sub">Join right from here when it's time.</p>
+<div class="card">
+<div class="tab-row" id="class-tabs">
+<button class="tab-btn active" data-status="scheduled">Upcoming</button>
+<button class="tab-btn" data-status="completed">Completed</button>
+<button class="tab-btn" data-status="cancelled">Cancelled</button>
+</div>
+<div id="classes-list"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+<!-- PROGRESS -->
+<section id="view-progress" style="display:none;">
+<h1 class="page-title">My Progress</h1>
+<p class="page-sub">Topics your mentor has covered with you, and how well they've landed.</p>
+<div class="card">
+<div id="progress-list"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+</main>
+</div>
 <script type="module">
   import { requireRole, logout, db } from "../assets/auth.js";
   import {

@@ -1,20 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <meta name="description" content="Leafy — Track your plants, watering schedules and care notes"/>
-  <meta name="theme-color" content="#16A34A"/>
-  <meta name="mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="apple-mobile-web-app-title" content="Leafy"/>
-  <link rel="apple-touch-icon" href="plant-icon-192.png"/>
-  <link rel="manifest" href="manifest.json"/>
-  <title>Leafy 🌿</title>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
 
-  <style>
+<html lang="en-US">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="Leafy — Track your plants, watering schedules and care notes" name="description"/>
+<meta content="#16A34A" name="theme-color"/>
+<meta content="yes" name="mobile-web-app-capable"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="Leafy" name="apple-mobile-web-app-title"/>
+
+<link href="manifest.json" rel="manifest"/>
+<title>Leafy 🌿</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&amp;family=DM+Sans:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
       --bg:        #060F08;
       --bg2:       #091408;
@@ -833,232 +833,209 @@
     #view-garden { overflow: hidden; display: none; flex: 1; flex-direction: column; }
     #view-garden.active { display: flex; }
   </style>
-</head>
-<body>
+<link href="https://wethemind.com/tools/apps/leafy/" rel="canonical"/><meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/><meta content="website" property="og:type"/><meta content="Leafy 🌿" property="og:title"/><meta content="Leafy — Track your plants, watering schedules and care notes" property="og:description"/><meta content="https://wethemind.com/tools/apps/leafy/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Leafy 🌿" name="twitter:title"/><meta content="Leafy — Track your plants, watering schedules and care notes" name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><link href="https://wethemind.com/tools/apps/leafy/" hreflang="en-us" rel="alternate"/><link href="https://wethemind.com/tools/apps/leafy/" hreflang="x-default" rel="alternate"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://wethemind.com/"}, {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://wethemind.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Apps", "item": "https://wethemind.com/tools/apps/"}, {"@type": "ListItem", "position": 4, "name": "Leafy", "item": "https://wethemind.com/tools/apps/leafy/"}]}</script><link rel="apple-touch-icon" href="plant-icon-192.png"/></head>
+<body><h1 class="sr-only">Leafy 🌿</h1>
 <canvas id="particles"></canvas>
 <canvas id="confetti"></canvas>
-
 <div id="app">
-
-  <!-- HEADER -->
-  <header>
-    <div class="header-left">
-      <div class="date-pill">🌿 <span id="hdr-date"></span></div>
-    </div>
-    <div class="brand">
-      <div class="brand-name">Leafy</div>
-      <div class="brand-sub">Plant Care Tracker</div>
-    </div>
-    <div class="header-right">
-      <button class="btn-add-top" onclick="openAdd()" aria-label="Add plant">＋</button>
-    </div>
-  </header>
-
-  <!-- STREAK -->
-  <div class="streak-bar">
-    <div class="streak-badge">
-      <span class="streak-fire">🔥</span>
-      <span id="streak-count">0</span>&nbsp;day streak
-    </div>
-  </div>
-
-  <!-- GARDEN VIEW -->
-  <div id="view-garden" class="active">
-    <!-- SEARCH -->
-    <div class="search-wrap">
-      <div class="search-box">
-        <span class="search-icon">🔍</span>
-        <input class="search-input" id="search-input" type="text" placeholder="Search plants…" oninput="onSearch()"/>
-        <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
-      </div>
-    </div>
-
-    <!-- STATS -->
-    <div class="stats-strip">
-      <div class="stat-pill">
-        <span class="sp-icon">🪴</span>
-        <div class="sp-val" id="st-total">0</div>
-        <div class="sp-lbl">Plants</div>
-      </div>
-      <div class="stat-pill urgent">
-        <span class="sp-icon">💧</span>
-        <div class="sp-val" id="st-due">0</div>
-        <div class="sp-lbl">Need Water</div>
-      </div>
-      <div class="stat-pill healthy">
-        <span class="sp-icon">✨</span>
-        <div class="sp-val" id="st-thriving">0</div>
-        <div class="sp-lbl">Thriving</div>
-      </div>
-    </div>
-
-    <!-- FILTER TABS -->
-    <div class="filter-row">
-      <button class="ftab active" data-f="all"       onclick="setFilter('all')">🌿 All</button>
-      <button class="ftab"        data-f="due"        onclick="setFilter('due')">💧 Due</button>
-      <button class="ftab"        data-f="thriving"   onclick="setFilter('thriving')">✨ Thriving</button>
-      <button class="ftab"        data-f="needs-help" onclick="setFilter('needs-help')">🌡 Needs Help</button>
-    </div>
-
-    <!-- PLANT GRID -->
-    <div class="plants-scroll">
-      <div class="plants-grid" id="plants-grid"></div>
-    </div>
-  </div>
-
-  <!-- SCHEDULE VIEW -->
-  <div id="view-schedule" class="view-section">
-    <div class="schedule-view" style="flex:1;overflow-y:auto">
-      <h2>Watering Schedule</h2>
-      <div class="week-strip" id="week-strip"></div>
-      <div class="schedule-list" id="schedule-list"></div>
-    </div>
-  </div>
-
-  <!-- TIPS VIEW -->
-  <div id="view-tips" class="view-section">
-    <div class="tips-view" style="flex:1">
-      <h2>Care Tips</h2>
-      <div id="tips-list"></div>
-    </div>
-  </div>
-
-  <!-- SETTINGS VIEW -->
-  <div id="view-settings" class="view-section">
-    <div class="settings-view" style="flex:1">
-      <h2>Settings</h2>
-      <div class="setting-row">
-        <div><div class="setting-label">🔔 Notifications</div><div class="setting-sub">Daily watering reminders</div></div>
-        <button class="toggle" id="notif-toggle" onclick="toggleNotif()"></button>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">📳 Haptic Feedback</div><div class="setting-sub">Vibrate on watering</div></div>
-        <button class="toggle on" id="haptic-toggle" onclick="toggleHaptic()"></button>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">🎉 Confetti</div><div class="setting-sub">Celebrate milestones</div></div>
-        <button class="toggle on" id="confetti-toggle" onclick="toggleConfetti()"></button>
-      </div>
-      <div class="setting-row">
-        <div><div class="setting-label">🌿 Sample Plants</div><div class="setting-sub">Restore default plants</div></div>
-        <button class="btn-save" style="width:auto;padding:8px 18px;font-size:0.78rem" onclick="restoreSamples()">Restore</button>
-      </div>
-      <button class="btn-danger" onclick="clearAllData()">🗑 Clear All Data</button>
-      <div class="app-version">Leafy v3.0 · Made with 💚</div>
-    </div>
-  </div>
-
-  <!-- BOTTOM NAV -->
-  <nav class="bottom-nav">
-    <button class="nav-btn active" data-view="garden" onclick="navTo('garden')">
-      <span class="nb-icon">🪴</span><span class="nb-lbl">Garden</span>
-    </button>
-    <button class="nav-btn" data-view="schedule" onclick="navTo('schedule')">
-      <span class="nb-icon">📅</span><span class="nb-lbl">Schedule</span>
-    </button>
-    <button class="nav-btn" data-view="tips" onclick="navTo('tips')">
-      <span class="nb-icon">💡</span><span class="nb-lbl">Tips</span>
-    </button>
-    <button class="nav-btn" data-view="settings" onclick="navTo('settings')">
-      <span class="nb-icon">⚙️</span><span class="nb-lbl">Settings</span>
-    </button>
-  </nav>
+<!-- HEADER -->
+<header>
+<div class="header-left">
+<div class="date-pill">🌿 <span id="hdr-date"></span></div>
 </div>
-
+<div class="brand">
+<div class="brand-name">Leafy</div>
+<div class="brand-sub">Plant Care Tracker</div>
+</div>
+<div class="header-right">
+<button aria-label="Add plant" class="btn-add-top" onclick="openAdd()">＋</button>
+</div>
+</header>
+<!-- STREAK -->
+<div class="streak-bar">
+<div class="streak-badge">
+<span class="streak-fire">🔥</span>
+<span id="streak-count">0</span> day streak
+    </div>
+</div>
+<!-- GARDEN VIEW -->
+<div class="active" id="view-garden">
+<!-- SEARCH -->
+<div class="search-wrap">
+<div class="search-box">
+<span class="search-icon">🔍</span>
+<input class="search-input" id="search-input" oninput="onSearch()" placeholder="Search plants…" type="text"/>
+<button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+</div>
+</div>
+<!-- STATS -->
+<div class="stats-strip">
+<div class="stat-pill">
+<span class="sp-icon">🪴</span>
+<div class="sp-val" id="st-total">0</div>
+<div class="sp-lbl">Plants</div>
+</div>
+<div class="stat-pill urgent">
+<span class="sp-icon">💧</span>
+<div class="sp-val" id="st-due">0</div>
+<div class="sp-lbl">Need Water</div>
+</div>
+<div class="stat-pill healthy">
+<span class="sp-icon">✨</span>
+<div class="sp-val" id="st-thriving">0</div>
+<div class="sp-lbl">Thriving</div>
+</div>
+</div>
+<!-- FILTER TABS -->
+<div class="filter-row">
+<button class="ftab active" data-f="all" onclick="setFilter('all')">🌿 All</button>
+<button class="ftab" data-f="due" onclick="setFilter('due')">💧 Due</button>
+<button class="ftab" data-f="thriving" onclick="setFilter('thriving')">✨ Thriving</button>
+<button class="ftab" data-f="needs-help" onclick="setFilter('needs-help')">🌡 Needs Help</button>
+</div>
+<!-- PLANT GRID -->
+<div class="plants-scroll">
+<div class="plants-grid" id="plants-grid"></div>
+</div>
+</div>
+<!-- SCHEDULE VIEW -->
+<div class="view-section" id="view-schedule">
+<div class="schedule-view" style="flex:1;overflow-y:auto">
+<h2>Watering Schedule</h2>
+<div class="week-strip" id="week-strip"></div>
+<div class="schedule-list" id="schedule-list"></div>
+</div>
+</div>
+<!-- TIPS VIEW -->
+<div class="view-section" id="view-tips">
+<div class="tips-view" style="flex:1">
+<h2>Care Tips</h2>
+<div id="tips-list"></div>
+</div>
+</div>
+<!-- SETTINGS VIEW -->
+<div class="view-section" id="view-settings">
+<div class="settings-view" style="flex:1">
+<h2>Settings</h2>
+<div class="setting-row">
+<div><div class="setting-label">🔔 Notifications</div><div class="setting-sub">Daily watering reminders</div></div>
+<button class="toggle" id="notif-toggle" onclick="toggleNotif()"></button>
+</div>
+<div class="setting-row">
+<div><div class="setting-label">📳 Haptic Feedback</div><div class="setting-sub">Vibrate on watering</div></div>
+<button class="toggle on" id="haptic-toggle" onclick="toggleHaptic()"></button>
+</div>
+<div class="setting-row">
+<div><div class="setting-label">🎉 Confetti</div><div class="setting-sub">Celebrate milestones</div></div>
+<button class="toggle on" id="confetti-toggle" onclick="toggleConfetti()"></button>
+</div>
+<div class="setting-row">
+<div><div class="setting-label">🌿 Sample Plants</div><div class="setting-sub">Restore default plants</div></div>
+<button class="btn-save" onclick="restoreSamples()" style="width:auto;padding:8px 18px;font-size:0.78rem">Restore</button>
+</div>
+<button class="btn-danger" onclick="clearAllData()">🗑 Clear All Data</button>
+<div class="app-version">Leafy v3.0 · Made with 💚</div>
+</div>
+</div>
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+<button class="nav-btn active" data-view="garden" onclick="navTo('garden')">
+<span class="nb-icon">🪴</span><span class="nb-lbl">Garden</span>
+</button>
+<button class="nav-btn" data-view="schedule" onclick="navTo('schedule')">
+<span class="nb-icon">📅</span><span class="nb-lbl">Schedule</span>
+</button>
+<button class="nav-btn" data-view="tips" onclick="navTo('tips')">
+<span class="nb-icon">💡</span><span class="nb-lbl">Tips</span>
+</button>
+<button class="nav-btn" data-view="settings" onclick="navTo('settings')">
+<span class="nb-icon">⚙️</span><span class="nb-lbl">Settings</span>
+</button>
+</nav>
+</div>
 <!-- ADD / EDIT SHEET -->
 <div class="overlay" id="add-overlay" onclick="overlayClick(event,'add-overlay')">
-  <div class="sheet" id="add-sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div style="width:32px"></div>
-      <span class="sheet-title" id="sheet-mode-title">New Plant</span>
-      <button class="btn-close" onclick="closeAdd()">✕</button>
-    </div>
-    <div class="sheet-body">
-      <div>
-        <label class="field-lbl" style="text-align:center">Choose an Emoji</label>
-        <div class="emoji-row" id="emoji-row"></div>
-      </div>
-
-      <div>
-        <label class="field-lbl" for="inp-name">Plant Name *</label>
-        <input class="field-input" id="inp-name" type="text" placeholder="e.g. Monstera, Fiddle Leaf…" maxlength="40"/>
-      </div>
-
-      <div>
-        <label class="field-lbl" for="inp-species">Species / Variety</label>
-        <input class="field-input" id="inp-species" type="text" placeholder="e.g. Monstera deliciosa" maxlength="60"/>
-      </div>
-
-      <div class="slider-wrap">
-        <label class="field-lbl" style="text-align:center">Water Every</label>
-        <div class="water-freq-display"><span id="freq-num">7</span> days</div>
-        <div class="water-freq-label">Drag to set frequency</div>
-        <input type="range" id="inp-water" min="1" max="60" value="7" oninput="updateFreq()"/>
-      </div>
-
-      <div>
-        <label class="field-lbl" for="inp-sunlight">Sunlight</label>
-        <select class="field-input" id="inp-sunlight">
-          <option value="Full sun">☀️ Full Sun</option>
-          <option value="Partial sun" selected>🌤 Partial Sun</option>
-          <option value="Shade">🌑 Shade</option>
-          <option value="Indoor">🏠 Indoor</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="field-lbl" style="text-align:center">Health Status</label>
-        <div class="health-row">
-          <button class="health-btn sel" data-h="thriving"   onclick="selHealth('thriving')">✨ Thriving</button>
-          <button class="health-btn"     data-h="okay"       onclick="selHealth('okay')">🙂 Okay</button>
-          <button class="health-btn"     data-h="needs-help" onclick="selHealth('needs-help')">🌡 Needs Help</button>
-          <button class="health-btn"     data-h="sick"       onclick="selHealth('sick')">😟 Sick</button>
-        </div>
-      </div>
-
-      <div>
-        <label class="field-lbl" for="inp-notes">Care Notes</label>
-        <textarea class="field-input" id="inp-notes" placeholder="Fertilise monthly, mist leaves, repot in spring…"></textarea>
-      </div>
-
-      <button class="btn-save" onclick="savePlant()">🌿 Save Plant</button>
-      <button class="btn-delete hidden" id="btn-delete" onclick="deletePlant()">🗑 Remove Plant</button>
-    </div>
-  </div>
+<div class="sheet" id="add-sheet">
+<div class="sheet-handle"></div>
+<div class="sheet-header">
+<div style="width:32px"></div>
+<span class="sheet-title" id="sheet-mode-title">New Plant</span>
+<button class="btn-close" onclick="closeAdd()">✕</button>
 </div>
-
+<div class="sheet-body">
+<div>
+<label class="field-lbl" style="text-align:center">Choose an Emoji</label>
+<div class="emoji-row" id="emoji-row"></div>
+</div>
+<div>
+<label class="field-lbl" for="inp-name">Plant Name *</label>
+<input class="field-input" id="inp-name" maxlength="40" placeholder="e.g. Monstera, Fiddle Leaf…" type="text"/>
+</div>
+<div>
+<label class="field-lbl" for="inp-species">Species / Variety</label>
+<input class="field-input" id="inp-species" maxlength="60" placeholder="e.g. Monstera deliciosa" type="text"/>
+</div>
+<div class="slider-wrap">
+<label class="field-lbl" style="text-align:center">Water Every</label>
+<div class="water-freq-display"><span id="freq-num">7</span> days</div>
+<div class="water-freq-label">Drag to set frequency</div>
+<input id="inp-water" max="60" min="1" oninput="updateFreq()" type="range" value="7"/>
+</div>
+<div>
+<label class="field-lbl" for="inp-sunlight">Sunlight</label>
+<select class="field-input" id="inp-sunlight">
+<option value="Full sun">☀️ Full Sun</option>
+<option selected="" value="Partial sun">🌤 Partial Sun</option>
+<option value="Shade">🌑 Shade</option>
+<option value="Indoor">🏠 Indoor</option>
+</select>
+</div>
+<div>
+<label class="field-lbl" style="text-align:center">Health Status</label>
+<div class="health-row">
+<button class="health-btn sel" data-h="thriving" onclick="selHealth('thriving')">✨ Thriving</button>
+<button class="health-btn" data-h="okay" onclick="selHealth('okay')">🙂 Okay</button>
+<button class="health-btn" data-h="needs-help" onclick="selHealth('needs-help')">🌡 Needs Help</button>
+<button class="health-btn" data-h="sick" onclick="selHealth('sick')">😟 Sick</button>
+</div>
+</div>
+<div>
+<label class="field-lbl" for="inp-notes">Care Notes</label>
+<textarea class="field-input" id="inp-notes" placeholder="Fertilise monthly, mist leaves, repot in spring…"></textarea>
+</div>
+<button class="btn-save" onclick="savePlant()">🌿 Save Plant</button>
+<button class="btn-delete hidden" id="btn-delete" onclick="deletePlant()">🗑 Remove Plant</button>
+</div>
+</div>
+</div>
 <!-- DETAIL SHEET -->
 <div class="overlay" id="detail-overlay" onclick="overlayClick(event,'detail-overlay')">
-  <div class="sheet" id="detail-sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-header">
-      <div style="width:32px"></div>
-      <span class="sheet-title">Plant Details</span>
-      <button class="btn-close" onclick="closeDetail()">✕</button>
-    </div>
-    <div class="sheet-body" id="detail-body"></div>
-  </div>
+<div class="sheet" id="detail-sheet">
+<div class="sheet-handle"></div>
+<div class="sheet-header">
+<div style="width:32px"></div>
+<span class="sheet-title">Plant Details</span>
+<button class="btn-close" onclick="closeDetail()">✕</button>
 </div>
-
+<div class="sheet-body" id="detail-body"></div>
+</div>
+</div>
 <!-- TOAST -->
 <div id="toast"></div>
-
 <!-- INSTALL BANNER -->
 <div id="install-banner">
-  <div class="ib-inner">
-    <div class="ib-icon">🌱</div>
-    <div class="ib-text">
-      <strong>Install Leafy</strong>
-      <small>Add to home screen for offline access</small>
-    </div>
-  </div>
-  <div class="ib-actions">
-    <button class="btn-inst" onclick="installApp()">📲 Install</button>
-    <button class="btn-dis"  onclick="dismissInstall()">Later</button>
-  </div>
+<div class="ib-inner">
+<div class="ib-icon">🌱</div>
+<div class="ib-text">
+<strong>Install Leafy</strong>
+<small>Add to home screen for offline access</small>
 </div>
-
+</div>
+<div class="ib-actions">
+<button class="btn-inst" onclick="installApp()">📲 Install</button>
+<button class="btn-dis" onclick="dismissInstall()">Later</button>
+</div>
+</div>
 <script>
 /* ═══════════════════════════════════════
    FLOATING PARTICLES

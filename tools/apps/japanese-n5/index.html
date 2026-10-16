@@ -1,33 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en-US">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>Nihongo N5 — Learn Japanese for JLPT</title>
-<meta name="description" content="Master JLPT N5 Japanese with interactive flashcards, quizzes, kanji practice, and audio pronunciation. Free offline PWA.">
-<meta name="theme-color" content="#C0392B">
-<link rel="manifest" href="manifest.json">
+<meta content="Master JLPT N5 Japanese with interactive flashcards, quizzes, kanji practice, and audio pronunciation. Free offline PWA." name="description"/>
+<meta content="#C0392B" name="theme-color"/>
+<link href="manifest.json" rel="manifest"/>
 <!-- iOS PWA support -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="日本語 N5">
-<link rel="apple-touch-icon" href="icon-192.png">
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="default" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="日本語 N5" name="apple-mobile-web-app-title"/>
+
 <!-- Windows tile -->
-<meta name="msapplication-TileColor" content="#C0392B">
-<meta name="msapplication-TileImage" content="icon-192.png">
+<meta content="#C0392B" name="msapplication-TileColor"/>
+<meta content="icon-192.png" name="msapplication-TileImage"/>
 <!-- OG image -->
-<meta property="og:image" content="icon-512.png">
-
+<meta content="icon-512.png" property="og:image"/>
 <!-- Open Graph / Lead Gen meta -->
-<meta property="og:title" content="Nihongo N5 – Free JLPT Practice App">
-<meta property="og:description" content="Interactive Japanese N5 trainer. Flashcards, audio, quizzes & kanji — all offline.">
-<meta property="og:type" content="website">
-
+<meta content="Nihongo N5 – Free JLPT Practice App" property="og:title"/>
+<meta content="Interactive Japanese N5 trainer. Flashcards, audio, quizzes &amp; kanji — all offline." property="og:description"/>
+<meta content="website" property="og:type"/>
 <!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&amp;family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
 <style>
 /* ── Reset & Variables ─────────────────────────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -357,320 +355,297 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   .bottom-nav{display:none;}
 }
 </style>
-</head>
+<link href="https://wethemind.com/tools/apps/japanese-n5/" rel="canonical"/><meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/><meta content="https://wethemind.com/tools/apps/japanese-n5/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Nihongo N5 — Learn Japanese for JLPT" name="twitter:title"/><meta content="Master JLPT N5 Japanese with interactive flashcards, quizzes, kanji practice, and audio pronunciation. Free offline PWA." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><link href="https://wethemind.com/tools/apps/japanese-n5/" hreflang="en-us" rel="alternate"/><link href="https://wethemind.com/tools/apps/japanese-n5/" hreflang="x-default" rel="alternate"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://wethemind.com/"}, {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://wethemind.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Apps", "item": "https://wethemind.com/tools/apps/"}, {"@type": "ListItem", "position": 4, "name": "Japanese N5", "item": "https://wethemind.com/tools/apps/japanese-n5/"}]}</script><link rel="apple-touch-icon" href="icon-192.png"></head>
 <body>
-
 <!-- OFFLINE BANNER -->
 <div class="offline-banner" id="offlineBanner">📵 You're offline — all content is still available!</div>
-
 <!-- UPDATE-AVAILABLE BANNER -->
 <div class="update-banner" id="updateBanner">
   🆕 A new version is ready!
   <button class="update-banner-btn" onclick="applyUpdate()">Update now</button>
 </div>
-
 <!-- iOS INSTALL BOTTOM-SHEET -->
 <div class="ios-sheet" id="iosSheet">
-  <button class="ios-sheet-close" onclick="document.getElementById('iosSheet').classList.remove('show')">✕</button>
-  <div class="ios-sheet-icon">📲</div>
-  <div class="ios-sheet-title">Install Nihongo N5</div>
-  <div class="ios-sheet-desc">Add to your Home Screen for the full offline app experience.</div>
-  <div class="ios-sheet-step"><div class="ios-step-num">1</div><div class="ios-step-text">Tap the <strong>Share</strong> button <span style="font-size:1rem">⬆</span> at the bottom of Safari.</div></div>
-  <div class="ios-sheet-step"><div class="ios-step-num">2</div><div class="ios-step-text">Scroll down and tap <strong>"Add to Home Screen"</strong>.</div></div>
-  <div class="ios-sheet-step"><div class="ios-step-num">3</div><div class="ios-step-text">Tap <strong>Add</strong> — and you're done! 🎌</div></div>
+<button class="ios-sheet-close" onclick="document.getElementById('iosSheet').classList.remove('show')">✕</button>
+<div class="ios-sheet-icon">📲</div>
+<div class="ios-sheet-title">Install Nihongo N5</div>
+<div class="ios-sheet-desc">Add to your Home Screen for the full offline app experience.</div>
+<div class="ios-sheet-step"><div class="ios-step-num">1</div><div class="ios-step-text">Tap the <strong>Share</strong> button <span style="font-size:1rem">⬆</span> at the bottom of Safari.</div></div>
+<div class="ios-sheet-step"><div class="ios-step-num">2</div><div class="ios-step-text">Scroll down and tap <strong>"Add to Home Screen"</strong>.</div></div>
+<div class="ios-sheet-step"><div class="ios-step-num">3</div><div class="ios-step-text">Tap <strong>Add</strong> — and you're done! 🎌</div></div>
 </div>
-
 <!-- TOP NAV -->
 <nav class="topnav">
-  <a class="nav-logo" href="#" onclick="showPanel('home');return false;">
-    <div class="nav-logo-mark">日</div>
-    <div class="nav-logo-text">Nihongo <span>N5</span></div>
-  </a>
-  <div class="nav-tabs">
-    <button class="nav-tab active" onclick="showPanel('home');setTab(this)">Home</button>
-    <button class="nav-tab" onclick="showPanel('vocab');setTab(this)">Vocab</button>
-    <button class="nav-tab" onclick="showPanel('kanji');setTab(this)">Kanji</button>
-    <button class="nav-tab" onclick="showPanel('quiz');setTab(this)">Quiz</button>
-    <button class="nav-tab" onclick="showPanel('grammar');setTab(this)">Grammar</button>
-    <button class="nav-tab" onclick="showPanel('kana');setTab(this)">Kana</button>
-    <button class="nav-tab" onclick="showPanel('sentences');setTab(this)">Sentences</button>
-  </div>
-  <button class="nav-install-btn hidden" id="installBtn" onclick="installApp()">
+<a class="nav-logo" href="#" onclick="showPanel('home');return false;">
+<div class="nav-logo-mark">日</div>
+<div class="nav-logo-text">Nihongo <span>N5</span></div>
+</a>
+<div class="nav-tabs">
+<button class="nav-tab active" onclick="showPanel('home');setTab(this)">Home</button>
+<button class="nav-tab" onclick="showPanel('vocab');setTab(this)">Vocab</button>
+<button class="nav-tab" onclick="showPanel('kanji');setTab(this)">Kanji</button>
+<button class="nav-tab" onclick="showPanel('quiz');setTab(this)">Quiz</button>
+<button class="nav-tab" onclick="showPanel('grammar');setTab(this)">Grammar</button>
+<button class="nav-tab" onclick="showPanel('kana');setTab(this)">Kana</button>
+<button class="nav-tab" onclick="showPanel('sentences');setTab(this)">Sentences</button>
+</div>
+<button class="nav-install-btn hidden" id="installBtn" onclick="installApp()">
     ⬇ Install App
   </button>
 </nav>
-
 <!-- ─── PANEL: HOME ─────────────────────────────────────────────────────── -->
-<div id="panel-home" class="panel active">
-
-  <!-- Hero -->
-  <div class="hero">
-    <div class="hero-badge"><span>🎌</span> JLPT N5 Complete Trainer</div>
-    <h1>Learn<br><em>Japanese</em><br>the Right Way</h1>
-    <p class="hero-sub">Flashcards, quizzes, kanji, grammar and audio — everything you need to pass JLPT N5. Free. Offline. Always.</p>
-    <div class="hero-cta-row">
-      <button class="btn-primary" onclick="showPanel('vocab');setTabByName('vocab')">▶ Start Learning</button>
-      <button class="btn-outline" onclick="showPanel('quiz');setTabByName('quiz')">📝 Take a Quiz</button>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><span class="hero-stat-num">800+</span><div class="hero-stat-lbl">Vocab Words</div></div>
-      <div class="hero-stat"><span class="hero-stat-num">103</span><div class="hero-stat-lbl">N5 Kanji</div></div>
-      <div class="hero-stat"><span class="hero-stat-num">40+</span><div class="hero-stat-lbl">Grammar Points</div></div>
-      <div class="hero-stat"><span class="hero-stat-num">100%</span><div class="hero-stat-lbl">Offline Ready</div></div>
-    </div>
-  </div>
-
-  <!-- Feature grid -->
-  <div class="section">
-    <div class="section-header">
-      <div>
-        <div class="section-label">What's inside</div>
-        <div class="section-title">Everything for N5</div>
-      </div>
-    </div>
-    <div class="feature-grid">
-      <div class="feature-card fc-red" onclick="showPanel('vocab');setTabByName('vocab')">
-        <span class="fc-icon">🃏</span>
-        <div class="fc-title">Flashcard Trainer</div>
-        <div class="fc-desc">Spaced-repetition style vocab cards with audio pronunciation and example sentences.</div>
-        <div class="fc-badge new">New</div>
-      </div>
-      <div class="feature-card fc-gold" onclick="showPanel('kanji');setTabByName('kanji')">
-        <span class="fc-icon">漢</span>
-        <div class="fc-title">Kanji 103</div>
-        <div class="fc-desc">All 103 N5 kanji with on/kun readings, stroke count, and mastery tracking.</div>
-        <div class="fc-badge free">Free</div>
-      </div>
-      <div class="feature-card fc-teal" onclick="showPanel('quiz');setTabByName('quiz')">
-        <span class="fc-icon">📝</span>
-        <div class="fc-title">JLPT Quiz</div>
-        <div class="fc-desc">Multiple choice quizzes covering vocab, reading, and grammar — JLPT exam style.</div>
-      </div>
-      <div class="feature-card fc-ink" onclick="showPanel('grammar');setTabByName('grammar')">
-        <span class="fc-icon">📖</span>
-        <div class="fc-title">Grammar Guide</div>
-        <div class="fc-desc">Bite-sized grammar explanations with patterns, examples and English translation.</div>
-      </div>
-      <div class="feature-card fc-red" onclick="showPanel('kana');setTabByName('kana')">
-        <span class="fc-icon">あ</span>
-        <div class="fc-title">Kana Charts</div>
-        <div class="fc-desc">Full hiragana and katakana charts with audio. Tap to hear — learn by sound.</div>
-      </div>
-      <div class="feature-card fc-gold" onclick="showPanel('sentences');setTabByName('sentences')">
-        <span class="fc-icon">✍️</span>
-        <div class="fc-title">Sentence Builder</div>
-        <div class="fc-desc">Drag and drop word order exercises. Build real N5 sentences from scratch.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Progress -->
-  <div class="section">
-    <div class="section-header">
-      <div>
-        <div class="section-label">Your progress</div>
-        <div class="section-title">Study Dashboard</div>
-      </div>
-      <button class="btn-outline" style="font-size:.78rem;padding:8px 14px;" onclick="resetProgress()">Reset</button>
-    </div>
-    <div class="progress-section">
-      <div class="prog-row">
-        <div class="prog-stat"><span class="prog-stat-num" id="prog-cards">0</span><div class="prog-stat-lbl">Cards Seen</div></div>
-        <div class="prog-stat"><span class="prog-stat-num" id="prog-correct">0</span><div class="prog-stat-lbl">Correct</div></div>
-        <div class="prog-stat"><span class="prog-stat-num" id="prog-kanji">0</span><div class="prog-stat-lbl">Kanji Mastered</div></div>
-        <div class="prog-stat"><span class="prog-stat-num" id="prog-streak">0</span><div class="prog-stat-lbl">Day Streak 🔥</div></div>
-      </div>
-      <div class="prog-bars">
-        <div class="prog-bar-row"><div class="prog-bar-label">Vocabulary</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-red" id="pb-vocab" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-vocab">0%</span></div>
-        <div class="prog-bar-row"><div class="prog-bar-label">Kanji</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-gold" id="pb-kanji" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-kanji">0%</span></div>
-        <div class="prog-bar-row"><div class="prog-bar-label">Grammar</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-teal" id="pb-grammar" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-grammar">0%</span></div>
-        <div class="prog-bar-row"><div class="prog-bar-label">Quiz</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-ink" id="pb-quiz" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-quiz">0%</span></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-divider"></div>
-
-  <!-- Lead Gen -->
-  <div class="lead-section">
-    <div class="lead-label">🎯 Free Study Pack</div>
-    <div class="lead-title">Get the N5 Cheat Sheet</div>
-    <p class="lead-sub">500+ vocab, all 103 kanji + grammar cheat sheet — delivered free. Join 12,000+ learners.</p>
-    <div class="lead-form">
-      <input class="lead-input" type="email" placeholder="your@email.com" id="lead-email">
-      <button class="lead-submit" onclick="submitLead()">Send Me the Pack →</button>
-    </div>
-    <div class="lead-badges">
-      <div class="lead-badge-item">🔒 No spam, ever</div>
-      <div class="lead-badge-item">📱 Instant delivery</div>
-      <div class="lead-badge-item">🆓 Completely free</div>
-    </div>
-  </div>
-
+<div class="panel active" id="panel-home">
+<!-- Hero -->
+<div class="hero">
+<div class="hero-badge"><span>🎌</span> JLPT N5 Complete Trainer</div>
+<h1>Learn<br/><em>Japanese</em><br/>the Right Way</h1>
+<p class="hero-sub">Flashcards, quizzes, kanji, grammar and audio — everything you need to pass JLPT N5. Free. Offline. Always.</p>
+<div class="hero-cta-row">
+<button class="btn-primary" onclick="showPanel('vocab');setTabByName('vocab')">▶ Start Learning</button>
+<button class="btn-outline" onclick="showPanel('quiz');setTabByName('quiz')">📝 Take a Quiz</button>
 </div>
-
+<div class="hero-stats">
+<div class="hero-stat"><span class="hero-stat-num">800+</span><div class="hero-stat-lbl">Vocab Words</div></div>
+<div class="hero-stat"><span class="hero-stat-num">103</span><div class="hero-stat-lbl">N5 Kanji</div></div>
+<div class="hero-stat"><span class="hero-stat-num">40+</span><div class="hero-stat-lbl">Grammar Points</div></div>
+<div class="hero-stat"><span class="hero-stat-num">100%</span><div class="hero-stat-lbl">Offline Ready</div></div>
+</div>
+</div>
+<!-- Feature grid -->
+<div class="section">
+<div class="section-header">
+<div>
+<div class="section-label">What's inside</div>
+<div class="section-title">Everything for N5</div>
+</div>
+</div>
+<div class="feature-grid">
+<div class="feature-card fc-red" onclick="showPanel('vocab');setTabByName('vocab')">
+<span class="fc-icon">🃏</span>
+<div class="fc-title">Flashcard Trainer</div>
+<div class="fc-desc">Spaced-repetition style vocab cards with audio pronunciation and example sentences.</div>
+<div class="fc-badge new">New</div>
+</div>
+<div class="feature-card fc-gold" onclick="showPanel('kanji');setTabByName('kanji')">
+<span class="fc-icon">漢</span>
+<div class="fc-title">Kanji 103</div>
+<div class="fc-desc">All 103 N5 kanji with on/kun readings, stroke count, and mastery tracking.</div>
+<div class="fc-badge free">Free</div>
+</div>
+<div class="feature-card fc-teal" onclick="showPanel('quiz');setTabByName('quiz')">
+<span class="fc-icon">📝</span>
+<div class="fc-title">JLPT Quiz</div>
+<div class="fc-desc">Multiple choice quizzes covering vocab, reading, and grammar — JLPT exam style.</div>
+</div>
+<div class="feature-card fc-ink" onclick="showPanel('grammar');setTabByName('grammar')">
+<span class="fc-icon">📖</span>
+<div class="fc-title">Grammar Guide</div>
+<div class="fc-desc">Bite-sized grammar explanations with patterns, examples and English translation.</div>
+</div>
+<div class="feature-card fc-red" onclick="showPanel('kana');setTabByName('kana')">
+<span class="fc-icon">あ</span>
+<div class="fc-title">Kana Charts</div>
+<div class="fc-desc">Full hiragana and katakana charts with audio. Tap to hear — learn by sound.</div>
+</div>
+<div class="feature-card fc-gold" onclick="showPanel('sentences');setTabByName('sentences')">
+<span class="fc-icon">✍️</span>
+<div class="fc-title">Sentence Builder</div>
+<div class="fc-desc">Drag and drop word order exercises. Build real N5 sentences from scratch.</div>
+</div>
+</div>
+</div>
+<!-- Progress -->
+<div class="section">
+<div class="section-header">
+<div>
+<div class="section-label">Your progress</div>
+<div class="section-title">Study Dashboard</div>
+</div>
+<button class="btn-outline" onclick="resetProgress()" style="font-size:.78rem;padding:8px 14px;">Reset</button>
+</div>
+<div class="progress-section">
+<div class="prog-row">
+<div class="prog-stat"><span class="prog-stat-num" id="prog-cards">0</span><div class="prog-stat-lbl">Cards Seen</div></div>
+<div class="prog-stat"><span class="prog-stat-num" id="prog-correct">0</span><div class="prog-stat-lbl">Correct</div></div>
+<div class="prog-stat"><span class="prog-stat-num" id="prog-kanji">0</span><div class="prog-stat-lbl">Kanji Mastered</div></div>
+<div class="prog-stat"><span class="prog-stat-num" id="prog-streak">0</span><div class="prog-stat-lbl">Day Streak 🔥</div></div>
+</div>
+<div class="prog-bars">
+<div class="prog-bar-row"><div class="prog-bar-label">Vocabulary</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-red" id="pb-vocab" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-vocab">0%</span></div>
+<div class="prog-bar-row"><div class="prog-bar-label">Kanji</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-gold" id="pb-kanji" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-kanji">0%</span></div>
+<div class="prog-bar-row"><div class="prog-bar-label">Grammar</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-teal" id="pb-grammar" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-grammar">0%</span></div>
+<div class="prog-bar-row"><div class="prog-bar-label">Quiz</div><div class="prog-bar-track"><div class="prog-bar-fill pbf-ink" id="pb-quiz" style="width:0%"></div></div><span class="prog-bar-pct" id="pct-quiz">0%</span></div>
+</div>
+</div>
+</div>
+<div class="section-divider"></div>
+<!-- Lead Gen -->
+<div class="lead-section">
+<div class="lead-label">🎯 Free Study Pack</div>
+<div class="lead-title">Get the N5 Cheat Sheet</div>
+<p class="lead-sub">500+ vocab, all 103 kanji + grammar cheat sheet — delivered free. Join 12,000+ learners.</p>
+<div class="lead-form">
+<input class="lead-input" id="lead-email" placeholder="your@email.com" type="email"/>
+<button class="lead-submit" onclick="submitLead()">Send Me the Pack →</button>
+</div>
+<div class="lead-badges">
+<div class="lead-badge-item">🔒 No spam, ever</div>
+<div class="lead-badge-item">📱 Instant delivery</div>
+<div class="lead-badge-item">🆓 Completely free</div>
+</div>
+</div>
+</div>
 <!-- ─── PANEL: VOCABULARY FLASHCARDS ───────────────────────────────────────── -->
-<div id="panel-vocab" class="panel">
-  <div class="section" style="padding-top:80px;">
-    <div class="section-header">
-      <div>
-        <div class="section-label">Spaced Repetition</div>
-        <div class="section-title">Vocabulary Cards</div>
-      </div>
-      <button class="btn-outline" style="font-size:.78rem;padding:8px 14px;" onclick="shuffleCards()">🔀 Shuffle</button>
-    </div>
-
-    <div class="fp-counter" id="fcCounter">Card 1 of 20</div>
-    <div class="flashcard-progress" id="fcProgress"></div>
-
-    <div class="flashcard-wrap">
-      <div class="flashcard" id="flashcard" onclick="flipCard()">
-        <div class="fc-face fc-front">
-          <div class="fc-jp" id="fc-jp">ありがとう</div>
-          <div class="fc-kana" id="fc-kana">arigatou</div>
-          <div class="fc-hint">Tap to reveal →</div>
-        </div>
-        <div class="fc-face fc-back">
-          <div class="fc-back-word" id="fc-back-word">ありがとう</div>
-          <div class="fc-back-romaji" id="fc-back-romaji">arigatou</div>
-          <div class="fc-back-meaning" id="fc-back-meaning">Thank you</div>
-          <div class="fc-back-example" id="fc-back-example">ありがとうございます。<br><em>Arigatou gozaimasu. — Thank you very much.</em></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="flashcard-controls">
-      <button class="fc-btn audio" onclick="speakCurrent()">🔊</button>
-      <button class="fc-btn hard" onclick="markCard('hard')">✗ Hard</button>
-      <button class="fc-btn skip" onclick="nextCard()">→ Skip</button>
-      <button class="fc-btn good" onclick="markCard('good')">✓ Got it</button>
-    </div>
-  </div>
+<div class="panel" id="panel-vocab">
+<div class="section" style="padding-top:80px;">
+<div class="section-header">
+<div>
+<div class="section-label">Spaced Repetition</div>
+<div class="section-title">Vocabulary Cards</div>
 </div>
-
+<button class="btn-outline" onclick="shuffleCards()" style="font-size:.78rem;padding:8px 14px;">🔀 Shuffle</button>
+</div>
+<div class="fp-counter" id="fcCounter">Card 1 of 20</div>
+<div class="flashcard-progress" id="fcProgress"></div>
+<div class="flashcard-wrap">
+<div class="flashcard" id="flashcard" onclick="flipCard()">
+<div class="fc-face fc-front">
+<div class="fc-jp" id="fc-jp">ありがとう</div>
+<div class="fc-kana" id="fc-kana">arigatou</div>
+<div class="fc-hint">Tap to reveal →</div>
+</div>
+<div class="fc-face fc-back">
+<div class="fc-back-word" id="fc-back-word">ありがとう</div>
+<div class="fc-back-romaji" id="fc-back-romaji">arigatou</div>
+<div class="fc-back-meaning" id="fc-back-meaning">Thank you</div>
+<div class="fc-back-example" id="fc-back-example">ありがとうございます。<br/><em>Arigatou gozaimasu. — Thank you very much.</em></div>
+</div>
+</div>
+</div>
+<div class="flashcard-controls">
+<button class="fc-btn audio" onclick="speakCurrent()">🔊</button>
+<button class="fc-btn hard" onclick="markCard('hard')">✗ Hard</button>
+<button class="fc-btn skip" onclick="nextCard()">→ Skip</button>
+<button class="fc-btn good" onclick="markCard('good')">✓ Got it</button>
+</div>
+</div>
+</div>
 <!-- ─── PANEL: KANJI ───────────────────────────────────────────────────────── -->
-<div id="panel-kanji" class="panel">
-  <div class="section" style="padding-top:80px;">
-    <div class="section-header">
-      <div>
-        <div class="section-label">103 Characters</div>
-        <div class="section-title">N5 Kanji</div>
-      </div>
-    </div>
-    <div class="kanji-filter-bar">
-      <button class="k-filter-btn active" onclick="filterKanji('all',this)">All</button>
-      <button class="k-filter-btn" onclick="filterKanji('numbers',this)">Numbers</button>
-      <button class="k-filter-btn" onclick="filterKanji('nature',this)">Nature</button>
-      <button class="k-filter-btn" onclick="filterKanji('people',this)">People</button>
-      <button class="k-filter-btn" onclick="filterKanji('time',this)">Time</button>
-      <button class="k-filter-btn" onclick="filterKanji('mastered',this)">✓ Mastered</button>
-    </div>
-    <div class="kanji-grid" id="kanjiGrid"></div>
-  </div>
+<div class="panel" id="panel-kanji">
+<div class="section" style="padding-top:80px;">
+<div class="section-header">
+<div>
+<div class="section-label">103 Characters</div>
+<div class="section-title">N5 Kanji</div>
 </div>
-
+</div>
+<div class="kanji-filter-bar">
+<button class="k-filter-btn active" onclick="filterKanji('all',this)">All</button>
+<button class="k-filter-btn" onclick="filterKanji('numbers',this)">Numbers</button>
+<button class="k-filter-btn" onclick="filterKanji('nature',this)">Nature</button>
+<button class="k-filter-btn" onclick="filterKanji('people',this)">People</button>
+<button class="k-filter-btn" onclick="filterKanji('time',this)">Time</button>
+<button class="k-filter-btn" onclick="filterKanji('mastered',this)">✓ Mastered</button>
+</div>
+<div class="kanji-grid" id="kanjiGrid"></div>
+</div>
+</div>
 <!-- ─── PANEL: QUIZ ────────────────────────────────────────────────────────── -->
-<div id="panel-quiz" class="panel">
-  <div class="section" style="padding-top:80px;">
-    <div class="section-header">
-      <div>
-        <div class="section-label">JLPT Style</div>
-        <div class="section-title">Practice Quiz</div>
-      </div>
-    </div>
-    <div class="quiz-type-tabs">
-      <button class="quiz-type-tab active" onclick="setQuizType('vocab',this)">Vocabulary</button>
-      <button class="quiz-type-tab" onclick="setQuizType('kanji',this)">Kanji Reading</button>
-      <button class="quiz-type-tab" onclick="setQuizType('grammar',this)">Grammar</button>
-      <button class="quiz-type-tab" onclick="setQuizType('listening',this)">Listening 🔊</button>
-    </div>
-    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="quizProgressBar" style="width:0%"></div></div>
-    <div class="quiz-card">
-      <div class="quiz-q-label" id="quizQLabel">Question 1 of 10</div>
-      <div class="quiz-question" id="quizQuestion">すみません</div>
-      <div class="quiz-question-sub" id="quizQuestionSub">What does this mean?</div>
-      <div class="quiz-options" id="quizOptions"></div>
-      <div class="quiz-feedback" id="quizFeedback"></div>
-      <div class="quiz-footer">
-        <div class="quiz-score">Score: <b id="quizScoreVal">0</b> / <span id="quizTotal">10</span></div>
-        <button class="btn-primary" style="font-size:.8rem;padding:9px 18px;" id="quizNextBtn" onclick="nextQuestion()" disabled>Next →</button>
-      </div>
-    </div>
-  </div>
+<div class="panel" id="panel-quiz">
+<div class="section" style="padding-top:80px;">
+<div class="section-header">
+<div>
+<div class="section-label">JLPT Style</div>
+<div class="section-title">Practice Quiz</div>
 </div>
-
+</div>
+<div class="quiz-type-tabs">
+<button class="quiz-type-tab active" onclick="setQuizType('vocab',this)">Vocabulary</button>
+<button class="quiz-type-tab" onclick="setQuizType('kanji',this)">Kanji Reading</button>
+<button class="quiz-type-tab" onclick="setQuizType('grammar',this)">Grammar</button>
+<button class="quiz-type-tab" onclick="setQuizType('listening',this)">Listening 🔊</button>
+</div>
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="quizProgressBar" style="width:0%"></div></div>
+<div class="quiz-card">
+<div class="quiz-q-label" id="quizQLabel">Question 1 of 10</div>
+<div class="quiz-question" id="quizQuestion">すみません</div>
+<div class="quiz-question-sub" id="quizQuestionSub">What does this mean?</div>
+<div class="quiz-options" id="quizOptions"></div>
+<div class="quiz-feedback" id="quizFeedback"></div>
+<div class="quiz-footer">
+<div class="quiz-score">Score: <b id="quizScoreVal">0</b> / <span id="quizTotal">10</span></div>
+<button class="btn-primary" disabled="" id="quizNextBtn" onclick="nextQuestion()" style="font-size:.8rem;padding:9px 18px;">Next →</button>
+</div>
+</div>
+</div>
+</div>
 <!-- ─── PANEL: GRAMMAR ─────────────────────────────────────────────────────── -->
-<div id="panel-grammar" class="panel">
-  <div class="section" style="padding-top:80px;">
-    <div class="section-header">
-      <div>
-        <div class="section-label">40+ Patterns</div>
-        <div class="section-title">Grammar Guide</div>
-      </div>
-    </div>
-    <div class="grammar-accordion" id="grammarList"></div>
-  </div>
+<div class="panel" id="panel-grammar">
+<div class="section" style="padding-top:80px;">
+<div class="section-header">
+<div>
+<div class="section-label">40+ Patterns</div>
+<div class="section-title">Grammar Guide</div>
 </div>
-
+</div>
+<div class="grammar-accordion" id="grammarList"></div>
+</div>
+</div>
 <!-- ─── PANEL: KANA ────────────────────────────────────────────────────────── -->
-<div id="panel-kana" class="panel">
-  <div class="section" style="padding-top:80px;">
-    <div class="section-header">
-      <div>
-        <div class="section-label">Hiragana & Katakana</div>
-        <div class="section-title">Kana Charts</div>
-      </div>
-    </div>
-    <div class="kana-tabs">
-      <button class="kana-tab active" onclick="showKana('hiragana',this)">あ Hiragana</button>
-      <button class="kana-tab" onclick="showKana('katakana',this)">ア Katakana</button>
-    </div>
-    <div class="kana-grid" id="kanaGrid"></div>
-    <p style="font-size:.76rem;color:var(--ink4);margin-top:16px;font-weight:500;">Tap any character to hear its pronunciation.</p>
-  </div>
+<div class="panel" id="panel-kana">
+<div class="section" style="padding-top:80px;">
+<div class="section-header">
+<div>
+<div class="section-label">Hiragana &amp; Katakana</div>
+<div class="section-title">Kana Charts</div>
 </div>
-
+</div>
+<div class="kana-tabs">
+<button class="kana-tab active" onclick="showKana('hiragana',this)">あ Hiragana</button>
+<button class="kana-tab" onclick="showKana('katakana',this)">ア Katakana</button>
+</div>
+<div class="kana-grid" id="kanaGrid"></div>
+<p style="font-size:.76rem;color:var(--ink4);margin-top:16px;font-weight:500;">Tap any character to hear its pronunciation.</p>
+</div>
+</div>
 <!-- ─── PANEL: SENTENCES ──────────────────────────────────────────────────── -->
-<div id="panel-sentences" class="panel">
-  <div class="section" style="padding-top:80px;">
-    <div class="section-header">
-      <div>
-        <div class="section-label">Word Order Practice</div>
-        <div class="section-title">Sentence Builder</div>
-      </div>
-      <button class="btn-outline" style="font-size:.78rem;padding:8px 14px;" onclick="nextSentence()">Next →</button>
-    </div>
-    <div class="sentence-card">
-      <div class="sentence-prompt">Arrange the words to form the correct sentence:</div>
-      <div class="sentence-english" id="sentenceEnglish">I am a student.</div>
-    </div>
-    <div style="margin-bottom:10px;font-size:.74rem;color:var(--ink4);font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Word Bank</div>
-    <div class="word-bank" id="wordBank"></div>
-    <div style="margin-bottom:10px;font-size:.74rem;color:var(--ink4);font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Your Answer</div>
-    <div class="answer-area" id="answerArea"><span class="sentence-area-hint">Tap words above to build your sentence…</span></div>
-    <div class="sentence-actions">
-      <button class="s-btn check" onclick="checkSentence()">Check Answer</button>
-      <button class="s-btn reset" onclick="resetSentence()">↺ Reset</button>
-      <button class="fc-btn audio" style="margin-left:auto;" onclick="speakSentence()">🔊 Hear it</button>
-    </div>
-    <div class="sentence-result" id="sentenceResult"></div>
-  </div>
+<div class="panel" id="panel-sentences">
+<div class="section" style="padding-top:80px;">
+<div class="section-header">
+<div>
+<div class="section-label">Word Order Practice</div>
+<div class="section-title">Sentence Builder</div>
 </div>
-
+<button class="btn-outline" onclick="nextSentence()" style="font-size:.78rem;padding:8px 14px;">Next →</button>
+</div>
+<div class="sentence-card">
+<div class="sentence-prompt">Arrange the words to form the correct sentence:</div>
+<div class="sentence-english" id="sentenceEnglish">I am a student.</div>
+</div>
+<div style="margin-bottom:10px;font-size:.74rem;color:var(--ink4);font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Word Bank</div>
+<div class="word-bank" id="wordBank"></div>
+<div style="margin-bottom:10px;font-size:.74rem;color:var(--ink4);font-weight:700;text-transform:uppercase;letter-spacing:.1em;">Your Answer</div>
+<div class="answer-area" id="answerArea"><span class="sentence-area-hint">Tap words above to build your sentence…</span></div>
+<div class="sentence-actions">
+<button class="s-btn check" onclick="checkSentence()">Check Answer</button>
+<button class="s-btn reset" onclick="resetSentence()">↺ Reset</button>
+<button class="fc-btn audio" onclick="speakSentence()" style="margin-left:auto;">🔊 Hear it</button>
+</div>
+<div class="sentence-result" id="sentenceResult"></div>
+</div>
+</div>
 <!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav">
-  <div class="bn-items">
-    <button class="bn-item active" id="bn-home" onclick="showPanel('home');setBnActive(this)"><span class="bn-icon">🏠</span><span class="bn-lbl">Home</span></button>
-    <button class="bn-item" id="bn-vocab" onclick="showPanel('vocab');setBnActive(this)"><span class="bn-icon">🃏</span><span class="bn-lbl">Vocab</span></button>
-    <button class="bn-item" id="bn-quiz" onclick="showPanel('quiz');setBnActive(this)"><span class="bn-icon">📝</span><span class="bn-lbl">Quiz</span></button>
-    <button class="bn-item" id="bn-kanji" onclick="showPanel('kanji');setBnActive(this)"><span class="bn-icon">漢</span><span class="bn-lbl">Kanji</span></button>
-    <button class="bn-item" id="bn-grammar" onclick="showPanel('grammar');setBnActive(this)"><span class="bn-icon">📖</span><span class="bn-lbl">Grammar</span></button>
-  </div>
+<div class="bn-items">
+<button class="bn-item active" id="bn-home" onclick="showPanel('home');setBnActive(this)"><span class="bn-icon">🏠</span><span class="bn-lbl">Home</span></button>
+<button class="bn-item" id="bn-vocab" onclick="showPanel('vocab');setBnActive(this)"><span class="bn-icon">🃏</span><span class="bn-lbl">Vocab</span></button>
+<button class="bn-item" id="bn-quiz" onclick="showPanel('quiz');setBnActive(this)"><span class="bn-icon">📝</span><span class="bn-lbl">Quiz</span></button>
+<button class="bn-item" id="bn-kanji" onclick="showPanel('kanji');setBnActive(this)"><span class="bn-icon">漢</span><span class="bn-lbl">Kanji</span></button>
+<button class="bn-item" id="bn-grammar" onclick="showPanel('grammar');setBnActive(this)"><span class="bn-icon">📖</span><span class="bn-lbl">Grammar</span></button>
+</div>
 </nav>
-
 <!-- TOAST -->
 <div class="toast" id="toast"><span class="toast-icon" id="toastIcon">✅</span><span id="toastMsg">Done!</span></div>
-
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
 // DATA

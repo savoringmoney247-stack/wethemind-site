@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en-US">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
 <title>WordSpark — English Dictionary</title>
-<meta name="description" content="Learn English words the fun way. Definitions, quizzes, etymology and daily challenges. Free offline PWA.">
-<meta name="theme-color" content="#0f0e17">
-<link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="WordSpark">
-<link rel="apple-touch-icon" href="icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<meta content="Learn English words the fun way. Definitions, quizzes, etymology and daily challenges. Free offline PWA." name="description"/>
+<meta content="#0f0e17" name="theme-color"/>
+<link href="manifest.json" rel="manifest"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="WordSpark" name="apple-mobile-web-app-title"/>
+
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&amp;family=DM+Sans:wght@300;400;500;600;700&amp;family=DM+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -218,128 +219,119 @@ body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellips
   .snum{font-size:1.5rem;}
 }
 </style>
-</head>
-<body>
+<link href="https://wethemind.com/tools/apps/english-dictionary/" rel="canonical"/><meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/><meta content="website" property="og:type"/><meta content="WordSpark — English Dictionary" property="og:title"/><meta content="Learn English words the fun way. Definitions, quizzes, etymology and daily challenges. Free offline PWA." property="og:description"/><meta content="https://wethemind.com/tools/apps/english-dictionary/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="WordSpark — English Dictionary" name="twitter:title"/><meta content="Learn English words the fun way. Definitions, quizzes, etymology and daily challenges. Free offline PWA." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><link href="https://wethemind.com/tools/apps/english-dictionary/" hreflang="en-us" rel="alternate"/><link href="https://wethemind.com/tools/apps/english-dictionary/" hreflang="x-default" rel="alternate"/><script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://wethemind.com/"}, {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://wethemind.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Apps", "item": "https://wethemind.com/tools/apps/"}, {"@type": "ListItem", "position": 4, "name": "English Dictionary", "item": "https://wethemind.com/tools/apps/english-dictionary/"}]}</script><link rel="apple-touch-icon" href="icon-192.png"></head>
+<body><h1 class="sr-only">WordSpark</h1>
 <div id="app">
 <div class="offbanner" id="offbanner">📵 Offline — all content still available!</div>
-
 <!-- TOP NAV -->
 <nav class="topnav">
-  <a class="logo" href="#" onclick="nav('home');return false;">
-    <div class="logo-mark">✨</div>
-    <div class="logo-name">Word<span>Spark</span></div>
-  </a>
-  <div class="nav-sw">
-    <span class="nav-si">🔍</span>
-    <input class="nav-inp" id="nsi" type="search" placeholder="Search any word…" autocomplete="off" oninput="doSearch(this.value)" onfocus="openSR()" onblur="setTimeout(closeSR,180)">
-    <div class="sr-drop" id="srdrop"></div>
-  </div>
-  <button class="install-btn hidden" id="ibtn" onclick="installApp()">⬇ Install</button>
+<a class="logo" href="#" onclick="nav('home');return false;">
+<div class="logo-mark">✨</div>
+<div class="logo-name">Word<span>Spark</span></div>
+</a>
+<div class="nav-sw">
+<span class="nav-si">🔍</span>
+<input autocomplete="off" class="nav-inp" id="nsi" onblur="setTimeout(closeSR,180)" onfocus="openSR()" oninput="doSearch(this.value)" placeholder="Search any word…" type="search"/>
+<div class="sr-drop" id="srdrop"></div>
+</div>
+<button class="install-btn hidden" id="ibtn" onclick="installApp()">⬇ Install</button>
 </nav>
-
 <!-- BOTTOM NAV -->
 <nav class="bnav">
-  <button class="bni active" id="bn-home" onclick="nav('home')"><span class="bni-icon">🏠</span><span class="bni-lbl">Home</span></button>
-  <button class="bni" id="bn-discover" onclick="nav('discover')"><span class="bni-icon">🔭</span><span class="bni-lbl">Discover</span></button>
-  <button class="bni" id="bn-quiz" onclick="nav('quiz')"><span class="bni-icon">⚡</span><span class="bni-lbl">Quiz</span></button>
-  <button class="bni" id="bn-collection" onclick="nav('collection')"><span class="bni-icon">📚</span><span class="bni-lbl">My Words</span></button>
+<button class="bni active" id="bn-home" onclick="nav('home')"><span class="bni-icon">🏠</span><span class="bni-lbl">Home</span></button>
+<button class="bni" id="bn-discover" onclick="nav('discover')"><span class="bni-icon">🔭</span><span class="bni-lbl">Discover</span></button>
+<button class="bni" id="bn-quiz" onclick="nav('quiz')"><span class="bni-icon">⚡</span><span class="bni-lbl">Quiz</span></button>
+<button class="bni" id="bn-collection" onclick="nav('collection')"><span class="bni-icon">📚</span><span class="bni-lbl">My Words</span></button>
 </nav>
-
 <!-- HOME -->
-<div id="panel-home" class="panel active">
-  <div class="wotd-zone">
-    <div class="wotd-pill">⭐ Word of the Day</div>
-    <div class="wotd-card" id="wotdcard"></div>
-  </div>
-  <div class="stats-row">
-    <div class="scard"><span class="snum" id="s-streak" style="color:var(--amber)">0</span><span class="slbl">Streak 🔥</span></div>
-    <div class="scard"><span class="snum" id="s-saved" style="color:var(--mint)">0</span><span class="slbl">Saved</span></div>
-    <div class="scard"><span class="snum" id="s-quizzed" style="color:var(--lav)">0</span><span class="slbl">Quizzed</span></div>
-  </div>
-  <div class="sec">
-    <div class="sechd"><div class="sectitle">✨ Featured</div><span class="seclink" onclick="nav('discover')">All words →</span></div>
-    <div class="wgrid" id="featgrid"></div>
-  </div>
-  <div class="sec">
-    <div class="sechd"><div class="sectitle">📂 Browse by Category</div></div>
-    <div style="display:flex;gap:9px;flex-wrap:wrap;">
-      <button class="btn btn-g btn-sm" onclick="goDiscover('emotion')">😊 Emotions</button>
-      <button class="btn btn-g btn-sm" onclick="goDiscover('nature')">🌿 Nature</button>
-      <button class="btn btn-g btn-sm" onclick="goDiscover('intellect')">🧠 Intellect</button>
-      <button class="btn btn-g btn-sm" onclick="goDiscover('beauty')">🌸 Beauty</button>
-      <button class="btn btn-g btn-sm" onclick="goDiscover('character')">🦁 Character</button>
-      <button class="btn btn-g btn-sm" onclick="goDiscover('time')">⏳ Time</button>
-    </div>
-  </div>
+<div class="panel active" id="panel-home">
+<div class="wotd-zone">
+<div class="wotd-pill">⭐ Word of the Day</div>
+<div class="wotd-card" id="wotdcard"></div>
 </div>
-
+<div class="stats-row">
+<div class="scard"><span class="snum" id="s-streak" style="color:var(--amber)">0</span><span class="slbl">Streak 🔥</span></div>
+<div class="scard"><span class="snum" id="s-saved" style="color:var(--mint)">0</span><span class="slbl">Saved</span></div>
+<div class="scard"><span class="snum" id="s-quizzed" style="color:var(--lav)">0</span><span class="slbl">Quizzed</span></div>
+</div>
+<div class="sec">
+<div class="sechd"><div class="sectitle">✨ Featured</div><span class="seclink" onclick="nav('discover')">All words →</span></div>
+<div class="wgrid" id="featgrid"></div>
+</div>
+<div class="sec">
+<div class="sechd"><div class="sectitle">📂 Browse by Category</div></div>
+<div style="display:flex;gap:9px;flex-wrap:wrap;">
+<button class="btn btn-g btn-sm" onclick="goDiscover('emotion')">😊 Emotions</button>
+<button class="btn btn-g btn-sm" onclick="goDiscover('nature')">🌿 Nature</button>
+<button class="btn btn-g btn-sm" onclick="goDiscover('intellect')">🧠 Intellect</button>
+<button class="btn btn-g btn-sm" onclick="goDiscover('beauty')">🌸 Beauty</button>
+<button class="btn btn-g btn-sm" onclick="goDiscover('character')">🦁 Character</button>
+<button class="btn btn-g btn-sm" onclick="goDiscover('time')">⏳ Time</button>
+</div>
+</div>
+</div>
 <!-- DISCOVER -->
-<div id="panel-discover" class="panel">
-  <div class="sec" style="padding-top:18px;">
-    <div class="sechd"><div class="sectitle" id="disc-title">🔭 All Words</div></div>
-    <div class="catpills" id="catpills">
-      <button class="cpill active" onclick="setDisc('all',this)">All</button>
-      <button class="cpill" onclick="setDisc('emotion',this)">😊 Emotion</button>
-      <button class="cpill" onclick="setDisc('nature',this)">🌿 Nature</button>
-      <button class="cpill" onclick="setDisc('intellect',this)">🧠 Intellect</button>
-      <button class="cpill" onclick="setDisc('beauty',this)">🌸 Beauty</button>
-      <button class="cpill" onclick="setDisc('character',this)">🦁 Character</button>
-      <button class="cpill" onclick="setDisc('time',this)">⏳ Time</button>
-    </div>
-    <div class="wgrid" id="discgrid"></div>
-  </div>
+<div class="panel" id="panel-discover">
+<div class="sec" style="padding-top:18px;">
+<div class="sechd"><div class="sectitle" id="disc-title">🔭 All Words</div></div>
+<div class="catpills" id="catpills">
+<button class="cpill active" onclick="setDisc('all',this)">All</button>
+<button class="cpill" onclick="setDisc('emotion',this)">😊 Emotion</button>
+<button class="cpill" onclick="setDisc('nature',this)">🌿 Nature</button>
+<button class="cpill" onclick="setDisc('intellect',this)">🧠 Intellect</button>
+<button class="cpill" onclick="setDisc('beauty',this)">🌸 Beauty</button>
+<button class="cpill" onclick="setDisc('character',this)">🦁 Character</button>
+<button class="cpill" onclick="setDisc('time',this)">⏳ Time</button>
 </div>
-
+<div class="wgrid" id="discgrid"></div>
+</div>
+</div>
 <!-- WORD DETAIL -->
-<div id="panel-word" class="panel">
-  <div class="wdzone" id="wdcontent"></div>
+<div class="panel" id="panel-word">
+<div class="wdzone" id="wdcontent"></div>
 </div>
-
 <!-- QUIZ -->
-<div id="panel-quiz" class="panel">
-  <div class="qwrap">
-    <div class="sechd" style="margin-bottom:18px;"><div class="sectitle">⚡ Quiz Mode</div></div>
-    <div id="qselect">
-      <div class="qmgrid">
-        <div class="qmc" onclick="startQ('definition')"><span class="qmi">📖</span><div class="qmt">Definition Match</div><div class="qmd">See a word, pick its meaning</div></div>
-        <div class="qmc" onclick="startQ('reverse')"><span class="qmi">🔀</span><div class="qmt">Word from Clue</div><div class="qmd">Read a clue, pick the word</div></div>
-        <div class="qmc" onclick="startQ('synonym')"><span class="qmi">🔗</span><div class="qmt">Synonym Finder</div><div class="qmd">Match words that mean the same</div></div>
-        <div class="qmc" onclick="startQ('fillin')"><span class="qmi">✏️</span><div class="qmt">Spell It Out</div><div class="qmd">Read the clue, type the word</div></div>
-      </div>
-      <p id="qnote" style="font-size:.78rem;color:var(--text3);text-align:center;margin-top:8px;"></p>
-    </div>
-    <div class="qa" id="qazone">
-      <div class="qapbar"><div class="qapfill" id="qapfill"></div></div>
-      <div class="qarow"><span class="qaqn" id="qaqn">Q 1/10</span><span class="qasc" id="qasc">Score: 0</span></div>
-      <div id="qqa"></div>
-      <div class="qares" id="qares">
-        <span class="qaremoji" id="qaremoji">🎉</span>
-        <div class="qaretitle" id="qaretitle">Well done!</div>
-        <div class="qarescore" id="qarescore">8 / 10</div>
-        <div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:14px;">
-          <button class="btn btn-a" onclick="resetQ()">🔁 Play Again</button>
-          <button class="btn btn-g" onclick="nav('discover')">📚 Study More</button>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="panel" id="panel-quiz">
+<div class="qwrap">
+<div class="sechd" style="margin-bottom:18px;"><div class="sectitle">⚡ Quiz Mode</div></div>
+<div id="qselect">
+<div class="qmgrid">
+<div class="qmc" onclick="startQ('definition')"><span class="qmi">📖</span><div class="qmt">Definition Match</div><div class="qmd">See a word, pick its meaning</div></div>
+<div class="qmc" onclick="startQ('reverse')"><span class="qmi">🔀</span><div class="qmt">Word from Clue</div><div class="qmd">Read a clue, pick the word</div></div>
+<div class="qmc" onclick="startQ('synonym')"><span class="qmi">🔗</span><div class="qmt">Synonym Finder</div><div class="qmd">Match words that mean the same</div></div>
+<div class="qmc" onclick="startQ('fillin')"><span class="qmi">✏️</span><div class="qmt">Spell It Out</div><div class="qmd">Read the clue, type the word</div></div>
 </div>
-
+<p id="qnote" style="font-size:.78rem;color:var(--text3);text-align:center;margin-top:8px;"></p>
+</div>
+<div class="qa" id="qazone">
+<div class="qapbar"><div class="qapfill" id="qapfill"></div></div>
+<div class="qarow"><span class="qaqn" id="qaqn">Q 1/10</span><span class="qasc" id="qasc">Score: 0</span></div>
+<div id="qqa"></div>
+<div class="qares" id="qares">
+<span class="qaremoji" id="qaremoji">🎉</span>
+<div class="qaretitle" id="qaretitle">Well done!</div>
+<div class="qarescore" id="qarescore">8 / 10</div>
+<div style="display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:14px;">
+<button class="btn btn-a" onclick="resetQ()">🔁 Play Again</button>
+<button class="btn btn-g" onclick="nav('discover')">📚 Study More</button>
+</div>
+</div>
+</div>
+</div>
+</div>
 <!-- COLLECTION -->
-<div id="panel-collection" class="panel">
-  <div class="cwrap">
-    <div class="sechd" style="margin-bottom:14px;">
-      <div class="sectitle">📚 My Words</div>
-      <button class="btn btn-g btn-sm" onclick="startQ('definition',true)">⚡ Quiz My Words</button>
-    </div>
-    <div id="collcontent"></div>
-  </div>
+<div class="panel" id="panel-collection">
+<div class="cwrap">
+<div class="sechd" style="margin-bottom:14px;">
+<div class="sectitle">📚 My Words</div>
+<button class="btn btn-g btn-sm" onclick="startQ('definition',true)">⚡ Quiz My Words</button>
 </div>
-
+<div id="collcontent"></div>
+</div>
+</div>
 <!-- TOAST -->
 <div class="toast" id="toast"><span id="ticon">✅</span><span id="tmsg">Saved!</span></div>
 </div>
-
 <script>
 // ── DATA ───────────────────────────────────────────────────────
 const W=[

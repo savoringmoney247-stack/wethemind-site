@@ -1,99 +1,90 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en-US">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex, nofollow" name="robots"/>
 <title>Teacher Dashboard — We The Mind Portal</title>
-<link rel="stylesheet" href="../assets/portal.css">
-</head>
+<link href="../assets/portal.css" rel="stylesheet"/>
+<meta content="Start the class, then mark attendance, topics, and notes once it's done." name="description"/><link href="https://wethemind.com/portal/teacher/" rel="canonical"/><meta content="website" property="og:type"/><meta content="Teacher Dashboard — We The Mind Portal" property="og:title"/><meta content="Start the class, then mark attendance, topics, and notes once it's done." property="og:description"/><meta content="https://wethemind.com/portal/teacher/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Teacher Dashboard — We The Mind Portal" name="twitter:title"/><meta content="Start the class, then mark attendance, topics, and notes once it's done." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><meta content="#E52421" name="theme-color"/><link href="../../assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="../../favicon.ico" rel="shortcut icon"/><link href="../../assets/apple-touch-icon.png" rel="apple-touch-icon"/></head>
 <body>
 <div class="portal-shell">
-  <aside class="portal-sidebar">
-    <a href="./" class="brand">We The Mind <span>Portal</span></a>
-    <span class="role-badge">Teacher</span>
-    <nav id="side-nav">
-      <a href="#" data-view="overview" class="active">📊 Overview</a>
-      <a href="#" data-view="classes">📚 My Classes</a>
-      <a href="#" data-view="calendar">🗓️ Calendar</a>
-    </nav>
-    <div class="sidebar-foot">
-      <div class="user-email" id="user-name"></div>
-      <button id="logout-btn" class="btn btn-ghost btn-sm" style="width:100%;">Log Out</button>
-    </div>
-  </aside>
-
-  <main class="portal-content">
-
-    <!-- OVERVIEW -->
-    <section id="view-overview">
-      <h1 class="page-title">Your Performance</h1>
-      <p class="page-sub">A quick look at how things are going.</p>
-      <div class="stat-grid">
-        <div class="stat-card"><div class="icon icon-leaf">✅</div><div class="num" id="stat-taught">—</div><div class="lbl">Classes Taught</div></div>
-        <div class="stat-card"><div class="icon icon-gold">⭐</div><div class="num" id="stat-rating">—</div><div class="lbl">Average Rating</div></div>
-        <div class="stat-card"><div class="icon icon-blue">⏱️</div><div class="num" id="stat-hours">—</div><div class="lbl">Hours Taught</div></div>
-        <div class="stat-card"><div class="icon icon-violet">💰</div><div class="num" id="stat-earnings">—</div><div class="lbl">Est. Earnings</div></div>
-      </div>
-      <div class="card">
-        <div class="card-row"><h2 style="margin:0;">Attendance Rate</h2></div>
-        <div class="ring-chart-wrap">
-          <div id="attendance-ring"></div>
-          <div><div class="ring-chart-num" id="attendance-pct">—</div><div class="sub" style="margin:0;">of scheduled classes completed</div></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CLASSES -->
-    <section id="view-classes" style="display:none;">
-      <h1 class="page-title">My Classes</h1>
-      <p class="page-sub">Start the class, then mark attendance, topics, and notes once it's done.</p>
-      <div class="card">
-        <div class="tab-row" id="class-tabs">
-          <button class="tab-btn active" data-status="scheduled">Upcoming</button>
-          <button class="tab-btn" data-status="completed">Completed</button>
-          <button class="tab-btn" data-status="cancelled">Cancelled</button>
-        </div>
-        <div id="classes-list"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-    <!-- CALENDAR -->
-    <section id="view-calendar" style="display:none;">
-      <h1 class="page-title">Calendar</h1>
-      <p class="page-sub">Your schedule this week.</p>
-      <div class="card"><div id="calendar-grid"><p class="empty-note">Loading…</p></div></div>
-    </section>
-
-  </main>
+<aside class="portal-sidebar">
+<a class="brand" href="./">We The Mind <span>Portal</span></a>
+<span class="role-badge">Teacher</span>
+<nav id="side-nav">
+<a class="active" data-view="overview" href="#">📊 Overview</a>
+<a data-view="classes" href="#">📚 My Classes</a>
+<a data-view="calendar" href="#">🗓️ Calendar</a>
+</nav>
+<div class="sidebar-foot">
+<div class="user-email" id="user-name"></div>
+<button class="btn btn-ghost btn-sm" id="logout-btn" style="width:100%;">Log Out</button>
 </div>
-
+</aside>
+<main class="portal-content">
+<!-- OVERVIEW -->
+<section id="view-overview">
+<h1 class="page-title">Your Performance</h1>
+<p class="page-sub">A quick look at how things are going.</p>
+<div class="stat-grid">
+<div class="stat-card"><div class="icon icon-leaf">✅</div><div class="num" id="stat-taught">—</div><div class="lbl">Classes Taught</div></div>
+<div class="stat-card"><div class="icon icon-gold">⭐</div><div class="num" id="stat-rating">—</div><div class="lbl">Average Rating</div></div>
+<div class="stat-card"><div class="icon icon-blue">⏱️</div><div class="num" id="stat-hours">—</div><div class="lbl">Hours Taught</div></div>
+<div class="stat-card"><div class="icon icon-violet">💰</div><div class="num" id="stat-earnings">—</div><div class="lbl">Est. Earnings</div></div>
+</div>
+<div class="card">
+<div class="card-row"><h2 style="margin:0;">Attendance Rate</h2></div>
+<div class="ring-chart-wrap">
+<div id="attendance-ring"></div>
+<div><div class="ring-chart-num" id="attendance-pct">—</div><div class="sub" style="margin:0;">of scheduled classes completed</div></div>
+</div>
+</div>
+</section>
+<!-- CLASSES -->
+<section id="view-classes" style="display:none;">
+<h1 class="page-title">My Classes</h1>
+<p class="page-sub">Start the class, then mark attendance, topics, and notes once it's done.</p>
+<div class="card">
+<div class="tab-row" id="class-tabs">
+<button class="tab-btn active" data-status="scheduled">Upcoming</button>
+<button class="tab-btn" data-status="completed">Completed</button>
+<button class="tab-btn" data-status="cancelled">Cancelled</button>
+</div>
+<div id="classes-list"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+<!-- CALENDAR -->
+<section id="view-calendar" style="display:none;">
+<h1 class="page-title">Calendar</h1>
+<p class="page-sub">Your schedule this week.</p>
+<div class="card"><div id="calendar-grid"><p class="empty-note">Loading…</p></div></div>
+</section>
+</main>
+</div>
 <!-- Mark complete modal -->
-<div id="modal-backdrop" class="modal-backdrop">
-  <div class="modal-card">
-    <h2>Mark This Class Complete</h2>
-    <div class="field"><label><input type="checkbox" id="modal-student-attended" checked style="width:auto; margin-right:6px;"> Student attended</label></div>
-
-    <div class="field" id="prior-progress-field" style="display:none;">
-      <label>Already covered with this student</label>
-      <div id="prior-progress-list" style="max-height:120px; overflow-y:auto;"></div>
-    </div>
-
-    <div class="field">
-      <label>Topics covered today</label>
-      <div id="topic-rows"></div>
-      <button type="button" class="btn btn-ghost btn-sm" id="add-topic-row">+ Add Topic</button>
-    </div>
-
-    <div class="field"><label for="modal-notes">Session notes (optional)</label><textarea id="modal-notes" rows="3"></textarea></div>
-    <div class="field"><label for="modal-recording">Recording link (optional)</label><input type="url" id="modal-recording" placeholder="https://..."></div>
-    <div style="display:flex; gap:10px;">
-      <button class="btn" id="modal-save">Save &amp; Mark Complete</button>
-      <button class="btn btn-ghost" id="modal-cancel" type="button">Cancel</button>
-    </div>
-  </div>
+<div class="modal-backdrop" id="modal-backdrop">
+<div class="modal-card">
+<h2>Mark This Class Complete</h2>
+<div class="field"><label><input checked="" id="modal-student-attended" style="width:auto; margin-right:6px;" type="checkbox"/> Student attended</label></div>
+<div class="field" id="prior-progress-field" style="display:none;">
+<label>Already covered with this student</label>
+<div id="prior-progress-list" style="max-height:120px; overflow-y:auto;"></div>
 </div>
-
+<div class="field">
+<label>Topics covered today</label>
+<div id="topic-rows"></div>
+<button class="btn btn-ghost btn-sm" id="add-topic-row" type="button">+ Add Topic</button>
+</div>
+<div class="field"><label for="modal-notes">Session notes (optional)</label><textarea id="modal-notes" rows="3"></textarea></div>
+<div class="field"><label for="modal-recording">Recording link (optional)</label><input id="modal-recording" placeholder="https://..." type="url"/></div>
+<div style="display:flex; gap:10px;">
+<button class="btn" id="modal-save">Save &amp; Mark Complete</button>
+<button class="btn btn-ghost" id="modal-cancel" type="button">Cancel</button>
+</div>
+</div>
+</div>
 <script type="module">
   import { requireRole, logout, db } from "../assets/auth.js";
   import { ringChartHTML } from "../assets/charts.js";

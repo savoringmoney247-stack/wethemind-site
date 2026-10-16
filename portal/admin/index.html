@@ -1,132 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+
+<html lang="en-US">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta content="noindex, nofollow" name="robots"/>
 <title>Admin Dashboard — We The Mind Portal</title>
-<link rel="stylesheet" href="../assets/portal.css">
-</head>
+<link href="../assets/portal.css" rel="stylesheet"/>
+<meta content="New student/teacher accounts are created by We The Mind directly (not self-signup) — ask your developer to add one whenever you're ready." name="description"/><link href="https://wethemind.com/portal/admin/" rel="canonical"/><meta content="website" property="og:type"/><meta content="Admin Dashboard — We The Mind Portal" property="og:title"/><meta content="New student/teacher accounts are created by We The Mind directly (not self-signup) — ask your developer to add one whenever you're ready." property="og:description"/><meta content="https://wethemind.com/portal/admin/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Admin Dashboard — We The Mind Portal" name="twitter:title"/><meta content="New student/teacher accounts are created by We The Mind directly (not self-signup) — ask your developer to add one whenever you're ready." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><meta content="#E52421" name="theme-color"/><link href="../../assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="../../favicon.ico" rel="shortcut icon"/><link href="../../assets/apple-touch-icon.png" rel="apple-touch-icon"/></head>
 <body>
 <div class="portal-shell">
-  <aside class="portal-sidebar">
-    <a href="./" class="brand">We The Mind <span>Portal</span></a>
-    <span class="role-badge">Admin</span>
-    <nav id="side-nav">
-      <a href="#" data-view="overview" class="active">📊 Overview</a>
-      <a href="#" data-view="students">🎓 Students</a>
-      <a href="#" data-view="teachers">🧑‍🏫 Teachers</a>
-      <a href="#" data-view="classes">📚 Classes</a>
-      <a href="#" data-view="calendar">🗓️ Calendar</a>
-    </nav>
-    <div class="sidebar-foot">
-      <div class="user-email" id="user-name"></div>
-      <button id="logout-btn" class="btn btn-ghost btn-sm" style="width:100%;">Log Out</button>
-    </div>
-  </aside>
-
-  <main class="portal-content">
-
-    <!-- OVERVIEW -->
-    <section id="view-overview">
-      <h1 class="page-title">Overview</h1>
-      <p class="page-sub">Everything happening across We The Mind, at a glance.</p>
-      <div class="stat-grid">
-        <div class="stat-card"><div class="icon icon-blue">🎓</div><div class="num" id="stat-students">—</div><div class="lbl">Students</div></div>
-        <div class="stat-card"><div class="icon icon-violet">🧑‍🏫</div><div class="num" id="stat-teachers">—</div><div class="lbl">Teachers</div></div>
-        <div class="stat-card"><div class="icon icon-gold">📅</div><div class="num" id="stat-upcoming">—</div><div class="lbl">Upcoming Classes</div></div>
-        <div class="stat-card"><div class="icon icon-leaf">✅</div><div class="num" id="stat-completed">—</div><div class="lbl">Completed Classes</div></div>
-        <div class="stat-card"><div class="icon icon-red">💰</div><div class="num" id="stat-payable">—</div><div class="lbl">Total Payable (est.)</div></div>
-      </div>
-      <div class="card">
-        <h2>Classes per Teacher</h2>
-        <p class="sub">Completed sessions, all-time</p>
-        <div id="teacher-bar-chart"><p class="empty-note">Loading…</p></div>
-      </div>
-      <div class="card">
-        <p class="sub" style="margin:0;">New student/teacher accounts are created by We The Mind directly (not self-signup) — ask your developer to add one whenever you're ready.</p>
-      </div>
-    </section>
-
-    <!-- STUDENTS -->
-    <section id="view-students" style="display:none;">
-      <h1 class="page-title">Students</h1>
-      <p class="page-sub">Package balances and learning progress.</p>
-      <div class="card">
-        <div class="card-row"><h2 style="margin:0;">All Students</h2><input type="text" id="student-search" class="search-input" placeholder="Search by name or email…"></div>
-        <div id="students-table"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-    <!-- TEACHERS -->
-    <section id="view-teachers" style="display:none;">
-      <h1 class="page-title">Teachers</h1>
-      <p class="page-sub">Performance, ratings, and earnings.</p>
-      <div class="card">
-        <div class="card-row"><h2 style="margin:0;">All Teachers</h2><input type="text" id="teacher-search" class="search-input" placeholder="Search by name or email…"></div>
-        <div id="teachers-table"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-    <!-- CLASSES -->
-    <section id="view-classes" style="display:none;">
-      <h1 class="page-title">Classes</h1>
-      <p class="page-sub">Schedule new sessions and manage existing ones.</p>
-
-      <div class="card">
-        <h2>Schedule a Class</h2>
-        <form id="new-class-form">
-          <div class="form-grid">
-            <div class="field"><label for="nc-student">Student</label><select id="nc-student" required></select></div>
-            <div class="field"><label for="nc-teacher">Teacher</label><select id="nc-teacher" required></select></div>
-            <div class="field"><label for="nc-subject">Subject</label><input type="text" id="nc-subject" required placeholder="e.g. AP Calculus AB"></div>
-            <div class="field"><label for="nc-when">Date &amp; Time</label><input type="datetime-local" id="nc-when" required></div>
-            <div class="field"><label for="nc-duration">Duration (minutes)</label><input type="number" id="nc-duration" value="60" min="15" step="15"></div>
-            <div class="field"><label for="nc-link">Zoom / Meet Link</label><input type="url" id="nc-link" placeholder="https://..."></div>
-          </div>
-          <div class="field" style="max-width:320px;">
-            <label><input type="checkbox" id="nc-repeat" style="width:auto; margin-right:6px;"> Repeat weekly</label>
-          </div>
-          <div class="field" id="nc-weeks-field" style="max-width:200px; display:none;">
-            <label for="nc-weeks">Number of weeks (including this one)</label>
-            <input type="number" id="nc-weeks" value="4" min="2" max="26">
-          </div>
-          <button type="submit" class="btn">Schedule Class</button>
-        </form>
-      </div>
-
-      <div class="card">
-        <div class="card-row"><h2 style="margin:0;">All Classes</h2></div>
-        <div class="tab-row" id="class-tabs">
-          <button class="tab-btn active" data-status="all">All</button>
-          <button class="tab-btn" data-status="scheduled">Upcoming</button>
-          <button class="tab-btn" data-status="completed">Completed</button>
-          <button class="tab-btn" data-status="cancelled">Cancelled</button>
-        </div>
-        <div id="classes-table"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-    <!-- CALENDAR -->
-    <section id="view-calendar" style="display:none;">
-      <h1 class="page-title">Calendar</h1>
-      <p class="page-sub">This week, across every teacher.</p>
-      <div class="card">
-        <div id="calendar-grid"><p class="empty-note">Loading…</p></div>
-      </div>
-    </section>
-
-  </main>
+<aside class="portal-sidebar">
+<a class="brand" href="./">We The Mind <span>Portal</span></a>
+<span class="role-badge">Admin</span>
+<nav id="side-nav">
+<a class="active" data-view="overview" href="#">📊 Overview</a>
+<a data-view="students" href="#">🎓 Students</a>
+<a data-view="teachers" href="#">🧑‍🏫 Teachers</a>
+<a data-view="classes" href="#">📚 Classes</a>
+<a data-view="calendar" href="#">🗓️ Calendar</a>
+</nav>
+<div class="sidebar-foot">
+<div class="user-email" id="user-name"></div>
+<button class="btn btn-ghost btn-sm" id="logout-btn" style="width:100%;">Log Out</button>
 </div>
-
+</aside>
+<main class="portal-content">
+<!-- OVERVIEW -->
+<section id="view-overview">
+<h1 class="page-title">Overview</h1>
+<p class="page-sub">Everything happening across We The Mind, at a glance.</p>
+<div class="stat-grid">
+<div class="stat-card"><div class="icon icon-blue">🎓</div><div class="num" id="stat-students">—</div><div class="lbl">Students</div></div>
+<div class="stat-card"><div class="icon icon-violet">🧑‍🏫</div><div class="num" id="stat-teachers">—</div><div class="lbl">Teachers</div></div>
+<div class="stat-card"><div class="icon icon-gold">📅</div><div class="num" id="stat-upcoming">—</div><div class="lbl">Upcoming Classes</div></div>
+<div class="stat-card"><div class="icon icon-leaf">✅</div><div class="num" id="stat-completed">—</div><div class="lbl">Completed Classes</div></div>
+<div class="stat-card"><div class="icon icon-red">💰</div><div class="num" id="stat-payable">—</div><div class="lbl">Total Payable (est.)</div></div>
+</div>
+<div class="card">
+<h2>Classes per Teacher</h2>
+<p class="sub">Completed sessions, all-time</p>
+<div id="teacher-bar-chart"><p class="empty-note">Loading…</p></div>
+</div>
+<div class="card">
+<p class="sub" style="margin:0;">New student/teacher accounts are created by We The Mind directly (not self-signup) — ask your developer to add one whenever you're ready.</p>
+</div>
+</section>
+<!-- STUDENTS -->
+<section id="view-students" style="display:none;">
+<h1 class="page-title">Students</h1>
+<p class="page-sub">Package balances and learning progress.</p>
+<div class="card">
+<div class="card-row"><h2 style="margin:0;">All Students</h2><input class="search-input" id="student-search" placeholder="Search by name or email…" type="text"/></div>
+<div id="students-table"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+<!-- TEACHERS -->
+<section id="view-teachers" style="display:none;">
+<h1 class="page-title">Teachers</h1>
+<p class="page-sub">Performance, ratings, and earnings.</p>
+<div class="card">
+<div class="card-row"><h2 style="margin:0;">All Teachers</h2><input class="search-input" id="teacher-search" placeholder="Search by name or email…" type="text"/></div>
+<div id="teachers-table"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+<!-- CLASSES -->
+<section id="view-classes" style="display:none;">
+<h1 class="page-title">Classes</h1>
+<p class="page-sub">Schedule new sessions and manage existing ones.</p>
+<div class="card">
+<h2>Schedule a Class</h2>
+<form id="new-class-form">
+<div class="form-grid">
+<div class="field"><label for="nc-student">Student</label><select id="nc-student" required=""></select></div>
+<div class="field"><label for="nc-teacher">Teacher</label><select id="nc-teacher" required=""></select></div>
+<div class="field"><label for="nc-subject">Subject</label><input id="nc-subject" placeholder="e.g. AP Calculus AB" required="" type="text"/></div>
+<div class="field"><label for="nc-when">Date &amp; Time</label><input id="nc-when" required="" type="datetime-local"/></div>
+<div class="field"><label for="nc-duration">Duration (minutes)</label><input id="nc-duration" min="15" step="15" type="number" value="60"/></div>
+<div class="field"><label for="nc-link">Zoom / Meet Link</label><input id="nc-link" placeholder="https://..." type="url"/></div>
+</div>
+<div class="field" style="max-width:320px;">
+<label><input id="nc-repeat" style="width:auto; margin-right:6px;" type="checkbox"/> Repeat weekly</label>
+</div>
+<div class="field" id="nc-weeks-field" style="max-width:200px; display:none;">
+<label for="nc-weeks">Number of weeks (including this one)</label>
+<input id="nc-weeks" max="26" min="2" type="number" value="4"/>
+</div>
+<button class="btn" type="submit">Schedule Class</button>
+</form>
+</div>
+<div class="card">
+<div class="card-row"><h2 style="margin:0;">All Classes</h2></div>
+<div class="tab-row" id="class-tabs">
+<button class="tab-btn active" data-status="all">All</button>
+<button class="tab-btn" data-status="scheduled">Upcoming</button>
+<button class="tab-btn" data-status="completed">Completed</button>
+<button class="tab-btn" data-status="cancelled">Cancelled</button>
+</div>
+<div id="classes-table"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+<!-- CALENDAR -->
+<section id="view-calendar" style="display:none;">
+<h1 class="page-title">Calendar</h1>
+<p class="page-sub">This week, across every teacher.</p>
+<div class="card">
+<div id="calendar-grid"><p class="empty-note">Loading…</p></div>
+</div>
+</section>
+</main>
+</div>
 <!-- Progress modal -->
-<div id="progress-modal" class="modal-backdrop">
-  <div class="modal-card">
-    <div class="card-row"><h2 style="margin:0;" id="progress-modal-title">Progress</h2><button class="btn btn-ghost btn-sm" id="progress-modal-close" type="button">Close</button></div>
-    <div id="progress-modal-body"><p class="empty-note">No topics logged yet.</p></div>
-  </div>
+<div class="modal-backdrop" id="progress-modal">
+<div class="modal-card">
+<div class="card-row"><h2 id="progress-modal-title" style="margin:0;">Progress</h2><button class="btn btn-ghost btn-sm" id="progress-modal-close" type="button">Close</button></div>
+<div id="progress-modal-body"><p class="empty-note">No topics logged yet.</p></div>
 </div>
-
+</div>
 <script type="module">
   import { requireRole, logout, db } from "../assets/auth.js";
   import { barChartHTML } from "../assets/charts.js";
