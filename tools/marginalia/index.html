@@ -452,6 +452,29 @@ body.inactive{cursor:default;}
   .railtab{width:22px;}
 }
 @media (hover:none){.thumb-del,.thumb-rotate{display:flex;}}
+
+/* ---------- tool options row ----------
+   The selected tool's options (pen/highlighter colours and width, cover colour, text style,
+   image lock) live on their own row under the toolbar. Inside the toolbar they sat in the
+   middle of a sideways-scrolling strip, so on a phone they were off-screen, and on desktop
+   they made the toolbar re-wrap (and the page jump) every time you switched tools. */
+.propsbar{
+  flex:0 0 auto;display:flex;align-items:center;min-height:44px;
+  padding:6px 18px;background:var(--surface);border-bottom:1px solid var(--line);
+}
+.toolbar[hidden] + .propsbar{display:none;}
+.propsbar .props{margin-left:0;padding-left:0;border-left:none;flex-wrap:wrap;row-gap:6px;min-width:0;}
+.propsbar .props:empty::before{content:"Pick a tool, or tap something on the page to change it";font-size:12px;color:var(--ink-400);}
+@media (max-width:900px){.propsbar{padding:6px 12px;}}
+@media (max-width:560px){.propsbar .props{gap:8px;}}
+
+/* Delete / resize / lock buttons always sit above covers and other items on the page,
+   so an image's lock is never hidden under a cover box that overlaps its corner. */
+.el .grip,.el .resize,.el .del,.el .lock{z-index:6;}
+@media (pointer:coarse){
+  .el .lock{width:30px;height:30px;top:-15px;left:-15px;}
+  .el .lock svg{width:15px;height:15px;}
+}
 </style>
 <link href="../../assets/theme.css" rel="stylesheet"/></head>
 <body>
@@ -545,7 +568,6 @@ body.inactive{cursor:default;}
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.6"></circle><path d="m21 15-5-5L5 21"></path></svg>
 </button>
 </div>
-<div class="props" id="props"></div>
 <div class="tool-group" style="margin-left:auto;">
 <button class="tool-btn" id="undoBtn" title="Undo">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M9 14 4 9l5-5"></path><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"></path></svg>
@@ -594,6 +616,7 @@ body.inactive{cursor:default;}
 </button>
 </div>
 </div>
+<div class="propsbar" id="propsBar"><div class="props" id="props"></div></div>
 <div class="body">
 <div class="railwrap" hidden="" id="railWrap">
 <button class="rail-arrow" id="railUp" title="Scroll pages up"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="m6 15 6-6 6 6"></path></svg></button>
@@ -986,6 +1009,14 @@ let rail = null;
 const homeStage = stage;
 const railWrap = $("#railWrap"), railHost = $("#railHost"), railUp = $("#railUp"), railDown = $("#railDown"), railStatus = $("#railStatus"), tabbar = $("#tabbar");
 const propsEl = $("#props"), undoBtn = $("#undoBtn"), redoBtn = $("#redoBtn");
+// The options row grows or shrinks as you switch tools (the pen's colour rows are taller than
+// the cover's one row). Scroll by the same amount so the page under your finger doesn't jump.
+const propsBar = $("#propsBar"); let propsBarH = 0;
+if (window.ResizeObserver) new ResizeObserver(()=>{
+  const h = propsBar.offsetHeight;
+  if (propsBarH && h && h !== propsBarH && !stageWrap.classList.contains("horiz")) stageWrap.scrollTop += h - propsBarH;
+  propsBarH = h;
+}).observe(propsBar);
 const zoomIn = $("#zoomIn"), zoomOut = $("#zoomOut"), zoomLabel = $("#zoomLabel");
 const toast = $("#toast");
 const searchToggleBtn = $("#searchToggleBtn"), searchWrap = $("#searchWrap"), searchInput = $("#searchInput"),
