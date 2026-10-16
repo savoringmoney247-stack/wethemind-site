@@ -1,28 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
 <title>Marginalia — PDF Markup | We The Mind</title>
-<meta name="description" content="Mark up any PDF — highlight, write in the margins, cover and retype text, drop in images, and add extra blank writing pages — without ever touching the original file.">
-<link rel="canonical" href="https://wethemind.com/tools/marginalia/">
-<meta property="og:type" content="website">
-<meta property="og:title" content="Marginalia — PDF Markup | We The Mind">
-<meta property="og:description" content="Highlight, write in the margins, cover and retype text, and add extra writing pages to any PDF — free, installable, and it never touches your original file.">
-<meta property="og:url" content="https://wethemind.com/tools/marginalia/">
-<meta property="og:image" content="https://wethemind.com/tools/marginalia/icon-512.png">
-<meta name="twitter:card" content="summary">
-<meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
-<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#241414">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="favicon.ico" sizes="any">
-<link rel="icon" href="favicon-32.png" type="image/png" sizes="32x32">
-<link rel="icon" href="favicon-16.png" type="image/png" sizes="16x16">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta content="Mark up any PDF — highlight, write in the margins, cover and retype text, drop in images, and add extra blank writing pages — without ever touching the original file." name="description"/>
+<link href="https://wethemind.com/tools/marginalia/" rel="canonical"/>
+<meta content="website" property="og:type"/>
+<meta content="Marginalia — PDF Markup | We The Mind" property="og:title"/>
+<meta content="Highlight, write in the margins, cover and retype text, and add extra writing pages to any PDF — free, installable, and it never touches your original file." property="og:description"/>
+<meta content="https://wethemind.com/tools/marginalia/" property="og:url"/>
+<meta content="https://wethemind.com/tools/marginalia/icon-512.png" property="og:image"/>
+<meta content="summary" name="twitter:card"/>
+<meta content="#ffffff" media="(prefers-color-scheme: light)" name="theme-color"/>
+<meta content="#241414" media="(prefers-color-scheme: dark)" name="theme-color"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<link href="favicon.ico" rel="icon" sizes="any"/>
+<link href="favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
+<link href="favicon-16.png" rel="icon" sizes="16x16" type="image/png"/>
+<link href="apple-touch-icon.png" rel="apple-touch-icon"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <script>try{var _t=localStorage.getItem("marginalia-theme");if(_t==="dark"||_t==="light")document.documentElement.setAttribute("data-theme",_t);}catch(e){}</script>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap"></noscript>
+<link as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap" onload="this.onload=null;this.rel='stylesheet'" rel="preload"/>
+<noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@500&amp;display=swap" rel="stylesheet"/></noscript>
 <script src="pdf.min.js"></script>
 <style>
 :root{
@@ -60,6 +61,18 @@ html,body{height:100%;}
 html{-webkit-text-size-adjust:100%;}
 body{margin:0;background:var(--paper);color:var(--ink-900);font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;overflow:hidden;}
 .app{display:flex;flex-direction:column;height:100%;height:100dvh;}
+
+/* ---------- footer credit ---------- */
+.footer-credit{
+  flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:4px 10px calc(env(safe-area-inset-bottom,0px) + 4px);
+  background:var(--surface);border-top:1px solid var(--line);
+  font-size:11px;color:var(--ink-400);text-decoration:none;
+}
+.footer-credit:hover{color:var(--ink-600);}
+.footer-credit img{height:14px;width:auto;display:block;}
+.footer-credit span{white-space:nowrap;}
+@media (max-width:420px){.footer-credit span{display:none;}}
 
 /* ---------- header ---------- */
 .hdr{
@@ -339,7 +352,9 @@ body.inactive .app, body.inactive .app *{pointer-events:none!important;}
 body.inactive{cursor:default;}
 
 /* ---------- brand mark ---------- */
-.brandmark{width:26px;height:26px;border-radius:6px;flex:0 0 auto;display:block;}
+/* The brand row baseline-aligns the title and tagline; centre the icon on that row
+   instead, so it sits level with the "Marginalia" wordmark rather than above it. */
+.brandmark{width:26px;height:26px;border-radius:6px;flex:0 0 auto;display:block;align-self:center;}
 
 /* ---------- search ---------- */
 .searchwrap{display:flex;align-items:center;gap:6px;background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:5px 12px;margin-left:6px;color:var(--ink-400);flex:1 1 460px;max-width:640px;min-width:0;}
@@ -438,217 +453,210 @@ body.inactive{cursor:default;}
 }
 @media (hover:none){.thumb-del,.thumb-rotate{display:flex;}}
 </style>
-</head>
+<link href="../../assets/theme.css" rel="stylesheet"/></head>
 <body>
-
 <div class="app">
-  <header class="hdr">
-    <div class="brand">
-      <img src="logo.png" alt="" class="brandmark" width="26" height="26">
-      <h1 id="brandTitle" aria-label="Marginalia"><span id="brandTitleText">Marginalia</span><span class="caret" aria-hidden="true"></span></h1>
-      <span>mark up any PDF, without touching the original</span>
-    </div>
-    <div class="filepill" id="filepill" hidden></div>
-    <div class="searchwrap" id="searchWrap" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      <input type="text" id="searchInput" placeholder="Find text…" autocomplete="off">
-      <span class="searchcount" id="searchCount"></span>
-      <button class="searchopt" id="searchCase" title="Match case" aria-pressed="false">Aa</button>
-      <button class="searchopt" id="searchWhole" title="Whole word" aria-pressed="false">"W"</button>
-      <button class="searchnav" id="searchPrev" title="Previous match">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
-      </button>
-      <button class="searchnav" id="searchNext" title="Next match">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-      </button>
-      <button class="searchnav" id="searchClose" title="Close search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
-      </button>
-    </div>
-    <div class="hdr-actions">
-      <button class="btn btn-icon" id="themeBtn" title="Dark mode" aria-label="Toggle dark mode"></button>
-      <button class="btn btn-icon" id="fsBtn" title="Full screen (F)" aria-label="Toggle full screen"></button>
-      <button class="btn installbtn" id="installBtn" title="Install Marginalia as an app" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M12 8v6M9 11l3 3 3-3"/></svg>
+<header class="hdr">
+<div class="brand">
+<img alt="" class="brandmark" height="26" src="logo.png" width="26"/>
+<h1 aria-label="Marginalia" id="brandTitle"><span id="brandTitleText">Marginalia</span><span aria-hidden="true" class="caret"></span></h1>
+<span>mark up any PDF, without touching the original</span>
+</div>
+<div class="filepill" hidden="" id="filepill"></div>
+<div class="searchwrap" hidden="" id="searchWrap">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+<input autocomplete="off" id="searchInput" placeholder="Find text…" type="text"/>
+<span class="searchcount" id="searchCount"></span>
+<button aria-pressed="false" class="searchopt" id="searchCase" title="Match case">Aa</button>
+<button aria-pressed="false" class="searchopt" id="searchWhole" title="Whole word">"W"</button>
+<button class="searchnav" id="searchPrev" title="Previous match">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="m18 15-6-6-6 6"></path></svg>
+</button>
+<button class="searchnav" id="searchNext" title="Next match">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<button class="searchnav" id="searchClose" title="Close search">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+</button>
+</div>
+<div class="hdr-actions">
+<button aria-label="Toggle dark mode" class="btn btn-icon" id="themeBtn" title="Dark mode"></button>
+<button aria-label="Toggle full screen" class="btn btn-icon" id="fsBtn" title="Full screen (F)"></button>
+<button class="btn installbtn" hidden="" id="installBtn" title="Install Marginalia as an app">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="16" rx="3" width="16" x="4" y="4"></rect><path d="M12 8v6M9 11l3 3 3-3"></path></svg>
         Install
       </button>
-      <input type="file" id="openInput" class="hidden-input" accept="application/pdf,image/png,image/jpeg,image/webp">
-      <button class="btn" id="openBtn" title="Open a PDF or image">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+<input accept="application/pdf,image/png,image/jpeg,image/webp" class="hidden-input" id="openInput" type="file"/>
+<button class="btn" id="openBtn" title="Open a PDF or image">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path></svg>
         Open
       </button>
-      <button class="btn btn-icon" id="searchToggleBtn" title="Find text in this document" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
-      </button>
-      <button class="btn btn-icon" id="outlineToggleBtn" title="Contents / chapters" hidden>
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h10M4 18h16"/></svg>
-      </button>
-      <div class="dlwrap" id="dlWrap">
-        <button class="btn btn-primary" id="exportBtn" disabled title="Download this file">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
+<button class="btn btn-icon" hidden="" id="searchToggleBtn" title="Find text in this document">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m21 21-4.3-4.3"></path></svg>
+</button>
+<button class="btn btn-icon" hidden="" id="outlineToggleBtn" title="Contents / chapters">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M4 6h16M4 12h10M4 18h16"></path></svg>
+</button>
+<div class="dlwrap" id="dlWrap">
+<button class="btn btn-primary" disabled="" id="exportBtn" title="Download this file">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 3v12"></path><path d="m7 10 5 5 5-5"></path><path d="M5 21h14"></path></svg>
           Download
         </button>
-        <button class="btn btn-primary dlcaret" id="dlMoreBtn" disabled title="More download options">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
-        </button>
-        <div class="dlmenu" id="dlMenu" hidden>
-          <button class="dlmenu-item" id="dlThis">This file</button>
-          <button class="dlmenu-item" id="dlAll">All open files</button>
-          <div class="dlmenu-sep"></div>
-          <div class="dlmenu-label">Choose files</div>
-          <div class="dlmenu-list" id="dlList"></div>
-          <button class="btn btn-primary dlmenu-go" id="dlChosenGo">Download chosen</button>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <div class="tabbar" id="tabbar" hidden></div>
-
-  <div class="outlinepanel" id="outlinePanel" hidden>
-    <div class="outlinepanel-hdr">Contents</div>
-    <div class="outlinepanel-body" id="outlineBody"></div>
-  </div>
-
-  <div class="toolbar" id="toolbar" hidden>
-    <div class="tool-group" role="group" aria-label="Tools">
-      <button class="tool-btn active" data-tool="select" title="Select &amp; move">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 2l14 8-6 1.5-1.5 6z"/></svg>
-      </button>
-      <button class="tool-btn" data-tool="text" title="Add text box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5h14"/><path d="M12 5v14"/></svg>
-      </button>
-      <button class="tool-btn" data-tool="pen" title="Pen">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg>
-      </button>
-      <button class="tool-btn" data-tool="eraser" title="Eraser (removes strokes)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20H9l-6-6 10-10 7 7z"/><path d="m14 8-7 7"/></svg>
-      </button>
-      <button class="tool-btn" data-tool="highlighter" title="Highlighter">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 6 6"/><path d="m3 21 3.5-1 9-9-2.5-2.5-9 9z"/><path d="M14.5 6.5 18 3l3 3-3.5 3.5"/></svg>
-      </button>
-      <button class="tool-btn" data-tool="cover" title="Cover / block out">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="6" width="16" height="12" rx="1.5"/><path d="M4 12h16"/></svg>
-      </button>
-      <button class="tool-btn" data-tool="image" title="Insert image">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.6"/><path d="m21 15-5-5L5 21"/></svg>
-      </button>
-    </div>
-
-    <div class="props" id="props"></div>
-
-    <div class="tool-group" style="margin-left:auto;">
-      <button class="tool-btn" id="undoBtn" title="Undo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>
-      </button>
-      <button class="tool-btn" id="redoBtn" title="Redo">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/></svg>
-      </button>
-    </div>
-    <div class="sep"></div>
-    <div class="tool-group">
-      <button class="tool-btn active" id="layoutVertBtn" title="Page down (scroll downward through the document)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="7" rx="1.2"/><rect x="6" y="14" width="12" height="7" rx="1.2"/><path d="M12 10.5v3"/></svg>
-      </button>
-      <button class="tool-btn" id="layoutHorizBtn" title="Page sideways (one page at a time, like a book)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="7" height="12" rx="1.2"/><rect x="14" y="6" width="7" height="12" rx="1.2"/><path d="M10.5 12h3"/></svg>
-      </button>
-    </div>
-    <div class="sep"></div>
-    <div class="tool-group">
-      <button class="tool-btn" id="rotateBtn" title="Rotate current page 90°">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3.2-6.9"/><path d="M21 3v6h-6"/></svg>
-      </button>
-      <button class="tool-btn" id="organizeBtn" title="Organize pages — drag to reorder, duplicate, rotate or delete">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><rect x="14" y="14" width="7" height="7" rx="1.2"/></svg>
-      </button>
-    </div>
-    <div class="sep"></div>
-    <div class="tool-group pagenav">
-      <button class="tool-btn" id="pagePrevBtn" title="Previous page (←)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-      </button>
-      <input type="text" inputmode="numeric" id="pageJumpInput" class="pagejump" value="1">
-      <span class="proplabel" id="pageCountLabel">/ 1</span>
-      <button class="tool-btn" id="pageNextBtn" title="Next page (→)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
-      </button>
-    </div>
-    <div class="sep"></div>
-    <div class="tool-group">
-      <button class="tool-btn" id="zoomOut" title="Zoom out">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/></svg>
-      </button>
-      <span class="zoomlabel" id="zoomLabel">100%</span>
-      <button class="tool-btn" id="zoomIn" title="Zoom in">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <div class="body">
-    <div class="railwrap" id="railWrap" hidden>
-      <button class="rail-arrow" id="railUp" title="Scroll pages up"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 15 6-6 6 6"/></svg></button>
-      <div class="railhost" id="railHost"></div>
-      <div class="rail-status" id="railStatus"></div>
-      <button class="rail-arrow" id="railDown" title="Scroll pages down"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg></button>
-      <div class="railfoot" id="railFootHost"></div>
-    </div>
-    <button class="railtab" id="railTab" hidden title="Show/hide pages">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6"/></svg>
-    </button>
-    <div class="stage-wrap" id="stageWrap">
-      <div class="stage" id="stage">
-        <div class="empty" id="emptyState">
-          <svg class="mark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 1.5-4L15 15"/><path d="M9.6 13.2h4.3"/></svg>
-          <h2>Nothing open yet</h2>
-          <p>Open a worksheet or paper to mark it up — highlight, write in the margins, cover a line and retype it, drop in a diagram. Drag a PDF in, or open one with Marginalia from your file manager once it's installed. The file you open is never changed; you download a separate, annotated copy. Or just start on a blank writing page.</p>
-          <div class="actions">
-            <button class="btn btn-primary" id="emptyOpenBtn">Open a PDF</button>
-            <button class="btn" id="emptyBlankBtn">Start blank page</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<button class="btn btn-primary dlcaret" disabled="" id="dlMoreBtn" title="More download options">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+</button>
+<div class="dlmenu" hidden="" id="dlMenu">
+<button class="dlmenu-item" id="dlThis">This file</button>
+<button class="dlmenu-item" id="dlAll">All open files</button>
+<div class="dlmenu-sep"></div>
+<div class="dlmenu-label">Choose files</div>
+<div class="dlmenu-list" id="dlList"></div>
+<button class="btn btn-primary dlmenu-go" id="dlChosenGo">Download chosen</button>
 </div>
-
+</div>
+</div>
+</header>
+<div class="tabbar" hidden="" id="tabbar"></div>
+<div class="outlinepanel" hidden="" id="outlinePanel">
+<div class="outlinepanel-hdr">Contents</div>
+<div class="outlinepanel-body" id="outlineBody"></div>
+</div>
+<div class="toolbar" hidden="" id="toolbar">
+<div aria-label="Tools" class="tool-group" role="group">
+<button class="tool-btn active" data-tool="select" title="Select &amp; move">
+<svg fill="currentColor" viewbox="0 0 24 24"><path d="M4 2l14 8-6 1.5-1.5 6z"></path></svg>
+</button>
+<button class="tool-btn" data-tool="text" title="Add text box">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M5 5h14"></path><path d="M12 5v14"></path></svg>
+</button>
+<button class="tool-btn" data-tool="pen" title="Pen">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M17 3a2.85 2.85 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"></path></svg>
+</button>
+<button class="tool-btn" data-tool="eraser" title="Eraser (removes strokes)">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M20 20H9l-6-6 10-10 7 7z"></path><path d="m14 8-7 7"></path></svg>
+</button>
+<button class="tool-btn" data-tool="highlighter" title="Highlighter">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="m9 11 6 6"></path><path d="m3 21 3.5-1 9-9-2.5-2.5-9 9z"></path><path d="M14.5 6.5 18 3l3 3-3.5 3.5"></path></svg>
+</button>
+<button class="tool-btn" data-tool="cover" title="Cover / block out">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="12" rx="1.5" width="16" x="4" y="6"></rect><path d="M4 12h16"></path></svg>
+</button>
+<button class="tool-btn" data-tool="image" title="Insert image">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.6"></circle><path d="m21 15-5-5L5 21"></path></svg>
+</button>
+</div>
+<div class="props" id="props"></div>
+<div class="tool-group" style="margin-left:auto;">
+<button class="tool-btn" id="undoBtn" title="Undo">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M9 14 4 9l5-5"></path><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"></path></svg>
+</button>
+<button class="tool-btn" id="redoBtn" title="Redo">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="m15 14 5-5-5-5"></path><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"></path></svg>
+</button>
+</div>
+<div class="sep"></div>
+<div class="tool-group">
+<button class="tool-btn active" id="layoutVertBtn" title="Page down (scroll downward through the document)">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="7" rx="1.2" width="12" x="6" y="3"></rect><rect height="7" rx="1.2" width="12" x="6" y="14"></rect><path d="M12 10.5v3"></path></svg>
+</button>
+<button class="tool-btn" id="layoutHorizBtn" title="Page sideways (one page at a time, like a book)">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><rect height="12" rx="1.2" width="7" x="3" y="6"></rect><rect height="12" rx="1.2" width="7" x="14" y="6"></rect><path d="M10.5 12h3"></path></svg>
+</button>
+</div>
+<div class="sep"></div>
+<div class="tool-group">
+<button class="tool-btn" id="rotateBtn" title="Rotate current page 90°">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3.2-6.9"></path><path d="M21 3v6h-6"></path></svg>
+</button>
+<button class="tool-btn" id="organizeBtn" title="Organize pages — drag to reorder, duplicate, rotate or delete">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="7" rx="1.2" width="7" x="3" y="3"></rect><rect height="7" rx="1.2" width="7" x="14" y="3"></rect><rect height="7" rx="1.2" width="7" x="3" y="14"></rect><rect height="7" rx="1.2" width="7" x="14" y="14"></rect></svg>
+</button>
+</div>
+<div class="sep"></div>
+<div class="tool-group pagenav">
+<button class="tool-btn" id="pagePrevBtn" title="Previous page (←)">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="m15 18-6-6 6-6"></path></svg>
+</button>
+<input class="pagejump" id="pageJumpInput" inputmode="numeric" type="text" value="1"/>
+<span class="proplabel" id="pageCountLabel">/ 1</span>
+<button class="tool-btn" id="pageNextBtn" title="Next page (→)">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="m9 18 6-6-6-6"></path></svg>
+</button>
+</div>
+<div class="sep"></div>
+<div class="tool-group">
+<button class="tool-btn" id="zoomOut" title="Zoom out">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M5 12h14"></path></svg>
+</button>
+<span class="zoomlabel" id="zoomLabel">100%</span>
+<button class="tool-btn" id="zoomIn" title="Zoom in">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
+</button>
+</div>
+</div>
+<div class="body">
+<div class="railwrap" hidden="" id="railWrap">
+<button class="rail-arrow" id="railUp" title="Scroll pages up"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="m6 15 6-6 6 6"></path></svg></button>
+<div class="railhost" id="railHost"></div>
+<div class="rail-status" id="railStatus"></div>
+<button class="rail-arrow" id="railDown" title="Scroll pages down"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg></button>
+<div class="railfoot" id="railFootHost"></div>
+</div>
+<button class="railtab" hidden="" id="railTab" title="Show/hide pages">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="m9 6 6 6-6 6"></path></svg>
+</button>
+<div class="stage-wrap" id="stageWrap">
+<div class="stage" id="stage">
+<div class="empty" id="emptyState">
+<svg class="mark" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="m9 15 1.5-4L15 15"></path><path d="M9.6 13.2h4.3"></path></svg>
+<h2>Nothing open yet</h2>
+<p>Open a worksheet or paper to mark it up — highlight, write in the margins, cover a line and retype it, drop in a diagram. Drag a PDF in, or open one with Marginalia from your file manager once it's installed. The file you open is never changed; you download a separate, annotated copy. Or just start on a blank writing page.</p>
+<div class="actions">
+<button class="btn btn-primary" id="emptyOpenBtn">Open a PDF</button>
+<button class="btn" id="emptyBlankBtn">Start blank page</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<a class="footer-credit" href="https://wethemind.com" rel="noopener" target="_blank">
+<img alt="We The Mind" height="37" src="wethemind-logo.png" width="54"/>
+<span>Part of We The Mind — Learn. Build. Grow.</span>
+</a>
+</div>
 <div class="toast" id="toast"></div>
-<div class="dropveil" id="dropVeil" hidden>Drop to open</div>
+<div class="dropveil" hidden="" id="dropVeil">Drop to open</div>
 <div class="toast promo" id="promoToast"></div>
-
-<div class="orgwrap" id="orgWrap" hidden>
-  <div class="orghdr">
-    <div class="orgtitle">Organize pages</div>
-    <div class="orghint">Drag a page to reorder it</div>
-    <button class="btn btn-primary" id="orgDoneBtn">Done</button>
-  </div>
-  <div class="orggrid" id="orgGrid"></div>
+<div class="orgwrap" hidden="" id="orgWrap">
+<div class="orghdr">
+<div class="orgtitle">Organize pages</div>
+<div class="orghint">Drag a page to reorder it</div>
+<button class="btn btn-primary" id="orgDoneBtn">Done</button>
 </div>
-
+<div class="orggrid" id="orgGrid"></div>
+</div>
 <template id="tplTextEl">
-  <div class="el text-el">
-    <button class="grip" title="Drag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><circle cx="6" cy="6" r=".6"/><circle cx="12" cy="6" r=".6"/><circle cx="18" cy="6" r=".6"/><circle cx="6" cy="12" r=".6"/><circle cx="12" cy="12" r=".6"/><circle cx="18" cy="12" r=".6"/><circle cx="6" cy="18" r=".6"/><circle cx="12" cy="18" r=".6"/><circle cx="18" cy="18" r=".6"/></svg></button>
-    <button class="del" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    <div class="content" contenteditable="true" spellcheck="false"></div>
-    <button class="resize" title="Resize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 18 18 6M11 18h7v-7"/></svg></button>
-  </div>
+<div class="el text-el">
+<button class="grip" title="Drag"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><circle cx="6" cy="6" r=".6"></circle><circle cx="12" cy="6" r=".6"></circle><circle cx="18" cy="6" r=".6"></circle><circle cx="6" cy="12" r=".6"></circle><circle cx="12" cy="12" r=".6"></circle><circle cx="18" cy="12" r=".6"></circle><circle cx="6" cy="18" r=".6"></circle><circle cx="12" cy="18" r=".6"></circle><circle cx="18" cy="18" r=".6"></circle></svg></button>
+<button class="del" title="Delete"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+<div class="content" contenteditable="true" spellcheck="false"></div>
+<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 18 18 6M11 18h7v-7"></path></svg></button>
+</div>
 </template>
 <template id="tplImgEl">
-  <div class="el img-el">
-    <img draggable="false">
-    <button class="lock" title="Lock in place"><svg class="off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.5-2"/></svg><svg class="on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
-    <button class="del" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    <button class="resize" title="Resize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 18 18 6M11 18h7v-7"/></svg></button>
-  </div>
+<div class="el img-el">
+<img draggable="false"/>
+<button class="lock" title="Lock in place"><svg class="off" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><rect height="9" rx="2" width="14" x="5" y="11"></rect><path d="M8 11V8a4 4 0 0 1 7.5-2"></path></svg><svg class="on" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><rect height="9" rx="2" width="14" x="5" y="11"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></button>
+<button class="del" title="Delete"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 18 18 6M11 18h7v-7"></path></svg></button>
+</div>
 </template>
 <template id="tplShapeEl">
-  <div class="el shape-el">
-    <button class="del" title="Delete"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-    <button class="resize" title="Resize"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 18 18 6M11 18h7v-7"/></svg></button>
-  </div>
+<div class="el shape-el">
+<button class="del" title="Delete"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
+<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 18 18 6M11 18h7v-7"></path></svg></button>
+</div>
 </template>
-
 <script>
 (function(){
 "use strict";

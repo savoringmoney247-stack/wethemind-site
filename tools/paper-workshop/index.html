@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>The Paper Workshop — PDF Tools</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&amp;family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -305,216 +306,203 @@ main{
   .panel{padding:28px 16px 36px;}
 }
 </style>
-<script src="../../analytics.js" defer></script>
-</head>
+<script defer="" src="../../analytics.js"></script>
+<link href="../../assets/theme.css" rel="stylesheet"/></head>
 <body>
-
 <div class="desk-header">
-  <div class="lamp-glow"></div>
-  <div class="eyebrow">Every tool below runs in your browser</div>
-  <h1 class="title">The Paper <em>Workshop</em></h1>
-  <p class="subtitle">Merge, split, stitch and mark up your PDFs like paper on a desk. <b>Nothing you upload ever leaves this tab</b> — no servers, no accounts, no waiting on uploads.</p>
+<div class="lamp-glow"></div>
+<div class="eyebrow">Every tool below runs in your browser</div>
+<h1 class="title">The Paper <em>Workshop</em></h1>
+<p class="subtitle">Merge, split, stitch and mark up your PDFs like paper on a desk. <b>Nothing you upload ever leaves this tab</b> — no servers, no accounts, no waiting on uploads.</p>
 </div>
-
 <nav class="tabs" id="tabs">
-  <button class="tab-btn active" data-tool="merge"><span class="ic">📎</span>Merge PDFs</button>
-  <button class="tab-btn" data-tool="img2pdf"><span class="ic">🖼️</span>JPG → PDF</button>
-  <button class="tab-btn" data-tool="split"><span class="ic">✂️</span>Split PDF</button>
-  <button class="tab-btn" data-tool="delete"><span class="ic">🗑️</span>Delete pages</button>
-  <button class="tab-btn" data-tool="addtext"><span class="ic">✒️</span>Add text</button>
-  <button class="tab-btn" data-tool="redact"><span class="ic">🧽</span>Erase text</button>
+<button class="tab-btn active" data-tool="merge"><span class="ic">📎</span>Merge PDFs</button>
+<button class="tab-btn" data-tool="img2pdf"><span class="ic">🖼️</span>JPG → PDF</button>
+<button class="tab-btn" data-tool="split"><span class="ic">✂️</span>Split PDF</button>
+<button class="tab-btn" data-tool="delete"><span class="ic">🗑️</span>Delete pages</button>
+<button class="tab-btn" data-tool="addtext"><span class="ic">✒️</span>Add text</button>
+<button class="tab-btn" data-tool="redact"><span class="ic">🧽</span>Erase text</button>
 </nav>
-
 <main>
-
-  <!-- ===================== MERGE ===================== -->
-  <section class="panel active" id="panel-merge">
-    <div class="panel-head">
-      <div>
-        <h2>Merge PDFs</h2>
-        <p>Drop in as many PDFs as you like, drag the cards into the order you want, and stitch them into one file.</p>
-      </div>
-      <div class="panel-tag">Stack &amp; staple</div>
-    </div>
-    <div class="dropzone" id="merge-drop">
-      <span class="dz-icon">📎</span>
-      <div class="dz-title">Drop PDFs here, or click to browse</div>
-      <div class="dz-sub">You can add more at any time — reorder by dragging</div>
-      <input type="file" id="merge-input" accept="application/pdf,.pdf" multiple>
-    </div>
-    <div class="card-row" id="merge-list"></div>
-    <div class="empty-state" id="merge-empty">An empty desk. Drop a few PDFs above to get started.</div>
-    <div class="actions-row">
-      <button class="btn btn-primary" id="merge-btn" disabled>📎 Merge &amp; download</button>
-      <button class="btn btn-ghost" id="merge-clear" style="display:none;">Clear all</button>
-    </div>
-  </section>
-
-  <!-- ===================== IMG2PDF ===================== -->
-  <section class="panel" id="panel-img2pdf">
-    <div class="panel-head">
-      <div>
-        <h2>JPG / PNG → PDF</h2>
-        <p>Turn a handful of photos or scans into one tidy, print-ready PDF. Drag to set the page order.</p>
-      </div>
-      <div class="panel-tag">Photo album</div>
-    </div>
-    <div class="dropzone" id="img-drop">
-      <span class="dz-icon">🖼️</span>
-      <div class="dz-title">Drop images here, or click to browse</div>
-      <div class="dz-sub">JPG and PNG supported — each image becomes one page</div>
-      <input type="file" id="img-input" accept="image/jpeg,image/png,.jpg,.jpeg,.png" multiple>
-    </div>
-    <div class="card-row" id="img-list"></div>
-    <div class="empty-state" id="img-empty">No photos on the desk yet. Drop some images above.</div>
-    <div class="actions-row">
-      <button class="btn btn-primary" id="img-btn" disabled>🖼️ Convert &amp; download PDF</button>
-      <button class="btn btn-ghost" id="img-clear" style="display:none;">Clear all</button>
-    </div>
-  </section>
-
-  <!-- ===================== SPLIT ===================== -->
-  <section class="panel" id="panel-split">
-    <div class="panel-head">
-      <div>
-        <h2>Split a PDF</h2>
-        <p>Upload one PDF, click the pages you want, then pull them out as one file or as separate pages in a zip.</p>
-      </div>
-      <div class="panel-tag">Cut along the line</div>
-    </div>
-    <div class="dropzone" id="split-drop">
-      <span class="dz-icon">✂️</span>
-      <div class="dz-title">Drop a PDF here, or click to browse</div>
-      <div class="dz-sub">One file at a time for splitting</div>
-      <input type="file" id="split-input" accept="application/pdf,.pdf">
-    </div>
-    <div id="split-body" style="display:none;">
-      <div class="actions-row" style="margin-top:22px;">
-        <button class="btn btn-ghost" id="split-all">Select all</button>
-        <button class="btn btn-ghost" id="split-none">Clear selection</button>
-        <span class="hint" id="split-count" style="margin-left:auto;"></span>
-      </div>
-      <div class="thumb-grid" id="split-grid"></div>
-      <div class="actions-row">
-        <button class="btn btn-primary" id="split-one" disabled>📄 Download selected as one PDF</button>
-        <button class="btn btn-sage" id="split-zip" disabled>🗂️ Download each page (ZIP)</button>
-        <button class="btn btn-ghost" id="split-reset">Start over</button>
-      </div>
-    </div>
-    <div class="empty-state" id="split-empty">Nothing on the cutting board yet. Drop a PDF above.</div>
-  </section>
-
-  <!-- ===================== DELETE PAGES ===================== -->
-  <section class="panel" id="panel-delete">
-    <div class="panel-head">
-      <div>
-        <h2>Delete pages</h2>
-        <p>Upload a PDF, tap the pages you don't need, and download the trimmed-down result.</p>
-      </div>
-      <div class="panel-tag">Tear it out</div>
-    </div>
-    <div class="dropzone" id="delete-drop">
-      <span class="dz-icon">🗑️</span>
-      <div class="dz-title">Drop a PDF here, or click to browse</div>
-      <div class="dz-sub">One file at a time</div>
-      <input type="file" id="delete-input" accept="application/pdf,.pdf">
-    </div>
-    <div id="delete-body" style="display:none;">
-      <div class="actions-row" style="margin-top:22px;">
-        <span class="hint" id="delete-count"></span>
-      </div>
-      <div class="thumb-grid" id="delete-grid"></div>
-      <div class="actions-row">
-        <button class="btn btn-danger" id="delete-btn" disabled>🗑️ Remove marked pages &amp; download</button>
-        <button class="btn btn-ghost" id="delete-reset">Start over</button>
-      </div>
-    </div>
-    <div class="empty-state" id="delete-empty">Nothing to trim yet. Drop a PDF above.</div>
-  </section>
-
-  <!-- ===================== ADD TEXT ===================== -->
-  <section class="panel" id="panel-addtext">
-    <div class="panel-head">
-      <div>
-        <h2>Add text</h2>
-        <p>Click anywhere on the page to drop a text box, type, drag it into place, then bake it into the PDF.</p>
-      </div>
-      <div class="panel-tag">Pen &amp; ink</div>
-    </div>
-    <div class="dropzone" id="addtext-drop">
-      <span class="dz-icon">✒️</span>
-      <div class="dz-title">Drop a PDF here, or click to browse</div>
-      <div class="dz-sub">One file at a time</div>
-      <input type="file" id="addtext-input" accept="application/pdf,.pdf">
-    </div>
-    <div id="addtext-body" style="display:none;" class="editor-wrap">
-      <div class="editor-toolbar">
-        <div class="pagenav">
-          <button id="at-prev">‹</button>
-          <span id="at-pageinfo" style="min-width:90px; text-align:center;">Page 1 of 1</span>
-          <button id="at-next">›</button>
-        </div>
-        <div class="field-row"><span>Click the page to add a text box · double‑click a box to type</span></div>
-      </div>
-      <div class="canvas-stage" id="at-stage">
-        <canvas id="at-canvas"></canvas>
-        <div class="stage-overlay" id="at-overlay"></div>
-      </div>
-      <div class="actions-row">
-        <button class="btn btn-primary" id="at-apply" disabled>✒️ Bake text &amp; download</button>
-        <button class="btn btn-ghost" id="at-reset">Start over</button>
-      </div>
-      <p class="hint">Tip: click a box once to select it (shows a mini toolbar for size &amp; color), double‑click to edit the words.</p>
-    </div>
-    <div class="empty-state" id="addtext-empty">No page open yet. Drop a PDF above.</div>
-  </section>
-
-  <!-- ===================== REDACT / ERASE TEXT ===================== -->
-  <section class="panel" id="panel-redact">
-    <div class="panel-head">
-      <div>
-        <h2>Erase / delete text</h2>
-        <p>Drag a box over anything you want gone — a name, a paragraph, a stamp — and it's painted over for good.</p>
-      </div>
-      <div class="panel-tag">White‑out</div>
-    </div>
-    <div class="dropzone" id="redact-drop">
-      <span class="dz-icon">🧽</span>
-      <div class="dz-title">Drop a PDF here, or click to browse</div>
-      <div class="dz-sub">One file at a time</div>
-      <input type="file" id="redact-input" accept="application/pdf,.pdf">
-    </div>
-    <div id="redact-body" style="display:none;" class="editor-wrap">
-      <div class="editor-toolbar">
-        <div class="pagenav">
-          <button id="rd-prev">‹</button>
-          <span id="rd-pageinfo" style="min-width:90px; text-align:center;">Page 1 of 1</span>
-          <button id="rd-next">›</button>
-        </div>
-        <div class="field-row">
-          <label>Cover colour</label>
-          <input type="color" id="rd-color" value="#ffffff">
-        </div>
-        <div class="field-row"><span>Click and drag over the text to erase it</span></div>
-      </div>
-      <div class="canvas-stage" id="rd-stage">
-        <canvas id="rd-canvas"></canvas>
-        <div class="stage-overlay" id="rd-overlay"></div>
-      </div>
-      <div class="actions-row">
-        <button class="btn btn-primary" id="rd-apply" disabled>🧽 Apply &amp; download</button>
-        <button class="btn btn-ghost" id="rd-reset">Start over</button>
-      </div>
-    </div>
-    <div class="empty-state" id="redact-empty">No page open yet. Drop a PDF above.</div>
-  </section>
-
+<!-- ===================== MERGE ===================== -->
+<section class="panel active" id="panel-merge">
+<div class="panel-head">
+<div>
+<h2>Merge PDFs</h2>
+<p>Drop in as many PDFs as you like, drag the cards into the order you want, and stitch them into one file.</p>
+</div>
+<div class="panel-tag">Stack &amp; staple</div>
+</div>
+<div class="dropzone" id="merge-drop">
+<span class="dz-icon">📎</span>
+<div class="dz-title">Drop PDFs here, or click to browse</div>
+<div class="dz-sub">You can add more at any time — reorder by dragging</div>
+<input accept="application/pdf,.pdf" id="merge-input" multiple="" type="file"/>
+</div>
+<div class="card-row" id="merge-list"></div>
+<div class="empty-state" id="merge-empty">An empty desk. Drop a few PDFs above to get started.</div>
+<div class="actions-row">
+<button class="btn btn-primary" disabled="" id="merge-btn">📎 Merge &amp; download</button>
+<button class="btn btn-ghost" id="merge-clear" style="display:none;">Clear all</button>
+</div>
+</section>
+<!-- ===================== IMG2PDF ===================== -->
+<section class="panel" id="panel-img2pdf">
+<div class="panel-head">
+<div>
+<h2>JPG / PNG → PDF</h2>
+<p>Turn a handful of photos or scans into one tidy, print-ready PDF. Drag to set the page order.</p>
+</div>
+<div class="panel-tag">Photo album</div>
+</div>
+<div class="dropzone" id="img-drop">
+<span class="dz-icon">🖼️</span>
+<div class="dz-title">Drop images here, or click to browse</div>
+<div class="dz-sub">JPG and PNG supported — each image becomes one page</div>
+<input accept="image/jpeg,image/png,.jpg,.jpeg,.png" id="img-input" multiple="" type="file"/>
+</div>
+<div class="card-row" id="img-list"></div>
+<div class="empty-state" id="img-empty">No photos on the desk yet. Drop some images above.</div>
+<div class="actions-row">
+<button class="btn btn-primary" disabled="" id="img-btn">🖼️ Convert &amp; download PDF</button>
+<button class="btn btn-ghost" id="img-clear" style="display:none;">Clear all</button>
+</div>
+</section>
+<!-- ===================== SPLIT ===================== -->
+<section class="panel" id="panel-split">
+<div class="panel-head">
+<div>
+<h2>Split a PDF</h2>
+<p>Upload one PDF, click the pages you want, then pull them out as one file or as separate pages in a zip.</p>
+</div>
+<div class="panel-tag">Cut along the line</div>
+</div>
+<div class="dropzone" id="split-drop">
+<span class="dz-icon">✂️</span>
+<div class="dz-title">Drop a PDF here, or click to browse</div>
+<div class="dz-sub">One file at a time for splitting</div>
+<input accept="application/pdf,.pdf" id="split-input" type="file"/>
+</div>
+<div id="split-body" style="display:none;">
+<div class="actions-row" style="margin-top:22px;">
+<button class="btn btn-ghost" id="split-all">Select all</button>
+<button class="btn btn-ghost" id="split-none">Clear selection</button>
+<span class="hint" id="split-count" style="margin-left:auto;"></span>
+</div>
+<div class="thumb-grid" id="split-grid"></div>
+<div class="actions-row">
+<button class="btn btn-primary" disabled="" id="split-one">📄 Download selected as one PDF</button>
+<button class="btn btn-sage" disabled="" id="split-zip">🗂️ Download each page (ZIP)</button>
+<button class="btn btn-ghost" id="split-reset">Start over</button>
+</div>
+</div>
+<div class="empty-state" id="split-empty">Nothing on the cutting board yet. Drop a PDF above.</div>
+</section>
+<!-- ===================== DELETE PAGES ===================== -->
+<section class="panel" id="panel-delete">
+<div class="panel-head">
+<div>
+<h2>Delete pages</h2>
+<p>Upload a PDF, tap the pages you don't need, and download the trimmed-down result.</p>
+</div>
+<div class="panel-tag">Tear it out</div>
+</div>
+<div class="dropzone" id="delete-drop">
+<span class="dz-icon">🗑️</span>
+<div class="dz-title">Drop a PDF here, or click to browse</div>
+<div class="dz-sub">One file at a time</div>
+<input accept="application/pdf,.pdf" id="delete-input" type="file"/>
+</div>
+<div id="delete-body" style="display:none;">
+<div class="actions-row" style="margin-top:22px;">
+<span class="hint" id="delete-count"></span>
+</div>
+<div class="thumb-grid" id="delete-grid"></div>
+<div class="actions-row">
+<button class="btn btn-danger" disabled="" id="delete-btn">🗑️ Remove marked pages &amp; download</button>
+<button class="btn btn-ghost" id="delete-reset">Start over</button>
+</div>
+</div>
+<div class="empty-state" id="delete-empty">Nothing to trim yet. Drop a PDF above.</div>
+</section>
+<!-- ===================== ADD TEXT ===================== -->
+<section class="panel" id="panel-addtext">
+<div class="panel-head">
+<div>
+<h2>Add text</h2>
+<p>Click anywhere on the page to drop a text box, type, drag it into place, then bake it into the PDF.</p>
+</div>
+<div class="panel-tag">Pen &amp; ink</div>
+</div>
+<div class="dropzone" id="addtext-drop">
+<span class="dz-icon">✒️</span>
+<div class="dz-title">Drop a PDF here, or click to browse</div>
+<div class="dz-sub">One file at a time</div>
+<input accept="application/pdf,.pdf" id="addtext-input" type="file"/>
+</div>
+<div class="editor-wrap" id="addtext-body" style="display:none;">
+<div class="editor-toolbar">
+<div class="pagenav">
+<button id="at-prev">‹</button>
+<span id="at-pageinfo" style="min-width:90px; text-align:center;">Page 1 of 1</span>
+<button id="at-next">›</button>
+</div>
+<div class="field-row"><span>Click the page to add a text box · double‑click a box to type</span></div>
+</div>
+<div class="canvas-stage" id="at-stage">
+<canvas id="at-canvas"></canvas>
+<div class="stage-overlay" id="at-overlay"></div>
+</div>
+<div class="actions-row">
+<button class="btn btn-primary" disabled="" id="at-apply">✒️ Bake text &amp; download</button>
+<button class="btn btn-ghost" id="at-reset">Start over</button>
+</div>
+<p class="hint">Tip: click a box once to select it (shows a mini toolbar for size &amp; color), double‑click to edit the words.</p>
+</div>
+<div class="empty-state" id="addtext-empty">No page open yet. Drop a PDF above.</div>
+</section>
+<!-- ===================== REDACT / ERASE TEXT ===================== -->
+<section class="panel" id="panel-redact">
+<div class="panel-head">
+<div>
+<h2>Erase / delete text</h2>
+<p>Drag a box over anything you want gone — a name, a paragraph, a stamp — and it's painted over for good.</p>
+</div>
+<div class="panel-tag">White‑out</div>
+</div>
+<div class="dropzone" id="redact-drop">
+<span class="dz-icon">🧽</span>
+<div class="dz-title">Drop a PDF here, or click to browse</div>
+<div class="dz-sub">One file at a time</div>
+<input accept="application/pdf,.pdf" id="redact-input" type="file"/>
+</div>
+<div class="editor-wrap" id="redact-body" style="display:none;">
+<div class="editor-toolbar">
+<div class="pagenav">
+<button id="rd-prev">‹</button>
+<span id="rd-pageinfo" style="min-width:90px; text-align:center;">Page 1 of 1</span>
+<button id="rd-next">›</button>
+</div>
+<div class="field-row">
+<label>Cover colour</label>
+<input id="rd-color" type="color" value="#ffffff"/>
+</div>
+<div class="field-row"><span>Click and drag over the text to erase it</span></div>
+</div>
+<div class="canvas-stage" id="rd-stage">
+<canvas id="rd-canvas"></canvas>
+<div class="stage-overlay" id="rd-overlay"></div>
+</div>
+<div class="actions-row">
+<button class="btn btn-primary" disabled="" id="rd-apply">🧽 Apply &amp; download</button>
+<button class="btn btn-ghost" id="rd-reset">Start over</button>
+</div>
+</div>
+<div class="empty-state" id="redact-empty">No page open yet. Drop a PDF above.</div>
+</section>
 </main>
-
 <p class="footer-note">Built for <b>Mr. KC's</b> desk — merges, splits and marks up paper the old-fashioned way, just faster. All processing happens locally in your browser.</p>
-
 <div id="stamp-overlay"><div class="stamp-mark" id="stamp-mark">Done!</div></div>
-
 <script>
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
 const { PDFDocument, rgb, StandardFonts } = PDFLib;
@@ -1367,6 +1355,6 @@ async function renderThumbnails(bytes, targetWidth){
   });
 })();
 </script>
-<script src="../../sound.js" defer></script>
+<script defer="" src="../../sound.js"></script>
 </body>
 </html>

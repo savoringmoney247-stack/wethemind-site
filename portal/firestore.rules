@@ -1,0 +1,65 @@
+rules_version = '2';
+
+// Role lives in the Auth custom claim (set by the admin SDK when an account is created),
+// not in Firestore itself — reading it from the token avoids an extra document read on
+// every rule check and can't be tampered with client-side.
+function role() {
+  return request.auth != null ? request.auth.token.role : null;
+}
+function isAdmin() {
+  return role() == 'admin';
+}
+function isSignedIn() {
+  return request.auth != null;
+}
+// A student may only ever change the rating + feedbackComment fields on their own class —
+// everything else (schedule, teacher, status, notes, topics...) stays admin/teacher-only.
+function isStudentRatingOwnClass() {
+  return isSignedIn()
+    && resource.data.studentUid == request.auth.uid
+    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rating', 'feedbackComment']);
+}
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // users/{uid} — profile + role lookup for the signed-in account itself.
+    match /users/{uid} {
+      allow read: if isAdmin() || request.auth.uid == uid;
+      allow write: if isAdmin();
+    }
+
+    // packages/{studentUid} — a student's session balance.
+    match /packages/{studentUid} {
+      allow read: if isAdmin() || request.auth.uid == studentUid;
+      allow write: if isAdmin();
+    }
+
+    // progress/{studentUid} — topic mastery, aggregated view.
+    // Teachers can read/write (not just write) so they can see what's already been
+    // covered before a lesson, not just blindly append to it.
+    match /progress/{studentUid} {
+      allow read: if isAdmin() || request.auth.uid == studentUid || (isSignedIn() && role() == 'teacher');
+      allow write: if isAdmin() || (isSignedIn() && role() == 'teacher');
+    }
+
+    // classes/{classId} — scheduled sessions.
+    match /classes/{classId} {
+      allow read: if isAdmin()
+        || (isSignedIn() && resource.data.studentUid == request.auth.uid)
+        || (isSignedIn() && resource.data.teacherUid == request.auth.uid);
+      // Teachers may update only their own class (attendance, notes, topics, status), never create/delete.
+      allow update: if isAdmin()
+        || isStudentRatingOwnClass()
+        || (isSignedIn() && resource.data.teacherUid == request.auth.uid
+            && request.resource.data.studentUid == resource.data.studentUid
+            && request.resource.data.teacherUid == resource.data.teacherUid);
+      allow create, delete: if isAdmin();
+    }
+
+    // Everything else stays locked down by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

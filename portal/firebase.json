@@ -1,0 +1,21 @@
+{
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  },
+  "hosting": {
+    "public": ".",
+    "ignore": [
+      "firebase.json",
+      "firestore.rules",
+      "firestore.indexes.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      { "source": "/student", "destination": "/student/index.html" },
+      { "source": "/teacher", "destination": "/teacher/index.html" },
+      { "source": "/admin", "destination": "/admin/index.html" }
+    ]
+  }
+}

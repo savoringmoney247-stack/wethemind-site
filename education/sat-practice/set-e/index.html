@@ -1,16 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>Digital SAT — Math Practice Exam (Set E)</title>
 <style>
 
   #wtmBar{ background:#111; color:#fff; display:flex; align-items:center; justify-content:space-between; padding:7px 18px; font-size:.78rem; font-family:Georgia, 'Times New Roman', serif; flex-wrap:wrap; gap:8px; }
-  #wtmBarBrand{ color:#FEBA02; font-weight:700; text-decoration:none; letter-spacing:.03em; }
+  #wtmBarBrand{ color:#FDBB0B; font-weight:700; text-decoration:none; letter-spacing:.03em; }
   #wtmBarLabel{ color:#cfd9e8; }
-  #wtmBarBtn{ background:#E81D1E; color:#fff; text-decoration:none; padding:6px 15px; border-radius:20px; font-weight:700; font-size:.72rem; white-space:nowrap; }
-  #wtmBarBtn:hover{ background:#B3161A; }
+  #wtmBarBtn{ background:#E52421; color:#fff; text-decoration:none; padding:6px 15px; border-radius:20px; font-weight:700; font-size:.72rem; white-space:nowrap; }
+  #wtmBarBtn:hover{ background:#B5171A; }
   @media (max-width:600px){ #wtmBarLabel{ display:none; } }
   :root{
     --navy:#0C2340;
@@ -132,87 +133,79 @@
   .tagCorrect{color:var(--good);font-weight:700;}
   .tagWrong{color:var(--warn);font-weight:700;}
 </style>
-<script src="../../../analytics.js" defer></script>
-</head>
+<script defer="" src="../../../analytics.js"></script>
+<link href="../../../assets/theme.css" rel="stylesheet"/></head>
 <body>
-
 <div id="wtmBar">
-  <a href="../../../" id="wtmBarBrand">We The Mind</a>
-  <span id="wtmBarLabel">Free SAT Math Practice — one of 12 sets</span>
-  <a href="../../../education/#book-demo" id="wtmBarBtn">Book Free Session</a>
+<a href="../../../" id="wtmBarBrand">We The Mind</a>
+<span id="wtmBarLabel">Free SAT Math Practice — one of 12 sets</span>
+<a href="../../../education/#book-demo" id="wtmBarBtn">Book Free Session</a>
 </div>
-
 <div id="topbar">
-  <div class="brand"><span class="dot"></span> DIGITAL SAT &nbsp;•&nbsp; Math &nbsp;•&nbsp; Form E</div>
-  <div class="mid">
-    <div id="timerDisplay">--:--</div>
-  </div>
-  <button class="topbtn" id="btnExitTest">Exit</button>
+<div class="brand"><span class="dot"></span> DIGITAL SAT  •  Math  •  Form E</div>
+<div class="mid">
+<div id="timerDisplay">--:--</div>
 </div>
-
+<button class="topbtn" id="btnExitTest">Exit</button>
+</div>
 <!-- ============ START ============ -->
 <div class="screen" id="screen-start">
-  <h1>Math</h1>
-  <div class="card">
-    <p>Module 1 of 2 &nbsp;•&nbsp; 22 Questions &nbsp;•&nbsp; 35 Minutes</p>
-    <p>A calculator is allowed for this section.</p>
-  </div>
-  <button class="btn-primary" id="btnGoCamSetup">Continue →</button>
+<h1>Math</h1>
+<div class="card">
+<p>Module 1 of 2  •  22 Questions  •  35 Minutes</p>
+<p>A calculator is allowed for this section.</p>
 </div>
-
+<button class="btn-primary" id="btnGoCamSetup">Continue →</button>
+</div>
 <!-- ============ INSTRUCTIONS ============ -->
 <div class="screen hidden" id="screen-instructions">
-  <h1>Directions</h1>
-  <div class="card">
-    <ul class="check">
-      <li>Each module has 22 questions and a 35-minute timer.</li>
-      <li>Once you submit a module, you cannot return to it.</li>
-      </ul>
-  </div>
-  <button class="btn-primary" id="btnStartExam">Begin Module 1</button>
+<h1>Directions</h1>
+<div class="card">
+<ul class="check">
+<li>Each module has 22 questions and a 35-minute timer.</li>
+<li>Once you submit a module, you cannot return to it.</li>
+</ul>
 </div>
-
+<button class="btn-primary" id="btnStartExam">Begin Module 1</button>
+</div>
 <!-- ============ EXAM AREA ============ -->
 <div id="examArea">
-  <div class="paneFull" id="paneFull"></div>
+<div class="paneFull" id="paneFull"></div>
 </div>
-
-<div id="bottomNav" class="hidden">
-  <div class="navInfo" id="navInfo">Question 1 of 22 — Module 1</div>
-  <div class="navBtns">
-    <button class="navBtn" id="btnBack">Back</button>
-    <button class="navBtn" id="btnNavToggle">Question Navigator</button>
-    <button class="navBtn primary" id="btnNext">Next</button>
-  </div>
+<div class="hidden" id="bottomNav">
+<div class="navInfo" id="navInfo">Question 1 of 22 — Module 1</div>
+<div class="navBtns">
+<button class="navBtn" id="btnBack">Back</button>
+<button class="navBtn" id="btnNavToggle">Question Navigator</button>
+<button class="navBtn primary" id="btnNext">Next</button>
+</div>
 </div>
 <div id="navGrid">
-  <div class="navDots" id="navDots"></div>
-  <div style="margin-top:12px;text-align:right;">
-    <button class="btn-primary" id="btnSubmitModule">Submit Module</button>
-  </div>
+<div class="navDots" id="navDots"></div>
+<div style="margin-top:12px;text-align:right;">
+<button class="btn-primary" id="btnSubmitModule">Submit Module</button>
 </div>
-
+</div>
 <!-- ============ RESULTS ============ -->
 <div class="screen hidden" id="screen-results">
-  <h1>Practice Exam Results</h1>
-  <div class="card">
-    <div style="color:var(--muted);">Math Score (approx.)</div>
-    <div class="scoreBig" id="scoreMath">—</div>
-    <div style="color:var(--muted);">out of 800</div>
-  </div>
-  <div class="card">
-    <h2>Module Breakdown</h2>
-    <table class="reviewTable" id="breakdownTable"><tbody></tbody></table>
-  </div>
-  <div class="card" id="wtmCTA" style="border:2px solid #E81D1E; background:linear-gradient(135deg, rgba(232,29,30,.05), rgba(254,186,2,.08));">
-    <h2 style="color:#E81D1E; margin-top:0;">Good with this? Let's go further.</h2>
-    <p id="wtmCTAmsg" style="font-size:1.05rem;">Nice work finishing a full practice exam on your own.</p>
-    <p style="color:var(--muted);">A live mentor can show you exactly which misses are quick fixes and which need a different approach — in a free 30-minute session, no strings attached.</p>
-    <a href="../../../education/#book-demo" class="btn-primary" style="text-decoration:none; display:inline-block;">Book a Free Session &rarr;</a>
-  </div>
-  <button class="btn-primary" id="btnRestart">Start a New Practice Exam</button>
+<h1>Practice Exam Results</h1>
+<div class="card">
+<div style="color:var(--muted);">Math Score (approx.)</div>
+<div class="scoreBig" id="scoreMath">—</div>
+<div style="color:var(--muted);">out of 800</div>
 </div>
-
+<div class="card">
+<h2>Module Breakdown</h2>
+<table class="reviewTable" id="breakdownTable"><tbody></tbody></table>
+</div>
+<div class="card" id="wtmCTA" style="border:2px solid #E52421; background:linear-gradient(135deg, rgba(232,29,30,.05), rgba(254,186,2,.08));">
+<h2 style="color:#E52421; margin-top:0;">Good with this? Let's go further.</h2>
+<p id="wtmCTAmsg" style="font-size:1.05rem;">Nice work finishing a full practice exam on your own.</p>
+<p style="color:var(--muted);">A live mentor can show you exactly which misses are quick fixes and which need a different approach — in a free 30-minute session, no strings attached.</p>
+<a class="btn-primary" href="../../../education/#book-demo" style="text-decoration:none; display:inline-block;">Book a Free Session →</a>
+</div>
+<button class="btn-primary" id="btnRestart">Start a New Practice Exam</button>
+</div>
 <script>
 /* =========================================================================
    ORIGINAL MATH QUESTION POOL
@@ -744,6 +737,6 @@ document.getElementById('btnExitTest').addEventListener('click', ()=>{
 
 showScreen('screen-start');
 </script>
-<script src="../../../sound.js" defer></script>
-</body>
+<script defer="" src="../../../sound.js"></script>
+<a aria-label="Visit Savoring Money" class="sm-chip" href="../../../money/website/"><img alt="Savoring Money logo" height="28" src="../../../money/assets/logo-icon.png" width="30"/><span>Savoring Money</span></a></body>
 </html>

@@ -1,7 +1,7 @@
 // Marginalia — service worker
 // Cache-first app shell so the editor keeps working offline once it has been opened once.
 // Bump CACHE_NAME whenever any of the cached files change, so returning visitors pick up the update.
-const CACHE_NAME = "marginalia-v13";
+const CACHE_NAME = "marginalia-v14";
 
 const APP_SHELL = [
   "./",
@@ -18,6 +18,7 @@ const APP_SHELL = [
   "./favicon.ico",
   "./favicon-32.png",
   "./favicon-16.png",
+  "./wethemind-logo.png",
 ];
 
 self.addEventListener("install", (event) => {

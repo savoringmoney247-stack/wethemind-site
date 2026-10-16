@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin Dashboard — We The Mind Portal</title>
+<link rel="stylesheet" href="../assets/portal.css">
+</head>
+<body>
+<div class="portal-shell">
+  <aside class="portal-sidebar">
+    <a href="./" class="brand">We The Mind <span>Portal</span></a>
+    <span class="role-badge">Admin</span>
+    <nav id="side-nav">
+      <a href="#" data-view="overview" class="active">📊 Overview</a>
+      <a href="#" data-view="students">🎓 Students</a>
+      <a href="#" data-view="teachers">🧑‍🏫 Teachers</a>
+      <a href="#" data-view="classes">📚 Classes</a>
+      <a href="#" data-view="calendar">🗓️ Calendar</a>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-email" id="user-name"></div>
+      <button id="logout-btn" class="btn btn-ghost btn-sm" style="width:100%;">Log Out</button>
+    </div>
+  </aside>
+
+  <main class="portal-content">
+
+    <!-- OVERVIEW -->
+    <section id="view-overview">
+      <h1 class="page-title">Overview</h1>
+      <p class="page-sub">Everything happening across We The Mind, at a glance.</p>
+      <div class="stat-grid">
+        <div class="stat-card"><div class="icon icon-blue">🎓</div><div class="num" id="stat-students">—</div><div class="lbl">Students</div></div>
+        <div class="stat-card"><div class="icon icon-violet">🧑‍🏫</div><div class="num" id="stat-teachers">—</div><div class="lbl">Teachers</div></div>
+        <div class="stat-card"><div class="icon icon-gold">📅</div><div class="num" id="stat-upcoming">—</div><div class="lbl">Upcoming Classes</div></div>
+        <div class="stat-card"><div class="icon icon-leaf">✅</div><div class="num" id="stat-completed">—</div><div class="lbl">Completed Classes</div></div>
+        <div class="stat-card"><div class="icon icon-red">💰</div><div class="num" id="stat-payable">—</div><div class="lbl">Total Payable (est.)</div></div>
+      </div>
+      <div class="card">
+        <h2>Classes per Teacher</h2>
+        <p class="sub">Completed sessions, all-time</p>
+        <div id="teacher-bar-chart"><p class="empty-note">Loading…</p></div>
+      </div>
+      <div class="card">
+        <p class="sub" style="margin:0;">New student/teacher accounts are created by We The Mind directly (not self-signup) — ask your developer to add one whenever you're ready.</p>
+      </div>
+    </section>
+
+    <!-- STUDENTS -->
+    <section id="view-students" style="display:none;">
+      <h1 class="page-title">Students</h1>
+      <p class="page-sub">Package balances and learning progress.</p>
+      <div class="card">
+        <div class="card-row"><h2 style="margin:0;">All Students</h2><input type="text" id="student-search" class="search-input" placeholder="Search by name or email…"></div>
+        <div id="students-table"><p class="empty-note">Loading…</p></div>
+      </div>
+    </section>
+
+    <!-- TEACHERS -->
+    <section id="view-teachers" style="display:none;">
+      <h1 class="page-title">Teachers</h1>
+      <p class="page-sub">Performance, ratings, and earnings.</p>
+      <div class="card">
+        <div class="card-row"><h2 style="margin:0;">All Teachers</h2><input type="text" id="teacher-search" class="search-input" placeholder="Search by name or email…"></div>
+        <div id="teachers-table"><p class="empty-note">Loading…</p></div>
+      </div>
+    </section>
+
+    <!-- CLASSES -->
+    <section id="view-classes" style="display:none;">
+      <h1 class="page-title">Classes</h1>
+      <p class="page-sub">Schedule new sessions and manage existing ones.</p>
+
+      <div class="card">
+        <h2>Schedule a Class</h2>
+        <form id="new-class-form">
+          <div class="form-grid">
+            <div class="field"><label for="nc-student">Student</label><select id="nc-student" required></select></div>
+            <div class="field"><label for="nc-teacher">Teacher</label><select id="nc-teacher" required></select></div>
+            <div class="field"><label for="nc-subject">Subject</label><input type="text" id="nc-subject" required placeholder="e.g. AP Calculus AB"></div>
+            <div class="field"><label for="nc-when">Date &amp; Time</label><input type="datetime-local" id="nc-when" required></div>
+            <div class="field"><label for="nc-duration">Duration (minutes)</label><input type="number" id="nc-duration" value="60" min="15" step="15"></div>
+            <div class="field"><label for="nc-link">Zoom / Meet Link</label><input type="url" id="nc-link" placeholder="https://..."></div>
+          </div>
+          <div class="field" style="max-width:320px;">
+            <label><input type="checkbox" id="nc-repeat" style="width:auto; margin-right:6px;"> Repeat weekly</label>
+          </div>
+          <div class="field" id="nc-weeks-field" style="max-width:200px; display:none;">
+            <label for="nc-weeks">Number of weeks (including this one)</label>
+            <input type="number" id="nc-weeks" value="4" min="2" max="26">
+          </div>
+          <button type="submit" class="btn">Schedule Class</button>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-row"><h2 style="margin:0;">All Classes</h2></div>
+        <div class="tab-row" id="class-tabs">
+          <button class="tab-btn active" data-status="all">All</button>
+          <button class="tab-btn" data-status="scheduled">Upcoming</button>
+          <button class="tab-btn" data-status="completed">Completed</button>
+          <button class="tab-btn" data-status="cancelled">Cancelled</button>
+        </div>
+        <div id="classes-table"><p class="empty-note">Loading…</p></div>
+      </div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section id="view-calendar" style="display:none;">
+      <h1 class="page-title">Calendar</h1>
+      <p class="page-sub">This week, across every teacher.</p>
+      <div class="card">
+        <div id="calendar-grid"><p class="empty-note">Loading…</p></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Progress modal -->
+<div id="progress-modal" class="modal-backdrop">
+  <div class="modal-card">
+    <div class="card-row"><h2 style="margin:0;" id="progress-modal-title">Progress</h2><button class="btn btn-ghost btn-sm" id="progress-modal-close" type="button">Close</button></div>
+    <div id="progress-modal-body"><p class="empty-note">No topics logged yet.</p></div>
+  </div>
+</div>
+
+<script type="module">
+  import { requireRole, logout, db } from "../assets/auth.js";
+  import { barChartHTML } from "../assets/charts.js";
+  import {
+    collection, getDocs, doc, getDoc, updateDoc, addDoc, query, Timestamp
+  } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+  document.getElementById("logout-btn").addEventListener("click", () => logout().then(() => window.location.href = "/"));
+
+  // ---- Sidebar view switching ----
+  document.querySelectorAll("#side-nav a").forEach(function(link){
+    link.addEventListener("click", function(e){
+      e.preventDefault();
+      document.querySelectorAll("#side-nav a").forEach(function(a){ a.classList.remove("active"); });
+      link.classList.add("active");
+      var view = link.getAttribute("data-view");
+      document.querySelectorAll("main.portal-content > section").forEach(function(s){ s.style.display = "none"; });
+      document.getElementById("view-" + view).style.display = "block";
+    });
+  });
+
+  function fmtDate(ts){
+    if(!ts) return "—";
+    var d = ts.toDate ? ts.toDate() : new Date(ts);
+    return d.toLocaleString(undefined, { dateStyle:"medium", timeStyle:"short" });
+  }
+  function escapeHtml(s){ return String(s || "").replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+
+  var studentsCache = [], teachersCache = [], classesCache = [], progressCache = {};
+
+  async function loadUsers(){
+    var snap = await getDocs(collection(db, "users"));
+    studentsCache = []; teachersCache = [];
+    var pkgSnap = await getDocs(collection(db, "packages"));
+    var packages = {};
+    pkgSnap.forEach(function(p){ packages[p.id] = p.data(); });
+
+    snap.forEach(function(d){
+      var u = d.data(); u._id = d.id;
+      if (u.role === "student") { u._pkg = packages[d.id] || {}; studentsCache.push(u); }
+      if (u.role === "teacher") teachersCache.push(u);
+    });
+
+    document.getElementById("stat-students").textContent = studentsCache.length;
+    document.getElementById("stat-teachers").textContent = teachersCache.length;
+
+    renderStudents(studentsCache);
+    renderTeachers(teachersCache);
+
+    var studentSel = document.getElementById("nc-student");
+    studentSel.innerHTML = studentsCache.map(function(u){ return '<option value="' + u._id + '" data-name="' + escapeHtml(u.name || u.email) + '">' + escapeHtml(u.name || u.email) + '</option>'; }).join("");
+    var teacherSel = document.getElementById("nc-teacher");
+    teacherSel.innerHTML = teachersCache.map(function(u){ return '<option value="' + u._id + '" data-name="' + escapeHtml(u.name || u.email) + '">' + escapeHtml(u.name || u.email) + '</option>'; }).join("");
+  }
+
+  function renderStudents(list){
+    var sEl = document.getElementById("students-table");
+    if (!list.length) { sEl.innerHTML = '<p class="empty-note">No student accounts yet.</p>'; return; }
+    var rows = list.map(function(u){
+      var total = u._pkg.sessionsTotal || 0, used = u._pkg.sessionsUsed || 0;
+      return '<tr><td>' + escapeHtml(u.name || "—") + '</td><td>' + escapeHtml(u.email) + '</td>' +
+        '<td><input type="number" min="0" value="' + total + '" class="pkg-total" data-uid="' + u._id + '"></td>' +
+        '<td><input type="number" min="0" value="' + used + '" class="pkg-used" data-uid="' + u._id + '"></td>' +
+        '<td>' + Math.max(total - used, 0) + '</td>' +
+        '<td><button class="btn btn-ghost btn-sm pkg-save" data-uid="' + u._id + '" type="button">Save</button></td>' +
+        '<td><button class="btn btn-ghost btn-sm progress-view" data-uid="' + u._id + '" data-name="' + escapeHtml(u.name || u.email) + '" type="button">Progress</button></td></tr>';
+    }).join("");
+    sEl.innerHTML = '<table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Purchased</th><th>Used</th><th>Remaining</th><th></th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    sEl.querySelectorAll(".pkg-save").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        var uid = btn.getAttribute("data-uid");
+        var total = Number(sEl.querySelector('.pkg-total[data-uid="' + uid + '"]').value) || 0;
+        var used = Number(sEl.querySelector('.pkg-used[data-uid="' + uid + '"]').value) || 0;
+        await updateDoc(doc(db, "packages", uid), { sessionsTotal: total, sessionsUsed: used });
+        btn.textContent = "Saved"; setTimeout(function(){ btn.textContent = "Save"; }, 1200);
+      });
+    });
+    sEl.querySelectorAll(".progress-view").forEach(function(btn){
+      btn.addEventListener("click", function(){ openProgressModal(btn.getAttribute("data-uid"), btn.getAttribute("data-name")); });
+    });
+  }
+
+  function teacherStats(teacherUid){
+    var mine = classesCache.filter(function(c){ return c.teacherUid === teacherUid; });
+    var completed = mine.filter(function(c){ return c.status === "completed"; });
+    var rated = completed.filter(function(c){ return typeof c.rating === "number"; });
+    var avgRating = rated.length ? (rated.reduce(function(s,c){ return s + c.rating; }, 0) / rated.length) : null;
+    var hours = completed.reduce(function(s,c){ return s + (c.durationMinutes || 60); }, 0) / 60;
+    return { classesTaught: completed.length, avgRating: avgRating, hours: hours };
+  }
+
+  function renderTeachers(list){
+    var tEl = document.getElementById("teachers-table");
+    if (!list.length) { tEl.innerHTML = '<p class="empty-note">No teacher accounts yet.</p>'; return; }
+    var rows = list.map(function(u){
+      var stats = teacherStats(u._id);
+      var payRate = u.payRate || 0;
+      var earnings = stats.classesTaught * payRate;
+      return '<tr><td>' + escapeHtml(u.name || "—") + '</td><td>' + escapeHtml(u.email) + '</td>' +
+        '<td>' + stats.classesTaught + '</td>' +
+        '<td>' + (stats.avgRating !== null ? stats.avgRating.toFixed(1) + ' ★' : '—') + '</td>' +
+        '<td>' + stats.hours.toFixed(1) + '</td>' +
+        '<td><input type="number" min="0" value="' + payRate + '" class="pay-rate" data-uid="' + u._id + '"> /class</td>' +
+        '<td>₹' + earnings.toLocaleString() + '</td>' +
+        '<td><button class="btn btn-ghost btn-sm pay-save" data-uid="' + u._id + '" type="button">Save</button></td></tr>';
+    }).join("");
+    tEl.innerHTML = '<table class="admin-table"><thead><tr><th>Name</th><th>Email</th><th>Classes Taught</th><th>Avg Rating</th><th>Hours</th><th>Pay Rate</th><th>Est. Earnings</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    tEl.querySelectorAll(".pay-save").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        var uid = btn.getAttribute("data-uid");
+        var rate = Number(tEl.querySelector('.pay-rate[data-uid="' + uid + '"]').value) || 0;
+        await updateDoc(doc(db, "users", uid), { payRate: rate });
+        var u = teachersCache.find(function(x){ return x._id === uid; });
+        if (u) u.payRate = rate;
+        btn.textContent = "Saved"; setTimeout(function(){ btn.textContent = "Save"; renderTeachers(teachersCache); }, 800);
+      });
+    });
+
+    // Overview stat: total payable + bar chart
+    var totalPayable = list.reduce(function(sum, u){
+      var stats = teacherStats(u._id);
+      return sum + stats.classesTaught * (u.payRate || 0);
+    }, 0);
+    document.getElementById("stat-payable").textContent = "₹" + totalPayable.toLocaleString();
+    document.getElementById("teacher-bar-chart").innerHTML = list.length
+      ? barChartHTML(list.map(function(u){ return { label: (u.name || u.email).split(" ")[0], value: teacherStats(u._id).classesTaught }; }))
+      : '<p class="empty-note">No teachers yet.</p>';
+  }
+
+  var currentClassTab = "all";
+  function renderClasses(){
+    var upcoming = classesCache.filter(function(c){ return c.status === "scheduled"; }).length;
+    var completed = classesCache.filter(function(c){ return c.status === "completed"; }).length;
+    document.getElementById("stat-upcoming").textContent = upcoming;
+    document.getElementById("stat-completed").textContent = completed;
+
+    var filtered = currentClassTab === "all" ? classesCache : classesCache.filter(function(c){ return c.status === currentClassTab; });
+    var cEl = document.getElementById("classes-table");
+    if (!filtered.length) { cEl.innerHTML = '<p class="empty-note">No classes in this view.</p>'; return; }
+    var rows = filtered.map(function(c){
+      var cancelBtn = c.status === "scheduled" ? '<button class="btn btn-danger btn-sm cancel-class" data-id="' + c._id + '" type="button">Cancel</button>' : "";
+      return '<tr><td>' + escapeHtml(c.studentName) + '</td><td>' + escapeHtml(c.teacherName) + '</td><td>' + escapeHtml(c.subject) + '</td>' +
+        '<td>' + fmtDate(c.scheduledAt) + '</td><td><span class="status-pill status-' + c.status + '">' + c.status + '</span></td>' +
+        '<td>' + (typeof c.rating === "number" ? c.rating + ' ★' : '—') + '</td>' +
+        '<td>' + (c.recordingLink ? '<a href="' + c.recordingLink + '" target="_blank" rel="noopener">Link</a>' : '—') + '</td>' +
+        '<td>' + cancelBtn + '</td></tr>';
+    }).join("");
+    cEl.innerHTML = '<table class="admin-table"><thead><tr><th>Student</th><th>Teacher</th><th>Subject</th><th>When</th><th>Status</th><th>Rating</th><th>Recording</th><th></th></tr></thead><tbody>' + rows + '</tbody></table>';
+    cEl.querySelectorAll(".cancel-class").forEach(function(btn){
+      btn.addEventListener("click", async function(){
+        if (!confirm("Cancel this class?")) return;
+        await updateDoc(doc(db, "classes", btn.getAttribute("data-id")), { status: "cancelled" });
+        await loadClasses();
+      });
+    });
+  }
+
+  document.getElementById("class-tabs").addEventListener("click", function(e){
+    if (!e.target.classList.contains("tab-btn")) return;
+    document.querySelectorAll("#class-tabs .tab-btn").forEach(function(b){ b.classList.remove("active"); });
+    e.target.classList.add("active");
+    currentClassTab = e.target.getAttribute("data-status");
+    renderClasses();
+  });
+
+  async function loadClasses(){
+    var snap = await getDocs(query(collection(db, "classes")));
+    classesCache = [];
+    snap.forEach(function(d){ var c = d.data(); c._id = d.id; classesCache.push(c); });
+    classesCache.sort(function(a,b){
+      var aw = a.scheduledAt && a.scheduledAt.toDate ? a.scheduledAt.toDate() : 0;
+      var bw = b.scheduledAt && b.scheduledAt.toDate ? b.scheduledAt.toDate() : 0;
+      return bw - aw;
+    });
+    renderClasses();
+    renderTeachers(teachersCache); // refresh stats that depend on classesCache
+    renderCalendar();
+  }
+
+  function renderCalendar(){
+    var el = document.getElementById("calendar-grid");
+    var days = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+    var today = new Date(); today.setHours(0,0,0,0);
+    var startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - today.getDay());
+    var byDay = {};
+    for (var i = 0; i < 7; i++) byDay[i] = [];
+    classesCache.forEach(function(c){
+      if (!c.scheduledAt || !c.scheduledAt.toDate) return;
+      var d = c.scheduledAt.toDate();
+      var diffDays = Math.round((new Date(d.getFullYear(),d.getMonth(),d.getDate()) - startOfWeek) / 86400000);
+      if (diffDays >= 0 && diffDays < 7) byDay[diffDays].push(c);
+    });
+    var head = days.map(function(d){ return '<div class="cal-day-head">' + d + '</div>'; }).join("");
+    var cells = days.map(function(_, i){
+      var dayDate = new Date(startOfWeek); dayDate.setDate(startOfWeek.getDate() + i);
+      var items = byDay[i].map(function(c){
+        var t = c.scheduledAt.toDate().toLocaleTimeString(undefined, {hour:"numeric", minute:"2-digit"});
+        return '<div class="cal-class" title="' + escapeHtml(c.subject) + ' — ' + escapeHtml(c.studentName) + '">' + t + ' ' + escapeHtml(c.subject) + '</div>';
+      }).join("");
+      return '<div class="cal-day"><div class="date-num">' + dayDate.getDate() + '</div>' + items + '</div>';
+    }).join("");
+    el.innerHTML = '<div class="cal-grid">' + head + cells + '</div>';
+  }
+
+  // ---- Schedule form (with recurring weekly) ----
+  document.getElementById("nc-repeat").addEventListener("change", function(){
+    document.getElementById("nc-weeks-field").style.display = this.checked ? "block" : "none";
+  });
+  document.getElementById("new-class-form").addEventListener("submit", async function(e){
+    e.preventDefault();
+    var studentSel = document.getElementById("nc-student");
+    var teacherSel = document.getElementById("nc-teacher");
+    var studentOpt = studentSel.options[studentSel.selectedIndex];
+    var teacherOpt = teacherSel.options[teacherSel.selectedIndex];
+    var when = new Date(document.getElementById("nc-when").value);
+    var repeat = document.getElementById("nc-repeat").checked;
+    var weeks = repeat ? Math.max(2, Number(document.getElementById("nc-weeks").value) || 2) : 1;
+    var recurringGroupId = repeat ? (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())) : null;
+    var duration = Number(document.getElementById("nc-duration").value) || 60;
+
+    for (var i = 0; i < weeks; i++) {
+      var occurrence = new Date(when.getTime() + i * 7 * 86400000);
+      await addDoc(collection(db, "classes"), {
+        studentUid: studentSel.value, studentName: studentOpt ? studentOpt.getAttribute("data-name") : "",
+        teacherUid: teacherSel.value, teacherName: teacherOpt ? teacherOpt.getAttribute("data-name") : "",
+        subject: document.getElementById("nc-subject").value.trim(),
+        scheduledAt: Timestamp.fromDate(occurrence),
+        durationMinutes: duration,
+        meetingLink: document.getElementById("nc-link").value.trim(),
+        status: "scheduled",
+        attendance: { student: false, teacher: false },
+        notes: "", topics: [], recordingLink: "", rating: null, feedbackComment: "",
+        recurringGroupId: recurringGroupId
+      });
+    }
+    e.target.reset();
+    document.getElementById("nc-weeks-field").style.display = "none";
+    await loadClasses();
+  });
+
+  // ---- Search/filter ----
+  document.getElementById("student-search").addEventListener("input", function(){
+    var q = this.value.toLowerCase();
+    renderStudents(studentsCache.filter(function(u){ return (u.name || "").toLowerCase().indexOf(q) > -1 || u.email.toLowerCase().indexOf(q) > -1; }));
+  });
+  document.getElementById("teacher-search").addEventListener("input", function(){
+    var q = this.value.toLowerCase();
+    renderTeachers(teachersCache.filter(function(u){ return (u.name || "").toLowerCase().indexOf(q) > -1 || u.email.toLowerCase().indexOf(q) > -1; }));
+  });
+
+  // ---- Progress modal ----
+  var mastery_LABELS = { introduced: "Introduced", learning: "Learning", mastered: "Mastered" };
+  async function openProgressModal(uid, name){
+    document.getElementById("progress-modal-title").textContent = name + "'s Progress";
+    var body = document.getElementById("progress-modal-body");
+    body.innerHTML = '<p class="empty-note">Loading…</p>';
+    document.getElementById("progress-modal").classList.add("show");
+    var snap = await getDoc(doc(db, "progress", uid));
+    var topics = snap.exists() ? (snap.data().topics || {}) : {};
+    var keys = Object.keys(topics);
+    body.innerHTML = keys.length ? keys.map(function(name){
+      var t = topics[name];
+      return '<div class="progress-topic"><span>' + escapeHtml(name) + '</span><span class="mastery-pill mastery-' + t.mastery + '">' + mastery_LABELS[t.mastery] + '</span></div>';
+    }).join("") : '<p class="empty-note">No topics logged yet.</p>';
+  }
+  document.getElementById("progress-modal-close").addEventListener("click", function(){
+    document.getElementById("progress-modal").classList.remove("show");
+  });
+
+  requireRole("admin", async function(user){
+    document.getElementById("user-name").textContent = user.email;
+    await loadUsers();
+    await loadClasses();
+  });
+</script>
+</body>
+</html>
