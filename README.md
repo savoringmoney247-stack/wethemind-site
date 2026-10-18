@@ -44,7 +44,7 @@ Clean, extensionless URLs throughout — every route is a folder containing an `
 | `privacy/`, `terms/` | Legal pages |
 | `style.css` | Shared stylesheet for every page (includes a `prefers-color-scheme: dark` block) |
 | `currency-shared.js` | Lightweight currency-display conversion used on a few marketing pages (pricing.html has its own, more detailed, script) |
-| `Code.gs` | Google Apps Script backing every form on the site (booking, mass-session signup, interest-capture forms, contact form) — writes to one Google Sheet, uploads files to Drive |
+| `google-sheets/Code.gs` (ships beside the site, not inside it) | Google Apps Script backing every form on the site (booking, mass-session signup, interest-capture forms, contact form) — writes to one Google Sheet, uploads files to Drive |
 | `sitemap.xml`, `robots.txt` | SEO |
 | `CNAME` | Custom domain for GitHub Pages (`wethemind.com`) |
 | `we-the-mind-course-plans.pdf` | Downloadable course plans & pricing guide |
