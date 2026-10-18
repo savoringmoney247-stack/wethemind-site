@@ -8,3 +8,8 @@ body:has(#sidebar-toggle) .sm-tab{display:none!important}
 /* Spot illustrations under the hero: centre a leftover item (tablets showed 2 + 1 stranded on the left). */
 .spot-grid{display:flex!important;flex-wrap:wrap;justify-content:center}
 .spot-grid>figure{flex:1 1 280px;max-width:380px}
+/* Education: "See Full Pricing" sat 40px under the pricing cards but 152px above the Coverage box
+   (120px on phones). Move it down and pull the space below up by the same amount so it sits
+   midway, without changing the page height. */
+.cta-price-wrap{margin-top:96px!important;margin-bottom:-56px!important}
+@media(max-width:720px){.cta-price-wrap{margin-top:80px!important;margin-bottom:-40px!important}}
