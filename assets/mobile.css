@@ -13,3 +13,13 @@ body:has(#sidebar-toggle) .sm-tab{display:none!important}
    midway, without changing the page height. */
 .cta-price-wrap{margin-top:96px!important;margin-bottom:-56px!important}
 @media(max-width:720px){.cta-price-wrap{margin-top:80px!important;margin-bottom:-40px!important}}
+/* Small phones (<=380px, e.g. iPhone SE / 320px Android): the header (logo + "Book Free Session" +
+   menu) was 36px wider than the screen, so the menu button was cut off. Tighten it a little. */
+@media(max-width:380px){
+ .wrap.nav,.nav.wrap{padding-left:12px!important;padding-right:12px!important}
+ .logo{gap:6px!important}.logo-mark{width:30px!important;height:30px!important}
+ .logo-text{font-size:.78rem!important;letter-spacing:.02em}
+ .nav-cta{gap:8px!important}
+ .nav-cta .btn{padding:7px 9px!important;font-size:.64rem!important;letter-spacing:.02em}
+ .burger{padding:6px 8px!important}
+}
