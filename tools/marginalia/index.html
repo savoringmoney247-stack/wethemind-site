@@ -146,6 +146,24 @@ button{font:inherit;cursor:pointer;}
 }
 .btn-primary:hover{filter:brightness(1.05);box-shadow:0 6px 20px rgba(229,24,28,.38);transform:translateY(-1px);}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+/* Red (primary) buttons stay red on hover/tap/open. The generic .btn:hover cream background used to
+   win, so after tapping the download arrow it went cream with a white, invisible arrow. */
+.btn-primary:hover,.btn-primary:focus-visible,.btn-primary.open{
+  background:linear-gradient(180deg, color-mix(in srgb, var(--accent) 100%, white 8%), var(--accent));
+  border-color:var(--accent);color:var(--accent-ink);
+}
+.dlcaret.open{filter:brightness(.92);}
+/* Touch screens keep :hover after a tap; don't leave buttons lifted or recoloured. */
+@media (hover:none){
+  .btn:hover{transform:none;box-shadow:var(--shadow-sm);}
+  .btn:not(.btn-primary):hover{background:var(--surface);}
+}
+/* When the header needs two rows (phones, or narrow windows with a file open), put the
+   Marginalia logo centred on top and centre the row of buttons under it. */
+.hdr.stacked{flex-wrap:wrap;justify-content:center;row-gap:8px;}
+.hdr.stacked .brand{flex:1 1 100%;justify-content:center;}
+.hdr.stacked .hdr-actions{flex:1 1 100%;margin-left:0;justify-content:center;}
+.hdr.stacked .filepill{order:3;margin:0 auto;}
 .btn-icon{padding:7px;width:34px;height:34px;justify-content:center;}
 .btn svg{width:15px;height:15px;flex:0 0 auto;}
 
@@ -1305,6 +1323,34 @@ fsBtn.hidden = !fsRequest;
 fsBtn.addEventListener("click", toggleFullscreen);
 document.addEventListener("fullscreenchange", updateFsButton);
 document.addEventListener("webkitfullscreenchange", updateFsButton);
+/* Header: centre the logo on top and the buttons below whenever they don't fit on one row. */
+(function(){
+  const hdr = document.querySelector(".hdr"); if (!hdr) return;
+  const brand = hdr.querySelector(".brand"), acts = hdr.querySelector(".hdr-actions"), pill = document.getElementById("filepill");
+  const shown = el => el && getComputedStyle(el).display !== "none";
+  function contentWidth(el){
+    const kids = [...el.children].filter(shown);
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    return kids.reduce((s, c)=> s + c.getBoundingClientRect().width, 0) + gap * Math.max(0, kids.length - 1);
+  }
+  let timer = 0;
+  function layout(){
+    timer = 0;
+    const cs = getComputedStyle(hdr);
+    const gap = parseFloat(cs.columnGap) || 0;
+    const avail = hdr.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    let need = contentWidth(brand) + gap + contentWidth(acts);
+    if (shown(pill)) need += gap + pill.getBoundingClientRect().width;
+    hdr.classList.toggle("stacked", need > avail + 0.5);
+  }
+  const queue = ()=>{ clearTimeout(timer); timer = setTimeout(layout, 30); };
+  window.addEventListener("resize", queue);
+  document.addEventListener("fullscreenchange", queue);
+  document.addEventListener("webkitfullscreenchange", queue);
+  new MutationObserver(queue).observe(hdr, {subtree:true, attributes:true, attributeFilter:["hidden","class"], childList:true});
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(queue);
+  queue();
+})();
 document.addEventListener("keydown", (e)=>{
   if (e.key !== "f" && e.key !== "F") return;
   if (e.ctrlKey || e.metaKey || e.altKey) return;
