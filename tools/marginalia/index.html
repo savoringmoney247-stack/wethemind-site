@@ -223,6 +223,36 @@ button{font:inherit;cursor:pointer;}
 }
 .inkhead{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:96px}
 .inktitle{display:flex;flex-direction:column;align-items:center;gap:4px}
+/* ---------- shapes ---------- */
+.shape-el.fig{background:transparent!important;border:1.5px dashed transparent;box-shadow:none}
+.shape-el.fig:hover{border-color:color-mix(in srgb,var(--accent) 45%,transparent);border-style:dashed;box-shadow:none}
+.shape-el.fig.selected{border-color:var(--accent);border-style:dashed;box-shadow:none}
+.shape-el .figsvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.shapemid,.shaperight{display:flex;flex-direction:column;align-items:center;gap:8px}
+.shapegrid{display:grid;grid-template-columns:repeat(4,36px);gap:6px}
+.shapebtn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink-600);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .14s,border-color .14s,background .14s}
+.shapebtn svg{width:20px;height:20px}
+@media (hover:hover){.shapebtn:hover{transform:translateY(-1px);color:var(--ink-900)}}
+.shapebtn.active{border-color:var(--c);color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));box-shadow:0 0 0 2px color-mix(in srgb,var(--c) 25%,transparent)}
+.fillseg{display:flex;padding:3px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line);gap:2px}
+.fillopt{display:flex;align-items:center;gap:6px;padding:6px 10px;border:none;border-radius:9px;background:transparent;color:var(--ink-600);
+  font:600 11.5px/1 "IBM Plex Sans",system-ui,sans-serif;cursor:pointer}
+.fillopt.active{background:var(--surface);color:var(--ink-900);box-shadow:var(--shadow-sm,0 1px 2px rgba(0,0,0,.1))}
+.fillseg.disabled{opacity:.45}
+.fillopt:disabled{cursor:not-allowed}
+.fillsw{width:13px;height:13px;border-radius:3px;border:2px solid var(--c)}
+.fillsw.solid{background:var(--c)}
+.fillsw.tint{background:color-mix(in srgb,var(--c) 25%,transparent)}
+.shapecols{display:flex;gap:9px}
+@media (pointer:coarse){.shapebtn{width:42px;height:42px}.shapegrid{grid-template-columns:repeat(4,42px)}.fillopt{padding:9px 12px}}
+@media (max-width:640px){
+  .shapemid,.shaperight{width:100%}
+  .shapegrid{grid-template-columns:repeat(8,1fr);width:100%;gap:4px}
+  .shapebtn{width:100%;height:40px}
+  .fillseg{width:100%}.fillopt{flex:1;justify-content:center}
+  .shapecols{justify-content:space-between;width:100%;gap:0}
+}
 /* teaching colours: purpose chips (each shows its light- and dark-background shade) */
 .inkuse{font:400 11px/1.25 "IBM Plex Sans",system-ui,sans-serif;color:var(--ink-600);text-align:center;max-width:150px}
 .inkpv{display:flex;flex-direction:column;align-items:center;gap:5px}
@@ -406,7 +436,7 @@ button{font:inherit;cursor:pointer;}
 .imglayer .el{pointer-events:auto;}
 .page-inner canvas.ink-canvas{pointer-events:none;}
 /* While a drawing tool is active, images/text/shapes never grab the pointer — you can write straight over them. */
-.stage-wrap[data-tool="pen"] .el,.stage-wrap[data-tool="highlighter"] .el,.stage-wrap[data-tool="eraser"] .el,.stage-wrap[data-tool="cover"] .el{pointer-events:none!important;}
+.stage-wrap[data-tool="pen"] .el,.stage-wrap[data-tool="highlighter"] .el,.stage-wrap[data-tool="eraser"] .el,.stage-wrap[data-tool="cover"] .el,.stage-wrap[data-tool="shape"] .el{pointer-events:none!important;}
 .el .lock{position:absolute;top:-11px;left:-11px;width:20px;height:20px;border-radius:50%;background:var(--ink-600);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;padding:0;box-shadow:0 1px 3px rgba(0,0,0,.25);touch-action:none;}
 .el .lock svg{width:11px;height:11px;}
 .el .lock .on{display:none;}
@@ -766,6 +796,9 @@ body.inactive{cursor:default;}
 <button class="tool-btn" data-tool="cover" title="Cover / block out">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="12" rx="1.5" width="16" x="4" y="6"></rect><path d="M4 12h16"></path></svg>
 </button>
+<button class="tool-btn" data-tool="shape" title="Shapes — rectangle, ellipse, triangle, arrow…">
+<svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="9" rx="1.2" width="9" x="3" y="12"></rect><circle cx="16.5" cy="7.5" r="4.5"></circle></svg>
+</button>
 <button class="tool-btn" data-tool="image" title="Insert image">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="3"></rect><circle cx="8.5" cy="8.5" r="1.6"></circle><path d="m21 15-5-5L5 21"></path></svg>
 </button>
@@ -938,6 +971,10 @@ const ui = {
   textBold: false,
   textFont: "Helvetica",
   coverColor: "#ffffff",
+  shapeType: "rect",        // rect | ellipse | triangle | diamond | star | line | arrow | darrow
+  shapeFill: "none",        // none (hollow) | solid | tint
+  shapeColor: "#1d4ed8",
+  shapeWidth: 2.5,          // outline thickness in page points
   selected: null,      // {pageId, kind:'text'|'image'|'shape', id}
   autoFit: true,
   layout: "vertical",  // "vertical" (page down) or "horizontal" (page sideways)
@@ -2402,7 +2439,10 @@ function positionEl(el, m, kind){
   } else {
     el.style.width = (m.w*ui.scale)+"px";
     el.style.height = (m.h*ui.scale)+"px";
-    if (kind === "shape") el.style.background = m.color;
+    if (kind === "shape"){
+      if (m.type){ el.classList.add("fig"); el.style.background = "transparent"; renderFig(el, m); }
+      else el.style.background = m.color;
+    }
   }
 }
 
@@ -2655,6 +2695,45 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
       return;
     }
 
+    if (ui.tool === "shape"){
+      // Drag to draw. Shift: squares/circles, and lines snapped to 45 degrees.
+      const sx = px, sy = py; let m = null, node = null;
+      inner.setPointerCapture(e.pointerId);
+      function move(ev){
+        const r = inner.getBoundingClientRect();
+        let nx=(ev.clientX-r.left)/ui.scale, ny=(ev.clientY-r.top)/ui.scale;
+        if (!m){
+          if (Math.hypot(nx-sx, ny-sy)*ui.scale < 8) return;
+          beginAction(ps);
+          const col = resolveInk(ps, sx, sy, ui.shapeColor, ui.shapeWidth, false).color;
+          m = {id:genId(), type: ui.shapeType, fill: ui.shapeFill, color: col, sw: ui.shapeWidth, x:sx, y:sy, w:4, h:4};
+          ps.shapes.push(m);
+          node = mountShapeLive(ps, m);
+        }
+        if (ev.shiftKey){
+          if (FIG_LINES.has(m.type)){
+            const ang = Math.round(Math.atan2(ny-sy, nx-sx)/(Math.PI/4))*(Math.PI/4), len = Math.hypot(nx-sx, ny-sy);
+            nx = sx + Math.cos(ang)*len; ny = sy + Math.sin(ang)*len;
+          } else {
+            const d = Math.max(Math.abs(nx-sx), Math.abs(ny-sy));
+            nx = sx + Math.sign(nx-sx || 1)*d; ny = sy + Math.sign(ny-sy || 1)*d;
+          }
+        }
+        figFromDrag(m, sx, sy, nx, ny);
+        positionEl(node, m, "shape");
+      }
+      function up(){
+        inner.removeEventListener("pointermove", move);
+        inner.removeEventListener("pointerup", up);
+        inner.removeEventListener("pointercancel", up);
+        if (m){ endAction(true); setTool("select"); const el = domRefs[ps.id].shapeLayer.querySelector('[data-mid="'+m.id+'"]'); if (el) selectEl(ps.id, "shape", m.id, el); }
+      }
+      inner.addEventListener("pointermove", move);
+      inner.addEventListener("pointerup", up);
+      inner.addEventListener("pointercancel", up);
+      return;
+    }
+
     if (ui.tool === "cover"){
       // A tap on blank space does nothing; only an actual drag makes a box (in any direction).
       const sx = px, sy = py; let m = null, node = null;
@@ -2705,6 +2784,99 @@ function mountShapeLive(ps, m){
   makeDraggable(node, ps, m, node, "shape", {move:true, excludeSelectors:[".resize",".del"]});
   makeResizable(node.querySelector(".resize"), ps, m, node, "shape", {lockAspect:false});
   return node;
+}
+
+/* ---------------- shapes (figures) ----------------
+   Stored in ps.shapes with a `type` (cover boxes have none). Geometry is in page points inside
+   the element's box, so the same SVG path draws on screen and in the downloaded PDF. */
+const FIG_LINES = new Set(["line","arrow","darrow"]);
+const FIG_TYPES = [
+  {type:"rect",     name:"Rectangle",    icon:'<rect x="4" y="6" width="16" height="12" rx="1.2"/>'},
+  {type:"ellipse",  name:"Ellipse",      icon:'<ellipse cx="12" cy="12" rx="8.5" ry="6.5"/>'},
+  {type:"triangle", name:"Triangle",     icon:'<path d="M12 4.5 20.5 19h-17z"/>'},
+  {type:"diamond",  name:"Diamond",      icon:'<path d="M12 3.5 20.5 12 12 20.5 3.5 12z"/>'},
+  {type:"star",     name:"Star",         icon:'<path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.8z"/>'},
+  {type:"line",     name:"Line",         icon:'<path d="M4.5 19.5 19.5 4.5"/>'},
+  {type:"arrow",    name:"Arrow",        icon:'<path d="M4.5 19.5 19 5M19 5h-7M19 5v7"/>'},
+  {type:"darrow",   name:"Double arrow", icon:'<path d="M5 19 19 5M19 5h-6.5M19 5v6.5M5 19h6.5M5 19v-6.5"/>'},
+];
+// Looked up when used (TEACH_INK is defined further down the file).
+const figColors = ()=> [...TEACH_INK, {key:"#111827", name:"Black", use:"Neutral outlines", light:"#111827", dark:"#f3f4f6"}];
+const figPad = m => Math.max(8, (m.sw||2.5)*4);
+// Set the box (and, for lines, the endpoints inside it) from a drag between two points.
+function figFromDrag(m, sx, sy, nx, ny){
+  if (FIG_LINES.has(m.type)){
+    const p = figPad(m), dx = nx-sx, dy = ny-sy;
+    m.x = Math.min(sx,nx) - p; m.y = Math.min(sy,ny) - p;
+    m.w = Math.abs(dx) + 2*p; m.h = Math.abs(dy) + 2*p;
+    m.u1 = dx ? (sx-Math.min(sx,nx))/Math.abs(dx) : 0.5; m.v1 = dy ? (sy-Math.min(sy,ny))/Math.abs(dy) : 0.5;
+    m.u2 = 1 - m.u1; m.v2 = 1 - m.v1;
+    if (!dx){ m.u1 = m.u2 = 0.5; } if (!dy){ m.v1 = m.v2 = 0.5; }
+  } else {
+    m.x = Math.min(sx,nx); m.y = Math.min(sy,ny);
+    m.w = Math.max(4, Math.abs(nx-sx)); m.h = Math.max(4, Math.abs(ny-sy));
+  }
+}
+const f2 = v => +v.toFixed(2);
+// Returns SVG path data in local box coordinates: body (outline/fill) and optional arrow heads.
+function figPaths(m){
+  const w = m.w, h = m.h, sw = m.sw || 2.5, i = sw/2;
+  if (FIG_LINES.has(m.type)){
+    const p = figPad(m);
+    let x1 = p + (m.u1 ?? 0)*(w-2*p), y1 = p + (m.v1 ?? 0)*(h-2*p), x2 = p + (m.u2 ?? 1)*(w-2*p), y2 = p + (m.v2 ?? 1)*(h-2*p);
+    const len = Math.hypot(x2-x1, y2-y1) || 1, ux = (x2-x1)/len, uy = (y2-y1)/len;
+    const L = Math.min(len*0.45, Math.max(10, sw*4)), hw = L*0.55;
+    const head = (ex, ey, dx, dy)=> `M${f2(ex)} ${f2(ey)} L${f2(ex-dx*L-dy*hw)} ${f2(ey-dy*L+dx*hw)} L${f2(ex-dx*L+dy*hw)} ${f2(ey-dy*L-dx*hw)} Z`;
+    const heads = [];
+    let ax = x1, ay = y1, bx = x2, by = y2;
+    if (m.type === "arrow" || m.type === "darrow"){ heads.push(head(x2, y2, ux, uy)); bx = x2 - ux*L*0.8; by = y2 - uy*L*0.8; }
+    if (m.type === "darrow"){ heads.push(head(x1, y1, -ux, -uy)); ax = x1 + ux*L*0.8; ay = y1 + uy*L*0.8; }
+    return {body:`M${f2(ax)} ${f2(ay)} L${f2(bx)} ${f2(by)}`, heads:heads.join(" "), line:true};
+  }
+  const l = i, t = i, r = w-i, b = h-i, cx = w/2, cy = h/2;
+  let d;
+  if (m.type === "ellipse"){
+    const rx = (w-sw)/2, ry = (h-sw)/2, k = 0.5523;
+    d = `M${f2(cx-rx)} ${f2(cy)} C${f2(cx-rx)} ${f2(cy-ry*k)} ${f2(cx-rx*k)} ${f2(cy-ry)} ${f2(cx)} ${f2(cy-ry)}`
+      + ` C${f2(cx+rx*k)} ${f2(cy-ry)} ${f2(cx+rx)} ${f2(cy-ry*k)} ${f2(cx+rx)} ${f2(cy)}`
+      + ` C${f2(cx+rx)} ${f2(cy+ry*k)} ${f2(cx+rx*k)} ${f2(cy+ry)} ${f2(cx)} ${f2(cy+ry)}`
+      + ` C${f2(cx-rx*k)} ${f2(cy+ry)} ${f2(cx-rx)} ${f2(cy+ry*k)} ${f2(cx-rx)} ${f2(cy)} Z`;
+  } else if (m.type === "triangle"){
+    d = `M${f2(cx)} ${f2(t)} L${f2(r)} ${f2(b)} L${f2(l)} ${f2(b)} Z`;
+  } else if (m.type === "diamond"){
+    d = `M${f2(cx)} ${f2(t)} L${f2(r)} ${f2(cy)} L${f2(cx)} ${f2(b)} L${f2(l)} ${f2(cy)} Z`;
+  } else if (m.type === "star"){
+    const rx = (w-sw)/2, ry = (h-sw)/2, pts = [];
+    for (let k = 0; k < 10; k++){
+      const a = -Math.PI/2 + k*Math.PI/5, f = k%2 ? 0.45 : 1;
+      pts.push(`${f2(cx + Math.cos(a)*rx*f)} ${f2(cy + Math.sin(a)*ry*f)}`);
+    }
+    d = "M" + pts.join(" L") + " Z";
+  } else {
+    d = `M${f2(l)} ${f2(t)} L${f2(r)} ${f2(t)} L${f2(r)} ${f2(b)} L${f2(l)} ${f2(b)} Z`;
+  }
+  return {body:d, heads:"", line:false};
+}
+function renderFig(el, m){
+  const NS = "http://www.w3.org/2000/svg";
+  let svg = el.querySelector("svg.figsvg");
+  if (!svg){
+    svg = document.createElementNS(NS, "svg"); svg.setAttribute("class","figsvg");
+    svg.append(document.createElementNS(NS, "path"), document.createElementNS(NS, "path"));
+    el.insertBefore(svg, el.firstChild);
+  }
+  const g = figPaths(m), [body, heads] = svg.children, sw = m.sw || 2.5;
+  svg.setAttribute("viewBox", `0 0 ${f2(m.w)} ${f2(m.h)}`);
+  body.setAttribute("d", g.body);
+  body.setAttribute("stroke", m.color); body.setAttribute("stroke-width", sw);
+  body.setAttribute("stroke-linecap","round"); body.setAttribute("stroke-linejoin","round");
+  body.setAttribute("fill", g.line || m.fill === "none" ? "none" : m.color);
+  body.setAttribute("fill-opacity", m.fill === "tint" ? 0.22 : 1);
+  heads.setAttribute("d", g.heads || "M0 0");
+  heads.setAttribute("fill", m.color); heads.setAttribute("stroke", m.color);
+  heads.setAttribute("stroke-width", sw*0.6); heads.setAttribute("stroke-linejoin","round");
+  heads.style.display = g.heads ? "" : "none";
+  el.title = (FIG_TYPES.find(f=>f.type===m.type)||{}).name || "Shape";
 }
 
 /* ---------------- image insertion ---------------- */
@@ -2824,7 +2996,7 @@ function rotatePage(id){
 document.querySelectorAll(".tool-btn[data-tool]").forEach(btn=>{
   btn.addEventListener("click", ()=> setTool(btn.dataset.tool));
 });
-const isDrawTool = (t)=> t==="pen"||t==="highlighter"||t==="eraser"||t==="cover";
+const isDrawTool = (t)=> t==="pen"||t==="highlighter"||t==="eraser"||t==="cover"||t==="shape";
 function setTool(tool){
   ui.tool = tool;
   stageWrap.dataset.tool = tool;
@@ -2888,6 +3060,8 @@ function pixelOf(el, sx, sy){
 function bgColourAt(ps, x, y){
   for (let i = ps.shapes.length-1; i >= 0; i--){
     const s = ps.shapes[i];
+    if (s.type && s.fill !== "solid") continue;          // hollow/tinted shapes don't hide the page
+    if (s.type && FIG_LINES.has(s.type)) continue;
     if (x >= s.x && x <= s.x+s.w && y >= s.y && y <= s.y+s.h) return hexRgb(s.color);
   }
   const refs = domRefs[ps.id];
@@ -2957,6 +3131,18 @@ function renderProps(){
       lb.addEventListener("click", ()=> toggleImageLock(ps, m));
       propsEl.appendChild(lb);
       addLabel(m.locked ? "Pen and highlighter write over it; it can't be moved" : "Draw over it with any tool");
+    } else if (sel.kind === "shape" && (ps.shapes.find(t=>t.id===sel.id)||{}).type){
+      const m = ps.shapes.find(t=>t.id===sel.id);
+      const edit = fn => { beginAction(ps); fn(); endAction(true); refreshSelectedVisual(); renderProps(); };
+      addShapePanel({
+        type: ()=>m.type, fill: ()=>m.fill, color: ()=>m.color, sw: ()=>m.sw||2.5,
+        setType: t=>edit(()=>{ const was = FIG_LINES.has(m.type), now = FIG_LINES.has(t); m.type = t;
+          if (was !== now){ if (now){ const p = figPad(m); figFromDrag(m, m.x, m.y, m.x+m.w, m.y+m.h); } } }),
+        setFill: f=>edit(()=>{ m.fill = f; }),
+        setColor: c=>edit(()=>{ const fam = figColors().find(x=>x.key===c); const dark = fam && String(m.color).toLowerCase() === fam.dark;
+          m.color = fam ? (figColors().some(x=>String(m.color).toLowerCase()===x.dark) ? fam.dark : fam.light) : c; }),
+        setSw: v=>{ beginAction(ps); m.sw = v; endAction(true); const el = domRefs[ps.id].shapeLayer.querySelector('[data-mid="'+m.id+'"]'); if (el) positionEl(el, m, "shape"); },
+      }, true);
     } else if (sel.kind === "shape"){
       const m = ps.shapes.find(t=>t.id===sel.id); if(!m) return;
       addLabel("Cover colour");
@@ -2976,6 +3162,12 @@ function renderProps(){
     addInkPanel("Pen", TEACH_INK, ()=>ui.penColor, c=>{ ui.penColor=c; }, ui.penPct, v=>{ ui.penPct=v; }, penPx, false);
   } else if (ui.tool === "highlighter"){
     addInkPanel("Highlighter", TEACH_HI, ()=>ui.highlighterColor, c=>{ ui.highlighterColor=c; }, ui.hiPct, v=>{ ui.hiPct=v; }, hiPx, true);
+  } else if (ui.tool === "shape"){
+    addShapePanel({
+      type: ()=>ui.shapeType, fill: ()=>ui.shapeFill, color: ()=>ui.shapeColor, sw: ()=>ui.shapeWidth,
+      setType: t=>{ ui.shapeType = t; renderProps(); }, setFill: f=>{ ui.shapeFill = f; renderProps(); },
+      setColor: c=>{ ui.shapeColor = c; renderProps(); }, setSw: v=>{ ui.shapeWidth = v; },
+    }, false);
   } else if (ui.tool === "cover"){
     addLabel("Cover colour");
     addSwatchRow(COVER_COLORS, ui.coverColor, c=> ui.coverColor=c, true);
@@ -3067,6 +3259,75 @@ function addInkPanel(kind, families, getColor, setColor, pct, setPct, toPx, isHi
   paint(pct);
 
   card.append(head, grid, w);
+  propsEl.appendChild(card);
+}
+// Shape options: which shape, hollow / filled / tinted, colour, line width.
+function addShapePanel(o, isSel){
+  const card = document.createElement("div"); card.className = "inkpanel shapepanel";
+  const famOf = c => figColors().find(f=>[f.key,f.light,f.dark].includes(String(c).toLowerCase())) || null;
+  const fam = famOf(o.color());
+  card.style.setProperty("--c", fam ? fam.light : o.color());
+  const cur = FIG_TYPES.find(f=>f.type===o.type()) || FIG_TYPES[0];
+  const isLine = FIG_LINES.has(cur.type);
+
+  const head = document.createElement("div"); head.className = "inkhead";
+  const title = document.createElement("div"); title.className = "inktitle";
+  const k = document.createElement("span"); k.className = "inkkind"; k.textContent = isSel ? "Selected shape" : "Shape";
+  const nm = document.createElement("span"); nm.className = "inkname"; nm.textContent = cur.name;
+  const hint = document.createElement("span"); hint.className = "inkuse";
+  hint.textContent = isSel ? "Drag to move · corner to resize" : "Drag on the page · Shift for square / 45°";
+  title.append(k, nm, hint); head.append(title);
+
+  const grid = document.createElement("div"); grid.className = "shapegrid"; grid.setAttribute("role","group"); grid.setAttribute("aria-label","Shape");
+  FIG_TYPES.forEach(f=>{
+    const b = document.createElement("button"); b.type = "button";
+    b.className = "shapebtn" + (f.type === cur.type ? " active" : "");
+    b.title = f.name; b.setAttribute("aria-label", f.name); b.setAttribute("aria-pressed", f.type === cur.type ? "true" : "false");
+    const filled = !FIG_LINES.has(f.type) && o.fill() !== "none";
+    b.innerHTML = `<svg viewBox="0 0 24 24" fill="${filled ? "currentColor" : "none"}" fill-opacity="${o.fill()==="tint" ? .25 : 1}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${f.icon}</svg>`;
+    b.addEventListener("click", ()=> o.setType(f.type));
+    grid.appendChild(b);
+  });
+
+  const seg = document.createElement("div"); seg.className = "fillseg" + (isLine ? " disabled" : "");
+  seg.setAttribute("role","group"); seg.setAttribute("aria-label","Fill");
+  [["none","Hollow"],["solid","Filled"],["tint","Tinted"]].forEach(([v, label])=>{
+    const b = document.createElement("button"); b.type = "button";
+    b.className = "fillopt" + (o.fill() === v ? " active" : "");
+    b.innerHTML = `<span class="fillsw ${v}"></span>${label}`;
+    b.disabled = isLine; b.setAttribute("aria-pressed", o.fill() === v ? "true" : "false");
+    b.title = isLine ? "Lines and arrows have no fill" : label;
+    b.addEventListener("click", ()=> o.setFill(v));
+    seg.appendChild(b);
+  });
+
+  const cols = document.createElement("div"); cols.className = "shapecols"; cols.setAttribute("role","group"); cols.setAttribute("aria-label","Colour");
+  figColors().forEach(f=>{
+    const on = fam && fam.key === f.key;
+    const b = document.createElement("button"); b.type = "button";
+    b.className = "inkswatch" + (on ? " active" : ""); b.style.setProperty("--c", f.light);
+    b.title = f.name; b.setAttribute("aria-label", f.name); b.setAttribute("aria-pressed", on ? "true" : "false");
+    b.addEventListener("click", ()=> o.setColor(f.key));
+    cols.appendChild(b);
+  });
+
+  const w = document.createElement("div"); w.className = "inkwidth";
+  const top = document.createElement("div"); top.className = "inkwidth-top";
+  const wl = document.createElement("span"); wl.className = "inkwidth-label"; wl.textContent = "Line";
+  const val = document.createElement("span"); val.className = "inknumwrap";
+  const vt = document.createElement("span"); vt.className = "inknum"; vt.style.width = "auto";
+  const pt = document.createElement("span"); pt.className = "inkpct"; pt.textContent = "pt";
+  val.append(vt, pt); top.append(wl, val);
+  const r = document.createElement("input"); r.type = "range"; r.className = "inkrange"; r.min = 1; r.max = 12; r.step = 0.5; r.value = o.sw();
+  r.setAttribute("aria-label","Line width");
+  w.append(top, r);
+  const paint = v => { vt.textContent = (+v).toFixed(1).replace(/\.0$/,""); r.style.setProperty("--c", fam ? fam.light : o.color()); r.style.setProperty("--fill", ((v-1)/11*100).toFixed(1)+"%"); };
+  r.addEventListener("input", ()=>{ paint(r.value); o.setSw(+r.value); });
+  paint(o.sw());
+
+  const mid = document.createElement("div"); mid.className = "shapemid"; mid.append(grid, seg);
+  const right = document.createElement("div"); right.className = "shaperight"; right.append(cols, w);
+  card.append(head, mid, right);
   propsEl.appendChild(card);
 }
 function addLabel(text){ const s=document.createElement("span"); s.className="proplabel"; s.textContent=text; propsEl.appendChild(s); }
@@ -3607,12 +3868,17 @@ async function drawAnnotations(page, ps, fontSet, embedImage){
     const embedded = await embedImage(src);
     page.drawImage(embedded, {x: im.x, y: H - im.y - im.h, width: im.w, height: im.h});
   }
-  // 1. cover shapes
+  // 1. cover boxes and shapes, in the order they were added
   for (const s of ps.shapes){
-    page.drawRectangle({
-      x: s.x, y: H - s.y - s.h, width: s.w, height: s.h,
-      color: hexToRgb01(s.color),
-    });
+    if (!s.type){
+      page.drawRectangle({ x: s.x, y: H - s.y - s.h, width: s.w, height: s.h, color: hexToRgb01(s.color) });
+      continue;
+    }
+    const g = figPaths(s), col = hexToRgb01(s.color), sw = s.sw || 2.5;
+    const opt = {x: s.x, y: H - s.y, borderColor: col, borderWidth: sw, borderLineCap: PDFLib_.LineCapStyle.Round};
+    if (!g.line && s.fill !== "none"){ opt.color = col; opt.opacity = s.fill === "tint" ? 0.22 : 1; }
+    page.drawSvgPath(g.body, opt);
+    if (g.heads) page.drawSvgPath(g.heads, {x: s.x, y: H - s.y, color: col, borderColor: col, borderWidth: sw*0.6});
   }
   // 2. ink strokes (pen + highlighter); an outline (halo) goes underneath its stroke
   for (const s of ps.strokes){
