@@ -2950,6 +2950,16 @@ function makeResizable(handle, ps, m, node, kind, opts){
 /* ---------------- page-level pointer interactions (drawing / adding) ---------------- */
 let activeStroke = null;
 function abortActiveStroke(){ if (activeStroke){ const a = activeStroke; activeStroke = null; a.cancel(); } }
+// The page (among those currently drawn) under a screen point, or null in the gaps between pages.
+function pageUnder(cx, cy, skip){
+  for (const p of pages){
+    if (p === skip) continue;
+    const r = domRefs[p.id]; if (!r || !r.live) continue;
+    const b = r.pageInner.getBoundingClientRect();
+    if (cx >= b.left && cx <= b.right && cy >= b.top && cy <= b.bottom) return p;
+  }
+  return null;
+}
 function attachPageInteractions(ps, inner, overlay, inkCanvas){
   inner.addEventListener("pointerdown", (e)=>{
     if (e.pointerType === "touch" && !e.isPrimary) return;   // second finger = pinch, not drawing
@@ -2974,75 +2984,146 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
     }
 
     if (ui.tool === "pen" || ui.tool === "highlighter"){
+      // Palm rejection: a stylus always wins over a resting hand, and only one stroke draws at a time.
+      if (activeStroke){
+        if (e.pointerType === "pen" && activeStroke.type !== "pen" && performance.now() - activeStroke.t0 < 700) abortActiveStroke();
+        else return;
+      }
       const isHi = ui.tool === "highlighter";
-      beginAction(ps);
       const w0 = isHi?hiPx(ui.hiPct):penPx(ui.penPct);
       const ink = resolveInk(ps, px, py, isHi?ui.highlighterColor:ui.penColor, w0, isHi);
-      const stroke = {id:genId(), tool: ui.tool, color: ink.color, width: w0, opacity: isHi?HI_OPACITY:1, points:[{x:px,y:py}]};
-      if (ink.halo) stroke.halo = ink.halo;
-      ps.strokes.push(stroke);
-      inner.setPointerCapture(e.pointerId);
-      drawLiveStroke(ps, stroke);
-      activeStroke = { cancel(){
+      const look = {tool: ui.tool, color: ink.color, width: w0, opacity: isHi?HI_OPACITY:1};
+      if (ink.halo) look.halo = ink.halo;
+      // One gesture can run across several pages: each page gets its own part of the line, and the
+      // parts meet exactly at the page edges, so writing flows on from one page to the next.
+      const segs = []; let cur = null, done = false;
+      const link = genId();                                   // ties the parts together, so erasing one erases the whole line
+      function begin(p, pts){
+        beginAction(p);
+        const stroke = Object.assign({id:genId(), points:pts}, look);
+        p.strokes.push(stroke);
+        cur = {ps:p, stroke}; segs.push(cur);
+        drawLiveStroke(p, stroke);
+      }
+      function settle(c){ clearLiveStroke(c.ps); drawInk(c.ps); endAction(); }
+      function detach(){
+        done = true;
         inner.removeEventListener("pointermove", move);
         inner.removeEventListener("pointerup", up);
         inner.removeEventListener("pointercancel", up);
+        inner.removeEventListener("lostpointercapture", up);
         try{ inner.releasePointerCapture(e.pointerId); }catch(_){}
-        ps.strokes = ps.strokes.filter(s => s !== stroke);
-        clearLiveStroke(ps); drawInk(ps); endAction();
+      }
+      begin(ps, [{x:px,y:py}]);
+      inner.setPointerCapture(e.pointerId);
+      activeStroke = { type: e.pointerType, t0: performance.now(), cancel(){
+        detach();
+        clearLiveStroke(cur.ps);
+        for (const c of segs) c.ps.strokes = c.ps.strokes.filter(s => s !== c.stroke);
+        endAction();
+        for (const c of segs) drawInk(c.ps);
+        scheduleAutosave();
       }};
       function move(ev){
-        if (!appActive) return;
-        const r = inner.getBoundingClientRect();
+        if (done || !appActive || ev.pointerId !== e.pointerId) return;   // only this pen/finger, never a resting palm
+        let r = domRefs[cur.ps.id].pageInner.getBoundingClientRect();
         const list = (ev.getCoalescedEvents && ev.getCoalescedEvents().length) ? ev.getCoalescedEvents() : [ev];
         let added = false;
         for (const e2 of list){
-          const nx=(e2.clientX-r.left)/ui.scale, ny=(e2.clientY-r.top)/ui.scale;
-          const prev = stroke.points[stroke.points.length-1];
+          const cx = e2.clientX, cy = e2.clientY;
+          let nx=(cx-r.left)/ui.scale, ny=(cy-r.top)/ui.scale;
+          if (cx < r.left || cx > r.right || cy < r.top || cy > r.bottom){
+            const next = pageUnder(cx, cy, cur.ps);
+            if (next){
+              const last = cur.stroke.points[cur.stroke.points.length-1];
+              const lx = r.left + last.x*ui.scale, ly = r.top + last.y*ui.scale;
+              cur.stroke.points.push({x:nx, y:ny});              // run this page's part out past its edge
+              settle(cur);
+              r = domRefs[next.id].pageInner.getBoundingClientRect();
+              if (!segs[0].stroke.link) segs[0].stroke.link = link;
+              begin(next, [{x:(lx-r.left)/ui.scale, y:(ly-r.top)/ui.scale}]);   // and pick it up on the next page
+              cur.stroke.link = link;
+              cur.stroke.points.push({x:(cx-r.left)/ui.scale, y:(cy-r.top)/ui.scale});
+              added = true;
+              continue;
+            }
+          }
+          const prev = cur.stroke.points[cur.stroke.points.length-1];
           if (Math.hypot(nx-prev.x, ny-prev.y)*ui.scale < 0.7) continue;   // ignore sub-pixel jitter
-          stroke.points.push({x:nx,y:ny}); added = true;
+          cur.stroke.points.push({x:nx,y:ny}); added = true;
         }
-        if (added) drawLiveStroke(ps, stroke);
+        if (added) drawLiveStroke(cur.ps, cur.stroke);
       }
-      function up(){
+      function up(ev){
+        if (done || (ev && ev.pointerId !== e.pointerId)) return;
         activeStroke = null;
-        inner.removeEventListener("pointermove", move);
-        inner.removeEventListener("pointerup", up);
-        inner.removeEventListener("pointercancel", up);
-        clearLiveStroke(ps);
-        drawInk(ps);
-        endAction();
+        detach();
+        settle(cur);
       }
       inner.addEventListener("pointermove", move);
       inner.addEventListener("pointerup", up);
       inner.addEventListener("pointercancel", up);
+      inner.addEventListener("lostpointercapture", up);
       return;
     }
 
     if (ui.tool === "eraser"){
-      beginAction(ps);
-      let removedAny = false;
-      const radius = 12;
-      function eraseAt(cx,cy){
-        const before = ps.strokes.length;
-        ps.strokes = ps.strokes.filter(s => !strokeHit(s, cx, cy, radius));
-        if (ps.strokes.length !== before){ removedAny = true; drawInk(ps); }
+      if (activeStroke) return;
+      // Sized on screen, so it feels the same at any zoom; works across pages; and it sweeps the
+      // whole path between pointer samples, so a quick swipe never skips a line.
+      const radius = (e.pointerType === "touch" ? 14 : 10) / ui.scale;
+      let cur = null, removed = false, last = null, done = false;
+      function onPage(p){
+        if (cur === p) return;
+        if (cur) endAction(removed);
+        cur = p; removed = false; beginAction(p);
       }
-      eraseAt(px,py);
+      function eraseClient(cx, cy){
+        const p = pageUnder(cx, cy, null); if (!p) return;
+        onPage(p);
+        const r = domRefs[p.id].pageInner.getBoundingClientRect();
+        const x = (cx-r.left)/ui.scale, y = (cy-r.top)/ui.scale;
+        const hit = p.strokes.filter(s => strokeHit(s, x, y, radius));
+        if (!hit.length) return;
+        p.strokes = p.strokes.filter(s => !hit.includes(s));
+        removed = true; drawInk(p);
+        // a line written across pages goes as one: remove its parts on the other pages too
+        const links = new Set(hit.map(s => s.link).filter(Boolean));
+        if (!links.size) return;
+        for (const q of pages){
+          if (q === p || !q.strokes.some(s => links.has(s.link))) continue;
+          endAction(removed);
+          beginAction(q); q.strokes = q.strokes.filter(s => !links.has(s.link)); endAction(true); drawInk(q);
+          beginAction(p); removed = false;                     // this page's removal is already saved above
+        }
+      }
+      function sweep(cx, cy){
+        if (last){
+          const d = Math.hypot(cx-last.x, cy-last.y), step = Math.max(2, radius*ui.scale*0.6);
+          const n = Math.min(80, Math.ceil(d/step));
+          for (let i=1;i<n;i++) eraseClient(last.x + (cx-last.x)*i/n, last.y + (cy-last.y)*i/n);
+        }
+        eraseClient(cx, cy); last = {x:cx, y:cy};
+      }
+      sweep(e.clientX, e.clientY);
       inner.setPointerCapture(e.pointerId);
       function move(ev){
-        const r = inner.getBoundingClientRect();
-        eraseAt((ev.clientX-r.left)/ui.scale, (ev.clientY-r.top)/ui.scale);
+        if (done || !appActive || ev.pointerId !== e.pointerId) return;
+        const list = (ev.getCoalescedEvents && ev.getCoalescedEvents().length) ? ev.getCoalescedEvents() : [ev];
+        for (const e2 of list) sweep(e2.clientX, e2.clientY);
       }
-      function up(){
+      function up(ev){
+        if (done || (ev && ev.pointerId !== e.pointerId)) return; done = true;
         inner.removeEventListener("pointermove", move);
         inner.removeEventListener("pointerup", up);
         inner.removeEventListener("pointercancel", up);
-        endAction(removedAny);
+        inner.removeEventListener("lostpointercapture", up);
+        if (cur) endAction(removed);
       }
       inner.addEventListener("pointermove", move);
       inner.addEventListener("pointerup", up);
       inner.addEventListener("pointercancel", up);
+      inner.addEventListener("lostpointercapture", up);
       return;
     }
 
