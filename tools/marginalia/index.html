@@ -433,6 +433,19 @@ button{font:inherit;cursor:pointer;}
 .page-inner canvas.live-canvas{pointer-events:none;}
 .page-badge{position:absolute;top:-26px;left:0;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;background:var(--ink-900);color:var(--paper);padding:3px 10px;border-radius:7px;opacity:.9;pointer-events:none;white-space:nowrap;}
 .overlay{position:absolute;inset:0;pointer-events:none;}
+/* ---------- zoom ---------- */
+.zoomlabel{border:none;background:none;cursor:pointer;border-radius:8px;padding:6px 4px;width:52px;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-600)}
+.zoomlabel:hover,.zoomlabel[aria-expanded="true"]{background:var(--surface);color:var(--ink-900)}
+.zoommenu{min-width:170px}
+.zoomopt{display:block;width:100%;text-align:left;border:none;background:none;padding:9px 12px;border-radius:10px;cursor:pointer;
+  font:500 13px/1 "IBM Plex Sans",system-ui,sans-serif;color:var(--ink-900)}
+.zoomopt:hover{background:var(--surface-2)}
+.zoomopt.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.zoomsep{height:1px;background:var(--line);margin:4px 6px}
+@media (pointer:coarse){.zoomopt{padding:12px 14px}}
+/* the browser must not zoom the whole app on a pinch; Marginalia zooms the page itself */
+.app{touch-action:pan-x pan-y}
+.stage{transform-origin:0 0}
 /* ---------- minimal UI: extras appear only when needed ---------- */
 /* options row only when a tool or a selected item has options */
 .propsbar:has(.props:empty){display:none}
@@ -1000,7 +1013,7 @@ body.inactive{cursor:default;}
 <button class="tool-btn" id="zoomOut" title="Zoom out">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M5 12h14"></path></svg>
 </button>
-<span class="zoomlabel" id="zoomLabel">100%</span>
+<button aria-expanded="false" aria-haspopup="true" class="zoomlabel" id="zoomLabel" title="Zoom options">Fit</button>
 <button class="tool-btn" id="zoomIn" title="Zoom in">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>
 </button>
@@ -1024,6 +1037,19 @@ body.inactive{cursor:default;}
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="7" rx="1.2" width="7" x="3" y="3"></rect><rect height="7" rx="1.2" width="7" x="14" y="3"></rect><rect height="7" rx="1.2" width="7" x="3" y="14"></rect><rect height="7" rx="1.2" width="7" x="14" y="14"></rect></svg>
 </button>
 </div>
+</div>
+<div class="moremenu zoommenu" hidden="" id="zoomMenu" role="menu">
+<div class="moremenu-label">Zoom</div>
+<button class="zoomopt" data-fit="auto">Fit</button>
+<button class="zoomopt" data-fit="width">Fit width</button>
+<button class="zoomopt" data-fit="page">Fit page</button>
+<div class="zoomsep"></div>
+<button class="zoomopt" data-z="0.5">50%</button>
+<button class="zoomopt" data-z="0.75">75%</button>
+<button class="zoomopt" data-z="1">100%</button>
+<button class="zoomopt" data-z="1.25">125%</button>
+<button class="zoomopt" data-z="1.5">150%</button>
+<button class="zoomopt" data-z="2">200%</button>
 </div>
 <div class="propsbar" id="propsBar"><div class="props" id="props"></div></div>
 <div class="body">
@@ -1704,7 +1730,7 @@ function activateDoc(d){
   if (d.ready && d.fresh){ startWorkspace(); }
   else if (d.ready){
     exportBtn.disabled = pages.length === 0; dlMoreBtn.disabled = !docs.length;
-    zoomLabel.textContent = Math.round(ui.scale*100) + "%";
+    updateZoomLabel();
     reconcileAndRenderAll();
     updatePageNavUI(); updateRailStatus();
     stageWrap.scrollTop = d.scrollTop;
@@ -1930,8 +1956,10 @@ function computeInitialScale(){
   const wFit = availW / p.widthPt, hFit = availH / p.heightPt;
   const wholePage = ratio >= 1.2 || ratio <= 0.62;
   const fit = wholePage ? Math.min(wFit, hFit) : wFit;
-  ui.scale = Math.min(1.25, Math.max(0.2, fit));
-  zoomLabel.textContent = Math.round(ui.scale*100) + "%";
+  const mode = ui.fitMode || "auto";
+  const f = mode === "width" ? wFit : mode === "page" ? Math.min(wFit, hFit) : fit;
+  ui.scale = Math.min(mode === "auto" ? 1.25 : 3, Math.max(0.2, f));
+  updateZoomLabel();
 }
 // Re-fit whenever the viewing area settles or changes size (panels opening, window resize,
 // tablet rotation) until the user zooms by hand. Uses the outer size, so a scrollbar
@@ -2316,7 +2344,7 @@ function layoutPage(ps){
   layoutOverlayElements(ps);
 }
 function layoutAllForZoom(){
-  zoomLabel.textContent = Math.round(ui.scale*100)+"%";
+  updateZoomLabel();
   pages.forEach(layoutPage);
   layoutSearchHighlights();
 }
@@ -2327,13 +2355,122 @@ function anchoredRelayout(){
   layoutAllForZoom();
   wrap.scrollTop = ratio * wrap.scrollHeight - wrap.clientHeight/2;
 }
+// Standard zoom steps (like browser / PDF viewers), so + and - always land on round numbers.
+const ZOOM_STEPS = [0.25, 0.33, 0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2, 2.5, 3];
+const ZOOM_MIN = 0.2, ZOOM_MAX = 3;
+function updateZoomLabel(){
+  if (!zoomLabel) return;
+  const pct = Math.round(ui.scale*100) + "%";
+  zoomLabel.textContent = ui.autoFit ? "Fit" : pct;
+  zoomLabel.title = ui.autoFit ? ("Fitted to screen (" + pct + ") — zoom options") : "Zoom options";
+}
+function nextZoomStep(dir){
+  const s = ui.scale;
+  if (dir > 0) return ZOOM_STEPS.find(z => z > s*1.02) ?? ZOOM_MAX;
+  return [...ZOOM_STEPS].reverse().find(z => z < s/1.02) ?? ZOOM_MIN;
+}
 function setZoom(next){
   ui.autoFit = false;
-  ui.scale = next;
+  ui.scale = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next));
   anchoredRelayout();
 }
-zoomIn.addEventListener("click", ()=> setZoom(Math.min(3, +(ui.scale*1.15).toFixed(3))));
-zoomOut.addEventListener("click", ()=> setZoom(Math.max(0.2, +(ui.scale/1.15).toFixed(3))));
+// Zoom keeping the document point under (clientX, clientY) still - for pinch and Ctrl+wheel.
+function zoomAt(next, clientX, clientY){
+  next = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, next));
+  if (Math.abs(next - ui.scale) < 0.0005) return;
+  const wrap = stageWrap, r = wrap.getBoundingClientRect();
+  const mx = clientX - r.left, my = clientY - r.top, k = next / ui.scale;
+  const sx = wrap.scrollLeft, sy = wrap.scrollTop;
+  ui.autoFit = false; ui.scale = next;
+  layoutAllForZoom();
+  wrap.scrollLeft = (sx + mx) * k - mx;
+  wrap.scrollTop = (sy + my) * k - my;
+}
+function snapZoom(clientX, clientY){
+  const near = ZOOM_STEPS.reduce((a, z)=> Math.abs(z - ui.scale) < Math.abs(a - ui.scale) ? z : a, ZOOM_STEPS[0]);
+  if (Math.abs(near - ui.scale) / near <= 0.06) zoomAt(near, clientX, clientY);
+  updateZoomLabel();
+}
+function fitTo(mode){
+  ui.fitMode = mode; ui.autoFit = true; lastFitBox = "";
+  computeInitialScale(); anchoredRelayout();
+}
+zoomIn.addEventListener("click", ()=> setZoom(nextZoomStep(+1)));
+zoomOut.addEventListener("click", ()=> setZoom(nextZoomStep(-1)));
+
+/* zoom menu: Fit / Fit width / Fit page / common sizes */
+(function(){
+  const btn = zoomLabel, menu = document.getElementById("zoomMenu");
+  if (!btn || !menu) return;
+  function place(){
+    const r = btn.getBoundingClientRect(), w = menu.offsetWidth;
+    menu.style.top = (r.bottom + 8) + "px";
+    menu.style.left = Math.max(8, Math.min(innerWidth - w - 8, r.left + r.width/2 - w/2)) + "px";
+  }
+  function mark(){
+    menu.querySelectorAll(".zoomopt").forEach(o=>{
+      const on = o.dataset.fit ? (ui.autoFit && (ui.fitMode || "auto") === o.dataset.fit) : (!ui.autoFit && Math.abs(ui.scale - +o.dataset.z) < 0.005);
+      o.classList.toggle("active", on);
+    });
+  }
+  function open(){ mark(); menu.hidden = false; btn.setAttribute("aria-expanded","true"); place(); }
+  function close(){ if (menu.hidden) return; menu.hidden = true; btn.setAttribute("aria-expanded","false"); }
+  btn.addEventListener("click", e=>{ e.stopPropagation(); menu.hidden ? open() : close(); });
+  menu.addEventListener("click", e=>{
+    const o = e.target.closest(".zoomopt"); if (!o) return;
+    if (o.dataset.fit) fitTo(o.dataset.fit); else setZoom(+o.dataset.z);
+    close();
+  });
+  document.addEventListener("pointerdown", e=>{ if (!menu.hidden && !menu.contains(e.target) && !btn.contains(e.target)) close(); }, true);
+  document.addEventListener("keydown", e=>{ if (e.key === "Escape") close(); });
+  window.addEventListener("resize", close);
+  document.querySelector(".toolbar").addEventListener("scroll", close, {passive:true});
+})();
+
+/* Ctrl/Cmd + wheel (mouse wheel or trackpad pinch) zooms the page, not the whole app */
+let wheelSnapT = 0;
+stageWrap.addEventListener("wheel", (e)=>{
+  if (!(e.ctrlKey || e.metaKey) || !pages.length) return;
+  e.preventDefault();
+  if (Math.abs(e.deltaY) >= 40 && e.deltaMode === 0 || e.deltaMode === 1){
+    zoomAt(nextZoomStep(e.deltaY < 0 ? +1 : -1), e.clientX, e.clientY);    // a wheel notch: next step
+  } else {
+    zoomAt(ui.scale * Math.exp(-e.deltaY * 0.01), e.clientX, e.clientY);   // trackpad pinch: smooth
+    clearTimeout(wheelSnapT); const cx = e.clientX, cy = e.clientY;
+    wheelSnapT = setTimeout(()=> snapZoom(cx, cy), 220);                 // ...then settle on a round step
+  }
+}, {passive:false});
+
+/* two-finger pinch on phones and tablets zooms the page (the toolbar stays put) */
+let pinch = null;
+function touchDist(t){ return Math.hypot(t[0].clientX - t[1].clientX, t[0].clientY - t[1].clientY); }
+stageWrap.addEventListener("touchstart", (e)=>{
+  if (e.touches.length !== 2 || !pages.length) return;
+  abortActiveStroke();
+  const mx = (e.touches[0].clientX + e.touches[1].clientX)/2, my = (e.touches[0].clientY + e.touches[1].clientY)/2;
+  pinch = {d0: touchDist(e.touches), s0: ui.scale, mx, my, k: 1};
+  const sr = stage.getBoundingClientRect();
+  stage.style.transformOrigin = (mx - sr.left) + "px " + (my - sr.top) + "px";
+  stage.style.willChange = "transform";
+  e.preventDefault();
+}, {passive:false, capture:true});
+stageWrap.addEventListener("touchmove", (e)=>{
+  if (!pinch || e.touches.length !== 2) return;
+  e.preventDefault();
+  const want = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, pinch.s0 * touchDist(e.touches) / pinch.d0));
+  pinch.k = want / pinch.s0;
+  stage.style.transform = "scale(" + pinch.k + ")";                 // cheap live preview
+  zoomLabel.textContent = Math.round(want*100) + "%";
+}, {passive:false, capture:true});
+function endPinch(){
+  if (!pinch) return;
+  const p = pinch; pinch = null;
+  stage.style.transform = ""; stage.style.transformOrigin = ""; stage.style.willChange = "";
+  zoomAt(p.s0 * p.k, p.mx, p.my);                                      // then re-render sharply
+  snapZoom(p.mx, p.my);
+}
+stageWrap.addEventListener("touchend", (e)=>{ if (pinch && e.touches.length < 2) endPinch(); }, {capture:true});
+stageWrap.addEventListener("touchcancel", ()=> endPinch(), {capture:true});
 
 /* ---------------- rotate (toolbar button = rotate current page) ---------------- */
 const rotateBtn = $("#rotateBtn");
@@ -2811,8 +2948,11 @@ function makeResizable(handle, ps, m, node, kind, opts){
 }
 
 /* ---------------- page-level pointer interactions (drawing / adding) ---------------- */
+let activeStroke = null;
+function abortActiveStroke(){ if (activeStroke){ const a = activeStroke; activeStroke = null; a.cancel(); } }
 function attachPageInteractions(ps, inner, overlay, inkCanvas){
   inner.addEventListener("pointerdown", (e)=>{
+    if (e.pointerType === "touch" && !e.isPrimary) return;   // second finger = pinch, not drawing
     // Only hand off to the element itself (for select/drag/resize) when Select
     // is the active tool, so pen/highlighter/eraser/cover also work when the
     // stroke starts on top of an existing text box, image or cover.
@@ -2843,6 +2983,14 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
       ps.strokes.push(stroke);
       inner.setPointerCapture(e.pointerId);
       drawLiveStroke(ps, stroke);
+      activeStroke = { cancel(){
+        inner.removeEventListener("pointermove", move);
+        inner.removeEventListener("pointerup", up);
+        inner.removeEventListener("pointercancel", up);
+        try{ inner.releasePointerCapture(e.pointerId); }catch(_){}
+        ps.strokes = ps.strokes.filter(s => s !== stroke);
+        clearLiveStroke(ps); drawInk(ps); endAction();
+      }};
       function move(ev){
         if (!appActive) return;
         const r = inner.getBoundingClientRect();
@@ -2857,6 +3005,7 @@ function attachPageInteractions(ps, inner, overlay, inkCanvas){
         if (added) drawLiveStroke(ps, stroke);
       }
       function up(){
+        activeStroke = null;
         inner.removeEventListener("pointermove", move);
         inner.removeEventListener("pointerup", up);
         inner.removeEventListener("pointercancel", up);
@@ -3682,6 +3831,9 @@ document.addEventListener("keydown", (e)=>{
   if (t && (t.tagName === "INPUT" || t.tagName === "TEXTAREA" || t.tagName === "SELECT")) return;
   const k = (e.key || "").toLowerCase();
   const isZ = k === "z" || e.code === "KeyZ", isY = k === "y" || e.code === "KeyY";
+  if (pages.length && (k === "=" || k === "+" || e.code === "NumpadAdd")){ e.preventDefault(); e.stopPropagation(); setZoom(nextZoomStep(+1)); return; }
+  if (pages.length && (k === "-" || e.code === "NumpadSubtract")){ e.preventDefault(); e.stopPropagation(); setZoom(nextZoomStep(-1)); return; }
+  if (pages.length && (k === "0" || e.code === "Numpad0")){ e.preventDefault(); e.stopPropagation(); fitTo("auto"); return; }
   if (isZ && !e.shiftKey){ e.preventDefault(); e.stopPropagation(); undo(); }
   else if (isY || (isZ && e.shiftKey)){ e.preventDefault(); e.stopPropagation(); redo(); }
 }, true);
