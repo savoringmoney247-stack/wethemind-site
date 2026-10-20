@@ -773,6 +773,46 @@ body.inactive{cursor:default;}
   .el .lock{width:30px;height:30px;top:-15px;left:-15px;}
   .el .lock svg{width:15px;height:15px;}
 }
+/* ---------- premium selection handles ----------
+   One consistent set for text, images, shapes and covers: white buttons with a soft shadow, centred
+   on the item's corners; the icon colour says what it does; on hover/press it fills with that colour.
+   They pop in with a gentle spring when the item is selected. */
+.stage .el{--hs:24px}
+@media (pointer:coarse){.stage .el{--hs:34px}}
+.stage .el .grip,.stage .el .resize,.stage .el .del,.stage .el .lock{
+  width:var(--hs);height:var(--hs);border-radius:50%;padding:0;
+  background:var(--surface);color:var(--ink-600);
+  border:1px solid color-mix(in srgb,var(--line-strong) 80%,transparent);
+  box-shadow:0 6px 14px -6px rgba(36,20,20,.45),0 1px 2px rgba(36,20,20,.12);
+  display:flex;align-items:center;justify-content:center;
+  scale:.5;transition:opacity .16s ease,scale .34s cubic-bezier(.34,1.56,.64,1),background .15s ease,color .15s ease,box-shadow .15s ease;
+}
+.stage .el .grip svg,.stage .el .resize svg,.stage .el .del svg,.stage .el .lock svg{width:calc(var(--hs)*.5);height:calc(var(--hs)*.5)}
+/* a larger, invisible touch target around each handle */
+.stage .el .grip::after,.stage .el .resize::after,.stage .el .del::after,.stage .el .lock::after{content:"";position:absolute;inset:-8px;border-radius:50%}
+/* exact corner placement */
+.stage .el .del{top:calc(var(--hs)/-2);right:calc(var(--hs)/-2);left:auto;bottom:auto;color:var(--danger)}
+.stage .el .resize{bottom:calc(var(--hs)/-2);right:calc(var(--hs)/-2);top:auto;left:auto;color:var(--accent);cursor:nwse-resize}
+.stage .el .grip,.stage .el .lock{top:calc(var(--hs)/-2);left:calc(var(--hs)/-2);right:auto;bottom:auto}
+.stage .el .grip{cursor:grab}
+.stage .el .grip:active{cursor:grabbing}
+/* hover / press: fill with the handle's colour */
+@media (hover:hover){
+  .stage .el .resize:hover{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);box-shadow:0 8px 18px -6px color-mix(in srgb,var(--accent) 70%,transparent)}
+  .stage .el .del:hover{background:var(--danger);color:#fff;border-color:var(--danger);box-shadow:0 8px 18px -6px color-mix(in srgb,var(--danger) 70%,transparent)}
+  .stage .el .grip:hover,.stage .el .lock:hover{background:var(--ink-900);color:var(--surface);border-color:var(--ink-900)}
+  .stage .el.selected .resize:hover,.stage .el.selected .del:hover,.stage .el.selected .grip:hover,.stage .el.selected .lock:hover{scale:1.12}
+}
+.stage .el.selected .resize:active{background:var(--accent);color:var(--accent-ink);scale:.94}
+.stage .el.selected .del:active{background:var(--danger);color:#fff;scale:.94}
+/* locked image: lock shows filled */
+.stage .el.locked .lock{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+/* selected item: clean solid outline with a soft glow */
+.stage .text-el.selected,.stage .img-el.selected,.stage .shape-el.selected,.stage .shape-el.fig.selected{
+  border-style:solid;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 16%,transparent)}
+@media (prefers-reduced-motion: reduce){
+  .stage .el .grip,.stage .el .resize,.stage .el .del,.stage .el .lock{transition:opacity .12s ease}
+}
 </style>
 <link href="../../assets/theme.css?v=20261018b" rel="stylesheet"/>
 <meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/>
@@ -985,7 +1025,7 @@ body.inactive{cursor:default;}
 <button class="grip" title="Drag"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><circle cx="6" cy="6" r=".6"></circle><circle cx="12" cy="6" r=".6"></circle><circle cx="18" cy="6" r=".6"></circle><circle cx="6" cy="12" r=".6"></circle><circle cx="12" cy="12" r=".6"></circle><circle cx="18" cy="12" r=".6"></circle><circle cx="6" cy="18" r=".6"></circle><circle cx="12" cy="18" r=".6"></circle><circle cx="18" cy="18" r=".6"></circle></svg></button>
 <button class="del" title="Delete"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
 <div class="content" contenteditable="true" spellcheck="false"></div>
-<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 18 18 6M11 18h7v-7"></path></svg></button>
+<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M5 5l14 14"></path><path d="M5 11V5h6"></path><path d="M19 13v6h-6"></path></svg></button>
 </div>
 </template>
 <template id="tplImgEl">
@@ -993,13 +1033,13 @@ body.inactive{cursor:default;}
 <img draggable="false"/>
 <button class="lock" title="Lock in place"><svg class="off" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><rect height="9" rx="2" width="14" x="5" y="11"></rect><path d="M8 11V8a4 4 0 0 1 7.5-2"></path></svg><svg class="on" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><rect height="9" rx="2" width="14" x="5" y="11"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg></button>
 <button class="del" title="Delete"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
-<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 18 18 6M11 18h7v-7"></path></svg></button>
+<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M5 5l14 14"></path><path d="M5 11V5h6"></path><path d="M19 13v6h-6"></path></svg></button>
 </div>
 </template>
 <template id="tplShapeEl">
 <div class="el shape-el">
 <button class="del" title="Delete"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"></path></svg></button>
-<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M6 18 18 6M11 18h7v-7"></path></svg></button>
+<button class="resize" title="Resize"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="M5 5l14 14"></path><path d="M5 11V5h6"></path><path d="M19 13v6h-6"></path></svg></button>
 </div>
 </template>
 <script>
