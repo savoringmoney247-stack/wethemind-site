@@ -832,6 +832,38 @@ body.inactive{cursor:default;}
   .inkpanel .inkhead{display:none}
   .stage-wrap:not(.horiz) .stage{padding-top:40px}
 }
+/* ---------- compact colour panel on touch screens and tablets ----------
+   The pen / highlighter / shape panel was a tall card (title, description, preview, badge, labelled
+   colour tiles, width block). On phones, tablets and the app it is now one slim strip: colour dots
+   (only the chosen one shows its name), then the width slider and %. Mouse desktops keep the full card. */
+@media (pointer:coarse), (max-width:1024px){
+  .propsbar .inkpanel{flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;padding:6px 10px;border-radius:14px;width:auto;max-width:100%}
+  .propsbar .inkpanel .inkhead{display:none}
+  .propsbar .inkchips{display:flex;flex-wrap:nowrap;width:auto;gap:4px;justify-content:center}
+  .propsbar .inkchip{flex:0 0 auto;flex-direction:row;gap:6px;min-width:0;padding:3px;border-radius:999px;border-color:transparent;background:none;box-shadow:none}
+  .propsbar .inkchip .inklab{display:none}
+  .propsbar .inkchip.active{padding:3px 10px 3px 3px;border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));box-shadow:none}
+  .propsbar .inkchip.active .inklab{display:inline;font-size:11.5px}
+  .propsbar .inkdot{width:30px;height:30px}
+  .propsbar .inkwidth{flex-direction:row;align-items:center;gap:8px;min-width:150px;flex:1 1 150px;max-width:260px}
+  .propsbar .inkwidth-top{order:2;flex:0 0 auto}
+  .propsbar .inkwidth-label{display:none}
+  .propsbar .inkrange{order:1;flex:1 1 auto;height:28px}
+  .propsbar .inknumwrap{padding:2px 7px}
+  /* shapes: same idea - no header, everything in one or two tidy rows */
+  .propsbar .shapepanel .shapemid,.propsbar .shapepanel .shaperight{flex-direction:row;flex-wrap:wrap;justify-content:center;width:auto;gap:8px}
+  .propsbar .shapepanel .shapegrid{grid-template-columns:repeat(8,34px);width:auto;gap:4px}
+  .propsbar .shapepanel .shapebtn{width:34px;height:34px}
+  .propsbar .shapepanel .fillseg{width:auto}
+  .propsbar .shapepanel .shapecols{width:auto;gap:6px;justify-content:center}
+}
+@media (max-width:420px){
+  .propsbar .inkpanel{padding:6px 8px;gap:6px 10px}
+  .propsbar .inkdot{width:28px;height:28px}
+  .propsbar .inkwidth{min-width:0;max-width:none;flex-basis:100%}
+  .propsbar .shapepanel .shapegrid{grid-template-columns:repeat(8,1fr);width:100%}
+  .propsbar .shapepanel .shapebtn{width:100%}
+}
 </style>
 <link href="../../assets/theme.css?v=20261020" rel="stylesheet"/>
 <meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/>
