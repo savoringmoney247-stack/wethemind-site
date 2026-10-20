@@ -431,6 +431,58 @@ button{font:inherit;cursor:pointer;}
 .page-inner canvas.live-canvas{pointer-events:none;}
 .page-badge{position:absolute;top:-26px;left:0;font-family:"IBM Plex Mono",monospace;font-size:12px;font-weight:600;background:var(--ink-900);color:var(--paper);padding:3px 10px;border-radius:7px;opacity:.9;pointer-events:none;white-space:nowrap;}
 .overlay{position:absolute;inset:0;pointer-events:none;}
+/* ---------- premium labels & motion ----------
+   Page badge: frosted pill, serif page number, gold "Writing page" tag; glides in (fade, rise,
+   un-blur) when its page appears; the current page's dot glows. Toasts rise with a soft spring. */
+.page-badge{
+  top:-34px;left:0;display:inline-flex;align-items:center;gap:8px;
+  padding:5px 12px 5px 10px;border-radius:999px;opacity:1;
+  font:600 12px/1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:.01em;color:var(--ink-900);
+  background:color-mix(in srgb,var(--surface) 82%,transparent);
+  -webkit-backdrop-filter:saturate(1.4) blur(10px);backdrop-filter:saturate(1.4) blur(10px);
+  border:1px solid color-mix(in srgb,var(--line-strong) 70%,transparent);
+  box-shadow:0 1px 0 rgba(255,255,255,.6) inset,0 6px 16px -8px rgba(36,20,20,.35);
+  animation:pbIn .6s cubic-bezier(.2,.8,.2,1) both;
+}
+.pb-dot{width:7px;height:7px;border-radius:50%;background:var(--ink-400);box-shadow:0 0 0 3px color-mix(in srgb,var(--ink-400) 18%,transparent);transition:background .3s,box-shadow .3s}
+.pb-num{font:600 13px/1 "Fraunces",serif;letter-spacing:.01em}
+.pb-kind{font:700 9.5px/1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;
+  color:color-mix(in srgb,var(--accent-2) 60%,var(--ink-900));padding:4px 8px;border-radius:999px;
+  background:color-mix(in srgb,var(--accent-2) 22%,transparent);border:1px solid color-mix(in srgb,var(--accent-2) 45%,transparent)}
+.page.is-current .pb-dot{background:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent);animation:pbGlow 2.4s ease-in-out infinite}
+/* room above each page for its badge (phones/tablets had 20px top, 22px between pages) */
+@media (max-width:900px){.stage-wrap:not(.horiz) .stage{padding-top:46px;gap:46px}}
+.stage-wrap.horiz .stage{padding-top:44px}
+@keyframes pbIn{from{opacity:0;transform:translateY(8px) scale(.96);filter:blur(4px)}to{opacity:1;transform:none;filter:none}}
+@keyframes pbGlow{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}50%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 8%,transparent)}}
+/* thumbnails: page-number chip to match */
+.thumb-num{font:600 10.5px/1 "IBM Plex Sans",system-ui,sans-serif;padding:4px 9px;border-radius:999px;line-height:1;
+  background:color-mix(in srgb,var(--ink-900) 78%,transparent);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  box-shadow:0 4px 10px -6px rgba(0,0,0,.5);transition:background .25s,transform .25s}
+.thumb.current .thumb-num{background:var(--accent);transform:translateX(-50%) scale(1.06)}
+/* toasts: frosted, rise with a soft spring, fade out quickly */
+.toast{
+  padding:11px 18px;border-radius:14px;font-weight:500;letter-spacing:.01em;
+  background:color-mix(in srgb,var(--ink-900) 88%,transparent);
+  -webkit-backdrop-filter:saturate(1.4) blur(12px);backdrop-filter:saturate(1.4) blur(12px);
+  border:1px solid rgba(255,255,255,.08);
+  box-shadow:0 18px 40px -16px rgba(20,10,10,.55),0 2px 6px rgba(20,10,10,.18);
+  transform:translate(-50%,14px) scale(.96);filter:blur(2px);
+  transition:opacity .22s ease,transform .22s ease,filter .22s ease;
+}
+.toast.show{opacity:1;transform:translate(-50%,0) scale(1);filter:none;
+  transition:opacity .35s cubic-bezier(.2,.8,.2,1),transform .5s cubic-bezier(.34,1.56,.64,1),filter .35s ease}
+.toast.promo{transform:translate(-50%,-12px) scale(.96);
+  background:linear-gradient(135deg,color-mix(in srgb,var(--ink-900) 92%,transparent),color-mix(in srgb,var(--ink-900) 80%,var(--accent) 20%));
+  border:1px solid color-mix(in srgb,var(--accent-2) 35%,transparent)}
+.toast.promo.show{transform:translate(-50%,4px) scale(1)}
+.toast.promo::before{display:inline-block;animation:pbSpark 1.6s ease-in-out infinite}
+@keyframes pbSpark{0%,100%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(1.25) rotate(20deg);opacity:.75}}
+@media (prefers-reduced-motion: reduce){
+  .page-badge,.page.is-current .pb-dot,.toast.promo::before{animation:none}
+  .toast,.toast.show{transition:opacity .2s ease;transform:translate(-50%,0);filter:none}
+  .toast.promo,.toast.promo.show{transform:translate(-50%,4px)}
+}
 .overlay .el{pointer-events:auto;}
 .imglayer{position:absolute;inset:0;pointer-events:none;}
 .imglayer .el{pointer-events:auto;}
@@ -1792,7 +1844,13 @@ function reconcileAndRenderAll(){
     }
     if (!refs.thumbObserved){ refs.thumbObserved = true; observeThumb(ps); }
     prevPageEl = refs.pageEl; prevThumb = refs.thumbBox;
-    refs.badge.textContent = "Page " + (idx+1) + (ps.kind==="blank" ? " · writing page" : "");
+    const badgeKey = (idx+1) + "|" + ps.kind;
+    if (refs.badge.dataset.key !== badgeKey){
+      refs.badge.dataset.key = badgeKey;
+      refs.badge.innerHTML = '<span class="pb-dot"></span><span class="pb-num">Page ' + (idx+1) + '</span>'
+        + (ps.kind === "blank" ? '<span class="pb-kind">Writing page</span>' : "");
+      refs.badge.setAttribute("aria-label", "Page " + (idx+1) + (ps.kind === "blank" ? ", writing page" : ""));
+    }
     refs.thumbNum.textContent = idx+1;
     const content = JSON.stringify([ps.strokes, ps.texts, ps.images, ps.shapes]);
     if (refs.geom !== geomOf(ps)){
@@ -2271,6 +2329,10 @@ function goToPageIndex(idx){
   pageJumpInput.value = idx+1;
 }
 function updatePageNavUI(){
+  // the page you are on gets a glowing dot on its badge
+  const cp = pages.length ? currentPage() : null;
+  const pe = cp && domRefs[cp.id] && domRefs[cp.id].pageEl, was = stage && stage.querySelector(".page.is-current");
+  if (was !== pe){ if (was) was.classList.remove("is-current"); if (pe) pe.classList.add("is-current"); }
   pageCountLabel.textContent = "/ " + pages.length;
   if (document.activeElement !== pageJumpInput) pageJumpInput.value = pages.length ? (currentPageIndex()+1) : 1;
 }
