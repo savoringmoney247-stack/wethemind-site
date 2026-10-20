@@ -193,6 +193,82 @@ button{font:inherit;cursor:pointer;}
 .pctprev{width:54px;height:28px;display:flex;align-items:center;justify-content:center;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;}
 .pctbar{display:block;width:44px;border-radius:99px;}
 .proplabel{font-size:11px;color:var(--ink-400);white-space:nowrap;}
+/* ---------- pen / highlighter panel ----------
+   One card: tool name + colour name + live stroke preview, the 6x3 colour grid, and a width
+   slider whose track fills with the chosen colour. Bigger targets and no hover lift on touch. */
+.inkpanel{
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;justify-content:center;
+  padding:10px 16px;border-radius:18px;
+  background:linear-gradient(160deg,var(--surface),var(--surface-2));
+  border:1px solid var(--line);
+  box-shadow:0 1px 0 rgba(255,255,255,.55) inset,var(--shadow-sm,0 1px 2px rgba(0,0,0,.08));
+}
+.inkhead{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:96px}
+.inktitle{display:flex;flex-direction:column;align-items:center;gap:4px}
+.inkkind{font:600 10.5px/1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-400)}
+.inkname{font:600 15px/1.1 "Fraunces",serif;color:var(--ink-900);white-space:nowrap}
+.inkpreview{width:96px;height:38px;border-radius:12px;background:#fff;border:1px solid var(--line);
+  box-shadow:0 1px 3px rgba(36,20,20,.08) inset;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.inkpreview .sample{position:absolute;font:600 17px/1 "Fraunces",serif;color:#3a2a26;letter-spacing:.02em}
+.inkpreview svg{position:relative;width:100%;height:100%;display:block}
+.inkgrid{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:12px;row-gap:8px}
+.inkrowlabel{font:600 10px/1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-400);text-align:right}
+.inkswatches{display:flex;gap:9px}
+.inkswatch{
+  --c:#c00;position:relative;width:28px;height:28px;border-radius:50%;padding:0;cursor:pointer;
+  border:none;background:var(--c);
+  box-shadow:0 0 0 1px rgba(0,0,0,.14) inset,0 2px 5px -1px color-mix(in srgb,var(--c) 55%,transparent);
+  transition:transform .16s var(--ease,ease),box-shadow .16s var(--ease,ease);
+}
+/* glossy highlight */
+.inkswatch::before{content:"";position:absolute;inset:0;border-radius:50%;
+  background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.55),rgba(255,255,255,0) 46%),
+             radial-gradient(circle at 70% 85%,rgba(0,0,0,.18),rgba(0,0,0,0) 55%);pointer-events:none}
+.inkswatch:focus-visible{outline:none;box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--ink-600)}
+.inkswatch.active{box-shadow:0 0 0 2.5px var(--surface),0 0 0 5px var(--c),0 6px 14px -4px color-mix(in srgb,var(--c) 70%,transparent)}
+.inkswatch.active::after{content:"";position:absolute;left:50%;top:50%;width:11px;height:6px;
+  border:solid #fff;border-width:0 0 2.4px 2.4px;transform:translate(-50%,-62%) rotate(-45deg);
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.35))}
+@media (hover:hover){.inkswatch:hover{transform:translateY(-2px) scale(1.08)}}
+.inkswatch:active{transform:scale(.92)}
+.inkwidth{display:flex;flex-direction:column;align-items:stretch;gap:8px;min-width:170px}
+.inkwidth-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.inkwidth-label{font:600 10.5px/1 "IBM Plex Sans",system-ui,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-400)}
+.inknumwrap{display:flex;align-items:center;gap:2px;padding:3px 8px;border-radius:999px;background:var(--surface);border:1px solid var(--line-strong)}
+.inknum{width:30px;border:none;background:transparent;font:500 12.5px/1 "IBM Plex Mono",monospace;color:var(--ink-900);text-align:right;padding:2px 0;-moz-appearance:textfield}
+.inknum::-webkit-outer-spin-button,.inknum::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.inknum:focus{outline:none}
+.inknumwrap:focus-within{border-color:var(--c,var(--accent));box-shadow:0 0 0 3px color-mix(in srgb,var(--c,var(--accent)) 20%,transparent)}
+.inkpct{font:500 11px/1 "IBM Plex Mono",monospace;color:var(--ink-400)}
+.inkrange{--c:#c00;--fill:10%;-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer;margin:0}
+.inkrange::-webkit-slider-runnable-track{height:8px;border-radius:999px;
+  background:linear-gradient(90deg,var(--c) 0,var(--c) var(--fill),var(--line) var(--fill));box-shadow:0 1px 2px rgba(0,0,0,.12) inset}
+.inkrange::-moz-range-track{height:8px;border-radius:999px;background:var(--line);box-shadow:0 1px 2px rgba(0,0,0,.12) inset}
+.inkrange::-moz-range-progress{height:8px;border-radius:999px;background:var(--c)}
+.inkrange::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;margin-top:-6px;border-radius:50%;background:#fff;
+  border:3px solid var(--c);box-shadow:0 2px 6px rgba(0,0,0,.22);transition:transform .12s}
+.inkrange::-moz-range-thumb{width:16px;height:16px;border-radius:50%;background:#fff;border:3px solid var(--c);box-shadow:0 2px 6px rgba(0,0,0,.22)}
+.inkrange:active::-webkit-slider-thumb{transform:scale(1.15)}
+.inkrange:focus-visible{outline:none}
+.inkrange:focus-visible::-webkit-slider-thumb{box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 25%,transparent),0 2px 6px rgba(0,0,0,.22)}
+/* touch (phones, tablets, the Play Store app): larger targets, everything fits the screen */
+@media (pointer:coarse){
+  .inkswatch{width:34px;height:34px}
+  .inkswatches{gap:10px}
+  .inkrange{height:32px}
+  .inkrange::-webkit-slider-thumb{width:26px;height:26px;margin-top:-9px}
+  .inkrange::-moz-range-thumb{width:22px;height:22px}
+  .inknum{font-size:16px;width:36px}
+}
+@media (max-width:640px){
+  .inkpanel{width:100%;gap:12px;padding:12px;border-radius:16px}
+  .inkhead{flex-direction:row;justify-content:space-between;width:100%;min-width:0}
+  .inkhead .inktitle{display:flex;flex-direction:column;gap:4px}
+  .inkgrid{width:100%;grid-template-columns:44px 1fr;column-gap:8px}
+  .inkswatches{justify-content:space-between;gap:0}
+  .inkwidth{width:100%;min-width:0}
+}
+@media (max-width:360px){.inkswatch{width:30px;height:30px}.inkgrid{grid-template-columns:38px 1fr}}
 
 /* ---------- body layout ---------- */
 .body{flex:1 1 auto;display:flex;min-height:0;}
@@ -2739,19 +2815,96 @@ function renderProps(){
     addSizeStepper(ui.textSize, 10, 64, v=> ui.textSize=v);
     addBoldToggle(ui.textBold, v=> ui.textBold=v);
   } else if (ui.tool === "pen"){
-    addLabel("Pen");
-    addToneRows(PRIDE_ROWS, ui.inkColor, c=> ui.inkColor=c, false, true);
-    addPercentWidth("Width", ui.penPct, v=>{ ui.penPct=v; }, penPx, ()=>ui.inkColor, false);
+    addInkPanel("Pen", PRIDE_ROWS, ()=>ui.inkColor, c=>{ ui.inkColor=c; }, ui.penPct, v=>{ ui.penPct=v; }, penPx, false);
   } else if (ui.tool === "highlighter"){
-    addLabel("Highlighter");
-    addToneRows(PRIDE_ROWS, ui.highlighterColor, c=> ui.highlighterColor=c, false, true);
-    addPercentWidth("Width", ui.hiPct, v=>{ ui.hiPct=v; }, hiPx, ()=>ui.highlighterColor, true);
+    addInkPanel("Highlighter", PRIDE_ROWS, ()=>ui.highlighterColor, c=>{ ui.highlighterColor=c; }, ui.hiPct, v=>{ ui.hiPct=v; }, hiPx, true);
   } else if (ui.tool === "cover"){
     addLabel("Cover colour");
     addSwatchRow(COVER_COLORS, ui.coverColor, c=> ui.coverColor=c, true);
   } else if (ui.tool === "eraser"){
     addLabel("Drag over pen or highlighter strokes to remove them");
   }
+}
+// Pen / highlighter options: colour grid + live preview + width, as one card.
+const HUE_NAMES = ["Red","Orange","Yellow","Green","Blue","Violet"];
+function inkColourName(groups, c){
+  c = String(c).toLowerCase();
+  for (const [row, colors] of groups){
+    const i = colors.findIndex(x=>x.toLowerCase()===c);
+    if (i >= 0) return row + " · " + HUE_NAMES[i];
+  }
+  return "Custom";
+}
+function addInkPanel(kind, groups, getColor, setColor, pct, setPct, toPx, isHi){
+  const card = document.createElement("div"); card.className = "inkpanel";
+  card.style.setProperty("--c", getColor());
+
+  // header: tool, colour name, live preview of the actual stroke
+  const head = document.createElement("div"); head.className = "inkhead";
+  const title = document.createElement("div"); title.className = "inktitle";
+  const k = document.createElement("span"); k.className = "inkkind"; k.textContent = kind;
+  const nm = document.createElement("span"); nm.className = "inkname"; nm.textContent = inkColourName(groups, getColor());
+  title.append(k, nm);
+  const prev = document.createElement("div"); prev.className = "inkpreview"; prev.setAttribute("aria-hidden","true");
+  if (isHi){ const s = document.createElement("span"); s.className = "sample"; s.textContent = "Aa Bb"; prev.appendChild(s); }
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox","0 0 96 38"); svg.setAttribute("preserveAspectRatio","none");
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("d", isHi ? "M10 20 L86 20" : "M10 24 C 26 8, 40 8, 50 19 S 74 31, 86 13");
+  path.setAttribute("fill","none"); path.setAttribute("stroke-linecap","round"); path.setAttribute("stroke-linejoin","round");
+  svg.appendChild(path); prev.appendChild(svg);
+  head.append(title, prev);
+
+  // colour grid
+  const grid = document.createElement("div"); grid.className = "inkgrid"; grid.setAttribute("role","group"); grid.setAttribute("aria-label", kind + " colour");
+  groups.forEach(([rowName, colors])=>{
+    const lab = document.createElement("span"); lab.className = "inkrowlabel"; lab.textContent = rowName;
+    const row = document.createElement("div"); row.className = "inkswatches";
+    colors.forEach((c, i)=>{
+      const b = document.createElement("button");
+      const on = c.toLowerCase() === String(getColor()).toLowerCase();
+      b.className = "inkswatch" + (on ? " active" : "");
+      b.style.setProperty("--c", c);
+      b.title = rowName + " " + HUE_NAMES[i]; b.setAttribute("aria-label", rowName + " " + HUE_NAMES[i]);
+      b.setAttribute("aria-pressed", on ? "true" : "false");
+      b.addEventListener("click", ()=>{ setColor(c); renderProps(); });
+      row.appendChild(b);
+    });
+    grid.append(lab, row);
+  });
+
+  // width
+  const w = document.createElement("div"); w.className = "inkwidth";
+  const top = document.createElement("div"); top.className = "inkwidth-top";
+  const wl = document.createElement("span"); wl.className = "inkwidth-label"; wl.textContent = "Width";
+  const nw = document.createElement("label"); nw.className = "inknumwrap";
+  const num = document.createElement("input"); num.type = "number"; num.className = "inknum"; num.min = 1; num.max = 100; num.step = 1; num.value = pct;
+  num.setAttribute("aria-label", kind + " width, percent"); num.inputMode = "numeric";
+  const pc = document.createElement("span"); pc.className = "inkpct"; pc.textContent = "%";
+  nw.append(num, pc); top.append(wl, nw);
+  const r = document.createElement("input"); r.type = "range"; r.className = "inkrange"; r.min = 1; r.max = 100; r.value = pct;
+  r.setAttribute("aria-label", kind + " width");
+  w.append(top, r);
+
+  function paint(v){
+    const col = getColor();
+    r.style.setProperty("--c", col);
+    r.style.setProperty("--fill", ((v-1)/99*100).toFixed(1) + "%");
+    path.setAttribute("stroke", col);
+    path.setAttribute("stroke-width", Math.max(1.5, Math.min(isHi ? 26 : 16, toPx(v) * (isHi ? 0.55 : 0.75))));
+    path.setAttribute("stroke-opacity", isHi ? .42 : 1);
+  }
+  function set(v, fromNum){
+    v = Math.max(1, Math.min(100, Math.round(+v || 1)));
+    setPct(v); r.value = v; if (!fromNum) num.value = v; paint(v);
+  }
+  r.addEventListener("input", ()=> set(r.value));
+  num.addEventListener("input", ()=>{ if (num.value !== "") set(num.value, true); });
+  num.addEventListener("change", ()=> set(num.value));
+  paint(pct);
+
+  card.append(head, grid, w);
+  propsEl.appendChild(card);
 }
 function addLabel(text){ const s=document.createElement("span"); s.className="proplabel"; s.textContent=text; propsEl.appendChild(s); }
 function addSwatchRow(colors, active, onPick, isLight){
