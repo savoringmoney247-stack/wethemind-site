@@ -23,3 +23,40 @@ body:has(#sidebar-toggle) .sm-tab{display:none!important}
  .nav-cta .btn{padding:7px 9px!important;font-size:.64rem!important;letter-spacing:.02em}
  .burger{padding:6px 8px!important}
 }
+/* ---- phone/tablet fixes (Oct 21) ---- */
+/* Savoring Money "Vault": each card stretched to its full text width (600-770px) and ran off the
+   screen. Fixed card width; text wraps inside it. */
+.vault-scroll .ws-card{flex:0 0 clamp(250px,78vw,320px);width:clamp(250px,78vw,320px);min-width:0}
+.vault-scroll .ws-card .torn-head,.vault-scroll .ws-card .torn-body{max-width:100%;white-space:normal}
+.vault-scroll{scroll-snap-type:x proximity;padding-left:2px;padding-right:2px}
+.vault-scroll .ws-card{scroll-snap-align:start}
+/* Savoring Money mobile menu: the panel only covered the header strip (the header's blur effect
+   changes what "full screen" means for it) and its links floated over the page in dark text.
+   Now a solid light panel right under the header. */
+#nav .nav-links.open{position:absolute;top:100%;left:0;right:0;bottom:auto;height:auto;max-height:calc(100dvh - 120px);
+ overflow-y:auto;background:#fffdf7;backdrop-filter:none;-webkit-backdrop-filter:none;padding:10px 5% 18px;gap:2px;
+ border-top:1px solid rgba(212,175,55,.4);box-shadow:0 28px 40px -22px rgba(13,59,102,.45)}
+#nav .nav-links.open a{color:#0D3B66}
+#nav .nav-links.open a:not(.nav-cta){border-bottom:1px solid rgba(13,59,102,.08);border-radius:0}
+#nav .nav-links.open .nav-cta{margin-top:10px;text-align:center;justify-content:center;border-radius:999px}
+/* We The Mind menu: "Savoring Money" (logo + text) is centred like the other links */
+.nav-links a:has(.um-logo),.umbrella-nav a:has(.um-logo){justify-content:center;gap:8px}
+.nav-links a:has(.um-logo) .um-logo,.umbrella-nav a:has(.um-logo) .um-logo{margin:0!important}
+/* the top "We The Mind / Education / ..." strip scrolls sideways on phones - fade hints at more */
+@media(max-width:900px){.umbrella-bar-inner{-webkit-mask-image:linear-gradient(90deg,#000 82%,transparent);mask-image:linear-gradient(90deg,#000 82%,transparent);scroll-snap-type:x proximity}}
+/* floating buttons slide away while scrolling down (phones/tablets), back on scroll up / pause */
+@media(max-width:900px){
+ .sm-tab,.wtm-tab,.whatsapp-fab,.say-fab{transition:translate .35s cubic-bezier(.2,.8,.2,1),opacity .25s ease}
+ html.fab-away .sm-tab,html.fab-away .say-fab{translate:-130% 0;opacity:0;pointer-events:none}
+ html.fab-away .whatsapp-fab{translate:130% 0;opacity:0;pointer-events:none}
+}
+/* free guide shown page by page (works on phones, tablets and desktops alike) */
+.guide-pages{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#dfe5ec;
+ padding:8px;display:flex;flex-direction:column;gap:8px;user-select:none;-webkit-user-select:none}
+.guide-pages canvas{display:block;width:100%;height:auto;background:#fff;border-radius:6px;box-shadow:0 6px 16px -8px rgba(10,31,60,.45);flex:none}
+.guide-loading{margin:auto;color:#0D3B66;font-size:.85rem;opacity:.75}
+.guide-open{display:block;width:max-content;margin:14px auto 0;padding:10px 20px;border-radius:999px;background:#D4AF37;color:#0A1F3C;font-weight:700;text-decoration:none}
+@media(prefers-reduced-motion:reduce){.sm-tab,.wtm-tab,.whatsapp-fab,.say-fab{transition:none}}
+/* education hero "passport": stop long buttons stretching the card past small phone screens */
+@media(max-width:820px){.passport{grid-template-columns:minmax(0,1fr)}.passport-page{min-width:0}.passport .hero-cta-row .btn{white-space:normal;max-width:100%;text-align:center}}
+@media(max-width:360px){.passport-page{padding:32px 18px}}
