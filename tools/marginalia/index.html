@@ -870,6 +870,49 @@ body.inactive{cursor:default;}
   .propsbar .shapepanel .fillseg{width:auto}
   .propsbar .shapepanel .shapecols{width:auto;gap:6px;justify-content:center}
 }
+/* ---------- expand / collapse the options row ----------
+   A small chevron at the end of the row. Collapsed on a desktop, the full card becomes the same slim
+   one-line strip phones use (every colour and the width stay one click away); collapsed on a phone or
+   tablet, where the strip is already slim, it tucks away into a small "Pen options" pill. Remembered. */
+.propsbar{position:relative}
+.propsbar:has(.props-toggle){padding-right:52px}
+.props-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  min-width:30px;height:30px;padding:0;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--ink-600);
+  cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06);transition:background .15s,color .15s,border-color .15s,box-shadow .15s}
+.props-toggle:hover{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.props-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.props-toggle svg{width:15px;height:15px;transition:transform .22s cubic-bezier(.2,.7,.2,1)}
+.propsbar.collapsed .props-toggle svg{transform:rotate(180deg)}
+.props-toggle .pt-label,.props-toggle .pt-dot{display:none}
+.propsbar .props{transition:opacity .18s ease}
+  .propsbar.collapsed .inkpanel{flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;padding:6px 10px;border-radius:14px;width:auto;max-width:100%}
+  .propsbar.collapsed .inkpanel .inkhead{display:none}
+  .propsbar.collapsed .inkchips{display:flex;flex-wrap:nowrap;width:auto;gap:4px;justify-content:center}
+  .propsbar.collapsed .inkchip{flex:0 0 auto;flex-direction:row;gap:6px;min-width:0;padding:3px;border-radius:999px;border-color:transparent;background:none;box-shadow:none}
+  .propsbar.collapsed .inkchip .inklab{display:none}
+  .propsbar.collapsed .inkchip.active{padding:3px 10px 3px 3px;border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));box-shadow:none}
+  .propsbar.collapsed .inkchip.active .inklab{display:inline;font-size:11.5px}
+  .propsbar.collapsed .inkdot{width:30px;height:30px}
+  .propsbar.collapsed .inkwidth{flex-direction:row;align-items:center;gap:8px;min-width:150px;flex:1 1 150px;max-width:260px}
+  .propsbar.collapsed .inkwidth-top{order:2;flex:0 0 auto}
+  .propsbar.collapsed .inkwidth-label{display:none}
+  .propsbar.collapsed .inkrange{order:1;flex:1 1 auto;height:28px}
+  .propsbar.collapsed .inknumwrap{padding:2px 7px}
+  .propsbar.collapsed .shapepanel .shapemid,.propsbar.collapsed .shapepanel .shaperight{flex-direction:row;flex-wrap:wrap;justify-content:center;width:auto;gap:8px}
+  .propsbar.collapsed .shapepanel .shapegrid{grid-template-columns:repeat(8,34px);width:auto;gap:4px}
+  .propsbar.collapsed .shapepanel .shapebtn{width:34px;height:34px}
+  .propsbar.collapsed .shapepanel .fillseg{width:auto}
+  .propsbar.collapsed .shapepanel .shapecols{width:auto;gap:6px;justify-content:center}
+@media (pointer:coarse), (max-width:1024px){
+  .props-toggle{min-width:34px;height:34px}
+  .propsbar.collapsed{justify-content:center;padding:5px 12px}
+  .propsbar.collapsed .props{display:none}
+  .propsbar.collapsed .props-toggle{position:static;transform:none;padding:0 12px 0 8px;font:600 12.5px/1 "IBM Plex Sans",system-ui,sans-serif}
+  .propsbar.collapsed .props-toggle .pt-label{display:inline}
+  .propsbar.collapsed .props-toggle .pt-dot{display:inline-block;width:16px;height:16px;border-radius:50%;background:var(--c,transparent);box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
+  .propsbar.collapsed .props-toggle .pt-dot:not([style]){display:none}
+}
+@media (prefers-reduced-motion:reduce){.props-toggle svg,.propsbar .props{transition:none}}
 @media (max-width:420px){
   .propsbar .inkpanel{padding:6px 8px;gap:6px 10px}
   .propsbar .inkdot{width:28px;height:28px}
@@ -1051,7 +1094,7 @@ body.inactive{cursor:default;}
 <button class="zoomopt" data-z="1.5">150%</button>
 <button class="zoomopt" data-z="2">200%</button>
 </div>
-<div class="propsbar" id="propsBar"><div class="props" id="props"></div></div>
+<div class="propsbar" id="propsBar"><div class="props" id="props"></div><button aria-controls="props" aria-expanded="true" class="props-toggle" id="propsToggle" title="Show less" type="button"><span class="pt-dot"></span><span class="pt-label"></span><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6"/></svg></button></div>
 <div class="body">
 <div class="railwrap" hidden="" id="railWrap">
 <button class="rail-arrow" id="railUp" title="Scroll pages up"><svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.4" viewbox="0 0 24 24"><path d="m6 15 6-6 6 6"></path></svg></button>
@@ -1461,6 +1504,34 @@ if (window.ResizeObserver) new ResizeObserver(()=>{
   if (h !== propsBarH && !stageWrap.classList.contains("horiz")) stageWrap.scrollTop += h - propsBarH;
   propsBarH = h;
 }).observe(propsBar);
+const propsToggle = $("#propsToggle");
+(function initPropsToggle(){
+  const KEY = "marginalia-props-collapsed", NAMES = {pen:"Pen", highlighter:"Highlighter", shape:"Shape", cover:"Cover", text:"Text", eraser:"Eraser"};
+  let collapsed = false;
+  try{ collapsed = localStorage.getItem(KEY) === "1"; }catch(e){}
+  function label(){
+    const name = ui.selected ? "Item" : (NAMES[ui.tool] || "Tool");
+    propsToggle.querySelector(".pt-label").textContent = name + " options";
+    const dot = propsToggle.querySelector(".pt-dot");
+    const c = ui.selected ? null : ui.tool === "pen" ? ui.penColor : ui.tool === "highlighter" ? ui.highlighterColor : ui.tool === "shape" ? ui.shapeColor : null;
+    if (c) dot.style.setProperty("--c", c); else dot.removeAttribute("style");
+  }
+  function apply(){
+    propsBar.classList.toggle("collapsed", collapsed);
+    propsToggle.setAttribute("aria-expanded", String(!collapsed));
+    propsToggle.title = collapsed ? "Show all options" : "Show less";
+    propsToggle.setAttribute("aria-label", propsToggle.title);
+    label();
+  }
+  propsToggle.addEventListener("click", ()=>{
+    collapsed = !collapsed;
+    try{ localStorage.setItem(KEY, collapsed ? "1" : "0"); }catch(e){}
+    apply();
+  });
+  // keep the pill's name and colour in step with the tool / colour you pick
+  new MutationObserver(label).observe(propsEl, {childList:true, subtree:true, attributes:true, attributeFilter:["class"]});
+  apply();
+})();
 const zoomIn = $("#zoomIn"), zoomOut = $("#zoomOut"), zoomLabel = $("#zoomLabel");
 const toast = $("#toast");
 const searchToggleBtn = $("#searchToggleBtn"), searchWrap = $("#searchWrap"), searchInput = $("#searchInput"),
