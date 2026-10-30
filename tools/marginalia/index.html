@@ -879,24 +879,14 @@ body.inactive{cursor:default;}
   .propsbar .shapepanel .fillseg{width:auto}
   .propsbar .shapepanel .shapecols{width:auto;gap:6px;justify-content:center}
 }
-/* ---------- colour dots: clean and flat ----------
-   One flat dot in the real ink colour with a hairline rim (the split light/dark shade, gloss and
-   shadow made deep inks look muddy). The chosen colour gets a crisp ring and a check that stays
-   readable on light colours too. Dark mode shows each colour's dark-background shade. */
-.inkdot{background:var(--c)!important;box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)!important;transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s ease}
-.inkdot::before{display:none}
-.inkchip.active .inkdot{box-shadow:inset 0 0 0 1px rgba(0,0,0,.14),0 0 0 2px var(--surface),0 0 0 4px var(--c)!important}
-.inkchip.active .inkdot::after{filter:none}
-.inkchip[data-light="1"].active .inkdot::after{border-color:#1f2937}
-@media (hover:hover){.inkchip:not(.active):hover .inkdot{transform:scale(1.08)}}
-:root[data-theme="dark"] .inkdot{background:var(--d)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)!important}
-:root[data-theme="dark"] .inkchip.active .inkdot{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--d)!important}
-:root[data-theme="dark"] .inkchip.active .inkdot::after{border-color:#111827}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]) .inkdot{background:var(--d)!important;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)!important}
-  :root:not([data-theme="light"]) .inkchip.active .inkdot{box-shadow:0 0 0 2px var(--surface),0 0 0 4px var(--d)!important}
-  :root:not([data-theme="light"]) .inkchip.active .inkdot::after{border-color:#111827}
-}
+/* shape colours use the pen / highlighter chips, in their slim form: dots, and the chosen one
+   opens into a pill with its name */
+.shapecols{flex-wrap:wrap;align-items:center;justify-content:center;gap:4px}
+.shapecols .inkchip{flex:0 0 auto;flex-direction:row;gap:6px;min-width:0;padding:3px;border-radius:999px;border-color:transparent;background:none;box-shadow:none}
+.shapecols .inkchip .inklab{display:none}
+.shapecols .inkchip.active{padding:3px 10px 3px 3px;border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));box-shadow:none}
+.shapecols .inkchip.active .inklab{display:inline;font-size:11.5px}
+.shapecols .inkdot{width:30px;height:30px}
 /* ---------- promo card: a glassy card in the corner, gliding in and out ----------
    Bottom-right on computers, full width along the bottom on phones. Each feature line glides into
    the next while it's up, it waits while you hover it, and the Play Store line is left out inside
@@ -3721,8 +3711,8 @@ const hiPx  = pct => +(6 + pct/100*44).toFixed(2);       // 1% ~ 6px  ... 100% =
 const TEACH_INK = [
   {key:"#1d4ed8", name:"Equations",     use:"Working, formulas, labels",    light:"#1d4ed8", dark:"#60a5fa"},
   {key:"#b91c1c", name:"Corrections",   use:"Errors, sign checks",          light:"#b91c1c", dark:"#f87171"},
-  {key:"#166534", name:"Correct",       use:"Final answers, verified steps",light:"#15803d", dark:"#4ade80"},
-  {key:"#6b21a8", name:"Constructions", use:"Graphs, auxiliary lines",      light:"#7e22ce", dark:"#c084fc"},
+  {key:"#166534", name:"Correct",       use:"Final answers, verified steps",light:"#166534", dark:"#4ade80"},
+  {key:"#6b21a8", name:"Constructions", use:"Graphs, auxiliary lines",      light:"#6b21a8", dark:"#c084fc"},
   {key:"#111827", name:"Writing",       use:"Plain notes, everyday text",   light:"#111827", dark:"#f3f4f6"},
   {key:"#c2410c", name:"Notes",         use:"Side notes, reminders",        light:"#c2410c", dark:"#fb923c"},
   {key:"#0f766e", name:"Examples",      use:"Worked examples, units",       light:"#0f766e", dark:"#2dd4bf"},
@@ -3919,7 +3909,6 @@ function addInkPanel(kind, families, getColor, setColor, pct, setPct, toPx, isHi
     const b = document.createElement("button"); b.type = "button";
     b.className = "inkchip" + (on ? " active" : "");
     b.style.setProperty("--c", f.light); b.style.setProperty("--d", f.dark);
-    if (lumaOf(hexRgb(f.light)) > 0.62) b.dataset.light = "1";
     b.setAttribute("aria-pressed", on ? "true" : "false");
     b.title = f.name + " — " + f.use; b.setAttribute("aria-label", f.name + ": " + f.use);
     const dot = document.createElement("span"); dot.className = "inkdot";
@@ -4007,8 +3996,12 @@ function addShapePanel(o, isSel){
   figColors().forEach(f=>{
     const on = fam && fam.key === f.key;
     const b = document.createElement("button"); b.type = "button";
-    b.className = "inkswatch" + (on ? " active" : ""); b.style.setProperty("--c", f.light);
+    b.className = "inkchip" + (on ? " active" : "");
+    b.style.setProperty("--c", f.light); b.style.setProperty("--d", f.dark);
     b.title = f.name; b.setAttribute("aria-label", f.name); b.setAttribute("aria-pressed", on ? "true" : "false");
+    const dot = document.createElement("span"); dot.className = "inkdot";
+    const lab = document.createElement("span"); lab.className = "inklab"; lab.textContent = f.name;
+    b.append(dot, lab);
     b.addEventListener("click", ()=> o.setColor(f.key));
     cols.appendChild(b);
   });
