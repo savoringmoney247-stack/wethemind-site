@@ -283,6 +283,12 @@ button{font:inherit;cursor:pointer;}
 .inkchip:focus-visible{outline:none;box-shadow:0 0 0 3px color-mix(in srgb,var(--c) 40%,transparent)}
 @media (hover:hover){.inkchip:hover{transform:translateY(-2px)}}
 .inkchip:active{transform:scale(.96)}
+/* full card (mouse desktops): with 8-9 colours the tiles sit in two compact rows of pills, so the
+   card stays about as tall as before instead of stretching across the screen */
+.inkchips{display:grid;grid-template-columns:repeat(var(--cols,4),auto);gap:6px}
+.inkchip{flex-direction:row;justify-content:flex-start;gap:8px;min-width:0;padding:5px 12px 5px 5px;border-radius:999px}
+.inkchip .inkdot{width:26px;height:26px}
+.inkchip.active .inkdot::after{width:9px;height:5px;border-width:0 0 2.2px 2.2px}
 @media (pointer:coarse){.inkdot{width:34px;height:34px}.inkchip{min-width:80px;padding:10px 8px}}
 @media (max-width:640px){
   .inkchips{display:flex;flex-wrap:wrap;justify-content:center;width:100%;gap:6px}
@@ -408,6 +414,7 @@ button{font:inherit;cursor:pointer;}
 .thumb:hover{box-shadow:var(--shadow-md);transform:translateY(-1px);}
 .thumb.current{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-soft),var(--shadow-md);}
 .thumb canvas,.thumb .blankface{display:block;position:absolute;inset:0;width:100%;height:100%;background:#fff;}
+.thumb canvas.thumb-ink{background:transparent;pointer-events:none}
 .thumb-num{
   position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-family:"IBM Plex Mono",monospace;font-size:11px;font-weight:600;
   background:rgba(36,20,20,.8);color:#fff;padding:1px 8px;border-radius:9px;line-height:1.5;
@@ -852,7 +859,7 @@ body.inactive{cursor:default;}
 @media (pointer:coarse), (max-width:1024px){
   .propsbar .inkpanel{flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;padding:6px 10px;border-radius:14px;width:auto;max-width:100%}
   .propsbar .inkpanel .inkhead{display:none}
-  .propsbar .inkchips{display:flex;flex-wrap:nowrap;width:auto;gap:4px;justify-content:center}
+  .propsbar .inkchips{display:flex;flex-wrap:wrap;width:auto;gap:4px;justify-content:center}
   .propsbar .inkchip{flex:0 0 auto;flex-direction:row;gap:6px;min-width:0;padding:3px;border-radius:999px;border-color:transparent;background:none;box-shadow:none}
   .propsbar .inkchip .inklab{display:none}
   .propsbar .inkchip.active{padding:3px 10px 3px 3px;border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));box-shadow:none}
@@ -887,7 +894,7 @@ body.inactive{cursor:default;}
 .propsbar .props{transition:opacity .18s ease}
   .propsbar.collapsed .inkpanel{flex-wrap:wrap;align-items:center;justify-content:center;gap:8px 14px;padding:6px 10px;border-radius:14px;width:auto;max-width:100%}
   .propsbar.collapsed .inkpanel .inkhead{display:none}
-  .propsbar.collapsed .inkchips{display:flex;flex-wrap:nowrap;width:auto;gap:4px;justify-content:center}
+  .propsbar.collapsed .inkchips{display:flex;flex-wrap:wrap;width:auto;gap:4px;justify-content:center}
   .propsbar.collapsed .inkchip{flex:0 0 auto;flex-direction:row;gap:6px;min-width:0;padding:3px;border-radius:999px;border-color:transparent;background:none;box-shadow:none}
   .propsbar.collapsed .inkchip .inklab{display:none}
   .propsbar.collapsed .inkchip.active{padding:3px 10px 3px 3px;border-color:var(--c);background:color-mix(in srgb,var(--c) 10%,var(--surface));box-shadow:none}
@@ -1261,6 +1268,7 @@ function endAction(force){
     scheduleAutosave();
   }
   updateUndoRedoButtons();
+  scheduleThumbInk(ps);
 }
 function flushPendingAction(){ endAction(); }
 document.addEventListener("visibilitychange", ()=>{ if (document.hidden){ flushPendingAction(); saveAutosave(); } });
@@ -1317,6 +1325,7 @@ function restorePageContent(ps, str){
   if (refs){ layoutPage(ps); rebuildOverlay(ps); if (refs.thumbDrawn){ refs.thumbDrawn = false; if (refs.thumbVisible) queueThumb(ps); } }
   updateUndoRedoButtons();
   scheduleAutosave();
+  scheduleThumbInk(ps);
 }
 function undoTarget(){
   const id = (pendingContent && pendingContent.ps.id) || lastEditedPageId;
@@ -2182,6 +2191,8 @@ function buildPageDom(ps){
   const refs = {pageEl, pageInner:inner, canvasEl, inkCanvas, liveCanvas, overlay, imgLayer, shapeLayer, badge, thumbBox, thumbInner, thumbNum:num,
                 ps, doc:curDoc, live:false, pdfKey:null, thumbDrawn:false, thumbVisible:false, inkK:1};
   pageIO.observe(pageEl);
+  refs.thumbInkDirty = true;
+  setTimeout(()=> scheduleThumbInk(ps), 0);              // pages opened with notes already on them
   return refs;
 }
 
@@ -2310,7 +2321,7 @@ function observeThumb(ps){
       for (const e of entries){
         const rr = domRefs[e.target.dataset.id]; if (!rr) continue;
         rr.thumbVisible = e.isIntersecting;
-        if (e.isIntersecting){ if (!rr.thumbDrawn) queueThumb(rr.ps); }
+        if (e.isIntersecting){ if (!rr.thumbDrawn) queueThumb(rr.ps); if (rr.thumbInkDirty) scheduleThumbInk(rr.ps); }
         else releaseThumb(rr);
       }
     }, {root: d.railEl, rootMargin: "500px 0px"});
@@ -2319,6 +2330,7 @@ function observeThumb(ps){
 }
 function releaseThumb(r){
   if (r.thumbInner.tagName === "CANVAS"){ r.thumbInner.width = 1; r.thumbInner.height = 1; }
+  if (r.thumbInk){ r.thumbInk.width = 1; r.thumbInk.height = 1; r.thumbInkDirty = true; }
   r.thumbDrawn = false;
 }
 function queueThumb(ps){
@@ -2367,6 +2379,73 @@ function paintThumb(ps, src){
   ctx.drawImage(src, -ps.widthPt*k/2, -ps.heightPt*k/2, ps.widthPt*k, ps.heightPt*k);
   ctx.restore();
   r.thumbDrawn = true;
+}
+/* What you write shows on the page thumbnails too: a transparent layer over each thumbnail with the
+   page's ink, text, shapes, covers and images, redrawn a moment after every change (and on undo /
+   redo). Like the thumbnails themselves, it only holds pixels while it is near the visible list. */
+const thumbInkT = new Map();
+function scheduleThumbInk(ps){
+  const r = ps && domRefs[ps.id]; if (!r) return;
+  r.thumbInkDirty = true;
+  clearTimeout(thumbInkT.get(ps.id));
+  thumbInkT.set(ps.id, setTimeout(()=>{ thumbInkT.delete(ps.id); paintThumbInk(ps); }, 220));
+}
+function paintThumbInk(ps){
+  const r = domRefs[ps.id]; if (!r || r.ps !== ps) return;
+  const has = (ps.strokes||[]).length || (ps.texts||[]).length || (ps.shapes||[]).length || (ps.images||[]).length;
+  if (!has){ if (r.thumbInk){ r.thumbInk.remove(); r.thumbInk = null; } r.thumbInkDirty = false; return; }
+  if (!r.thumbVisible) return;                                   // drawn when it scrolls into the list
+  let c = r.thumbInk;
+  if (!c){ c = document.createElement("canvas"); c.className = "thumb-ink"; c.setAttribute("aria-hidden","true"); r.thumbBox.insertBefore(c, r.thumbNum); r.thumbInk = c; }
+  const D = Math.min(2, window.devicePixelRatio || 1), W = 132, H = 187;
+  c.width = Math.round(W*D); c.height = Math.round(H*D);
+  const ctx = c.getContext("2d");
+  ctx.setTransform(D,0,0,D,0,0); ctx.clearRect(0,0,W,H);
+  const rotN = (((ps.rotation||0)/90) % 4 + 4) % 4, swap = rotN === 1 || rotN === 3;
+  const pw = swap ? ps.heightPt : ps.widthPt, ph = swap ? ps.widthPt : ps.heightPt;
+  const k = Math.min(W/pw, H/ph);
+  ctx.translate(W/2, H/2); ctx.rotate((ps.rotation||0)*Math.PI/180);
+  ctx.translate(-ps.widthPt*k/2, -ps.heightPt*k/2); ctx.scale(k, k);
+  ctx.beginPath(); ctx.rect(0, 0, ps.widthPt, ps.heightPt); ctx.clip();
+  // same order as the page: images, then covers / shapes, then ink, with text on top
+  for (const m of ps.images||[]){
+    const img = r.imgLayer.querySelector('[data-mid="'+m.id+'"] img');
+    if (img && img.complete && img.naturalWidth){ try{ ctx.drawImage(img, m.x, m.y, m.w, m.h); }catch(e){} }
+  }
+  for (const m of ps.shapes||[]){
+    ctx.save(); ctx.translate(m.x, m.y);
+    if (!m.type){ ctx.fillStyle = m.color; ctx.fillRect(0, 0, m.w, m.h); ctx.restore(); continue; }
+    const g = figPaths(m), sw = m.sw || 2.5;
+    ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.strokeStyle = m.color; ctx.fillStyle = m.color; ctx.lineWidth = sw;
+    const body = new Path2D(g.body);
+    if (!g.line && m.fill !== "none"){ ctx.globalAlpha = m.fill === "tint" ? 0.22 : 1; ctx.fill(body); ctx.globalAlpha = 1; }
+    ctx.stroke(body);
+    if (g.heads){ const hp = new Path2D(g.heads); ctx.fill(hp); ctx.lineWidth = sw*0.6; ctx.stroke(hp); }
+    ctx.restore();
+  }
+  for (const s of ps.strokes||[]){
+    if (!s.points || !s.points.length) continue;
+    const minW = 1.3/k;                                          // never thinner than ~1px on the thumbnail
+    if (s.halo){ applyStroke(ctx, {color:s.halo, width:Math.max(minW*1.8, haloWidth(s.width)), opacity:s.opacity}, 1); strokePath(ctx, s.points, 1); }
+    applyStroke(ctx, {color:s.color, width:Math.max(minW, s.width), opacity:s.opacity}, 1); strokePath(ctx, s.points, 1);
+  }
+  ctx.globalAlpha = 1;
+  for (const m of ps.texts||[]){
+    if (!m.text) continue;
+    const face = FONT_FACES.find(f=>f.pdf===m.font) || FONT_FACES[0];
+    const fs = m.fontSize || 16, lh = fs*1.28, maxW = Math.max(10, (m.w||200) - 12);
+    ctx.font = (m.bold ? "700 " : "500 ") + fs + "px " + face.css; ctx.fillStyle = m.color || "#111"; ctx.textBaseline = "top";
+    let y = m.y + 5;
+    for (const para of String(m.text).split(/\r?\n/)){
+      let line = "";
+      for (const word of para.split(" ")){
+        const t = line ? line + " " + word : word;
+        if (line && ctx.measureText(t).width > maxW){ ctx.fillText(line, m.x + 7, y); y += lh; line = word; } else line = t;
+      }
+      ctx.fillText(line, m.x + 7, y); y += lh;
+    }
+  }
+  r.thumbInkDirty = false;
 }
 function renderThumb(ps){
   const r = domRefs[ps.id];
@@ -3304,7 +3383,7 @@ const FIG_TYPES = [
   {type:"darrow",   name:"Double arrow", icon:'<path d="M5 19 19 5M19 5h-6.5M19 5v6.5M5 19h6.5M5 19v-6.5"/>'},
 ];
 // Looked up when used (TEACH_INK is defined further down the file).
-const figColors = ()=> [...TEACH_INK, {key:"#111827", name:"Black", use:"Neutral outlines", light:"#111827", dark:"#f3f4f6"}];
+const figColors = ()=> TEACH_INK.some(f=>f.key==="#111827") ? [...TEACH_INK] : [...TEACH_INK, {key:"#111827", name:"Black", use:"Neutral outlines", light:"#111827", dark:"#f3f4f6"}];
 const figPad = m => Math.max(8, (m.sw||2.5)*4);
 // Set the box (and, for lines, the endpoints inside it) from a drag between two points.
 function figFromDrag(m, sx, sy, nx, ny){
@@ -3534,10 +3613,18 @@ const TEACH_INK = [
   {key:"#b91c1c", name:"Corrections",   use:"Errors, sign checks",          light:"#b91c1c", dark:"#f87171"},
   {key:"#166534", name:"Correct",       use:"Final answers, verified steps",light:"#166534", dark:"#4ade80"},
   {key:"#6b21a8", name:"Constructions", use:"Graphs, auxiliary lines",      light:"#6b21a8", dark:"#c084fc"},
+  {key:"#111827", name:"Writing",       use:"Plain notes, everyday text",   light:"#111827", dark:"#f3f4f6"},
+  {key:"#c2410c", name:"Notes",         use:"Side notes, reminders",        light:"#c2410c", dark:"#fb923c"},
+  {key:"#0f766e", name:"Examples",      use:"Worked examples, units",       light:"#0f766e", dark:"#2dd4bf"},
+  {key:"#be185d", name:"Questions",     use:"Doubts, things to ask",        light:"#be185d", dark:"#f472b6"},
 ];
 const TEACH_HI = [
   {key:"#facc15", name:"Highlight",     use:"Key terms, definitions",       light:"#facc15", dark:"#fde047"},
-  ...TEACH_INK,
+  {key:"#fb923c", name:"Formulas",      use:"Formulas to learn",            light:"#fb923c", dark:"#fdba74"},
+  {key:"#f472b6", name:"Revise",        use:"Come back to this",            light:"#f472b6", dark:"#f9a8d4"},
+  {key:"#84cc16", name:"Remember",      use:"Facts, must-knows",            light:"#84cc16", dark:"#bef264"},
+  {key:"#22d3ee", name:"Names & dates", use:"People, places, dates",        light:"#22d3ee", dark:"#67e8f9"},
+  ...TEACH_INK.slice(0, 4),
 ];
 const HI_OPACITY = 0.3;   // 25-30% keeps the text underneath readable
 function inkFamily(color, isHi){
@@ -3716,6 +3803,7 @@ function addInkPanel(kind, families, getColor, setColor, pct, setPct, toPx, isHi
 
   // purpose colours
   const grid = document.createElement("div"); grid.className = "inkchips"; grid.setAttribute("role","group"); grid.setAttribute("aria-label", kind + " colour");
+  grid.style.setProperty("--cols", Math.ceil(families.length/2));   // two tidy rows on the full card
   families.forEach(f=>{
     const on = fam().key === f.key;
     const b = document.createElement("button"); b.type = "button";
