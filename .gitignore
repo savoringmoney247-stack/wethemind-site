@@ -1,1 +1,7 @@
 .claude/
+
+# Marginalia billing: local-only files
+marginalia-billing/functions/node_modules/
+marginalia-billing/functions/.env
+marginalia-billing/functions/.env.local
+marginalia-billing/.firebase/

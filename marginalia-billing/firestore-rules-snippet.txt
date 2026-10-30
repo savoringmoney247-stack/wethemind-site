@@ -1,0 +1,14 @@
+// Add these two blocks INSIDE your existing rules, next to the portal's rules
+// (Firebase console > Firestore Database > Rules), inside:
+//   match /databases/{database}/documents { ... }
+// Don't replace the portal's rules (classes, packages, users, progress).
+
+    // Marginalia: each person can read only their own "remove ads" plan; only the server writes it.
+    match /entitlements/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+      allow write: if false;
+    }
+    // Marginalia: payment records are server-only.
+    match /payments/{id} {
+      allow read, write: if false;
+    }

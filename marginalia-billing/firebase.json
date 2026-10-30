@@ -1,0 +1,10 @@
+{
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "marginalia-billing",
+      "runtime": "nodejs20",
+      "ignore": ["node_modules", ".env.local"]
+    }
+  ]
+}
