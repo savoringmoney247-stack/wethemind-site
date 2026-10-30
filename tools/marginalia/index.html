@@ -918,6 +918,8 @@ body.inactive{cursor:default;}
 .pc-close svg{width:13px;height:13px}
 .pc-close:hover{background:var(--surface-2);color:var(--ink-900)}
 .promo-card.in-app .pc-sub,.promo-card.in-app .pc-cta{display:none}
+.promo-card.update-card{z-index:81}
+.promo-card.update-card .pc-icon{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 65%,#f97316))}
 @media (max-width:640px){
   .promo-card{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));width:auto;max-width:none;border-radius:18px}
   .pc-line{font-size:13.5px}
@@ -4628,9 +4630,40 @@ window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom *
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
 if ("serviceWorker" in navigator){
+  // Updates arrive by themselves: the app checks for a new version when it opens, when you come
+  // back to it, and every 30 minutes (installed windows can stay open for days). When one is ready
+  // it says so and refreshes on a tap - after saving your work - or straight away on the start screen.
+  let swReg = null, hadController = !!navigator.serviceWorker.controller, updateShown = false;
+  const checkForUpdate = ()=>{ if (swReg && navigator.onLine !== false) swReg.update().catch(()=>{}); };
   window.addEventListener("load", ()=>{
-    navigator.serviceWorker.register("sw.js").catch(err=> console.warn("Service worker failed:", err));
+    navigator.serviceWorker.register("sw.js", {updateViaCache: "none"}).then((reg)=>{
+      swReg = reg;
+      setInterval(checkForUpdate, 30*60*1000);
+    }).catch(err=> console.warn("Service worker failed:", err));
   });
+  document.addEventListener("visibilitychange", ()=>{ if (!document.hidden) checkForUpdate(); });
+  window.addEventListener("online", checkForUpdate);
+  navigator.serviceWorker.addEventListener("controllerchange", ()=>{
+    if (!hadController){ hadController = true; return; }       // first install, not an update
+    if (updateShown) return; updateShown = true;
+    if (!curDoc){ location.reload(); return; }               // nothing open: just refresh
+    showUpdateReady();
+  });
+  function showUpdateReady(){
+    const card = document.createElement("div");
+    card.className = "promo-card update-card in-app"; card.setAttribute("role", "status"); card.setAttribute("aria-live", "polite");
+    card.innerHTML = '<span class="pc-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><path d="M21 4v5h-5"/></svg></span>'
+      + '<span class="pc-body"><span class="pc-line">A new version is ready</span><span class="pc-sub" style="display:block">Your work is saved first</span></span>'
+      + '<button type="button" class="pc-cta" style="display:inline-flex;border:none;cursor:pointer">Refresh</button>';
+    document.body.appendChild(card);
+    promoToast.classList.remove("show");
+    requestAnimationFrame(()=> requestAnimationFrame(()=> card.classList.add("show")));
+    setTimeout(()=> card.classList.add("show"), 60);
+    card.querySelector(".pc-cta").addEventListener("click", async ()=>{
+      try{ flushPendingAction(); await saveAutosave(); }catch(e){}
+      location.reload();
+    });
+  }
 }
 
 const installBtn = $("#installBtn");
