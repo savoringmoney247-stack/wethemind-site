@@ -1657,8 +1657,12 @@ $("#promoClose").addEventListener("click", ()=>{
   promoOff = true; promoToast.classList.remove("show"); clearInterval(promoSwapT);
   try{ localStorage.setItem("mg-promo-off", String(Date.now() + 24*3600*1000)); }catch(e){}
 });
-setTimeout(showPromo, 15000);
-setInterval(showPromo, 60000);
+// Installed on a computer (Chrome / Edge "Install page as app"), not the Play Store app: the promo
+// for the Android app comes sooner and more often there.
+const installedOnComputer = !inAndroidApp && !!(window.matchMedia && (matchMedia("(display-mode: standalone)").matches
+  || matchMedia("(display-mode: window-controls-overlay)").matches || matchMedia("(display-mode: minimal-ui)").matches));
+setTimeout(showPromo, installedOnComputer ? 5000 : 15000);
+setInterval(showPromo, installedOnComputer ? 45000 : 60000);
 
 function showToast(msg){
   if (!appActive){ deferredToast = msg; return; }
