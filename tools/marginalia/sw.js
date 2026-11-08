@@ -1,11 +1,11 @@
-// Marginalia — service worker
+// Manaluz — service worker
 // Works offline once opened, AND stays up to date by itself:
 // - the app page is fetched fresh whenever you're online (falls back to the saved copy offline),
 // - everything else is served instantly from the saved copy and refreshed in the background,
 // - a new version installs straight from the server (never from the browser's own HTTP cache).
 // So an installed copy (from a browser, or the Play Store app) picks up every update without
 // being uninstalled. Bump CACHE_NAME whenever the cached files change.
-const CACHE_NAME = "marginalia-v41";
+const CACHE_NAME = "marginalia-v42";
 
 const APP_SHELL = [
   "./",

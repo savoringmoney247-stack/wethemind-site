@@ -1,7 +1,7 @@
 {
   "id": "./",
-  "name": "Marginalia — PDF Markup",
-  "short_name": "Marginalia",
+  "name": "Manaluz — PDF Markup",
+  "short_name": "Manaluz",
   "description": "Mark up any PDF — highlight, annotate, cover and retype text, add images and extra writing pages — without touching the original file.",
   "start_url": "./index.html",
   "scope": "./",

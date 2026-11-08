@@ -1,4 +1,4 @@
-/* Marginalia on computers: free with ads, or "Remove ads" with a Lifetime or Monthly plan.
+/* Manaluz on computers: free with ads, or "Remove ads" with a Lifetime or Monthly plan.
  *
  * - Off until window.MARGINALIA_PAY.enabled is true (set in index.html once Razorpay, Firebase
  *   and AdSense are ready). While off, this file does nothing at all.
@@ -193,12 +193,12 @@
       var line = ent.plan === "lifetime" ? "Lifetime plan: ad-free for good."
         : (ent.status === "cancelled" ? "Monthly plan, cancelled: ad-free until " : "Monthly plan: renews on ")
           + new Date(untilMs(ent)).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) + ".";
-      body = '<h2>You\'re ad-free</h2><p class="mg-sub">Thank you for supporting Marginalia.</p>'
+      body = '<h2>You\'re ad-free</h2><p class="mg-sub">Thank you for supporting Manaluz.</p>'
         + '<div class="mg-status">✓ ' + line + '</div>'
         + (ent.plan === "monthly" && ent.status !== "cancelled" ? '<p class="mg-sub" style="margin-top:12px"><button class="mg-link" data-act="cancel" style="color:var(--ink-600);background:none;border:none;padding:0;font:inherit;text-decoration:underline;cursor:pointer">Cancel monthly plan</button> (stays ad-free until the end of the month you paid for)</p>' : "");
     } else {
       body = '<h2>Remove ads</h2>'
-        + '<p class="mg-sub">Marginalia is free with ads. Choose a plan to use it ad-free on all your computers. Payments are handled securely by Razorpay (UPI, cards, netbanking).</p>'
+        + '<p class="mg-sub">Manaluz is free with ads. Choose a plan to use it ad-free on all your computers. Payments are handled securely by Razorpay (UPI, cards, netbanking).</p>'
         + '<div class="mg-plans">'
         + '<div class="mg-plan best"><span class="mg-name">Lifetime</span><span class="mg-price">' + (P.lifetime || "") + '</span><span class="mg-note">Pay once, ad-free forever.</span><button data-act="lifetime">Get lifetime</button></div>'
         + '<div class="mg-plan"><span class="mg-name">Monthly</span><span class="mg-price">' + (P.monthly || "") + '</span><span class="mg-note">Ad-free while subscribed. Cancel anytime.</span><button data-act="monthly">Start monthly</button></div>'
@@ -230,7 +230,7 @@
       .then(function (r) {
         var c = r[0];
         var opts = {
-          key: c.keyId, name: "Marginalia", description: what === "lifetime" ? "Lifetime · no ads" : "Monthly · no ads",
+          key: c.keyId, name: "Manaluz", description: what === "lifetime" ? "Lifetime · no ads" : "Monthly · no ads",
           image: new URL("icon-192.png", location.href).href,
           prefill: { email: user.email || "", name: user.displayName || "" },
           theme: { color: "#E5181C" },

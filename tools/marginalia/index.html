@@ -4,11 +4,11 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
-<title>Marginalia — PDF Markup | We The Mind</title>
+<title>Manaluz — PDF Markup | We The Mind</title>
 <meta content="Mark up any PDF — highlight, write in the margins, cover and retype text, drop in images, and add extra blank writing pages — without ever touching the original file." name="description"/>
 <link href="https://wethemind.com/tools/marginalia/" rel="canonical"/>
 <meta content="website" property="og:type"/>
-<meta content="Marginalia — PDF Markup | We The Mind" property="og:title"/>
+<meta content="Manaluz — PDF Markup | We The Mind" property="og:title"/>
 <meta content="Highlight, write in the margins, cover and retype text, and add extra writing pages to any PDF — free, installable, and it never touches your original file." property="og:description"/>
 <meta content="https://wethemind.com/tools/marginalia/" property="og:url"/>
 <meta content="https://wethemind.com/tools/marginalia/icon-512.png" property="og:image"/>
@@ -161,7 +161,7 @@ button{font:inherit;cursor:pointer;}
   .btn:not(.btn-primary):hover{background:var(--surface);}
 }
 /* When the header needs two rows (phones, or narrow windows with a file open), put the
-   Marginalia logo centred on top and centre the row of buttons under it. */
+   Manaluz logo centred on top and centre the row of buttons under it. */
 .hdr.stacked{flex-wrap:wrap;justify-content:center;row-gap:8px;}
 .hdr.stacked .brand{flex:1 1 100%;justify-content:center;}
 .hdr.stacked .hdr-actions{flex:1 1 100%;margin-left:0;justify-content:center;}
@@ -452,7 +452,7 @@ button{font:inherit;cursor:pointer;}
 .zoomopt.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .zoomsep{height:1px;background:var(--line);margin:4px 6px}
 @media (pointer:coarse){.zoomopt{padding:12px 14px}}
-/* the browser must not zoom the whole app on a pinch; Marginalia zooms the page itself */
+/* the browser must not zoom the whole app on a pinch; Manaluz zooms the page itself */
 .app{touch-action:pan-x pan-y}
 .stage{transform-origin:0 0}
 /* ---------- minimal UI: extras appear only when needed ---------- */
@@ -673,7 +673,7 @@ body.inactive{cursor:default;}
 
 /* ---------- brand mark ---------- */
 /* The brand row baseline-aligns the title and tagline; centre the icon on that row
-   instead, so it sits level with the "Marginalia" wordmark rather than above it. */
+   instead, so it sits level with the "Manaluz" wordmark rather than above it. */
 .brandmark{width:26px;height:26px;border-radius:6px;flex:0 0 auto;display:block;align-self:center;}
 
 /* ---------- search ---------- */
@@ -993,19 +993,19 @@ body.inactive{cursor:default;}
 <meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/>
 <meta content="We The Mind" property="og:site_name"/>
 <meta content="en_US" property="og:locale"/>
-<meta content="Marginalia — PDF Markup | We The Mind" name="twitter:title"/>
+<meta content="Manaluz — PDF Markup | We The Mind" name="twitter:title"/>
 <meta content="Mark up any PDF — highlight, write in the margins, cover and retype text, drop in images, and add extra blank writing pages — without ever touching the original file." name="twitter:description"/>
 <meta content="https://wethemind.com/tools/marginalia/icon-512.png" name="twitter:image"/>
 <link href="https://wethemind.com/tools/marginalia/" hreflang="en-us" rel="alternate"/>
 <link href="https://wethemind.com/tools/marginalia/" hreflang="x-default" rel="alternate"/>
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://wethemind.com/"}, {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://wethemind.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Marginalia", "item": "https://wethemind.com/tools/marginalia/"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://wethemind.com/"}, {"@type": "ListItem", "position": 2, "name": "Tools", "item": "https://wethemind.com/tools/"}, {"@type": "ListItem", "position": 3, "name": "Manaluz", "item": "https://wethemind.com/tools/marginalia/"}]}</script>
 </head>
 <body>
 <div class="app">
 <header class="hdr">
 <div class="brand">
 <img alt="" class="brandmark" height="26" src="logo.png" width="26"/>
-<h1 aria-label="Marginalia" id="brandTitle"><span id="brandTitleText">Marginalia</span><span aria-hidden="true" class="caret"></span></h1>
+<h1 aria-label="Manaluz" id="brandTitle"><span id="brandTitleText">Manaluz</span><span aria-hidden="true" class="caret"></span></h1>
 <span>mark up any PDF, without touching the original</span>
 </div>
 <div class="filepill" hidden="" id="filepill"></div>
@@ -1028,7 +1028,7 @@ body.inactive{cursor:default;}
 <div class="hdr-actions">
 <button aria-label="Toggle dark mode" class="btn btn-icon" id="themeBtn" title="Dark mode"></button>
 <button aria-label="Toggle full screen" class="btn btn-icon" id="fsBtn" title="Full screen (F)"></button>
-<button class="btn installbtn" hidden="" id="installBtn" title="Install Marginalia as an app">
+<button class="btn installbtn" hidden="" id="installBtn" title="Install Manaluz as an app">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="16" rx="3" width="16" x="4" y="4"></rect><path d="M12 8v6M9 11l3 3 3-3"></path></svg>
         Install
       </button>
@@ -1179,14 +1179,14 @@ body.inactive{cursor:default;}
 <div class="empty" id="emptyState">
 <svg class="mark" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="m9 15 1.5-4L15 15"></path><path d="M9.6 13.2h4.3"></path></svg>
 <h2>Nothing open yet</h2>
-<p>Open a worksheet or paper to mark it up — highlight, write in the margins, cover a line and retype it, drop in a diagram. Drag a PDF in, or open one with Marginalia from your file manager once it's installed. The file you open is never changed; you download a separate, annotated copy. Or just start on a blank writing page.</p>
+<p>Open a worksheet or paper to mark it up — highlight, write in the margins, cover a line and retype it, drop in a diagram. Drag a PDF in, or open one with Manaluz from your file manager once it's installed. The file you open is never changed; you download a separate, annotated copy. Or just start on a blank writing page.</p>
 <div class="actions">
 <button class="btn btn-primary" id="emptyOpenBtn">Open a PDF</button>
 <button class="btn" id="emptyBlankBtn">Start blank page</button>
 </div>
 <div class="getapp"><h3>Get the app</h3><div class="row">
 <a class="getbtn play" href="https://play.google.com/store/apps/details?id=com.wethemind.marginalia" id="getPlay" rel="noopener" target="_blank"><svg aria-hidden="true" viewbox="0 0 24 24"><path d="M4 3.2v17.6c0 .5.5.8.9.5l15-8.8c.4-.2.4-.8 0-1L4.9 2.7c-.4-.3-.9 0-.9.5z" fill="#34A853"></path><path d="M4 3.2 14 12 4 20.8c-.2-.1-.3-.3-.3-.6V3.8c0-.3.1-.5.3-.6z" fill="#4285F4"></path><path d="M14 12l3.2-3.2L20 10.5c.4.2.4.8 0 1l-2.8 1.7z" fill="#FBBC04"></path><path d="M14 12l3.2 3.2-12.3 5.5c-.3.1-.6 0-.9-.1z" fill="#EA4335"></path></svg><span><small>Get it on</small><b>Google Play</b></span></a>
-</div><p class="hint">The Marginalia app is on Google Play · Your files never leave your device</p></div>
+</div><p class="hint">The Manaluz app is on Google Play · Your files never leave your device</p></div>
 </div>
 </div>
 </div>
@@ -1198,7 +1198,7 @@ body.inactive{cursor:default;}
 </div>
 <div class="toast" id="toast"></div>
 <div class="dropveil" hidden="" id="dropVeil">Drop to open</div>
-<div aria-live="polite" class="promo-card" id="promoToast" role="status"><span aria-hidden="true" class="pc-icon"><svg viewBox="0 0 24 26"><defs><linearGradient id="pcg1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#22d3ee"/></linearGradient><linearGradient id="pcg2" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f97316"/></linearGradient><linearGradient id="pcg3" x1="0" x2="1" y1="1" y2="0"><stop offset="0" stop-color="#f43f5e"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><path d="M3 2.2 14.6 13 3 23.8c-.6-.3-1-.9-1-1.7V3.9c0-.8.4-1.4 1-1.7Z" fill="url(#pcg1)"/><path d="m14.6 13 3.6-3.4 3.9 2.2c1.2.7 1.2 1.7 0 2.4l-3.9 2.2Z" fill="url(#pcg2)"/><path d="M3 23.8 14.6 13l3.6 3.4L5.2 23.8c-.8.4-1.6.4-2.2 0Z" fill="url(#pcg3)"/><path d="M3 2.2c.6-.4 1.4-.4 2.2 0l13 7.4-3.6 3.4Z" fill="#60a5fa"/></svg></span><span class="pc-body"><span class="pc-line" id="promoLine">Mark up anything</span><span class="pc-sub">Marginalia is on Google Play</span></span><a class="pc-cta" href="https://play.google.com/store/apps/details?id=com.wethemind.marginalia" id="promoPlay" rel="noopener" target="_blank">Get it</a><button aria-label="Hide for today" class="pc-close" id="promoClose" title="Hide for today" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+<div aria-live="polite" class="promo-card" id="promoToast" role="status"><span aria-hidden="true" class="pc-icon"><svg viewBox="0 0 24 26"><defs><linearGradient id="pcg1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#34d399"/><stop offset="1" stop-color="#22d3ee"/></linearGradient><linearGradient id="pcg2" x1="0" x2="1" y1="0" y2="0"><stop offset="0" stop-color="#fbbf24"/><stop offset="1" stop-color="#f97316"/></linearGradient><linearGradient id="pcg3" x1="0" x2="1" y1="1" y2="0"><stop offset="0" stop-color="#f43f5e"/><stop offset="1" stop-color="#ec4899"/></linearGradient></defs><path d="M3 2.2 14.6 13 3 23.8c-.6-.3-1-.9-1-1.7V3.9c0-.8.4-1.4 1-1.7Z" fill="url(#pcg1)"/><path d="m14.6 13 3.6-3.4 3.9 2.2c1.2.7 1.2 1.7 0 2.4l-3.9 2.2Z" fill="url(#pcg2)"/><path d="M3 23.8 14.6 13l3.6 3.4L5.2 23.8c-.8.4-1.6.4-2.2 0Z" fill="url(#pcg3)"/><path d="M3 2.2c.6-.4 1.4-.4 2.2 0l13 7.4-3.6 3.4Z" fill="#60a5fa"/></svg></span><span class="pc-body"><span class="pc-line" id="promoLine">Mark up anything</span><span class="pc-sub">Manaluz is on Google Play</span></span><a class="pc-cta" href="https://play.google.com/store/apps/details?id=com.wethemind.marginalia" id="promoPlay" rel="noopener" target="_blank">Get it</a><button aria-label="Hide for today" class="pc-close" id="promoClose" title="Hide for today" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
 <div class="orgwrap" hidden="" id="orgWrap">
 <div class="orghdr">
 <div class="orgtitle">Organize pages</div>
@@ -1672,7 +1672,7 @@ function showToast(msg){
 }
 
 /* ---------------- only react while this is the window being used ---------------- */
-// Tracks whether Marginalia is the focused, visible window. While it is not (you are in another
+// Tracks whether Manaluz is the focused, visible window. While it is not (you are in another
 // app, a meeting window, a picture-in-picture, a system dialog...), the pointer cannot move,
 // draw, hover or click anything here, and no message or dialog is shown by this app.
 let pointerIsDown = false, lastDown = null;
@@ -1714,7 +1714,7 @@ appActive = document.hasFocus() && !document.hidden;
 (function initBrandTypewriter(){
   const titleEl = document.getElementById("brandTitleText");
   if (!titleEl) return;
-  const FULL_TEXT = "Marginalia", CYCLE_MS = 9000, TYPE_MS = 90;
+  const FULL_TEXT = "Manaluz", CYCLE_MS = 9000, TYPE_MS = 90;
   if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   let typeTimer = null;
   function typeOut(){
@@ -4733,7 +4733,7 @@ window.addEventListener("drop", async (e)=>{
     if (file.type === "application/pdf" || /\.pdf$/i.test(file.name) || isImageFile(file)) await loadAnyFile(file);
     else rejected++;
   }
-  if (rejected) showToast("Marginalia opens PDFs and images (PNG, JPG, WebP). " + rejected + (rejected === 1 ? " file was" : " files were") + " skipped.");
+  if (rejected) showToast("Manaluz opens PDFs and images (PNG, JPG, WebP). " + rejected + (rejected === 1 ? " file was" : " files were") + " skipped.");
 });
 window.addEventListener("blur", ()=>{ dragDepth = 0; dropVeil.hidden = true; });
 
@@ -4782,7 +4782,7 @@ window.MARGINALIA_PAY = {
     // header's Install button only appears once the browser offers installation.
     var ib = document.getElementById("installBtn");
     if (ib && !ib.hidden) { ib.click(); return; }
-    var m = "On a computer, open this page in Chrome or Edge, then use the install icon in the address bar (or the three-dot menu, Install Marginalia).";
+    var m = "On a computer, open this page in Chrome or Edge, then use the install icon in the address bar (or the three-dot menu, Install Manaluz).";
     var t = document.getElementById("toast");
     if (!t) { alert(m); return; }
     t.textContent = m; t.classList.add("show");
