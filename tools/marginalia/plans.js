@@ -47,6 +47,7 @@
     ".mg-card h2{margin:0 0 6px;font:700 22px/1.2 'Fraunces',serif}",
     ".mg-card p.mg-sub{margin:0 0 18px;color:var(--ink-600);font:400 13.5px/1.5 'IBM Plex Sans',system-ui,sans-serif}",
     ".mg-plans{display:grid;grid-template-columns:1fr 1fr;gap:12px}",
+    ".mg-plans.mg-one{grid-template-columns:1fr}",
     "@media (max-width:520px){.mg-plans{grid-template-columns:1fr}}",
     ".mg-plan{border:1.5px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px;background:var(--surface-2,#faf7f0)}",
     ".mg-plan.best{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,var(--surface))}",
@@ -80,13 +81,24 @@
     if (!d || d.active === false) return false;
     return d.plan === "lifetime" || untilMs(d) > Date.now();
   }
+  var TIERS = [
+    { id: "ember",  level: 1, name: "Ember",  line: "Pen, eraser and cover-up. No ads." },
+    { id: "beacon", level: 2, name: "Beacon", line: "Everything in Ember, plus shapes, insert images and page tools (rotate, reorder, layout)." },
+    { id: "aurora", level: 3, name: "Aurora", line: "Everything in Beacon, plus download-all, and every new Pro feature as it arrives." },
+  ];
+  function tierOf(d) {
+    if (!isAdFree(d)) return 0;
+    if (d.plan === "lifetime") return 3;
+    return +d.tier || 1;
+  }
   function cachedAdFree() {
     try { var v = localStorage.getItem(CACHE_KEY); return v === "lifetime" || (+v > Date.now()); } catch (e) { return false; }
   }
   function remember(d) {
     try {
+      localStorage.setItem("mg-tier", String(tierOf(d)));
       if (isAdFree(d)) localStorage.setItem(CACHE_KEY, d.plan === "lifetime" ? "lifetime" : String(untilMs(d)));
-      else localStorage.removeItem(CACHE_KEY);
+      else { localStorage.removeItem(CACHE_KEY); localStorage.removeItem("mg-tier"); }
     } catch (e) {}
   }
   function loadScript(src, attrs) {
@@ -129,7 +141,7 @@
   /* ---------- ads ---------- */
   var bar = el("div", "mg-adbar");
   bar.hidden = true;
-  bar.innerHTML = '<span class="mg-adtag">Ad</span><ins class="adsbygoogle mg-adslot"></ins><button type="button" class="mg-noads">Remove ads</button>';
+  bar.innerHTML = '<span class="mg-adtag">Ad</span><ins class="adsbygoogle mg-adslot"></ins><button type="button" class="mg-noads">Go Pro</button>';
   var app = document.querySelector(".app");
   if (app) app.appendChild(bar);
   // AdSense's responsive ads force "height:auto !important" onto the ad's parent elements, which
@@ -157,16 +169,37 @@
         .then(function () { (window.adsbygoogle = window.adsbygoogle || []).push({}); })
         .catch(function () { bar.hidden = true; });          // ad blocker: just leave the space empty
     }
+    setPro(!wanted);
     proBtn.classList.toggle("on", !wanted);                // the button reflects the plan, not the ad
-    proBtn.textContent = wanted ? "Remove ads" : "Ad-free ✓";
+    proBtn.textContent = wanted ? "Go Pro" : "Pro ✓";
   }
 
   /* ---------- header button ---------- */
-  var proBtn = el("button", "btn mg-probtn", "Remove ads");
-  proBtn.type = "button"; proBtn.title = "Remove ads with a Lifetime or Monthly plan";
+  var proBtn = el("button", "btn mg-probtn", "Go Pro");
+  proBtn.type = "button"; proBtn.title = "Manaluz Pro";
   var actions = document.querySelector(".hdr-actions");
   if (actions) actions.insertBefore(proBtn, actions.firstChild);
   proBtn.addEventListener("click", openPlans);
+
+  /* ---------- Pro state shared with pro.js, and the Sign in button ---------- */
+  function setPro(on) {
+    var t = 0;
+    if (on) { t = ent ? tierOf(ent) : (+localStorage.getItem("mg-tier") || 1); }
+    window.__mgTier = t;
+    window.__mgPro = t > 0;
+    try { window.dispatchEvent(new Event("mg-pro-change")); } catch (e) {}
+  }
+  var signBtn = el("button", "btn", "Sign in");
+  signBtn.type = "button"; signBtn.title = "Sign in with Google to use your Pro plan on this device";
+  if (actions) actions.insertBefore(signBtn, proBtn);
+  signBtn.addEventListener("click", function () {
+    if (user) return firebase().then(function (f) { return f.A.signOut(f.auth); });
+    signIn().catch(function (e) {
+      if (e && /popup-closed|cancelled-popup/.test(e.code || "")) return;
+      toast("Couldn't sign in. Please try again.");
+    });
+  });
+  window.addEventListener("mg-open-pro", openPlans);
 
   /* ---------- plans dialog ---------- */
   var dlg = null;
@@ -189,20 +222,26 @@
     var P = CFG.prices || {};
     var who = user ? (user.email || user.displayName || "your Google account") : "";
     var body;
-    if (isAdFree(ent)) {
-      var line = ent.plan === "lifetime" ? "Lifetime plan: ad-free for good."
-        : (ent.status === "cancelled" ? "Monthly plan, cancelled: ad-free until " : "Monthly plan: renews on ")
+    var cur = tierOf(ent);
+    var cards = TIERS.filter(function (t) { return t.level > cur; }).map(function (t) {
+      var best = t.id === "beacon";
+      return '<div class="mg-plan' + (best ? ' best' : '') + '"><span class="mg-name">' + t.name + (best ? ' · most popular' : '') + '</span>'
+        + '<span class="mg-price">' + ((P[t.id] || "") + (P[t.id] ? ' <small style="font:500 13px/1 system-ui,sans-serif">/ month</small>' : "")) + '</span>'
+        + '<span class="mg-note">' + t.line + '</span><button data-act="' + t.id + '">' + (cur ? "Upgrade to " : "Get ") + t.name + '</button></div>';
+    }).join("");
+    if (cur) {
+      var curT = TIERS[cur - 1];
+      var line = ent.plan === "lifetime" ? "Lifetime plan: every Pro feature, for good."
+        : curT.name + (ent.status === "cancelled" ? " (cancelled): active until " : " plan: renews on ")
           + new Date(untilMs(ent)).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) + ".";
-      body = '<h2>You\'re ad-free</h2><p class="mg-sub">Thank you for supporting Manaluz.</p>'
+      body = '<h2>You\'re on ' + (ent.plan === "lifetime" ? "Aurora" : curT.name) + '</h2><p class="mg-sub">Thank you for supporting Manaluz.</p>'
         + '<div class="mg-status">✓ ' + line + '</div>'
-        + (ent.plan === "monthly" && ent.status !== "cancelled" ? '<p class="mg-sub" style="margin-top:12px"><button class="mg-link" data-act="cancel" style="color:var(--ink-600);background:none;border:none;padding:0;font:inherit;text-decoration:underline;cursor:pointer">Cancel monthly plan</button> (stays ad-free until the end of the month you paid for)</p>' : "");
+        + (cards && ent.plan !== "lifetime" ? '<p class="mg-sub" style="margin:16px 0 10px">Want more?</p><div class="mg-plans mg-one">' + cards + '</div>' : "")
+        + (ent.plan === "monthly" && ent.status !== "cancelled" ? '<p class="mg-sub" style="margin-top:12px"><button class="mg-link" data-act="cancel" style="color:var(--ink-600);background:none;border:none;padding:0;font:inherit;text-decoration:underline;cursor:pointer">Cancel plan</button> (stays active until the end of the month you paid for)</p>' : "");
     } else {
-      body = '<h2>Remove ads</h2>'
-        + '<p class="mg-sub">Manaluz is free with ads. Choose a plan to use it ad-free on all your computers. Payments are handled securely by Razorpay (UPI, cards, netbanking).</p>'
-        + '<div class="mg-plans">'
-        + '<div class="mg-plan best"><span class="mg-name">Lifetime</span><span class="mg-price">' + (P.lifetime || "") + '</span><span class="mg-note">Pay once, ad-free forever.</span><button data-act="lifetime">Get lifetime</button></div>'
-        + '<div class="mg-plan"><span class="mg-name">Monthly</span><span class="mg-price">' + (P.monthly || "") + '</span><span class="mg-note">Ad-free while subscribed. Cancel anytime.</span><button data-act="monthly">Start monthly</button></div>'
-        + '</div>';
+      body = '<h2>Go Pro</h2>'
+        + '<p class="mg-sub">Manaluz is free for reading, highlighting and adding text. Pick a level to unlock more and remove ads. Cancel any time. Payments are handled securely by Razorpay (UPI, cards, netbanking).</p>'
+        + '<div class="mg-plans mg-one">' + cards + '</div>';
     }
     card.innerHTML = '<button class="mg-x" aria-label="Close" data-act="close">×</button>' + body
       + '<div class="mg-foot"><span>' + (user ? 'Signed in as <b>' + who.replace(/</g, "&lt;") + '</b> · <button class="mg-link" data-act="signout">Sign out</button>'
@@ -217,10 +256,10 @@
     if (what === "close") return closePlans();
     if (what === "signout") return firebase().then(function (f) { return f.A.signOut(f.auth); });
     if (what === "cancel") {
-      if (!confirm("Cancel your monthly plan? You stay ad-free until the end of the month you paid for.")) return;
+      if (!confirm("Cancel your plan? It stays active until the end of the month you paid for.")) return;
       return call("cancelMonthly").then(function () { toast("Monthly plan cancelled."); }).catch(function () { toast("Couldn't cancel right now. Please try again."); });
     }
-    if (what !== "lifetime" && what !== "monthly") return;
+    if (!TIERS.some(function (t) { return t.id === what; })) return;
     var label = btn.textContent;
     busy(btn, true, "One moment…");
     (user ? Promise.resolve() : signIn())
@@ -230,7 +269,7 @@
       .then(function (r) {
         var c = r[0];
         var opts = {
-          key: c.keyId, name: "Manaluz", description: what === "lifetime" ? "Lifetime · no ads" : "Monthly · no ads",
+          key: c.keyId, name: "Manaluz", description: "Manaluz " + what.charAt(0).toUpperCase() + what.slice(1) + " · monthly",
           image: new URL("icon-192.png", location.href).href,
           prefill: { email: user.email || "", name: user.displayName || "" },
           theme: { color: "#E5181C" },
@@ -238,7 +277,7 @@
           handler: function (resp) {
             busy(btn, true, "Confirming…");
             call("confirmPayment", resp)
-              .then(function () { toast("Thank you! Ads are gone."); closePlans(); })
+              .then(function () { toast("Thank you! Pro is unlocked."); closePlans(); })
               .catch(function () { toast("Payment received - your plan will appear in a minute."); closePlans(); });
           },
         };
@@ -258,6 +297,7 @@
   firebase().then(function (f) {
     f.A.onAuthStateChanged(f.auth, function (u) {
       user = u;
+      signBtn.textContent = u ? "Sign out" : "Sign in";
       if (unsubEnt) { unsubEnt(); unsubEnt = null; }
       if (!u) { ent = null; remember(null); showAds(true); renderPlans(); return; }
       unsubEnt = f.F.onSnapshot(f.F.doc(f.db, "entitlements", u.uid), function (snap) {

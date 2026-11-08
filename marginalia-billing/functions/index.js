@@ -29,7 +29,14 @@ const db = admin.firestore();
 
 const RAZORPAY_KEY_ID = defineString("RAZORPAY_KEY_ID");
 const LIFETIME_PRICE_PAISE = defineString("LIFETIME_PRICE_PAISE");          // e.g. 49900 = Rs 499
-const RAZORPAY_MONTHLY_PLAN_ID = defineString("RAZORPAY_MONTHLY_PLAN_ID");  // plan_XXXX from the dashboard
+const RAZORPAY_MONTHLY_PLAN_ID = defineString("RAZORPAY_MONTHLY_PLAN_ID");  // legacy single monthly plan
+/* Three subscription levels, each a monthly Razorpay plan (plan_XXXX from the dashboard). */
+const TIER_PLAN_IDS = {
+  ember: defineString("RAZORPAY_PLAN_EMBER"),
+  beacon: defineString("RAZORPAY_PLAN_BEACON"),
+  aurora: defineString("RAZORPAY_PLAN_AURORA"),
+};
+const TIER_LEVEL = { ember: 1, beacon: 2, aurora: 3 };
 const RAZORPAY_KEY_SECRET = defineSecret("RAZORPAY_KEY_SECRET");
 const RAZORPAY_WEBHOOK_SECRET = defineSecret("RAZORPAY_WEBHOOK_SECRET");
 
@@ -47,7 +54,7 @@ const ts = (ms) => admin.firestore.Timestamp.fromMillis(ms);
 
 async function grantLifetime(uid, ref) {
   await db.doc(`entitlements/${uid}`).set({
-    plan: "lifetime", active: true, until: null, status: "active", source: "razorpay", ref: ref || null,
+    plan: "lifetime", tier: 3, active: true, until: null, status: "active", source: "razorpay", ref: ref || null,
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   }, { merge: true });
 }
@@ -55,9 +62,16 @@ async function grantLifetime(uid, ref) {
 async function grantMonthly(uid, sub, status) {
   const ent = await db.doc(`entitlements/${uid}`).get();
   if (ent.exists && ent.data().plan === "lifetime") return;          // never downgrade a lifetime plan
+  const tierName = sub.notes && sub.notes.plan;
+  const tier = TIER_LEVEL[tierName] || 1;
+  const old = ent.exists ? ent.data() : null;
+  if (old && old.plan === "monthly" && old.ref && old.ref !== sub.id && status !== "active") return;   // an old subscription ending after a level change
+  if (old && old.plan === "monthly" && old.ref && old.ref !== sub.id && status === "active") {
+    try { await rzp().subscriptions.cancel(old.ref, false); } catch (e) { console.warn("old subscription not cancelled", e.message); }   // moving up (or down) a level: stop the old one
+  }
   const endMs = (sub.current_end ? sub.current_end * 1000 : Date.now() + 31 * 24 * 3600 * 1000) + GRACE_MS;
   await db.doc(`entitlements/${uid}`).set({
-    plan: "monthly", active: status !== "halted", until: ts(endMs), status: status || "active",
+    plan: "monthly", tier, tierName: tierName || "ember", active: status !== "halted", until: ts(endMs), status: status || "active",
     source: "razorpay", ref: sub.id, updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   }, { merge: true });
 }
@@ -66,7 +80,7 @@ async function grantMonthly(uid, sub, status) {
 exports.createCheckout = onCall({ region: REGION, cors: CORS, secrets: [RAZORPAY_KEY_SECRET] }, async (req) => {
   if (!req.auth) throw new HttpsError("unauthenticated", "Sign in first.");
   const uid = req.auth.uid, plan = req.data && req.data.plan;
-  if (plan !== "lifetime" && plan !== "monthly") throw new HttpsError("invalid-argument", "Unknown plan.");
+  if (plan !== "lifetime" && plan !== "monthly" && !TIER_LEVEL[plan]) throw new HttpsError("invalid-argument", "Unknown plan.");
 
   if (plan === "lifetime") {
     const amount = parseInt(LIFETIME_PRICE_PAISE.value(), 10);
@@ -78,8 +92,8 @@ exports.createCheckout = onCall({ region: REGION, cors: CORS, secrets: [RAZORPAY
     return { keyId: RAZORPAY_KEY_ID.value(), orderId: order.id, amount: order.amount, currency: order.currency };
   }
 
-  const planId = RAZORPAY_MONTHLY_PLAN_ID.value();
-  if (!planId) throw new HttpsError("failed-precondition", "Monthly plan is not set.");
+  const planId = TIER_LEVEL[plan] ? TIER_PLAN_IDS[plan].value() : RAZORPAY_MONTHLY_PLAN_ID.value();
+  if (!planId) throw new HttpsError("failed-precondition", "That plan is not set up yet.");
   const sub = await rzp().subscriptions.create({ plan_id: planId, total_count: 120, customer_notify: 1, notes: { uid, plan } });
   await db.doc(`payments/${sub.id}`).set({ uid, plan, kind: "subscription", status: "created", createdAt: admin.firestore.FieldValue.serverTimestamp() });
   return { keyId: RAZORPAY_KEY_ID.value(), subscriptionId: sub.id };

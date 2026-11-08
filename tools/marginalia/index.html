@@ -4761,14 +4761,16 @@ window.addEventListener("blur", ()=>{ dragDepth = 0; dropVeil.hidden = true; });
 <script>
 /* Paste your real links here. desktop: direct installer URL (leave "" to install from the browser). play: your Google Play listing. */
 window.MARGINALIA_LINKS = { desktop: "", play: "https://play.google.com/store/apps/details?id=com.wethemind.marginalia" };
-/* Computers: free with ads, or ad-free with a Lifetime / Monthly plan (see plans.js and /marginalia-billing).
+/* Computers: free with ads, or Pro (one Lifetime plan) (see plans.js and /marginalia-billing).
    Switch on once Razorpay, Firebase and AdSense are set up; until then nothing changes. Prices should
    match the Play Store. adSlot is the AdSense display ad unit id. Never shown inside the Play Store app. */
+/* Manaluz Pro (see pro.js). Leave enforce false until Pro can be bought and checked on every platform. */
+window.MARGINALIA_PRO = { enforce: false };
 window.MARGINALIA_PAY = {
   enabled: false,
   adClient: "ca-pub-3784163501998631",
   adSlot: "",
-  prices: { lifetime: "", monthly: "" },
+  prices: { ember: "", beacon: "", aurora: "" },
   functionsRegion: "asia-south1"
 };
 (function(){
@@ -4791,5 +4793,6 @@ window.MARGINALIA_PAY = {
 })();
 </script>
 <script defer src="plans.js"></script>
+<script defer src="pro.js"></script>
 </body>
 </html>
