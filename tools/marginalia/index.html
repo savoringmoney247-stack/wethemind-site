@@ -1038,7 +1038,7 @@ html.in-app #mgBuild{display:none}
         Install
       </button>
 <input accept="application/pdf,.pdf" class="hidden-input" id="openInput" type="file"/>
-<button class="btn" id="openBtn" title="Open a PDF">
+<button class="btn" id="openBtn" title="Open a file">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path></svg>
         Open
       </button>
@@ -1186,7 +1186,7 @@ html.in-app #mgBuild{display:none}
 <h2>Nothing open yet</h2>
 <p>Open a worksheet or paper to mark it up — highlight, write in the margins, cover a line and retype it, drop in a diagram. Drag a PDF in, or open one with Manaluz from your file manager once it's installed. The file you open is never changed; you download a separate, annotated copy. Or just start on a blank writing page.</p>
 <div class="actions">
-<button class="btn btn-primary" id="emptyOpenBtn">Open a PDF</button>
+<button class="btn btn-primary" id="emptyOpenBtn">Open a file</button>
 <button class="btn" id="emptyBlankBtn">Start blank page</button>
 </div>
 <div class="getapp"><h3>Get the app</h3><div class="row">
@@ -4690,7 +4690,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "56";
+const MG_BUILD = "57";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
