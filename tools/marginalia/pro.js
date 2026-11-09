@@ -14,11 +14,11 @@
   "use strict";
   var CFG = window.MARGINALIA_PRO || {};
   /* The level each feature needs: 1 Ember, 2 Beacon, 3 Aurora. Free: read, search, select, text, highlighter. */
-  var NEEDS = CFG.needs || { pen: 1, eraser: 1, cover: 1, shape: 2, image: 2, moreBtn: 2, dlAll: 3 };
+  var NEEDS = CFG.needs || { pen: 1, eraser: 1, cover: 1, shape: 2, image: 2, moreBtn: 2, dlAll: 3, merge: 2, split: 2, img2pdf: 2, pdf2img: 3, watermark: 3, pagenum: 3 };
   var LEVEL_NAME = ["", "Ember", "Beacon", "Aurora"];
   var PRO_TOOLS = ["pen", "eraser", "cover", "shape", "image"];
   var PRO_IDS = ["moreBtn", "dlAll"];
-  var NAMES = { pen: "Pen", eraser: "Eraser", cover: "Cover-up", shape: "Shapes", image: "Insert image", moreBtn: "Page tools", dlAll: "Download all" };
+  var NAMES = { pen: "Pen", eraser: "Eraser", cover: "Cover-up", shape: "Shapes", image: "Insert image", moreBtn: "Page tools", dlAll: "Download all", merge: "Merge PDFs", split: "Extract pages", img2pdf: "Images to PDF", pdf2img: "PDF to images", watermark: "Watermark", pagenum: "Page numbers" };
 
   function isPro() {
     try { if (window.ManaluzNative && typeof window.ManaluzNative.isPro === "function") return !!window.ManaluzNative.isPro(); } catch (e) {}
@@ -48,6 +48,9 @@
     }
     if (!opened) toast((NAMES[what] || "This") + " needs Manaluz " + LEVEL_NAME[NEEDS[what] || 1] + ".");
   }
+
+  /* the PDF tools panel (tools.js) asks here before running a locked tool */
+  window.MGPro = { allow: function (key) { if (!lockedKey(key)) return true; upsell(key); return false; } };
 
   /* clicks on locked buttons never reach the editor */
   document.addEventListener("click", function (e) {
