@@ -4689,12 +4689,9 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "54";
+const MG_BUILD = "55";
 (function buildStamp(){
-  const el = document.createElement("div");
-  el.id = "mgBuild"; el.textContent = "Manaluz build " + MG_BUILD;
-  el.style.cssText = "position:fixed;left:6px;bottom:2px;font:10px system-ui,sans-serif;color:#888;opacity:.7;pointer-events:none;z-index:5";
-  document.body.appendChild(el);
+  document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
   if (navigator.onLine === false) return;
   fetch("index.html?b=" + Date.now(), {cache:"no-store"}).then(r=>r.text()).then(async t=>{
