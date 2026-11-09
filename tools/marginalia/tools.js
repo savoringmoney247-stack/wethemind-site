@@ -224,7 +224,17 @@
   /* header button */
   var actions = document.querySelector(".hdr-actions");
   if (actions) {
-    var b = el("button", "btn", "Tools"); b.type = "button"; b.title = "Merge, extract pages, images to PDF and more";
+    var st = document.createElement("style");
+    st.textContent = ".mg-toolsbtn svg{width:16px;height:16px;flex:none;transition:transform .5s cubic-bezier(.34,1.56,.64,1)}"
+      + ".mg-toolsbtn:hover svg{transform:rotate(90deg) scale(1.12)}"
+      + ".mg-toolsbtn:active svg{transform:rotate(180deg) scale(.9)}"
+      + ".mg-toolsbtn{transition:transform .18s ease,box-shadow .25s ease}.mg-toolsbtn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(229,24,28,.18)}"
+      + ".mg-toolsbtn:active{transform:scale(.94)}"
+      + "@keyframes mgToolsHint{0%,88%,100%{transform:rotate(0)}92%{transform:rotate(-14deg)}96%{transform:rotate(12deg)}}"
+      + ".mg-toolsbtn svg{animation:mgToolsHint 7s ease-in-out 3s infinite}"
+      + "@media (prefers-reduced-motion:reduce){.mg-toolsbtn,.mg-toolsbtn svg{animation:none!important;transition:none!important}}";
+    document.head.appendChild(st);
+    var b = el("button", "btn mg-toolsbtn", '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z"/></svg><span>Tools</span>'); b.type = "button"; b.title = "Tools: merge, extract pages, images to PDF and more"; b.setAttribute("aria-label", "Tools");
     actions.insertBefore(b, actions.firstChild); b.addEventListener("click", open);
   }
 })();
