@@ -990,7 +990,7 @@ body.inactive{cursor:default;}
 }
 
 /* inside the Android app the window already starts below the status bar - don't add the inset twice */
-html.in-app .hdr{padding-top:8px !important}
+html.in-app .hdr{padding-top:20px !important}
 html.in-app .footer-credit{padding-bottom:4px !important}
 html.in-app #mgBuild{display:none}
 </style>
@@ -4689,7 +4689,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "51";
+const MG_BUILD = "52";
 (function buildStamp(){
   const el = document.createElement("div");
   el.id = "mgBuild"; el.textContent = "Manaluz build " + MG_BUILD;
@@ -4855,6 +4855,6 @@ window.MARGINALIA_PAY = {
 <script defer src="plans.js?v=50"></script>
 <script>if (window.ManaluzNative) document.documentElement.classList.add("in-app");</script>
 <script defer src="pro.js?v=50"></script>
-<script defer src="tools.js?v=50"></script>
+<script defer src="tools.js?v=52"></script>
 </body>
 </html>
