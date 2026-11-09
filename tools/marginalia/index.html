@@ -4689,7 +4689,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "52";
+const MG_BUILD = "53";
 (function buildStamp(){
   const el = document.createElement("div");
   el.id = "mgBuild"; el.textContent = "Manaluz build " + MG_BUILD;
@@ -4751,8 +4751,10 @@ if ("serviceWorker" in navigator){
 const installBtn = $("#installBtn");
 let deferredInstallPrompt = null;
 window.addEventListener("beforeinstallprompt", (e)=>{
-  // Installing is done from Google Play (paid plans remove ads), so the website never offers a free install.
+  // Offer the install button on computers (the Android app is installed from Google Play instead).
   e.preventDefault();
+  deferredInstallPrompt = e;
+  if (!window.ManaluzNative) installBtn.hidden = false;
 });
 installBtn.addEventListener("click", async ()=>{
   if (!deferredInstallPrompt) return;
