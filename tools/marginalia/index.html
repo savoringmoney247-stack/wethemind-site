@@ -1991,6 +1991,40 @@ async function loadAnyFile(file){
   return loadPdfFile(file);
 }
 
+
+/* Standard page shapes for pictures. Long side is 842 pt (A4's length) so pen widths and text sizes feel the same. */
+const PAGE_FORMATS = [
+  {name:"A4",       w:595.28, h:841.89},
+  {name:"A4 wide",  w:841.89, h:595.28},
+  {name:"3:4",      w:631.42, h:841.89},
+  {name:"4:3",      w:841.89, h:631.42},
+  {name:"9:16",     w:473.56, h:841.89},
+  {name:"16:9",     w:841.89, h:473.56},
+  {name:"Square",   w:595.28, h:595.28},
+];
+function pickPageFormat(ratio){
+  let best = PAGE_FORMATS[0], bestD = Infinity;
+  for (const f of PAGE_FORMATS){
+    const d = Math.abs(Math.log(ratio / (f.w / f.h)));
+    if (d < bestD){ bestD = d; best = f; }
+  }
+  return best;
+}
+// Draws the picture, kept whole and centred, on a white page of the chosen shape.
+async function placeImageOnPage(dataUrl, dims, pageW, pageH){
+  const scale = Math.min(2400 / Math.max(pageW, pageH), 3);            // up to ~2400 px on the long side
+  const cw = Math.round(pageW * scale), ch = Math.round(pageH * scale);
+  const img = await new Promise((ok, fail)=>{ const i = new Image(); i.onload = ()=> ok(i); i.onerror = fail; i.src = dataUrl; });
+  const k = Math.min(cw / dims.w, ch / dims.h);
+  const dw = dims.w * k, dh = dims.h * k;
+  const c = document.createElement("canvas"); c.width = cw; c.height = ch;
+  const g = c.getContext("2d");
+  g.fillStyle = "#fff"; g.fillRect(0, 0, cw, ch);
+  g.imageSmoothingQuality = "high";
+  g.drawImage(img, (cw - dw) / 2, (ch - dh) / 2, dw, dh);
+  return c.toDataURL("image/png");
+}
+
 async function loadImageFile(file){
   try{
     const dataUrl = await normalizeImageToPng(file);
@@ -1998,13 +2032,16 @@ async function loadImageFile(file){
     // Size the page like a PDF page: the image keeps its shape and fits inside an A4 sheet turned
     // its own way (portrait or landscape), so Fit, zoom and pen widths work just as they do for PDFs,
     // whether the picture is a tiny icon or a 50-megapixel photo.
-    const port = dims.h >= dims.w;
-    const boxW = port ? A4.w : A4.h, boxH = port ? A4.h : A4.w;
-    const fitK = Math.min(boxW / dims.w, boxH / dims.h);
-    const w = dims.w*fitK, h = dims.h*fitK;
+    // The page becomes a real page format (A4, 16:9, 4:3, 3:4, 9:16 or square, whichever is closest
+    // to the picture's shape) and the picture sits whole inside it, so Fit, the writing pages you
+    // add and the downloaded PDF all line up instead of following an odd photo shape.
+    const fmt = pickPageFormat(dims.w / dims.h);
+    const w = fmt.w, h = fmt.h;
+    const placed = await placeImageOnPage(dataUrl, dims, w, h);
+    ui.fitMode = "page";
     const d = openNewDoc(file.name.replace(/\.[a-z0-9]{2,5}$/i,"") || "image", null);
     d.kind = "image";
-    d.pages.push(newImagePageState(w, h, dataUrl));
+    d.pages.push(newImagePageState(w, h, placed));
     d.ready = true;
     startWorkspace();
   }catch(err){

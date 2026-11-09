@@ -5,7 +5,7 @@
 // - a new version installs straight from the server (never from the browser's own HTTP cache).
 // So an installed copy (from a browser, or the Play Store app) picks up every update without
 // being uninstalled. Bump CACHE_NAME whenever the cached files change.
-const CACHE_NAME = "marginalia-v44";
+const CACHE_NAME = "marginalia-v45";
 
 const APP_SHELL = [
   "./",
