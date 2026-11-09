@@ -17,7 +17,7 @@
 <meta content="#241414" media="(prefers-color-scheme: dark)" name="theme-color"/>
 <script>/* The app is installed from Google Play (with its lifetime / monthly plans), not from the website:
    the install manifest is only attached inside the Play Store app itself. */
-(function(){var a=(document.referrer||"").indexOf("android-app://")===0;try{if(a)sessionStorage.setItem("mg-in-app","1");a=a||sessionStorage.getItem("mg-in-app")==="1";}catch(e){}if(a){var l=document.createElement("link");l.rel="manifest";l.href="manifest.webmanifest";document.head.appendChild(l);}})();</script>
+(function(){var a=(document.referrer||"").indexOf("android-app://")===0;try{if(a)sessionStorage.setItem("mg-in-app","1");a=a||sessionStorage.getItem("mg-in-app")==="1";}catch(e){}{var l=document.createElement("link");l.rel="manifest";l.href="manifest.webmanifest";document.head.appendChild(l);}})();</script>
 <link href="favicon.ico" rel="icon" sizes="any"/>
 <link href="favicon-32.png" rel="icon" sizes="32x32" type="image/png"/>
 <link href="favicon-16.png" rel="icon" sizes="16x16" type="image/png"/>
@@ -4689,7 +4689,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "53";
+const MG_BUILD = "54";
 (function buildStamp(){
   const el = document.createElement("div");
   el.id = "mgBuild"; el.textContent = "Manaluz build " + MG_BUILD;
