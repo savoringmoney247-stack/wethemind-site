@@ -229,6 +229,11 @@
         + '<span class="mg-price">' + ((P[t.id] || "") + (P[t.id] ? ' <small style="font:500 13px/1 system-ui,sans-serif">/ month</small>' : "")) + '</span>'
         + '<span class="mg-note">' + t.line + '</span><button data-act="' + t.id + '">' + (cur ? "Upgrade to " : "Get ") + t.name + '</button></div>';
     }).join("");
+    if (cur < 3) {
+      cards += '<div class="mg-plan"><span class="mg-name">Aurora Lifetime · pay once</span>'
+        + '<span class="mg-price">' + (P.lifetime || "") + (P.lifetime ? ' <small style="font:500 13px/1 system-ui,sans-serif">once</small>' : "") + '</span>'
+        + '<span class="mg-note">Every Pro feature, forever. No renewals.</span><button data-act="lifetime">Get Lifetime</button></div>';
+    }
     if (cur) {
       var curT = TIERS[cur - 1];
       var line = ent.plan === "lifetime" ? "Lifetime plan: every Pro feature, for good."
@@ -259,7 +264,7 @@
       if (!confirm("Cancel your plan? It stays active until the end of the month you paid for.")) return;
       return call("cancelMonthly").then(function () { toast("Monthly plan cancelled."); }).catch(function () { toast("Couldn't cancel right now. Please try again."); });
     }
-    if (!TIERS.some(function (t) { return t.id === what; })) return;
+    if (what !== "lifetime" && !TIERS.some(function (t) { return t.id === what; })) return;
     var label = btn.textContent;
     busy(btn, true, "One moment…");
     (user ? Promise.resolve() : signIn())
@@ -269,7 +274,7 @@
       .then(function (r) {
         var c = r[0];
         var opts = {
-          key: c.keyId, name: "Manaluz", description: "Manaluz " + what.charAt(0).toUpperCase() + what.slice(1) + " · monthly",
+          key: c.keyId, name: "Manaluz", description: what === "lifetime" ? "Manaluz Aurora Lifetime" : "Manaluz " + what.charAt(0).toUpperCase() + what.slice(1) + " · monthly",
           image: new URL("icon-192.png", location.href).href,
           prefill: { email: user.email || "", name: user.displayName || "" },
           theme: { color: "#E5181C" },
