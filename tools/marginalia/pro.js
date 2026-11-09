@@ -28,7 +28,10 @@
     try { if (window.ManaluzNative && typeof window.ManaluzNative.tier === "function") return +window.ManaluzNative.tier() || 0; } catch (e) {}
     return window.__mgTier || (window.__mgPro === true ? 1 : 0);
   }
-  function lockedKey(key) { return !!CFG.enforce && tier() < (NEEDS[key] || 0); }
+  /* Locks apply on the web when enforce is true, and inside the Android app when enforceApp is true
+     (the app tells the page which level the Google Play account owns). */
+  function active() { return !!CFG.enforce || (!!CFG.enforceApp && !!window.ManaluzNative); }
+  function lockedKey(key) { return active() && tier() < (NEEDS[key] || 0); }
 
   function toast(msg) {
     var t = document.getElementById("toast"); if (!t) return;
