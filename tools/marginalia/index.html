@@ -2168,6 +2168,7 @@ function computeInitialScale(){
   const narrow = stageWrap.clientWidth < 700;
   const availW = Math.max(160, stageWrap.clientWidth - (narrow ? 24 : 64));
   const availH = Math.max(160, stageWrap.clientHeight - (narrow ? 32 : 56));
+  pages.forEach(q=>{ if (q.kind==="image" || q.kind==="blank"){ const L=Math.max(q.widthPt,q.heightPt); if (L>1200){ const k=842/L; q.widthPt*=k; q.heightPt*=k; } } });
   const p = pages[0];
   const ratio = p.widthPt / p.heightPt;
   const wFit = availW / p.widthPt, hFit = availH / p.heightPt;
@@ -4683,6 +4684,23 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
+const MG_BUILD = "46";
+(function buildStamp(){
+  const el = document.createElement("div");
+  el.textContent = "Manaluz build " + MG_BUILD;
+  el.style.cssText = "position:fixed;left:6px;bottom:2px;font:10px system-ui,sans-serif;color:#888;opacity:.7;pointer-events:none;z-index:5";
+  document.body.appendChild(el);
+  // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
+  if (navigator.onLine === false) return;
+  fetch("index.html?b=" + Date.now(), {cache:"no-store"}).then(r=>r.text()).then(async t=>{
+    const m = /const MG_BUILD = "(\d+)"/.exec(t);
+    if (!m || m[1] === MG_BUILD) return;
+    try{ if (sessionStorage.getItem("mgReloaded") === m[1]) return; sessionStorage.setItem("mgReloaded", m[1]); }catch(e){}
+    try{ const ks = await caches.keys(); await Promise.all(ks.map(k=>caches.delete(k))); }catch(e){}
+    try{ const rs = await navigator.serviceWorker.getRegistrations(); await Promise.all(rs.map(r=>r.update().catch(()=>{}))); }catch(e){}
+    location.reload();
+  }).catch(()=>{});
+})();
 if ("serviceWorker" in navigator){
   // Updates arrive by themselves: the app checks for a new version when it opens, when you come
   // back to it, and every 30 minutes (installed windows can stay open for days). When one is ready
