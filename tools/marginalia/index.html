@@ -1037,8 +1037,8 @@ html.in-app #mgBuild{display:none}
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><rect height="16" rx="3" width="16" x="4" y="4"></rect><path d="M12 8v6M9 11l3 3 3-3"></path></svg>
         Install
       </button>
-<input accept="application/pdf,image/*,.heic,.heif,.avif,.bmp,.gif,.svg,.tif,.tiff,.ico" class="hidden-input" id="openInput" type="file"/>
-<button class="btn" id="openBtn" title="Open a PDF or image">
+<input accept="application/pdf,.pdf" class="hidden-input" id="openInput" type="file"/>
+<button class="btn" id="openBtn" title="Open a PDF">
 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path></svg>
         Open
       </button>
@@ -1992,7 +1992,8 @@ function isImageFile(file){
   return /^image\//.test(file.type) || /\.(png|jpe?g|webp|gif|bmp|svg|avif|heic|heif|tiff?|ico)$/i.test(file.name);
 }
 async function loadAnyFile(file){
-  if (isImageFile(file)) return loadImageFile(file);
+  // Pictures are added with the Image tool, not opened as documents.
+  if (isImageFile(file)){ showToast("To add a picture, use the Image tool in the toolbar."); return; }
   return loadPdfFile(file);
 }
 
@@ -4689,7 +4690,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "55";
+const MG_BUILD = "56";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
@@ -4775,7 +4776,7 @@ if ("launchQueue" in window){
   });
 }
 
-// Drag-and-drop: drop a PDF or image anywhere on the page, from any app, even when the window
+// Drag-and-drop: drop a PDF anywhere on the page, from any app, even when the window
 // isn't focused (dragging from the file manager never focuses it first).
 const dropVeil = document.getElementById("dropVeil");
 let dragDepth = 0;
@@ -4792,7 +4793,7 @@ window.addEventListener("drop", async (e)=>{
     if (file.type === "application/pdf" || /\.pdf$/i.test(file.name) || isImageFile(file)) await loadAnyFile(file);
     else rejected++;
   }
-  if (rejected) showToast("Manaluz opens PDFs and images (PNG, JPG, WebP). " + rejected + (rejected === 1 ? " file was" : " files were") + " skipped.");
+  if (rejected) showToast("Manaluz opens PDFs here; add pictures with the Image tool. " + rejected + (rejected === 1 ? " file was" : " files were") + " skipped.");
 });
 window.addEventListener("blur", ()=>{ dragDepth = 0; dropVeil.hidden = true; });
 
