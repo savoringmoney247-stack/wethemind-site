@@ -4689,7 +4689,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "50";
+const MG_BUILD = "51";
 (function buildStamp(){
   const el = document.createElement("div");
   el.id = "mgBuild"; el.textContent = "Manaluz build " + MG_BUILD;
@@ -4852,9 +4852,9 @@ window.MARGINALIA_PAY = {
   });
 })();
 </script>
-<script defer src="plans.js"></script>
+<script defer src="plans.js?v=50"></script>
 <script>if (window.ManaluzNative) document.documentElement.classList.add("in-app");</script>
-<script defer src="pro.js"></script>
-<script defer src="tools.js"></script>
+<script defer src="pro.js?v=50"></script>
+<script defer src="tools.js?v=50"></script>
 </body>
 </html>
