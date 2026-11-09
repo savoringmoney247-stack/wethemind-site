@@ -1,11 +1,13 @@
 // Manaluz — service worker
 // Works offline once opened, AND stays up to date by itself:
 // - the app page is fetched fresh whenever you're online (falls back to the saved copy offline),
-// - everything else is served instantly from the saved copy and refreshed in the background,
+// - the app's own code (.js / .css / manifest) is also fetched fresh first, so a new build never
+//   waits behind the browser's 4-hour HTTP cache (falls back to the saved copy offline),
+// - big libraries and images are served instantly from the saved copy and re-checked in the background,
 // - a new version installs straight from the server (never from the browser's own HTTP cache).
 // So an installed copy (from a browser, or the Play Store app) picks up every update without
 // being uninstalled. Bump CACHE_NAME whenever the cached files change.
-const CACHE_NAME = "marginalia-v59";
+const CACHE_NAME = "marginalia-v60";
 
 const APP_SHELL = [
   "./",
@@ -91,10 +93,23 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Everything else: instant from the saved copy, refreshed in the background for next time.
+  // The app's own code: always check the server first ("no-cache" = ask before reusing the browser's
+  // saved copy), so new builds show up straight away. Offline, the saved copy is used.
+  const isVendor = /\/(pdf\.min|pdf\.worker\.min|pdf-lib\.min)\.js$/.test(url.pathname);
+  if (!isVendor && /\.(js|css|webmanifest|json)$/.test(url.pathname)) {
+    event.respondWith(
+      fetch(req, { cache: "no-cache" })
+        .then((res) => putInCache(req, res))
+        .catch(() => caches.match(req).then((c) => c || Response.error()))
+    );
+    return;
+  }
+
+  // Everything else (libraries, images): instant from the saved copy, re-checked with the server in
+  // the background for next time - again bypassing the browser's saved copy.
   event.respondWith(
     caches.match(req).then((cached) => {
-      const fresh = fetch(req).then((res) => putInCache(req, res)).catch(() => cached);
+      const fresh = fetch(req, { cache: "no-cache" }).then((res) => putInCache(req, res)).catch(() => cached);
       if (cached) { event.waitUntil(fresh.catch(() => {})); return cached; }
       return fresh;
     })
