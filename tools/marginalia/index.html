@@ -993,6 +993,16 @@ body.inactive{cursor:default;}
 html.in-app .hdr{padding-top:20px !important}
 html.in-app .footer-credit{padding-bottom:4px !important}
 html.in-app #mgBuild{display:none}
+
+.mg-drop{display:flex;flex-direction:column;align-items:center;gap:4px;margin:18px auto 6px;max-width:380px;padding:22px 18px;border:2px dashed var(--line,#d9d2c3);border-radius:18px;cursor:pointer;background:rgba(255,255,255,.55);transition:transform .2s ease,border-color .2s ease,background .2s ease,box-shadow .2s ease}
+.mg-drop svg{width:34px;height:34px;color:#e5181c;transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+.mg-drop strong{font-size:16px}
+.mg-drop span{font-size:12.5px;opacity:.7}
+.mg-drop:hover,.mg-drop:focus-visible,.mg-drop.over{border-color:#e5181c;background:rgba(229,24,28,.05);transform:translateY(-2px);box-shadow:0 8px 22px rgba(229,24,28,.12);outline:none}
+.mg-drop:hover svg,.mg-drop.over svg{transform:translateY(-4px) scale(1.1)}
+.mg-drop:active{transform:scale(.98)}
+.mg-drop + .actions{margin-top:16px}
+@media (prefers-reduced-motion:reduce){.mg-drop,.mg-drop svg{transition:none}}
 </style>
 <link href="../../assets/theme.css?v=20261022" rel="stylesheet"/>
 <meta content="index,follow,max-image-preview:large,max-snippet:-1" name="robots"/>
@@ -1183,10 +1193,15 @@ html.in-app #mgBuild{display:none}
 <div class="stage" id="stage">
 <div class="empty" id="emptyState">
 <svg class="mark" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.6" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="m9 15 1.5-4L15 15"></path><path d="M9.6 13.2h4.3"></path></svg>
-<h2>Nothing open yet</h2>
-<p>Open a worksheet or paper to mark it up — highlight, write in the margins, cover a line and retype it, drop in a diagram. Drag a PDF in, or open one with Manaluz from your file manager once it's installed. The file you open is never changed; you download a separate, annotated copy. Or just start on a blank writing page.</p>
+<h2>Open a file to start</h2>
+<p>Highlight, write in the margins, cover a line and retype it, drop in a picture. Your original file is never changed - you download a separate marked-up copy.</p>
+<div class="mg-drop" id="mgDropZone" role="button" tabindex="0" aria-label="Open a file">
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="m7 9 5-5 5 5"/><path d="M4 16v3a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-3"/></svg>
+<strong>Open a file</strong>
+<span>Choose a PDF, or drag it here</span>
+</div>
 <div class="actions">
-<button class="btn btn-primary" id="emptyOpenBtn">Open a file</button>
+<button class="btn btn-primary" id="emptyOpenBtn">Browse files</button>
 <button class="btn" id="emptyBlankBtn">Start blank page</button>
 </div>
 <div class="getapp"><h3>Get the app</h3><div class="row">
@@ -1980,6 +1995,11 @@ function renderTabs(){
 /* ---------------- opening files ---------------- */
 openBtn.addEventListener("click", ()=>openInput.click());
 emptyOpenBtn.addEventListener("click", ()=>openInput.click());
+{ const z = document.getElementById("mgDropZone");
+  if (z){ z.addEventListener("click", ()=>openInput.click());
+    z.addEventListener("keydown", (e)=>{ if (e.key==="Enter"||e.key===" "){ e.preventDefault(); openInput.click(); } });
+    window.addEventListener("dragenter", (e)=>{ if (e.dataTransfer && Array.prototype.indexOf.call(e.dataTransfer.types||[],"Files")!==-1) z.classList.add("over"); });
+    ["drop","dragleave"].forEach(t=> window.addEventListener(t, ()=> z.classList.remove("over"))); } }
 emptyBlankBtn.addEventListener("click", ()=>{ addBlankPage(); });
 openInput.multiple = true;
 openInput.addEventListener("change", async (e)=>{
@@ -4690,7 +4710,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "57";
+const MG_BUILD = "58";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
