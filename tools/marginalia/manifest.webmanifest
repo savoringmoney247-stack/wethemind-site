@@ -9,6 +9,7 @@
   "orientation": "any",
   "background_color": "#ffffff",
   "theme_color": "#e5181c",
+  "launch_handler": { "client_mode": "focus-existing" },
   "categories": ["education", "productivity", "utilities"],
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
