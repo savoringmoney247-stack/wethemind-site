@@ -244,7 +244,7 @@
     "@media (max-width:560px){.mg-plans.mg-grid{grid-template-columns:1fr}}",
     ".mg-plan{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}",
     ".mg-plan:hover{transform:translateY(-3px);box-shadow:0 16px 30px -18px rgba(0,0,0,.45)}",
-    ".mg-plan ul{list-style:none;margin:2px 0 4px;padding:0;display:grid;gap:6px;flex:1}",
+    ".mg-plan ul{list-style:none;margin:2px 0 4px;padding:0;display:grid;gap:6px;flex:1;align-content:start}",
     ".mg-plan li{font:500 12.5px/1.35 'IBM Plex Sans',system-ui,sans-serif;color:var(--ink-600);padding-left:18px;position:relative}",
     ".mg-plan li::before{content:'\\2713';position:absolute;left:0;color:#16a34a;font-weight:800}",
     ".mg-plan button{position:relative;overflow:hidden;transition:transform .15s ease,filter .2s ease}",
