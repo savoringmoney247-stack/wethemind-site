@@ -192,6 +192,20 @@
   var signBtn = el("button", "btn", "Sign in");
   signBtn.type = "button"; signBtn.title = "Sign in with Google to use your Pro plan on this device";
   if (actions) actions.insertBefore(signBtn, proBtn);
+  /* owner-only "View as" switch in the header (hidden for everyone else) */
+  var viewSel = el("select", "btn", "");
+  viewSel.title = "Admin: view the tool as another kind of user"; viewSel.style.display = "none";
+  [["admin", "View as: Me"], ["free", "View as: Free"], ["ember", "View as: Ember"], ["beacon", "View as: Beacon"], ["aurora", "View as: Aurora"]].forEach(function (o) {
+    var op = document.createElement("option"); op.value = o[0]; op.textContent = o[1]; viewSel.appendChild(op);
+  });
+  if (actions) actions.insertBefore(viewSel, signBtn);
+  function syncView() { viewSel.style.display = isOwner() ? "" : "none"; viewSel.value = viewAs(); }
+  viewSel.addEventListener("change", function () {
+    if (!isOwner()) return;
+    try { localStorage.setItem("mg-viewas", viewSel.value); } catch (e) {}
+    ent = applyView(realEnt); remember(ent); showAds(!isAdFree(ent)); renderPlans();
+    toast("Viewing as: " + viewSel.options[viewSel.selectedIndex].text.replace("View as: ", ""));
+  });
   signBtn.addEventListener("click", function () {
     if (user) return firebase().then(function (f) { return f.A.signOut(f.auth); });
     signIn().catch(function (e) {
@@ -429,7 +443,7 @@
     return { plan: "monthly", tier: lv, tierName: v, active: true, status: "active", trialUsed: true, until: { toMillis: function () { return Date.now() + 30 * 864e5; } } };
   }
   function ownerBar() {
-    if (!isOwner()) return "";
+    return "";
     var cur = viewAs(), h = '<div class="mg-foot" style="margin-top:14px;border-top:1px dashed var(--line,#ddd);padding-top:10px"><span><b>Admin: view as</b> </span><span style="display:flex;flex-wrap:wrap;gap:6px">';
     ["admin", "free", "ember", "beacon", "aurora"].forEach(function (k) {
       h += '<button class="mg-link" data-view="' + k + '" style="padding:4px 9px;border-radius:999px;border:1px solid var(--accent);' + (k === cur ? "background:var(--accent);color:#fff" : "") + '">' + (k === "admin" ? "Me (lifetime)" : k.charAt(0).toUpperCase() + k.slice(1)) + "</button>";
@@ -441,7 +455,7 @@
   showAds(!cachedAdFree());                                  // no flash of ads for people who paid
   firebase().then(function (f) {
     f.A.onAuthStateChanged(f.auth, function (u) {
-      user = u;
+      user = u; syncView();
       signBtn.textContent = u ? "Sign out" : "Sign in";
       if (unsubEnt) { unsubEnt(); unsubEnt = null; }
       if (!u) { ent = null; remember(null); showAds(true); renderPlans(); return; }
