@@ -267,9 +267,9 @@
     if (what !== "lifetime" && !TIERS.some(function (t) { return t.id === what; })) return;
     var label = btn.textContent;
     busy(btn, true, "One moment…");
-    (user ? Promise.resolve() : signIn())
+    (user ? Promise.resolve() : (function () { try { sessionStorage.setItem("mg-pending", what); } catch (e) {} return signIn(); })())
       .then(function () { return firebase(); })
-      .then(function (f) { if (!f.auth.currentUser) throw new Error("not signed in"); user = f.auth.currentUser; })
+      .then(function (f) { if (!f.auth.currentUser) throw new Error("not signed in"); user = f.auth.currentUser; try { sessionStorage.removeItem("mg-pending"); } catch (e) {} })
       .then(function () { return Promise.all([call("createCheckout", { plan: what }), window.Razorpay ? null : loadScript("https://checkout.razorpay.com/v1/checkout.js")]); })
       .then(function (r) {
         var c = r[0];
@@ -292,6 +292,7 @@
       })
       .catch(function (e) {
         busy(btn, false, label);
+        try { sessionStorage.removeItem("mg-pending"); } catch (e2) {}
         if (e && /popup-closed|cancelled-popup|not signed in/.test((e.code || "") + e.message)) return;
         toast("Couldn't start the payment. Please try again.");
       });
@@ -305,6 +306,8 @@
       signBtn.textContent = u ? "Sign out" : "Sign in";
       if (unsubEnt) { unsubEnt(); unsubEnt = null; }
       if (!u) { ent = null; remember(null); showAds(true); renderPlans(); return; }
+      var pend = null; try { pend = sessionStorage.getItem("mg-pending"); sessionStorage.removeItem("mg-pending"); } catch (e) {}
+      if (pend) { openPlans(); setTimeout(function () { var b = dlg && dlg.querySelector('[data-act="' + pend + '"]'); if (b) act(pend, b); }, 700); }
       unsubEnt = f.F.onSnapshot(f.F.doc(f.db, "entitlements", u.uid), function (snap) {
         ent = snap.exists() ? snap.data() : null;
         remember(ent); showAds(!isAdFree(ent)); renderPlans();
