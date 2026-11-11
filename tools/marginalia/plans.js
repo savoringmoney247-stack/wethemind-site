@@ -357,10 +357,17 @@
         + sec(plansHtml, "Pick a plan");
     }
     body += sec(toolsHtml(), "More from We The Mind");
-    card.innerHTML = '<button class="mg-x" aria-label="Close" data-act="close">×</button>' + body
+    card.innerHTML = '<button class="mg-x" aria-label="Close" data-act="close">×</button>' + body + ownerBar()
       + '<div class="mg-foot"><span>' + (user ? "Signed in as <b>" + who.replace(/</g, "&lt;") + '</b> · <button class="mg-link" data-act="signout">Sign out</button>'
         : "You’ll sign in with Google so your plan works on every computer.") + "</span>"
       + '<a href="' + PLAY + '" target="_blank" rel="noopener">On Android? Get the app on Google Play</a></div>';
+    card.querySelectorAll("[data-view]").forEach(function (b) {
+      b.addEventListener("click", function () {
+        try { localStorage.setItem("mg-viewas", b.getAttribute("data-view")); } catch (e) {}
+        ent = applyView(realEnt); remember(ent); showAds(!isAdFree(ent)); renderPlans();
+        toast("Viewing as: " + b.textContent);
+      });
+    });
     card.querySelectorAll("[data-act]").forEach(function (b) {
       b.addEventListener("click", function () { act(b.getAttribute("data-act"), b); });
     });
@@ -410,6 +417,26 @@
       });
   }
 
+  /* ---------- owner-only "View as" switch (only ever lowers what the owner sees) ---------- */
+  var OWNER = "king.kngr47@gmail.com", realEnt = null;
+  function isOwner() { return !!(user && user.email && user.email.toLowerCase() === OWNER); }
+  function viewAs() { try { return localStorage.getItem("mg-viewas") || "admin"; } catch (e) { return "admin"; } }
+  function applyView(e) {
+    if (!isOwner()) return e;
+    var v = viewAs(); if (v === "admin") return e;
+    if (v === "free") return null;
+    var lv = { ember: 1, beacon: 2, aurora: 3 }[v]; if (!lv) return e;
+    return { plan: "monthly", tier: lv, tierName: v, active: true, status: "active", trialUsed: true, until: { toMillis: function () { return Date.now() + 30 * 864e5; } } };
+  }
+  function ownerBar() {
+    if (!isOwner()) return "";
+    var cur = viewAs(), h = '<div class="mg-foot" style="margin-top:14px;border-top:1px dashed var(--line,#ddd);padding-top:10px"><span><b>Admin: view as</b> </span><span style="display:flex;flex-wrap:wrap;gap:6px">';
+    ["admin", "free", "ember", "beacon", "aurora"].forEach(function (k) {
+      h += '<button class="mg-link" data-view="' + k + '" style="padding:4px 9px;border-radius:999px;border:1px solid var(--accent);' + (k === cur ? "background:var(--accent);color:#fff" : "") + '">' + (k === "admin" ? "Me (lifetime)" : k.charAt(0).toUpperCase() + k.slice(1)) + "</button>";
+    });
+    return h + "</span></div>";
+  }
+
   /* ---------- who's signed in, and their plan ---------- */
   showAds(!cachedAdFree());                                  // no flash of ads for people who paid
   firebase().then(function (f) {
@@ -421,7 +448,7 @@
       var pend = null; try { pend = sessionStorage.getItem("mg-pending"); sessionStorage.removeItem("mg-pending"); } catch (e) {}
       if (pend) { openPlans(); setTimeout(function () { var b = dlg && dlg.querySelector('[data-act="' + pend + '"]'); if (b) act(pend, b); }, 700); }
       unsubEnt = f.F.onSnapshot(f.F.doc(f.db, "entitlements", u.uid), function (snap) {
-        ent = snap.exists() ? snap.data() : null;
+        realEnt = snap.exists() ? snap.data() : null; ent = applyView(realEnt);
         remember(ent); showAds(!isAdFree(ent)); renderPlans();
       }, function () { showAds(!cachedAdFree()); });
     });
