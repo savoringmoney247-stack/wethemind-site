@@ -227,7 +227,7 @@
       var best = t.id === "beacon";
       return '<div class="mg-plan' + (best ? ' best' : '') + '"><span class="mg-name">' + t.name + (best ? ' · most popular' : '') + '</span>'
         + '<span class="mg-price">' + ((P[t.id] || "") + (P[t.id] ? ' <small style="font:500 13px/1 system-ui,sans-serif">/ month</small>' : "")) + '</span>'
-        + '<span class="mg-note">' + t.line + '</span><button data-act="' + t.id + '">' + (cur ? "Upgrade to " : "Get ") + t.name + '</button></div>';
+        + '<span class="mg-note">' + t.line + '</span><button data-act="' + t.id + '">' + (cur ? "Upgrade to " : (ent && ent.trialUsed ? "Get " : "Try 7 days free · ")) + t.name + '</button></div>';
     }).join("");
     if (cur < 3) {
       cards += '<div class="mg-plan"><span class="mg-name">Aurora Lifetime · pay once</span>'
