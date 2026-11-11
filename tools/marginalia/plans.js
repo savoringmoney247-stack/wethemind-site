@@ -206,7 +206,7 @@
   function closePlans() { if (!dlg) return; var d = dlg; dlg = null; d.classList.remove("show"); setTimeout(function () { d.remove(); }, 320); }
   function openPlans() {
     if (dlg) return;
-    dlg = el("div", "mg-dlg"); dlg.setAttribute("role", "dialog"); dlg.setAttribute("aria-modal", "true"); dlg.setAttribute("aria-label", "Remove ads");
+    dlg = el("div", "mg-dlg"); dlg.setAttribute("role", "dialog"); dlg.setAttribute("aria-modal", "true"); dlg.setAttribute("aria-label", "Manaluz plans");
     var card = el("div", "mg-card");
     dlg.appendChild(card);
     dlg.addEventListener("click", function (e) { if (e.target === dlg) closePlans(); });
@@ -216,45 +216,157 @@
     requestAnimationFrame(function () { requestAnimationFrame(function () { if (dlg) dlg.classList.add("show"); }); });
     setTimeout(function () { if (dlg) dlg.classList.add("show"); }, 50);
   }
+  var css2 = document.createElement("style");
+  css2.textContent = [
+    ".mg-card{width:min(680px,100%)}",
+    "@keyframes mgUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}",
+    "@keyframes mgShine{from{transform:translateX(-130%) skewX(-18deg)}to{transform:translateX(330%) skewX(-18deg)}}",
+    "@keyframes mgFall{to{transform:translate3d(var(--dx),108vh,0) rotate(var(--rot));opacity:.9}}",
+    "@keyframes mgGlow{0%,100%{box-shadow:0 10px 30px -14px rgba(229,24,28,.55)}50%{box-shadow:0 14px 38px -10px rgba(249,115,22,.7)}}",
+    ".mg-first .mg-sec{animation:mgUp .6s cubic-bezier(.22,1,.36,1) both;animation-delay:calc(var(--i,0)*80ms)}",
+    ".mg-sec{margin-top:20px}",
+    ".mg-sec>h3{margin:0 0 10px;font:700 11px/1 'IBM Plex Sans',system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-600)}",
+    ".mg-hero{position:relative;overflow:hidden;border-radius:18px;padding:18px 18px 16px;color:#fff;background:linear-gradient(135deg,#e5181c,#f97316);animation:mgGlow 3.6s ease-in-out infinite}",
+    ".mg-hero::after{content:'';position:absolute;top:0;left:0;width:30%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent);animation:mgShine 4.2s ease-in-out infinite}",
+    ".mg-hero-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}",
+    ".mg-hero-name{font:700 26px/1.1 'Fraunces',serif}",
+    ".mg-pill{font:700 10px/1 'IBM Plex Sans',system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;border-radius:999px;padding:5px 9px;background:rgba(255,255,255,.22)}",
+    ".mg-hero p{margin:8px 0 12px;font:500 13.5px/1.45 'IBM Plex Sans',system-ui,sans-serif;color:rgba(255,255,255,.92)}",
+    ".mg-bar{height:8px;border-radius:99px;background:rgba(255,255,255,.28);overflow:hidden}",
+    ".mg-bar i{display:block;height:100%;width:0;border-radius:inherit;background:#fff;transition:width 1.2s cubic-bezier(.22,1,.36,1) .25s}",
+    ".mg-hero-foot{margin-top:7px;font:600 11.5px/1 'IBM Plex Sans',system-ui,sans-serif;color:rgba(255,255,255,.85)}",
+    ".mg-feats{display:flex;flex-wrap:wrap;gap:8px}",
+    ".mg-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;font:600 12.5px/1 'IBM Plex Sans',system-ui,sans-serif;border:1px solid var(--line);background:var(--surface-2,#faf7f0);color:var(--ink-600);transition:transform .2s ease,box-shadow .2s ease}",
+    ".mg-chip:hover{transform:translateY(-2px);box-shadow:0 8px 16px -10px rgba(0,0,0,.4)}",
+    ".mg-chip.on{color:#166534;background:color-mix(in srgb,#16a34a 10%,var(--surface));border-color:color-mix(in srgb,#16a34a 35%,var(--line))}",
+    ".mg-chip em{font-style:normal;font-size:9px;letter-spacing:.07em;text-transform:uppercase;background:var(--accent);color:#fff;border-radius:5px;padding:2px 4px}",
+    ".mg-plans.mg-grid{grid-template-columns:1fr 1fr}",
+    "@media (max-width:560px){.mg-plans.mg-grid{grid-template-columns:1fr}}",
+    ".mg-plan{transition:transform .25s ease,box-shadow .25s ease,border-color .25s ease}",
+    ".mg-plan:hover{transform:translateY(-3px);box-shadow:0 16px 30px -18px rgba(0,0,0,.45)}",
+    ".mg-plan ul{list-style:none;margin:2px 0 4px;padding:0;display:grid;gap:6px;flex:1}",
+    ".mg-plan li{font:500 12.5px/1.35 'IBM Plex Sans',system-ui,sans-serif;color:var(--ink-600);padding-left:18px;position:relative}",
+    ".mg-plan li::before{content:'\\2713';position:absolute;left:0;color:#16a34a;font-weight:800}",
+    ".mg-plan button{position:relative;overflow:hidden;transition:transform .15s ease,filter .2s ease}",
+    ".mg-plan button:hover:not(:disabled){filter:brightness(1.08);transform:translateY(-1px)}",
+    ".mg-plan button:active:not(:disabled){transform:scale(.98)}",
+    ".mg-plan.best button::after{content:'';position:absolute;top:0;left:0;width:35%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:mgShine 2.8s ease-in-out infinite}",
+    ".mg-tools{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}",
+    ".mg-tool{display:flex;gap:10px;align-items:flex-start;padding:11px 12px;border:1px solid var(--line);border-radius:14px;background:var(--surface-2,#faf7f0);text-decoration:none;color:inherit;transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}",
+    ".mg-tool:hover{transform:translateY(-3px);border-color:var(--accent);box-shadow:0 14px 26px -18px rgba(0,0,0,.5)}",
+    ".mg-ti{font-size:21px;line-height:1.1}",
+    ".mg-tool b{display:block;font:700 13px/1.2 'IBM Plex Sans',system-ui,sans-serif;color:var(--ink-900)}",
+    ".mg-tool small{display:block;margin-top:3px;font:400 11.5px/1.35 'IBM Plex Sans',system-ui,sans-serif;color:var(--ink-600)}",
+    ".mg-all{display:inline-block;margin-top:10px;color:var(--accent);font:700 12.5px/1 'IBM Plex Sans',system-ui,sans-serif;text-decoration:none}",
+    ".mg-conf{position:fixed;top:-14px;width:8px;height:14px;border-radius:2px;pointer-events:none;z-index:140;animation:mgFall 1.9s cubic-bezier(.3,.6,.4,1) forwards}",
+    "@media (prefers-reduced-motion:reduce){.mg-first .mg-sec,.mg-hero,.mg-hero::after,.mg-plan.best button::after{animation:none!important}.mg-conf{display:none}.mg-bar i{transition:none}.mg-plan,.mg-chip,.mg-tool{transition:none}}",
+  ].join("\n");
+  document.head.appendChild(css2);
+
+  var GRACE = 2 * 864e5;
+  var FEATS = [
+    { n: "Read & zoom", l: 0 }, { n: "Search", l: 0 }, { n: "Text box", l: 0 }, { n: "Highlighter", l: 0 }, { n: "Download a file", l: 0 },
+    { n: "Pen", l: 1 }, { n: "Eraser", l: 1 }, { n: "Cover-up", l: 1 }, { n: "No ads", l: 1 },
+    { n: "Shapes", l: 2 }, { n: "Insert image", l: 2 }, { n: "Page tools", l: 2 }, { n: "Merge PDFs", l: 2 }, { n: "Extract pages", l: 2 }, { n: "Images to PDF", l: 2 },
+    { n: "Download all", l: 3 }, { n: "PDF to images", l: 3 }, { n: "Watermark", l: 3 }, { n: "Page numbers", l: 3 }, { n: "Every new feature", l: 3 },
+  ];
+  var PERKS = {
+    ember: ["Pen, eraser and cover-up", "No ads"],
+    beacon: ["Everything in Ember", "Shapes and insert images", "Page tools: rotate, reorder, layout", "Merge, split, images to PDF"],
+    aurora: ["Everything in Beacon", "Download all at once", "Watermark and page numbers", "PDF to images", "Every new Pro feature"],
+    lifetime: ["Everything in Aurora", "One payment, no renewals"],
+  };
+  var MORE = [
+    { i: "✏️", n: "Whiteboard", d: "A clean digital whiteboard for working through problems", u: "/tools/whiteboard/" },
+    { i: "🗂️", n: "Paper Workshop", d: "Merge, split and compress PDFs", u: "/tools/paper-workshop/" },
+    { i: "✒️", n: "Quill & Proof", d: "Typed notes to handwriting, with LaTeX", u: "/tools/quill-and-proof/" },
+    { i: "📖", n: "WordSpark", d: "English dictionary and daily words", u: "/tools/apps/english-dictionary/" },
+    { i: "🇯🇵", n: "Nihongo N5", d: "JLPT N5 flashcards, kanji and quizzes", u: "/tools/apps/japanese-n5/" },
+    { i: "💸", n: "Kharcha", d: "Daily earnings and expenses tracker", u: "/tools/apps/kharcha-tracker/" },
+    { i: "🌿", n: "Leafy", d: "Plant-care schedules and notes", u: "/tools/apps/leafy/" },
+  ];
+  function fmt(ms) { return new Date(ms).toLocaleDateString(undefined, { day: "numeric", month: "short", year: "numeric" }); }
+  function chipsHtml(cur) {
+    return FEATS.map(function (f) {
+      var on = f.l <= cur;
+      return '<span class="mg-chip ' + (on ? "on" : "off") + '">' + (on ? "✓" : "🔒") + " " + f.n + (on ? "" : " <em>" + TIERS[f.l - 1].name + "</em>") + "</span>";
+    }).join("");
+  }
+  function toolsHtml() {
+    return '<div class="mg-tools">' + MORE.map(function (t) {
+      return '<a class="mg-tool" href="' + t.u + '" target="_blank" rel="noopener"><span class="mg-ti">' + t.i + "</span><span><b>" + t.n.replace(/&/g, "&amp;") + "</b><small>" + t.d + "</small></span></a>";
+    }).join("") + '</div><a class="mg-all" href="/tools/" target="_blank" rel="noopener">See all tools →</a>';
+  }
+  function burst() {
+    if (!dlg || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    var cols = ["#e5181c", "#f97316", "#facc15", "#16a34a", "#2563eb", "#9333ea"];
+    for (var k = 0; k < 36; k++) {
+      var p = document.createElement("span"); p.className = "mg-conf";
+      p.style.left = (Math.random() * 100) + "vw"; p.style.background = cols[k % cols.length];
+      p.style.setProperty("--dx", (Math.random() * 160 - 80) + "px"); p.style.setProperty("--rot", (Math.random() * 720 - 360) + "deg");
+      p.style.animationDelay = (Math.random() * 0.5) + "s"; p.style.animationDuration = (1.5 + Math.random() * 1.2) + "s";
+      dlg.appendChild(p);
+      (function (n) { setTimeout(function () { if (n.parentNode) n.parentNode.removeChild(n); }, 3600); })(p);
+    }
+  }
   function renderPlans() {
     if (!dlg) return;
+    if (!dlg._r) { dlg._r = 1; dlg.classList.add("mg-first"); setTimeout(function () { if (dlg) dlg.classList.remove("mg-first"); }, 1600); }
     var card = dlg.querySelector(".mg-card");
     var P = CFG.prices || {};
     var who = user ? (user.email || user.displayName || "your Google account") : "";
-    var body;
-    var cur = tierOf(ent);
+    var cur = tierOf(ent), n = 0;
+    function sec(html, h) { return '<div class="mg-sec" style="--i:' + (n++) + '">' + (h ? "<h3>" + h + "</h3>" : "") + html + "</div>"; }
     var cards = TIERS.filter(function (t) { return t.level > cur; }).map(function (t) {
       var best = t.id === "beacon";
-      return '<div class="mg-plan' + (best ? ' best' : '') + '"><span class="mg-name">' + t.name + (best ? ' · most popular' : '') + '</span>'
-        + '<span class="mg-price">' + ((P[t.id] || "") + (P[t.id] ? ' <small style="font:500 13px/1 system-ui,sans-serif">/ month</small>' : "")) + '</span>'
-        + '<span class="mg-note">' + t.line + '</span><button data-act="' + t.id + '">' + (cur ? "Upgrade to " : (ent && ent.trialUsed ? "Get " : "Try 7 days free · ")) + t.name + '</button></div>';
+      return '<div class="mg-plan' + (best ? " best" : "") + '"><span class="mg-name">' + t.name + (best ? " · most popular" : "") + "</span>"
+        + '<span class="mg-price">' + ((P[t.id] || "") + (P[t.id] ? ' <small style="font:500 13px/1 system-ui,sans-serif">/ month</small>' : "")) + "</span>"
+        + "<ul>" + PERKS[t.id].map(function (x) { return "<li>" + x + "</li>"; }).join("") + "</ul>"
+        + '<button data-act="' + t.id + '">' + (cur ? "Upgrade to " : (ent && ent.trialUsed ? "Get " : "Try 7 days free · ")) + t.name + "</button></div>";
     }).join("");
     if (cur < 3) {
       cards += '<div class="mg-plan"><span class="mg-name">Aurora Lifetime · pay once</span>'
-        + '<span class="mg-price">' + (P.lifetime || "") + (P.lifetime ? ' <small style="font:500 13px/1 system-ui,sans-serif">once</small>' : "") + '</span>'
-        + '<span class="mg-note">Every Pro feature, forever. No renewals.</span><button data-act="lifetime">Get Lifetime</button></div>';
+        + '<span class="mg-price">' + (P.lifetime || "") + (P.lifetime ? ' <small style="font:500 13px/1 system-ui,sans-serif">once</small>' : "") + "</span>"
+        + "<ul>" + PERKS.lifetime.map(function (x) { return "<li>" + x + "</li>"; }).join("") + '</ul><button data-act="lifetime">Get Lifetime</button></div>';
     }
+    var plansHtml = cards ? '<div class="mg-plans mg-grid">' + cards + "</div>" : "";
+    var body;
     if (cur) {
-      var curT = TIERS[cur - 1];
-      var line = ent.plan === "lifetime" ? "Lifetime plan: every Pro feature, for good."
-        : curT.name + (ent.status === "cancelled" ? " (cancelled): active until " : " plan: renews on ")
-          + new Date(untilMs(ent)).toLocaleDateString(undefined, { day: "numeric", month: "long", year: "numeric" }) + ".";
-      body = '<h2>You\'re on ' + (ent.plan === "lifetime" ? "Aurora" : curT.name) + '</h2><p class="mg-sub">Thank you for supporting Manaluz.</p>'
-        + '<div class="mg-status">✓ ' + line + '</div>'
-        + (cards && ent.plan !== "lifetime" ? '<p class="mg-sub" style="margin:16px 0 10px">Want more?</p><div class="mg-plans mg-one">' + cards + '</div>' : "")
-        + (ent.plan === "monthly" && ent.status !== "cancelled" ? '<p class="mg-sub" style="margin-top:12px"><button class="mg-link" data-act="cancel" style="color:var(--ink-600);background:none;border:none;padding:0;font:inherit;text-decoration:underline;cursor:pointer">Cancel plan</button> (stays active until the end of the month you paid for)</p>' : "");
+      var life = ent.plan === "lifetime", curT = TIERS[cur - 1];
+      var cancelled = ent.status === "cancelled";
+      var untilM = untilMs(ent);
+      var nextMs = Math.max(untilM - GRACE, Date.now());
+      var days = Math.max(0, Math.ceil(((cancelled ? untilM : nextMs) - Date.now()) / 864e5));
+      var pct = life ? 100 : Math.round(Math.min(1, Math.max(0.05, 1 - days / 30)) * 100);
+      var pill = life ? "Lifetime" : (cancelled ? "Cancelled" : "Active");
+      var sub = life ? "Every Pro feature, for good. Thank you for supporting Manaluz."
+        : (cancelled ? "No more charges. You keep full access until " + fmt(untilM) + "."
+          : "Next charge " + (P[curT.id] ? P[curT.id] + " " : "") + "on " + fmt(nextMs) + ". Cancel any time.");
+      var foot = life ? "Yours forever" : (days + (days === 1 ? " day" : " days") + (cancelled ? " of access left" : " until your next charge"));
+      var hero = '<div class="mg-hero"><div class="mg-hero-top"><span class="mg-pill">' + pill + '</span><span class="mg-hero-name">' + (life ? "Aurora Lifetime" : curT.name) + "</span></div>"
+        + "<p>" + sub + '</p><div class="mg-bar"><i data-w="' + pct + '"></i></div><div class="mg-hero-foot">' + foot + "</div></div>";
+      body = "<h2>Your plan</h2>"
+        + sec(hero)
+        + sec('<div class="mg-feats">' + chipsHtml(cur) + "</div>", "What’s included")
+        + (plansHtml ? sec(plansHtml, "Upgrade") : "")
+        + (ent.plan === "monthly" && !cancelled ? sec('<p class="mg-sub" style="margin:0"><button class="mg-link" data-act="cancel" style="color:var(--ink-600);background:none;border:none;padding:0;font:inherit;text-decoration:underline;cursor:pointer">Cancel plan</button> (stays active until the end of the month you paid for)</p>') : "");
     } else {
-      body = '<h2>Go Pro</h2>'
-        + '<p class="mg-sub">Manaluz is free for reading, highlighting and adding text. Pick a level to unlock more and remove ads. Cancel any time. Payments are handled securely by Razorpay (UPI, cards, netbanking).</p>'
-        + '<div class="mg-plans mg-one">' + cards + '</div>';
+      body = "<h2>Go Pro</h2>"
+        + '<p class="mg-sub" style="margin:0">Manaluz is free for reading, highlighting and adding text. Pick a level to unlock more' + (ent && ent.trialUsed ? "" : ", with 7 days free on every monthly plan (one trial per account)") + ". Cancel any time. Payments are handled securely by Razorpay (UPI, cards, netbanking).</p>"
+        + sec('<div class="mg-feats">' + chipsHtml(0) + "</div>", "Free today · what you can unlock")
+        + sec(plansHtml, "Pick a plan");
     }
+    body += sec(toolsHtml(), "More from We The Mind");
     card.innerHTML = '<button class="mg-x" aria-label="Close" data-act="close">×</button>' + body
-      + '<div class="mg-foot"><span>' + (user ? 'Signed in as <b>' + who.replace(/</g, "&lt;") + '</b> · <button class="mg-link" data-act="signout">Sign out</button>'
-        : 'You\'ll sign in with Google so your plan works on every computer.') + '</span>'
+      + '<div class="mg-foot"><span>' + (user ? "Signed in as <b>" + who.replace(/</g, "&lt;") + '</b> · <button class="mg-link" data-act="signout">Sign out</button>'
+        : "You’ll sign in with Google so your plan works on every computer.") + "</span>"
       + '<a href="' + PLAY + '" target="_blank" rel="noopener">On Android? Get the app on Google Play</a></div>';
     card.querySelectorAll("[data-act]").forEach(function (b) {
       b.addEventListener("click", function () { act(b.getAttribute("data-act"), b); });
     });
+    requestAnimationFrame(function () { requestAnimationFrame(function () {
+      card.querySelectorAll(".mg-bar i[data-w]").forEach(function (i) { i.style.width = i.getAttribute("data-w") + "%"; });
+    }); });
   }
   function busy(b, on, label) { if (!b) return; b.disabled = on; if (label) b.textContent = label; }
   function act(what, btn) {
@@ -282,7 +394,7 @@
           handler: function (resp) {
             busy(btn, true, "Confirming…");
             call("confirmPayment", resp)
-              .then(function () { toast("Thank you! Pro is unlocked."); closePlans(); })
+              .then(function () { toast("Thank you! Pro is unlocked."); burst(); setTimeout(closePlans, 1700); })
               .catch(function () { toast("Payment received - your plan will appear in a minute."); closePlans(); });
           },
         };
