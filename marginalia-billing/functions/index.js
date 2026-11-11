@@ -69,10 +69,10 @@ async function grantMonthly(uid, sub, status) {
   if (old && old.plan === "monthly" && old.ref && old.ref !== sub.id && status === "active") {
     try { await rzp().subscriptions.cancel(old.ref, false); } catch (e) { console.warn("old subscription not cancelled", e.message); }   // moving up (or down) a level: stop the old one
   }
-  const endMs = (sub.current_end ? sub.current_end * 1000 : Date.now() + 31 * 24 * 3600 * 1000) + GRACE_MS;
+  const endMs = (sub.current_end ? sub.current_end * 1000 : (sub.start_at ? sub.start_at * 1000 : Date.now() + 31 * 24 * 3600 * 1000)) + GRACE_MS;
   await db.doc(`entitlements/${uid}`).set({
     plan: "monthly", tier, tierName: tierName || "ember", active: status !== "halted", until: ts(endMs), status: status || "active",
-    source: "razorpay", ref: sub.id, updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    source: "razorpay", ref: sub.id, trialUsed: true, updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   }, { merge: true });
 }
 
@@ -94,9 +94,13 @@ exports.createCheckout = onCall({ region: REGION, cors: CORS, secrets: [RAZORPAY
 
   const planId = TIER_LEVEL[plan] ? TIER_PLAN_IDS[plan].value() : RAZORPAY_MONTHLY_PLAN_ID.value();
   if (!planId) throw new HttpsError("failed-precondition", "That plan is not set up yet.");
-  const sub = await rzp().subscriptions.create({ plan_id: planId, total_count: 120, customer_notify: 1, notes: { uid, plan } });
+  const prior = await db.doc(`entitlements/${uid}`).get();
+  const trial = !(prior.exists && prior.data().trialUsed);   // one 7-day free trial per account
+  const subReq = { plan_id: planId, total_count: 120, customer_notify: 1, notes: { uid, plan } };
+  if (trial) subReq.start_at = Math.floor(Date.now() / 1000) + 7 * 24 * 3600 + 600;   // first charge happens after the trial
+  const sub = await rzp().subscriptions.create(subReq);
   await db.doc(`payments/${sub.id}`).set({ uid, plan, kind: "subscription", status: "created", createdAt: admin.firestore.FieldValue.serverTimestamp() });
-  return { keyId: RAZORPAY_KEY_ID.value(), subscriptionId: sub.id };
+  return { keyId: RAZORPAY_KEY_ID.value(), subscriptionId: sub.id, trial };
 });
 
 /* 2. Confirm a payment right after checkout (checks Razorpay's signature), so ads go away at once. */
@@ -126,7 +130,8 @@ exports.cancelMonthly = onCall({ region: REGION, cors: CORS, secrets: [RAZORPAY_
   if (!req.auth) throw new HttpsError("unauthenticated", "Sign in first.");
   const ent = await db.doc(`entitlements/${req.auth.uid}`).get();
   if (!ent.exists || ent.data().plan !== "monthly" || !ent.data().ref) throw new HttpsError("failed-precondition", "No monthly plan to cancel.");
-  await rzp().subscriptions.cancel(ent.data().ref, true);   // true = at the end of the current period
+  try { await rzp().subscriptions.cancel(ent.data().ref, true); }   // true = at the end of the current period
+  catch (e) { await rzp().subscriptions.cancel(ent.data().ref, false); }   // still in the free trial: nothing has been charged, cancel straight away
   await ent.ref.update({ status: "cancelled", updatedAt: admin.firestore.FieldValue.serverTimestamp() });
   return { ok: true };
 });
@@ -145,7 +150,7 @@ exports.razorpayWebhook = onRequest({ region: REGION, secrets: [RAZORPAY_KEY_SEC
     const pay = p.payment && p.payment.entity;
     if (sub && sub.notes && sub.notes.uid) {
       const uid = sub.notes.uid;
-      if (ev.event === "subscription.activated" || ev.event === "subscription.charged" || ev.event === "subscription.resumed") await grantMonthly(uid, sub, "active");
+      if (ev.event === "subscription.authenticated" || ev.event === "subscription.activated" || ev.event === "subscription.charged" || ev.event === "subscription.resumed") await grantMonthly(uid, sub, "active");
       else if (ev.event === "subscription.cancelled" || ev.event === "subscription.completed") await grantMonthly(uid, sub, "cancelled");
       else if (ev.event === "subscription.halted" || ev.event === "subscription.paused") await grantMonthly(uid, sub, "halted");
     } else if (pay && ev.event === "payment.captured" && pay.notes && pay.notes.uid && pay.notes.plan === "lifetime") {
