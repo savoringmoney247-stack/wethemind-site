@@ -4601,7 +4601,16 @@ function saveBlob(blob, filename){
 
 async function buildExportPdf(d){
   await loadPdfLib();
-  const pdfDoc = d.file ? await PDFLib_.PDFDocument.load(await d.file.arrayBuffer()) : await PDFLib_.PDFDocument.create();
+  // Protected (encrypted) PDFs can't be edited in place. When that happens, each page is drawn as a
+  // picture of itself (pdf.js can read it) and your markup goes on top, so the download still works.
+  let encrypted = false, pdfDoc;
+  if (d.file){
+    try{ pdfDoc = await PDFLib_.PDFDocument.load(await d.file.arrayBuffer()); }
+    catch(e){
+      if (/encrypt/i.test(String((e && e.message) || e)) && d.pdfDocProxy){ encrypted = true; pdfDoc = await PDFLib_.PDFDocument.create(); }
+      else throw e;
+    }
+  } else pdfDoc = await PDFLib_.PDFDocument.create();
   const fontSet = {
     Helvetica:   { regular: await pdfDoc.embedFont(PDFLib_.StandardFonts.Helvetica),   bold: await pdfDoc.embedFont(PDFLib_.StandardFonts.HelveticaBold) },
     TimesRoman:  { regular: await pdfDoc.embedFont(PDFLib_.StandardFonts.TimesRoman),  bold: await pdfDoc.embedFont(PDFLib_.StandardFonts.TimesRomanBold) },
@@ -4618,12 +4627,25 @@ async function buildExportPdf(d){
     return img;
   }
 
-  const existing = d.file ? pdfDoc.getPages() : [];
+  async function pageAsPicture(ps){
+    const pr = await d.pdfDocProxy.getPage(ps.pdfPageIndex + 1);
+    const v1 = pr.getViewport({scale:1}), v2 = pr.getViewport({scale:2});
+    const cv = document.createElement("canvas"); cv.width = Math.ceil(v2.width); cv.height = Math.ceil(v2.height);
+    const cx = cv.getContext("2d"); cx.fillStyle = "#fff"; cx.fillRect(0, 0, cv.width, cv.height);
+    await pr.render({canvasContext: cx, viewport: v2}).promise;
+    const img = await embedImage(cv.toDataURL("image/jpeg", 0.88));
+    const pg = pdfDoc.addPage([v1.width, v1.height]);
+    pg.drawImage(img, {x:0, y:0, width: v1.width, height: v1.height});
+    cv.width = cv.height = 0;
+    return pg;
+  }
+  const existing = d.file && !encrypted ? pdfDoc.getPages() : [];
   // Pass 1: decide the page for every entry, in the exact order shown in the app. Added pages
   // are created here; a duplicated page gets a clean copy (made before anything is drawn).
   const used = new Set(); const entries = [];
   for (const ps of d.pages){
     let page;
+    if (ps.kind === "pdf" && encrypted){ entries.push({ps, page: await pageAsPicture(ps)}); continue; }
     if (ps.kind === "pdf"){
       const base = existing[ps.pdfPageIndex];
       if (!base) continue;
@@ -4635,7 +4657,7 @@ async function buildExportPdf(d){
     entries.push({ps, page});
   }
   // Put the pages into the document in that order (skipped when nothing moved).
-  const inPlace = entries.length === existing.length && entries.every((e,i)=> e.page === existing[i]);
+  const inPlace = encrypted || entries.length === existing.length && entries.every((e,i)=> e.page === existing[i]);
   if (!inPlace){
     for (let i = pdfDoc.getPageCount()-1; i >= 0; i--) pdfDoc.removePage(i);
     for (const e of entries) pdfDoc.addPage(e.page);
@@ -4760,7 +4782,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "62";
+const MG_BUILD = "63";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
