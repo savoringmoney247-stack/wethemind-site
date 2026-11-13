@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="description" content="Mathynx: live math tutoring for US students. SAT Math, AP Calculus, Algebra, Geometry. Free 30-minute demo.">
 <title>Mathynx</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#E52421"><link rel="icon" type="image/png" sizes="48x48" href="icons/favicon-48.png"><link rel="apple-touch-icon" href="icons/apple-touch-icon.png"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Mathynx"><meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap">
 <style>
@@ -158,7 +159,14 @@ select,input[type=text]{text-align:center;text-align-last:center}
 .pbox .x{background:none;border:0;color:var(--mut);font:700 .9rem Nunito;cursor:pointer;margin-top:10px;padding:8px}
 .perr{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em;margin:4px 0}
 .pill-btn{background:none}
+
+#inst{display:none;margin:14px auto 0;justify-content:center}
+#inst.on{display:inline-flex}
+#ios{display:none;position:fixed;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:40;max-width:420px;margin:0 auto;background:var(--card);border:2px solid var(--yel);border-radius:18px;padding:14px 16px;text-align:center;box-shadow:0 16px 40px -12px rgba(0,0,0,.35);font-weight:700}
+#ios.on{display:block;animation:pup .3s ease both}
+#ios button{background:none;border:0;color:var(--mut);font:700 .85rem Nunito;margin-top:6px;cursor:pointer}
 </style>
+<div id="ios"><div>Install Mathynx: tap <b>Share</b> ⬆️ then <b>Add to Home Screen</b></div><button id="iosx">Got it</button></div>
 <div id="ps" role="dialog" aria-modal="true" aria-label="Pay"><div class="pbox" id="pb"></div></div>
 <div id="fx" aria-hidden="true"></div>
 <div class="app">
@@ -261,6 +269,18 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-go],[data-
  if(d.help){st.course='help';st.tab='book'}else if(d.rev)st.rev=!st.rev;else if(d.go)st.tab=d.go;else if(d.open)st.open=st.open==d.open?null:d.open;else if(d.book){st.course=d.book;st.tab='book'}else if(d.plan)st.plan=d.plan;else if(d.fmt)st.fmt=d.fmt;else if(d.day){const i=st.days.indexOf(d.day);i>=0?st.days.splice(i,1):st.days.push(d.day)}
  render();if(d.go||d.book)window.scrollTo({top:0})});
 $('#fx').innerHTML=fx();
+/* ===== PWA ===== */
+let dip=null;
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')&&location.pathname.indexOf('/app')===0){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;const b=$('#inst');if(b)b.classList.add('on')});
+addEventListener('appinstalled',()=>{dip=null;const b=$('#inst');if(b)b.classList.remove('on')});
+document.addEventListener('click',async e=>{const t=e.target.closest('#inst');if(t){if(dip){dip.prompt();try{await dip.userChoice}catch(x){}dip=null;t.classList.remove('on')}else{$('#ios').classList.add('on')}}
+ if(e.target.id==='iosx'){$('#ios').classList.remove('on');try{localStorage.setItem('mx_ios','1')}catch(x){}}});
+const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+(function(){if(standalone()||!(location.protocol==='https:'||location.hostname==='localhost')||location.pathname.indexOf('/app')!==0)return;const f=document.querySelector('.foot');if(!f)return;const b=document.createElement('button');b.id='inst';b.className='wbtn'+(isiOS?' on':'');b.type='button';b.textContent='📲 Install app';f.parentNode.insertBefore(b,f);if(dip)b.classList.add('on')})();
+(function(){const q=new URLSearchParams(location.search).get('go');if(q&&['courses','pricing','book'].includes(q)){st.tab=q}})();
+
 /* ===== In-app payment (Razorpay Checkout) ===== */
 const RZP_KEY='rzp_live_TyorbeIN9SY9C1',LIVE_URL='https://wethemind.com/app/';
 const PLANS={m10:{t:'Mathynx 1-to-1',n:'10 live math sessions',usd:99},mg:{t:'Mathynx small group',n:'10 sessions, per student',usd:59},m1h:{t:'Mathynx 1 hour',n:'Any math problems',usd:SINGLE}};
