@@ -520,7 +520,7 @@
     ".mg-fb textarea:focus,.mg-fb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 16%,transparent)}",
     ".mg-fbrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}",
     "@media (max-width:520px){.mg-fbrow{grid-template-columns:1fr}}",
-    ".mg-fbchk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-600);margin:0 0 14px;text-transform:none;letter-spacing:0;font-weight:500}",
+    ".mg-fb label.mg-fbchk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-600);margin:0 0 14px;text-transform:none;letter-spacing:0;font-weight:500}",
     ".mg-fbsend{position:relative;overflow:hidden;width:100%;border:none;border-radius:14px;padding:13px 16px;font:800 15px/1 inherit;color:#fff;cursor:pointer;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%,#f97316));transition:transform .2s,box-shadow .2s,opacity .2s}",
     ".mg-fbsend:hover{transform:translateY(-2px);box-shadow:0 14px 26px -14px var(--accent)}",
     ".mg-fbsend:disabled{opacity:.6;cursor:default;transform:none}",
