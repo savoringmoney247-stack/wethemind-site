@@ -7,7 +7,7 @@
 // - a new version installs straight from the server (never from the browser's own HTTP cache).
 // So an installed copy (from a browser, or the Play Store app) picks up every update without
 // being uninstalled. Bump CACHE_NAME whenever the cached files change.
-const CACHE_NAME = "marginalia-v69";
+const CACHE_NAME = "marginalia-v70";
 
 const APP_SHELL = [
   "./",
@@ -67,6 +67,7 @@ self.addEventListener("fetch", (event) => {
 
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return; // don't intercept Google Fonts etc.
+  if (url.searchParams.has("c")) return;            // the app's own "is there a new version?" checks go straight to the server
 
   if (isPage(req)) {
     // Network first (with a short wait), so opening the app always shows the newest version.
