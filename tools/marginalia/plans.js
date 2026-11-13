@@ -724,11 +724,11 @@
     }
     if (isOwner()) {
       var ow = el("div", "mg-owner");
-      ow.innerHTML = "<details><summary style=\"cursor:pointer;font-weight:700\">Owner tools: approve an upgrade</summary><div style=\"display:grid;gap:8px;margin-top:10px\"><input type=\"email\" id=\"mg-o-mail\" placeholder=\"customer email (must have signed in)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹499 offer</button></div></details>";
+      ow.innerHTML = "<details><summary style=\"cursor:pointer;font-weight:700\">Owner tools: approve an upgrade</summary><div style=\"display:grid;gap:8px;margin-top:10px\"><input type=\"email\" id=\"mg-o-mail\" placeholder=\"Their email (they need to have signed in to Manaluz)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹499 offer</button></div></details>";
       anchor.parentNode.insertBefore(ow, anchor);
       ow.querySelector("#mg-o-go").addEventListener("click", function () {
         var b = this, mail = ow.querySelector("#mg-o-mail").value.trim(), title = ow.querySelector("#mg-o-title").value.trim();
-        if (!mail || title.length < 3) { toast("Add the customer email and a short title."); return; }
+        if (!mail || title.length < 3) { toast("Please add their email and a short title."); return; }
         busy(b, true);
         call("createUpgradeOffer", { email: mail, title: title }).then(function () {
           busy(b, false); ow.querySelector("#mg-o-mail").value = ""; ow.querySelector("#mg-o-title").value = ""; toast("Offer sent. They will see Pay ₹499 in their app.");
