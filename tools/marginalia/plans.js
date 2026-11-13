@@ -581,12 +581,13 @@
     fbDlg.addEventListener("click", function (e) { if (e.target === fbDlg) closeFeedback(); });
     document.addEventListener("keydown", function esc(e) { if (e.key === "Escape") { closeFeedback(); document.removeEventListener("keydown", esc); } });
     document.body.appendChild(fbDlg);
+    try { ccWrap(fbDlg.querySelector("#mg-fb-tel")); } catch (e) {}
     fbOpenedAt = Date.now();
     requestAnimationFrame(function () { requestAnimationFrame(function () { if (fbDlg) fbDlg.classList.add("show"); }); });
     setTimeout(function () { if (fbDlg) fbDlg.classList.add("show"); }, 50);
     var send = card.querySelector("#mg-fb-send"), err = card.querySelector("#mg-fb-err");
     send.addEventListener("click", function () {
-      var msg = card.querySelector("#mg-fb-msg").value.trim(), mail = card.querySelector("#mg-fb-mail").value.trim(), name = card.querySelector("#mg-fb-name").value.trim(), tel = card.querySelector("#mg-fb-tel").value.trim();
+      var msg = card.querySelector("#mg-fb-msg").value.trim(), mail = card.querySelector("#mg-fb-mail").value.trim(), name = card.querySelector("#mg-fb-name").value.trim(), tel = fullTel(card.querySelector("#mg-fb-tel"));
       err.textContent = "";
       if (msg.length < 8) { err.textContent = "Please write a little more so we can help."; card.querySelector("#mg-fb-msg").focus(); return; }
       if (name.length < 2) { err.textContent = "Please tell us your name."; card.querySelector("#mg-fb-name").focus(); return; }
@@ -654,6 +655,22 @@
   if (actions) actions.insertBefore(wishBtn, sparkBtn);
   wishBtn.addEventListener("click", openWish);
 
+  var CC = [["🇮🇳","India","+91"],["🇺🇸","United States","+1"],["🇨🇦","Canada","+1"],["🇬🇧","United Kingdom","+44"],["🇦🇺","Australia","+61"],["🇳🇿","New Zealand","+64"],["🇦🇪","UAE","+971"],["🇸🇦","Saudi Arabia","+966"],["🇶🇦","Qatar","+974"],["🇰🇼","Kuwait","+965"],["🇴🇲","Oman","+968"],["🇧🇭","Bahrain","+973"],["🇸🇬","Singapore","+65"],["🇲🇾","Malaysia","+60"],["🇮🇩","Indonesia","+62"],["🇵🇭","Philippines","+63"],["🇹🇭","Thailand","+66"],["🇻🇳","Vietnam","+84"],["🇭🇰","Hong Kong","+852"],["🇨🇳","China","+86"],["🇯🇵","Japan","+81"],["🇰🇷","South Korea","+82"],["🇧🇩","Bangladesh","+880"],["🇳🇵","Nepal","+977"],["🇱🇰","Sri Lanka","+94"],["🇵🇰","Pakistan","+92"],["🇦🇫","Afghanistan","+93"],["🇹🇷","Turkey","+90"],["🇮🇱","Israel","+972"],["🇪🇬","Egypt","+20"],["🇿🇦","South Africa","+27"],["🇳🇬","Nigeria","+234"],["🇰🇪","Kenya","+254"],["🇬🇭","Ghana","+233"],["🇩🇪","Germany","+49"],["🇫🇷","France","+33"],["🇪🇸","Spain","+34"],["🇮🇹","Italy","+39"],["🇳🇱","Netherlands","+31"],["🇮🇪","Ireland","+353"],["🇨🇭","Switzerland","+41"],["🇸🇪","Sweden","+46"],["🇳🇴","Norway","+47"],["🇷🇺","Russia","+7"],["🇧🇷","Brazil","+55"],["🇲🇽","Mexico","+52"],["🇦🇷","Argentina","+54"]];
+  function ccWrap(inp) {
+    if (!inp || inp._cc) return;
+    var sel = document.createElement("select"); sel.setAttribute("aria-label", "Country code");
+    sel.style.cssText = "flex:0 0 auto;max-width:44%;padding:0 8px;border-radius:12px;border:1px solid rgba(148,163,184,.55);background:#fff;font:inherit;text-align:center;text-align-last:center;cursor:pointer";
+    CC.forEach(function (c, i) { var o = document.createElement("option"); o.value = c[2]; o.textContent = c[0] + " " + c[2] + "  " + c[1]; o.setAttribute("data-short", c[0] + " " + c[2]); if (i === 0) o.selected = true; sel.appendChild(o); });
+    var wrap = document.createElement("div"); wrap.style.cssText = "display:flex;gap:8px;align-items:stretch";
+    inp.parentNode.insertBefore(wrap, inp); wrap.appendChild(sel); wrap.appendChild(inp);
+    inp.style.flex = "1 1 auto"; inp.style.minWidth = "0"; inp.placeholder = "Phone number";
+    inp._cc = sel;
+  }
+  function fullTel(inp) {
+    var n = (inp && inp.value || "").trim(); if (!n) return "";
+    if (n.charAt(0) === "+") return n;
+    return ((inp._cc && inp._cc.value) || "+91") + " " + n.replace(/^0+/, "");
+  }
   function wishCss() {
     if (document.getElementById("mg-offer-css")) return;
     var s = document.createElement("style"); s.id = "mg-offer-css";
@@ -788,13 +805,14 @@
     wsDlg.addEventListener("click", function (e) { if (e.target === wsDlg) closeWish(); });
     document.addEventListener("keydown", function esc(e) { if (e.key === "Escape") { closeWish(); document.removeEventListener("keydown", esc); } });
     document.body.appendChild(wsDlg);
+    try { ccWrap(wsDlg.querySelector("#mg-w-tel")); } catch (e) {}
     try { mountOffers(card); } catch (e) {}
     wsOpenedAt = Date.now();
     requestAnimationFrame(function () { requestAnimationFrame(function () { if (wsDlg) wsDlg.classList.add("show"); }); });
     setTimeout(function () { if (wsDlg) wsDlg.classList.add("show"); }, 50);
     var send = card.querySelector("#mg-w-send"), err = card.querySelector("#mg-w-err");
     send.addEventListener("click", function () {
-      var msg = msgEl.value.trim(), mail = card.querySelector("#mg-w-mail").value.trim(), name = card.querySelector("#mg-w-name").value.trim(), tel = card.querySelector("#mg-w-tel").value.trim();
+      var msg = msgEl.value.trim(), mail = card.querySelector("#mg-w-mail").value.trim(), name = card.querySelector("#mg-w-name").value.trim(), tel = fullTel(card.querySelector("#mg-w-tel"));
       err.textContent = "";
       if (msg.length < 20) { err.textContent = "Tell us a little more about what you want (a sentence or two)."; msgEl.focus(); return; }
       if (name.length < 2) { err.textContent = "Please tell us your name."; card.querySelector("#mg-w-name").focus(); return; }
