@@ -189,7 +189,7 @@
     window.__mgPro = t > 0;
     try { window.dispatchEvent(new Event("mg-pro-change")); } catch (e) {}
   }
-  var signBtn = el("button", "btn", "Sign in");
+  var signBtn = el("button", "btn mg-signbtn", "Sign in");
   signBtn.type = "button"; signBtn.title = "Sign in with Google to use your Pro plan on this device";
   if (actions) actions.insertBefore(signBtn, proBtn);
   /* owner-only "View as" menu in the header (hidden for everyone else) */
