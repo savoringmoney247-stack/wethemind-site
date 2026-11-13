@@ -8,3 +8,4 @@
 #demo-form .trust{color:#0D3B66;font-family:'Nunito',sans-serif;font-weight:700}
 #demo-form .trust li svg{color:#9C7A1F;stroke:#9C7A1F}
 #demo-form .form-footnote{color:#5b5a4c;font-family:'Nunito',sans-serif}
+#demo-form .field input:focus,#demo-form .field select:focus,#demo-form .field textarea:focus{outline:0;border-color:#9C7A1F!important;box-shadow:0 0 0 4px rgba(212,175,55,.28)!important}
