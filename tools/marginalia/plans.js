@@ -619,6 +619,110 @@
     });
   }
 
+  /* ---------- "Wish": custom upgrades, Rs 499 each. A request is sent first; payment is a secure Razorpay link sent after we agree the scope. ---------- */
+  var wsDlg = null, wsOpenedAt = 0;
+  var wcss = document.createElement("style");
+  wcss.textContent = [
+    ".mg-wishbtn{display:inline-flex;align-items:center;gap:6px;font-weight:700}",
+    ".mg-wishbtn i{font-style:normal;display:inline-block;transform-origin:20% 85%;animation:mgWand 3.6s ease-in-out infinite}",
+    "@keyframes mgWand{0%,68%,100%{transform:rotate(0)}76%{transform:rotate(-24deg)}84%{transform:rotate(16deg)}92%{transform:rotate(-7deg)}}",
+    ".mg-wish-hero{position:relative;overflow:hidden;border-radius:18px;padding:22px 20px 18px;margin:0 0 16px;color:#fff;background:linear-gradient(120deg,#7c3aed,#e5181c 55%,#f97316,#7c3aed);background-size:240% 240%;animation:mgGrad 10s ease infinite}",
+    "@keyframes mgGrad{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}",
+    ".mg-wish-hero h2{margin:0 0 4px;font-size:27px;color:#fff;position:relative}",
+    ".mg-wish-hero p{margin:0;opacity:.94;font-size:14px;line-height:1.45;position:relative;max-width:34em}",
+    ".mg-wish-price{position:relative;display:inline-flex;align-items:baseline;gap:6px;margin-top:13px;padding:7px 15px;border-radius:999px;font-weight:800;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.4);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}",
+    ".mg-wish-price b{font-size:21px}",
+    ".mg-wish-price span{font-size:12px;font-weight:600;opacity:.92}",
+    ".mg-wish-hero .sp{position:absolute;bottom:-8px;width:6px;height:6px;border-radius:50%;background:#fff;opacity:0;animation:mgFloat 4.2s ease-in infinite}",
+    "@keyframes mgFloat{0%{transform:translateY(0) scale(.4);opacity:0}20%{opacity:.95}100%{transform:translateY(-120px) scale(1.3);opacity:0}}",
+    ".mg-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:0 0 14px}",
+    ".mg-step{border:1px solid var(--line);border-radius:14px;padding:11px 10px 11px;font-size:12.5px;line-height:1.35;color:var(--ink-600);opacity:0;animation:mgRise .55s cubic-bezier(.22,1,.36,1) forwards;animation-delay:calc(var(--i) * 120ms + 250ms)}",
+    "@keyframes mgRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}",
+    ".mg-step b{display:flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font-size:12px;margin-bottom:6px}",
+    ".mg-step strong{display:block;color:var(--ink-900);font-size:13px;margin-bottom:2px}",
+    "@media (max-width:520px){.mg-steps{grid-template-columns:1fr}}",
+    ".mg-ideas{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}",
+    ".mg-idea{border:1px dashed var(--accent);background:none;color:var(--accent);border-radius:999px;padding:7px 11px;font:600 12px/1 inherit;cursor:pointer;transition:background .2s,transform .2s}",
+    ".mg-idea:hover{background:color-mix(in srgb,var(--accent) 10%,transparent);transform:translateY(-2px)}",
+    ".mg-wishnote{font-size:12px;color:var(--ink-600);margin:0 0 12px;line-height:1.45}",
+    "@media (prefers-reduced-motion:reduce){.mg-wishbtn i,.mg-wish-hero,.mg-wish-hero .sp,.mg-step{animation:none!important;opacity:1!important}.mg-wish-hero .sp{opacity:0!important}}"
+  ].join("\n");
+  document.head.appendChild(wcss);
+  var wishBtn = el("button", "btn mg-wishbtn", "<i>🪄</i><span>Wish</span>");
+  wishBtn.type = "button"; wishBtn.title = "Custom upgrade: tell us the feature you want, Rs 499 per upgrade";
+  if (actions) actions.insertBefore(wishBtn, sparkBtn);
+  wishBtn.addEventListener("click", openWish);
+  function closeWish() { if (!wsDlg) return; var x = wsDlg; wsDlg = null; x.classList.remove("show"); setTimeout(function () { x.remove(); }, 320); }
+  function openWish() {
+    if (wsDlg) return;
+    wsDlg = el("div", "mg-dlg"); wsDlg.setAttribute("role", "dialog"); wsDlg.setAttribute("aria-modal", "true"); wsDlg.setAttribute("aria-label", "Custom upgrades");
+    var card = el("div", "mg-card mg-fb mg-wish"); wsDlg.appendChild(card);
+    var nm = (user && user.displayName) || "", em = (user && user.email) || "";
+    function esc3(s) { return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+    var sparks = ""; for (var k = 0; k < 9; k++) sparks += '<i class="sp" style="left:' + (6 + k * 11) + '%;animation-delay:' + ((k * 0.47) % 4).toFixed(2) + 's;animation-duration:' + (3.4 + (k % 3) * 0.7).toFixed(1) + 's"></i>';
+    card.innerHTML = '<button class="mg-x" aria-label="Close" data-w="close" style="z-index:2;color:#fff;background:rgba(0,0,0,.25)">×</button>'
+      + '<div class="mg-wish-hero">' + sparks + '<h2>🪄 Say the word.</h2><p>Need Manaluz to do something it does not do yet? Tell us, and we will build it for you.</p>'
+      + '<div class="mg-wish-price"><b>₹499</b><span>per custom upgrade</span></div></div>'
+      + '<div class="mg-steps">'
+      + '<div class="mg-step" style="--i:0"><b>1</b><strong>Make a wish</strong>Describe the feature or change you want.</div>'
+      + '<div class="mg-step" style="--i:1"><b>2</b><strong>We reply</strong>You get a short plan and a secure Razorpay link by email.</div>'
+      + '<div class="mg-step" style="--i:2"><b>3</b><strong>We build it</strong>You pay only after you agree, then we make it happen.</div></div>'
+      + '<label>Need inspiration? Tap one</label><div class="mg-ideas"></div>'
+      + '<label for="mg-w-msg">Your wish</label><textarea id="mg-w-msg" maxlength="1500" placeholder="For example: I want a stamp tool with my school logo, and a one-click way to number pages like 1/12."></textarea>'
+      + '<div class="mg-fbrow"><div><label for="mg-w-name">Name *</label><input id="mg-w-name" type="text" maxlength="80" required autocomplete="name" value="' + esc3(nm) + '"></div>'
+      + '<div><label for="mg-w-mail">Email *</label><input id="mg-w-mail" type="email" maxlength="120" required autocomplete="email" placeholder="you@example.com" value="' + esc3(em) + '"></div></div>'
+      + '<div style="margin:0 0 12px"><label for="mg-w-tel">Contact number (optional)</label><input id="mg-w-tel" type="text" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="+91 …"></div>'
+      + '<p class="mg-wishnote">Nothing is charged now. We look at your request first, tell you if and how we can do it, and only then send the ₹499 payment link.</p>'
+      + '<div style="position:absolute;left:-9999px" aria-hidden="true"><input type="text" id="mg-w-hp" tabindex="-1" autocomplete="off"></div>'
+      + '<p class="mg-fberr" id="mg-w-err" role="alert"></p>'
+      + '<button class="mg-fbsend" type="button" id="mg-w-send">Send my wish ✨</button>';
+    var ideas = card.querySelector(".mg-ideas"), msgEl = card.querySelector("#mg-w-msg");
+    ["A custom stamp or signature tool", "Auto page numbers and headers", "Batch watermark for many files", "A tool for my subject (maths, music, legal…)", "Match my school or brand colours"].forEach(function (t) {
+      var b = el("button", "mg-idea", t); b.type = "button";
+      b.addEventListener("click", function () { msgEl.value = (msgEl.value ? msgEl.value.replace(/\s*$/, "") + "\n" : "") + t + ": "; msgEl.focus(); });
+      ideas.appendChild(b);
+    });
+    card.querySelector('[data-w="close"]').addEventListener("click", closeWish);
+    wsDlg.addEventListener("click", function (e) { if (e.target === wsDlg) closeWish(); });
+    document.addEventListener("keydown", function esc(e) { if (e.key === "Escape") { closeWish(); document.removeEventListener("keydown", esc); } });
+    document.body.appendChild(wsDlg);
+    wsOpenedAt = Date.now();
+    requestAnimationFrame(function () { requestAnimationFrame(function () { if (wsDlg) wsDlg.classList.add("show"); }); });
+    setTimeout(function () { if (wsDlg) wsDlg.classList.add("show"); }, 50);
+    var send = card.querySelector("#mg-w-send"), err = card.querySelector("#mg-w-err");
+    send.addEventListener("click", function () {
+      var msg = msgEl.value.trim(), mail = card.querySelector("#mg-w-mail").value.trim(), name = card.querySelector("#mg-w-name").value.trim(), tel = card.querySelector("#mg-w-tel").value.trim();
+      err.textContent = "";
+      if (msg.length < 20) { err.textContent = "Tell us a little more about what you want (a sentence or two)."; msgEl.focus(); return; }
+      if (name.length < 2) { err.textContent = "Please tell us your name."; card.querySelector("#mg-w-name").focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { err.textContent = "Please enter a valid email so we can reply."; card.querySelector("#mg-w-mail").focus(); return; }
+      if (tel && !/^[+\d][\d\s()\-]{5,18}$/.test(tel)) { err.textContent = "That contact number looks off. Fix it, or leave it empty."; card.querySelector("#mg-w-tel").focus(); return; }
+      try { var last = +localStorage.getItem("mg-w-last") || 0; if (Date.now() - last < 30000) { err.textContent = "Your wish just went through. Please wait a moment before sending another."; return; } } catch (e) {}
+      var head = "[Manaluz CUSTOM UPGRADE request · ₹499 per upgrade · Plan: " + planLabel() + "]\n";
+      var fd = new FormData();
+      fd.append("form_name", "Contact Messages");
+      fd.append("source_page", "/tools/marginalia/ (Manaluz Wish: custom upgrade)");
+      fd.append("form_started_at", String(wsOpenedAt));
+      fd.append("company_website", card.querySelector("#mg-w-hp").value);
+      fd.append("student_name", name);
+      fd.append("email", mail);
+      if (tel) fd.append("phone", tel);
+      fd.append("notes", head + msg + (tel ? "\n\nContact number: " + tel : ""));
+      send.disabled = true; send.textContent = "Sending your wish…";
+      var wait = Math.max(0, 3500 - (Date.now() - wsOpenedAt));
+      setTimeout(function () {
+        try { fetch(FEEDBACK_ENDPOINT, { method: "POST", mode: "no-cors", body: fd }); } catch (e) {}
+        try { localStorage.setItem("mg-w-last", String(Date.now())); } catch (e) {}
+        card.innerHTML = '<button class="mg-x" aria-label="Close" data-w="close">×</button><div class="mg-fbdone">'
+          + '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M19 33l9 9 17-19"/></svg>'
+          + '<h2 style="justify-content:center;margin-top:12px">Wish received ✨</h2>'
+          + '<p class="mg-fbsub" style="margin:0">We will email <b>' + esc3(mail) + '</b> soon with a quick plan and a secure payment link for ₹499. You pay only if you are happy with the plan.</p></div>';
+        card.querySelector('[data-w="close"]').addEventListener("click", closeWish);
+        setTimeout(closeWish, 5200);
+      }, wait);
+    });
+  }
+
   /* ---------- who's signed in, and their plan ---------- */
   showAds(!cachedAdFree());                                  // no flash of ads for people who paid
   firebase().then(function (f) {
