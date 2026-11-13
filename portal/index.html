@@ -1,1 +1,124 @@
-<!DOCTYPE html> <html lang="en-US"> <head> <meta charset="utf-8"/> <meta content="width=device-width,initial-scale=1" name="viewport"/> <meta content="noindex, nofollow" name="robots"/> <title>Portal Login — We The Mind</title> <link href="assets/portal.css" rel="stylesheet"/> <link href="../assets/voice.css?v=20261022" rel="stylesheet"/><meta content="portal" name="wtm-voice"/><meta content="We The Mind — learn, build, grow. Math tutoring, personal finance, tech and free tools." name="description"/><link href="https://wethemind.com/portal/" rel="canonical"/><meta content="website" property="og:type"/><meta content="Portal Login — We The Mind" property="og:title"/><meta content="We The Mind — learn, build, grow. Math tutoring, personal finance, tech and free tools." property="og:description"/><meta content="https://wethemind.com/portal/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Portal Login — We The Mind" name="twitter:title"/><meta content="We The Mind — learn, build, grow. Math tutoring, personal finance, tech and free tools." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><meta content="#E52421" name="theme-color"/><link href="../assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="../favicon.ico" rel="shortcut icon"/><link href="../assets/apple-touch-icon.png" rel="apple-touch-icon"/></head> <body> <div class="login-wrap"> <div class="login-card"> <h1>We The Mind <span style="color:var(--gold)">Portal</span></h1> <p class="sub">Student, teacher &amp; admin login</p> <form id="login-form"> <div class="field" style="text-align:left"> <label for="email">Email</label> <input autocomplete="username" id="email" required="" type="email"/> </div> <div class="field" style="text-align:left"> <label for="password">Password</label> <input autocomplete="current-password" id="password" required="" type="password"/> </div> <button class="btn" style="width:100%;justify-content:center" type="submit">Log In</button> <p class="error-msg" id="error-msg"></p> </form> </div> </div> <script type="module">import{login,auth}from"./assets/auth.js";import{onAuthStateChanged}from"https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";onAuthStateChanged(auth,async user=>{if(user){const token=await user.getIdTokenResult();const role=token.claims.role;if(role)window.location.href="/"+role+"/"}});document.getElementById("login-form").addEventListener("submit",async function(e){e.preventDefault();const errorEl=document.getElementById("error-msg");errorEl.style.display="none";const email=document.getElementById("email").value.trim();const password=document.getElementById("password").value;try{await login(email,password)}catch(err){errorEl.textContent="Login failed ("+(err.code||"unknown")+"): "+err.message;errorEl.style.display="block";console.error("Login error:",err)}})</script> <script defer="" src="../assets/voice.js?v=20261022"></script></body> </html> 
+<!DOCTYPE html> <html lang="en-US"> <head> <meta charset="utf-8"/> <meta content="width=device-width,initial-scale=1" name="viewport"/> <meta content="noindex, nofollow" name="robots"/> <title>Portal Login — We The Mind</title> <link href="../assets/voice.css?v=20261022" rel="stylesheet"/><meta content="portal" name="wtm-voice"/><meta content="We The Mind — learn, build, grow. Math tutoring, personal finance, tech and free tools." name="description"/><link href="https://wethemind.com/portal/" rel="canonical"/><meta content="website" property="og:type"/><meta content="Portal Login — We The Mind" property="og:title"/><meta content="We The Mind — learn, build, grow. Math tutoring, personal finance, tech and free tools." property="og:description"/><meta content="https://wethemind.com/portal/" property="og:url"/><meta content="We The Mind" property="og:site_name"/><meta content="en_US" property="og:locale"/><meta content="https://wethemind.com/assets/og-image.png" property="og:image"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="We The Mind — one mind, every curriculum" property="og:image:alt"/><meta content="summary_large_image" name="twitter:card"/><meta content="Portal Login — We The Mind" name="twitter:title"/><meta content="We The Mind — learn, build, grow. Math tutoring, personal finance, tech and free tools." name="twitter:description"/><meta content="https://wethemind.com/assets/og-image.png" name="twitter:image"/><meta content="#E52421" name="theme-color"/><link href="../assets/favicon-32.png" rel="icon" sizes="32x32" type="image/png"/><link href="../favicon.ico" rel="shortcut icon"/><link href="../assets/apple-touch-icon.png" rel="apple-touch-icon"/><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../assets/wtm-fonts.css?v=1"><style>
+:root{--navy:#0C1A33;--red:#E52421;--yel:#FDBB0B;--mut:#5B6780;--line:#E5E0D2}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body.lg{font-family:'Nunito',system-ui,sans-serif!important;background:#0C1A33;color:var(--navy)}
+.lg-shell{min-height:100vh;display:grid;grid-template-columns:1.05fr .95fr}
+.lg-left{position:relative;overflow:hidden;color:#fff;padding:clamp(28px,5vw,64px);display:flex;flex-direction:column;justify-content:space-between;gap:24px;background:radial-gradient(700px 420px at 90% 0,rgba(229,36,33,.45),transparent 60%),radial-gradient(600px 400px at 0 100%,rgba(253,187,11,.30),transparent 60%),linear-gradient(160deg,#16294d,#0C1A33 70%)}
+.lg-brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:#fff;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1.25rem;position:relative;z-index:2}
+.lg-brand img{height:64px;width:auto;background:none;border-radius:0;padding:0;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));transition:transform .25s}.lg-brand:hover img{transform:scale(1.05)}
+.lg-hero{position:relative;z-index:2;text-align:center;display:flex;flex-direction:column;align-items:center}
+.lg-art{width:min(380px,78%);position:relative;margin:0 auto 22px}
+.lg-art:before{content:"";position:absolute;inset:6% 4%;border-radius:46% 54% 50% 50%/52% 46% 54% 48%;background:linear-gradient(145deg,#fff,#FFE3A0);animation:lgMorph 12s ease-in-out infinite;box-shadow:0 40px 70px -30px rgba(0,0,0,.6)}
+.lg-art img{position:relative;width:100%;display:block;animation:lgFloat 7s ease-in-out infinite}
+.lg-hero h2{font-family:'Fredoka',sans-serif!important;font-size:clamp(1.8rem,3vw,2.5rem);line-height:1.15;margin:0 0 10px;font-weight:600;text-transform:none!important;color:#fff}
+.lg-hero h2 em{font-style:normal;color:var(--yel)}
+.lg-hero p{margin:0;color:#cfd8ea;max-width:30em;font-size:1.05rem}
+.lg-pts{list-style:none;padding:0;margin:20px 0 0;display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.lg-pts li{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.18);border-radius:999px;padding:8px 14px;font-weight:700;font-size:.9rem}
+.lg-pts svg{color:var(--yel)}
+.lg-foot{position:relative;z-index:2;text-align:center;color:#9fb0cf;font-size:.9rem}
+.lg-sym{position:absolute;font-family:'Fredoka',sans-serif;font-weight:600;color:rgba(255,255,255,.12);user-select:none;pointer-events:none;animation:lgDrift var(--t,14s) ease-in-out infinite;animation-delay:var(--d,0s)}
+.lg-right{background:linear-gradient(180deg,#FFF8EC,#FFEFD0);display:flex;align-items:center;justify-content:center;padding:clamp(24px,4vw,56px);position:relative;overflow:hidden}
+.lg-right:before{content:"";position:absolute;right:-120px;top:-120px;width:380px;height:380px;border-radius:50%;background:var(--yel);opacity:.28;animation:lgBlob 16s ease-in-out infinite}
+.lg-card{position:relative;width:100%;max-width:440px;background:#fff;border-radius:28px;padding:clamp(26px,4vw,40px);box-shadow:0 40px 80px -40px rgba(12,26,51,.55);border:1.5px solid var(--line);animation:lgUp .8s cubic-bezier(.2,.7,.2,1) both}
+.lg-card h1{font-family:'Fredoka',sans-serif!important;font-size:1.9rem;margin:0 0 6px;text-align:center;text-transform:none!important;color:var(--navy)}
+.lg-card h1 span{color:var(--red)}
+.lg-sub{margin:0 0 24px;text-align:center;color:var(--mut)}
+.lg-field{margin-bottom:16px}
+.lg-field label{display:block;font-weight:800;font-size:.9rem;margin-bottom:6px}
+.lg-in{position:relative}
+.lg-in svg.i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:#8a94aa;pointer-events:none}
+.lg-in input{width:100%;height:54px;border:2px solid var(--line);border-radius:14px;padding:0 48px 0 46px;font:600 1rem 'Nunito',sans-serif;color:var(--navy);background:#FBFAF6;transition:border-color .2s,box-shadow .2s,background .2s}
+.lg-in input:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 4px rgba(229,36,33,.14);background:#fff}
+.lg-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;background:transparent;border-radius:10px;cursor:pointer;color:#6b7690;display:flex;align-items:center;justify-content:center}
+.lg-eye:hover{background:#F2EEE2;color:var(--navy)}
+.lg-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:2px 0 18px;font-size:.92rem;flex-wrap:wrap}
+.lg-row label{display:inline-flex;align-items:center;gap:8px;font-weight:700;cursor:pointer}
+.lg-row input{width:18px;height:18px;accent-color:var(--red)}
+.lg-link{background:none;border:0;padding:4px 0;font:800 .92rem 'Nunito',sans-serif;color:var(--red);cursor:pointer}
+.lg-link:hover{text-decoration:underline}
+.lg-btn{width:100%;height:56px;border:0;border-radius:14px;font:600 1.1rem 'Fredoka',sans-serif;color:#fff;cursor:pointer;background:linear-gradient(135deg,#F0403B,#E52421 55%,#B5171A);box-shadow:0 14px 28px -12px rgba(229,36,33,.8);display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;transition:transform .15s,box-shadow .15s}
+.lg-btn:hover{transform:translateY(-2px)}.lg-btn:disabled{opacity:.85;cursor:wait;transform:none}
+.lg-btn:after{content:"";position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:lgShine 4s 1s ease-in-out infinite}
+.lg-spin{width:20px;height:20px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:lgSpin .7s linear infinite;display:none}
+.lg-btn.busy .lg-spin{display:block}.lg-btn.busy .lg-arr{display:none}
+.lg-msg{margin:14px 0 0;padding:12px 14px;border-radius:12px;font-weight:700;font-size:.95rem;display:none;text-align:center}
+.lg-msg.err{display:block;background:#FDEBEA;color:#9B1B18;border:1.5px solid #F6C4C2;animation:lgShake .4s}
+.lg-msg.ok{display:block;background:#E8F6EE;color:#17663C;border:1.5px solid #BFE3CE}
+.lg-caps{display:none;margin-top:6px;font-size:.82rem;font-weight:800;color:#B35A00}
+.lg-or{display:flex;align-items:center;gap:12px;color:#8a94aa;font-weight:700;font-size:.85rem;margin:22px 0 14px}
+.lg-or:before,.lg-or:after{content:"";flex:1;height:1px;background:var(--line)}
+.lg-new{display:flex;align-items:center;justify-content:center;width:100%;height:50px;border:2px solid var(--navy);border-radius:14px;color:var(--navy);text-decoration:none;font:600 1rem 'Fredoka',sans-serif;transition:background .15s,color .15s}
+.lg-new:hover{background:var(--navy);color:#fff}
+.lg-back{display:block;text-align:center;margin-top:18px;color:var(--mut);font-weight:700;text-decoration:none;font-size:.92rem}.lg-back:hover{color:var(--navy)}
+@keyframes lgUp{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes lgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes lgMorph{0%,100%{border-radius:46% 54% 50% 50%/52% 46% 54% 48%}50%{border-radius:56% 44% 42% 58%/46% 56% 44% 54%}}
+@keyframes lgDrift{0%,100%{transform:translate(0,0) rotate(var(--r,0deg))}50%{transform:translate(18px,-26px) rotate(calc(var(--r,0deg) + 12deg))}}
+@keyframes lgBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-40px,30px) scale(1.12)}}
+@keyframes lgShine{0%{transform:translateX(-130%) skewX(-20deg)}60%,100%{transform:translateX(260%) skewX(-20deg)}}
+@keyframes lgSpin{to{transform:rotate(360deg)}}
+@keyframes lgShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.lg-hero>*{animation:lgUp .8s .15s cubic-bezier(.2,.7,.2,1) both}
+@media(max-width:900px){.lg-shell{grid-template-columns:1fr}.lg-left{padding:22px 20px 24px}.lg-art,.lg-pts,.lg-foot{display:none}.lg-hero h2{font-size:1.5rem;margin:0}.lg-hero p{display:none}.lg-right{padding:24px 16px 40px}}
+@media(prefers-reduced-motion:reduce){.lg *,.lg *:before,.lg *:after{animation:none!important}}
+</style>
+</head>
+<body class="lg">
+<div class="lg-shell">
+<aside class="lg-left">
+<span class="lg-sym" style="left:62%;top:18%;font-size:64px;--t:15s;--d:0s;--r:-8deg">π</span><span class="lg-sym" style="left:78%;top:10%;font-size:56px;--t:13s;--d:-3s;--r:10deg">∑</span><span class="lg-sym" style="left:12%;top:62%;font-size:60px;--t:16s;--d:-5s;--r:6deg">√</span><span class="lg-sym" style="left:84%;top:58%;font-size:70px;--t:14s;--d:-2s;--r:-10deg">∫</span><span class="lg-sym" style="left:46%;top:86%;font-size:52px;--t:17s;--d:-7s;--r:4deg">x²</span><span class="lg-sym" style="left:62%;top:30%;font-size:44px;--t:12s;--d:-4s;--r:-6deg">%</span><span class="lg-sym" style="left:30%;top:38%;font-size:40px;--t:15s;--d:-1s;--r:12deg">+</span>
+<a class="lg-brand" href="../index.html" aria-label="We The Mind home"><img alt="We The Mind" src="assets/wtm-logo-light.png"/></a>
+<div class="lg-hero">
+<div class="lg-art"><img alt="" src="../assets/art/spot-course.svg"/></div>
+<h2>Welcome back to <em>class</em></h2>
+<p>Your classes, progress and mentors, all in one place.</p>
+<ul class="lg-pts"><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Join live classes</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Track progress</li><li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Message your mentor</li></ul>
+</div>
+<div class="lg-foot">Need help signing in? WhatsApp +91 74781 47260</div>
+</aside>
+<main class="lg-right">
+<div class="lg-card">
+<h1>We The Mind <span>Portal</span></h1>
+<p class="lg-sub">Student and teacher sign-in</p>
+<form id="login-form" novalidate>
+<div class="lg-field"><label for="email">Email</label><div class="lg-in"><svg class="i" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg><input id="email" type="email" autocomplete="username" inputmode="email" placeholder="you@example.com" required/></div></div>
+<div class="lg-field"><label for="password">Password</label><div class="lg-in"><svg class="i" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><input id="password" type="password" autocomplete="current-password" placeholder="Your password" required/><button class="lg-eye" id="eye" type="button" aria-label="Show password"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></div><div class="lg-caps" id="caps">Caps Lock is on</div></div>
+<div class="lg-row"><label><input id="remember" type="checkbox" checked/>Keep me signed in</label><button class="lg-link" id="forgot" type="button">Forgot password?</button></div>
+<button class="lg-btn" id="go" type="submit"><span class="lg-spin"></span><span id="go-t">Log in</span><span class="lg-arr"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+<div class="lg-msg" id="msg" role="alert" aria-live="polite"></div>
+</form>
+<div class="lg-or">New here?</div>
+<a class="lg-new" href="../education/index.html#book-demo">Book a free class</a>
+<a class="lg-back" href="../index.html">Back to the website</a>
+</div>
+</main>
+</div>
+<script type="module">
+const $=id=>document.getElementById(id),msg=$("msg"),btn=$("go"),em=$("email"),pw=$("password");
+const BASE=(function(){var p=location.pathname,i=p.indexOf("/portal/");return i>=0?p.slice(0,i+8):p.replace(/[^\/]*$/,"")})();
+function nextUrl(role){var n=new URLSearchParams(location.search).get("next");if(n&&/^\/?[A-Za-z0-9_\-\/\.]*$/.test(n)&&n.indexOf("..")<0&&n.indexOf("//")<0)return n.charAt(0)==="/"?n:"/"+n;return BASE+role+"/"}
+function show(t,k){msg.className="lg-msg "+k;msg.textContent=t}
+function busy(b,t){btn.disabled=b;btn.classList.toggle("busy",b);$("go-t").textContent=t||"Log in"}
+$("eye").onclick=function(){var s=pw.type==="password";pw.type=s?"text":"password";this.setAttribute("aria-label",s?"Hide password":"Show password");this.style.color=s?"#E52421":""};
+pw.addEventListener("keyup",e=>{$("caps").style.display=e.getModifierState&&e.getModifierState("CapsLock")?"block":"none"});
+pw.addEventListener("blur",()=>{$("caps").style.display="none"});
+var A=null,FB=null;
+try{A=await import("./assets/auth.js");FB=await import("https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js")}catch(e){console.error(e);var h=location.hostname,m;if(location.protocol==="file:")m="This page was opened from a file on your computer, and sign-in cannot run that way. Open it from the live website instead: wethemind.com/portal/";else if(!/(^|\.)wethemind\.com$|^localhost$|^127\.0\.0\.1$/.test(h))m="This is a preview copy of the website, so sign-in is switched off here. Sign in on the live site: wethemind.com/portal/";else m="We cannot reach the sign-in service right now. Check your internet connection and refresh the page.";show(m,"err")}
+function friendly(c){switch(c){case"auth/invalid-credential":case"auth/wrong-password":case"auth/user-not-found":case"auth/invalid-login-credentials":return"That email and password do not match. Check them and try again, or use Forgot password.";case"auth/invalid-email":return"That email address does not look right.";case"auth/too-many-requests":return"Too many attempts. Wait a few minutes, or reset your password.";case"auth/user-disabled":return"This account is switched off. Please contact us.";case"auth/network-request-failed":return"Network problem. Check your connection and try again.";case"auth/unauthorized-domain":return"This website address is not approved for sign-in yet. Please contact us.";default:return"We could not sign you in ("+(c||"unknown")+"). Please try again."}}
+async function route(user){try{var t=await user.getIdTokenResult(true);var role=t.claims.role;try{localStorage.setItem("wtm_auth","1")}catch(_){}
+if(role){show("Welcome back! Taking you to your class…","ok");location.href=nextUrl(role)}else{show("You are signed in, but your account is not set up yet. Please contact us and we will finish it.","err");busy(false)}}catch(e){show(friendly(e.code),"err");busy(false)}}
+if(A&&FB){
+ try{FB.onAuthStateChanged(A.auth,u=>{if(u&&!$("login-form").dataset.sub){busy(true,"Signing you in…");route(u)}})}catch(e){}
+ $("login-form").addEventListener("submit",async e=>{e.preventDefault();msg.className="lg-msg";var email=em.value.trim(),pass=pw.value;
+  if(!email||!pass){show("Please enter your email and password.","err");(email?pw:em).focus();return}
+  $("login-form").dataset.sub="1";busy(true,"Signing in…");
+  try{await FB.setPersistence(A.auth,$("remember").checked?FB.browserLocalPersistence:FB.browserSessionPersistence)}catch(_){}
+  try{var c=await A.login(email,pass);await route(c.user)}catch(err){console.error(err);delete $("login-form").dataset.sub;show(friendly(err.code),"err");busy(false);pw.select()}});
+ $("forgot").onclick=async()=>{var email=em.value.trim();if(!email){show("Type your email above first, then tap Forgot password.","err");em.focus();return}
+  try{await FB.sendPasswordResetEmail(A.auth,email);show("If that email has an account, a reset link is on its way. Check your inbox and spam.","ok")}catch(err){show(friendly(err.code),"err")}}
+}else{$("login-form").addEventListener("submit",e=>e.preventDefault());$("forgot").onclick=()=>show("Sign-in service is not reachable right now.","err")}
+</script>
+<script defer="" src="../assets/voice.js?v=20261022"></script>
+</body></html>

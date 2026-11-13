@@ -1,0 +1,207 @@
+<!DOCTYPE html><html lang="en-US"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><title>Pay for Classes — We The Mind</title><meta name="description" content="Pay securely for your We The Mind tutoring plan with any card, UPI or netbanking. International payments welcome."/><link rel="canonical" href="https://wethemind.com/pay/"/><link href="../style.css?v=20261022" rel="stylesheet"/><link href="../assets/voice.css?v=20261022" rel="stylesheet"/><link href="../assets/mobile.css?v=20261022" rel="stylesheet"/><link href="../assets/theme.css?v=20261022" rel="stylesheet"/><link rel="icon" href="../assets/favicon-32.png"/><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="../assets/wtm-fonts.css?v=1"/><style>
+.pay{--navy:#0C1A33;--red:#E52421;--yel:#FDBB0B;--cream:#FFF8EC;--tint:#F6F3EC;--mut:#55627A;--line:#E8E2D4;--grn:#1E8E5A;font-family:'Nunito',system-ui,sans-serif;color:var(--navy);background:#fff;line-height:1.6;text-align:center}
+.pay *{box-sizing:border-box}
+.pay a{text-decoration:none;color:inherit}
+.p-wrap{max-width:1180px;margin:0 auto;padding:0 clamp(20px,4.5vw,48px)}
+.p-hero{background:linear-gradient(180deg,#FFF8EC,#FFEFD0);padding:64px 0 120px;position:relative;overflow:hidden}
+.p-hero:before{content:"";position:absolute;right:-140px;top:-160px;width:480px;height:480px;border-radius:50%;background:var(--yel);opacity:.25;animation:pBlob 16s ease-in-out infinite}
+.p-hero:after{content:"";position:absolute;left:-120px;bottom:-150px;width:360px;height:360px;border-radius:50%;background:var(--red);opacity:.07;animation:pBlob 20s -6s ease-in-out infinite}
+.p-hero .p-wrap{position:relative;z-index:1}
+.p-eye{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 18px;font-weight:800;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:var(--grn);margin-bottom:20px}
+.p-hero h1{font-family:'Fredoka',sans-serif!important;font-size:clamp(2.2rem,4.6vw,3.4rem);line-height:1.1;margin:0 0 14px;text-transform:none!important;color:var(--navy)}
+.p-hero h1 em{font-style:normal;color:var(--red)}
+.p-hero p{max-width:36em;margin:0 auto;font-size:1.15rem;color:var(--mut)}
+.p-main{margin-top:-72px;position:relative;z-index:2;padding-bottom:88px}
+.p-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:clamp(20px,3vw,32px);align-items:start}
+.p-card{background:#fff;border:1.5px solid var(--line);border-radius:28px;padding:clamp(22px,3.4vw,36px);box-shadow:0 40px 70px -46px rgba(12,26,51,.5)}
+.p-step{display:flex;align-items:center;justify-content:center;gap:12px;margin:0 0 18px}
+.p-step b{width:34px;height:34px;border-radius:50%;background:var(--red);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fredoka',sans-serif}
+.p-step h2{font-family:'Fredoka',sans-serif!important;font-size:1.3rem;margin:0;text-transform:none!important}
+.p-sec+.p-sec{margin-top:30px;padding-top:28px;border-top:1.5px dashed var(--line)}
+.p-tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+.p-tab{border:2px solid var(--line);background:#fff;border-radius:999px;padding:10px 20px;font:600 1rem 'Fredoka',sans-serif;color:var(--navy);cursor:pointer;transition:all .18s}
+.p-tab:hover{border-color:var(--navy)}.p-tab[aria-selected=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.p-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.p-plan{position:relative;border:2px solid var(--line);border-radius:20px;padding:22px 14px 18px;background:#fff;cursor:pointer;text-align:center;transition:transform .18s,border-color .18s,box-shadow .18s;font:inherit;color:inherit;display:flex;flex-direction:column;align-items:center;gap:2px}
+.p-plan:hover{transform:translateY(-4px);border-color:var(--navy)}
+.p-plan[aria-checked=true]{border-color:var(--red);box-shadow:0 0 0 4px rgba(229,36,33,.14),0 22px 36px -24px rgba(229,36,33,.6);background:#FFFAF6}
+.p-plan[aria-checked=true]:after{content:"";position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:var(--red) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/14px no-repeat}
+.p-plan h3{font-family:'Fredoka',sans-serif!important;font-size:1.1rem;margin:0;text-transform:none!important}
+.p-plan .pp{font-family:'Fredoka',sans-serif;font-size:1.7rem;font-weight:600;color:var(--navy);line-height:1.2;margin-top:6px}
+.p-plan .pn{font-size:.88rem;color:var(--mut)}
+.p-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--yel);color:var(--navy);border-radius:999px;font-weight:800;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 12px;white-space:nowrap}
+.p-save{display:inline-block;margin-top:6px;background:#E8F6EE;color:#17663C;border-radius:999px;padding:2px 10px;font-weight:800;font-size:.78rem}
+.p-cur{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.p-cur button{border:2px solid var(--line);background:#fff;border-radius:12px;padding:8px 14px;font:800 .92rem 'Nunito',sans-serif;color:var(--navy);cursor:pointer;transition:all .15s}
+.p-cur button:hover{border-color:var(--navy)}.p-cur button[aria-pressed=true]{background:var(--navy);border-color:var(--navy);color:#fff}
+.p-note{margin:12px 0 0;color:var(--mut);font-size:.92rem}
+.p-form{display:grid;grid-template-columns:1fr 1fr;gap:14px;text-align:left}
+.p-f label{display:block;font-weight:800;font-size:.88rem;margin-bottom:5px}
+.p-f input,.p-f textarea{width:100%;height:52px;border:2px solid var(--line);border-radius:14px;padding:0 16px;font:600 1rem 'Nunito',sans-serif;color:var(--navy);background:#FBFAF6;transition:border-color .2s,box-shadow .2s}
+.p-f textarea{height:84px;padding:12px 16px;resize:vertical}
+.p-f input:focus,.p-f textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 0 4px rgba(229,36,33,.14);background:#fff}
+.p-f.full{grid-column:1/-1}
+.p-f input.bad{border-color:var(--red);background:#FFF5F4}
+.p-sum{position:sticky;top:96px}
+.p-sum h3{font-family:'Fredoka',sans-serif!important;font-size:1.3rem;margin:0 0 16px;text-transform:none!important}
+.p-line{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1.5px dashed var(--line);text-align:left}
+.p-line span{color:var(--mut);font-weight:700}.p-line b{font-weight:800;text-align:right}
+.p-total{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0 18px}
+.p-total span{font-weight:800}.p-total b{font-family:'Fredoka',sans-serif;font-size:2.2rem;color:var(--red);line-height:1}
+.p-pay{width:100%;min-height:60px;border:0;border-radius:16px;font:600 1.15rem 'Fredoka',sans-serif;color:#fff;cursor:pointer;background:linear-gradient(135deg,#F0403B,#E52421 55%,#B5171A);box-shadow:0 16px 30px -14px rgba(229,36,33,.85);display:flex;align-items:center;justify-content:center;gap:10px;position:relative;overflow:hidden;transition:transform .15s}
+.p-pay:hover{transform:translateY(-2px)}.p-pay:disabled{opacity:.85;cursor:wait;transform:none}
+.p-pay:after{content:"";position:absolute;top:0;left:0;width:40%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.42),transparent);animation:pShine 4s 1s ease-in-out infinite}
+.p-spin{width:20px;height:20px;border:3px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:pSpin .7s linear infinite;display:none}
+.p-pay.busy .p-spin{display:block}
+.p-methods{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:16px 0 4px}
+.p-methods span{background:var(--tint);border-radius:999px;padding:5px 12px;font-weight:800;font-size:.8rem;color:var(--navy)}
+.p-trust{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;text-align:left;font-size:.92rem;color:var(--mut);font-weight:700}
+.p-trust li{display:flex;gap:10px;align-items:flex-start}.p-trust svg{flex:none;color:var(--grn);margin-top:3px}
+.p-msg{display:none;margin-top:14px;padding:12px 14px;border-radius:12px;font-weight:700;font-size:.95rem}
+.p-msg.err{display:block;background:#FDEBEA;color:#9B1B18;border:1.5px solid #F6C4C2;animation:pShake .4s}
+.p-msg.ok{display:block;background:#E8F6EE;color:#17663C;border:1.5px solid #BFE3CE}
+.p-alt{margin-top:26px;background:var(--cream);border:1.5px solid var(--line);border-radius:24px;padding:26px}
+.p-alt h3{font-family:'Fredoka',sans-serif!important;font-size:1.25rem;margin:0 0 6px;text-transform:none!important}
+.p-alt p{margin:0 0 14px;color:var(--mut)}
+.p-altgrid{display:flex;flex-wrap:wrap;gap:12px;justify-content:center}
+.p-altgrid a{display:inline-flex;align-items:center;gap:8px;background:#fff;border:2px solid var(--navy);border-radius:14px;padding:12px 20px;font:600 1rem 'Fredoka',sans-serif}
+.p-altgrid a:hover{background:var(--navy);color:#fff}
+.p-done{display:none;text-align:center;padding:12px 4px}
+.p-done .tick{width:84px;height:84px;border-radius:50%;background:#E8F6EE;color:var(--grn);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;animation:pPop .6s cubic-bezier(.3,1.6,.5,1)}
+.p-done h2{font-family:'Fredoka',sans-serif!important;font-size:1.9rem;margin:0 0 8px;text-transform:none!important}
+.p-done p{color:var(--mut);margin:0 auto 12px;max-width:32em}
+.p-done .ref{display:inline-block;background:var(--tint);border-radius:12px;padding:8px 16px;font-weight:800;font-family:ui-monospace,monospace;margin:6px 0 14px}
+.p-faq{margin-top:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.p-faq div{background:var(--tint);border-radius:22px;padding:24px}
+.p-faq b{display:block;font-family:'Fredoka',sans-serif;font-size:1.1rem;margin-bottom:6px}.p-faq p{margin:0;color:var(--mut)}
+@keyframes pBlob{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-50px,40px) scale(1.12)}}
+@keyframes pShine{0%{transform:translateX(-130%) skewX(-20deg)}60%,100%{transform:translateX(260%) skewX(-20deg)}}
+@keyframes pSpin{to{transform:rotate(360deg)}}
+@keyframes pShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes pPop{from{transform:scale(.3);opacity:0}to{transform:none;opacity:1}}
+@keyframes pUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.p-hero .p-wrap>*{animation:pUp .8s both}.p-hero .p-wrap>*:nth-child(2){animation-delay:.08s}.p-hero .p-wrap>*:nth-child(3){animation-delay:.16s}
+.p-card{animation:pUp .9s .2s both}
+.p-amt{display:inline-block;transition:transform .25s}.p-amt.bump{transform:scale(1.12)}
+@media(max-width:900px){.p-grid{grid-template-columns:1fr}.p-sum{position:static}.p-plans{grid-template-columns:1fr}.p-form{grid-template-columns:1fr}.p-faq{grid-template-columns:1fr}.p-hero{padding:44px 0 104px}}
+@media(prefers-reduced-motion:reduce){.pay *,.pay *:before,.pay *:after{animation:none!important;transition:none!important}}
+</style>
+</head><body class="mc"><header> <div class="wrap nav"> <a class="logo" href="../."> <span class="logo-mark"></span> <span class="logo-text">We The Mind</span> </a> <nav class="nav-links" id="nav-links"> <a href="../education/">Tutoring</a> <a href="../education/pricing/">Prices</a> <a href="../education/sat-practice/">Free SAT Practice</a> <a href="../tools/">Free Tools</a> <a href="../money/website/"><img alt="Savoring Money logo" class="um-logo" decoding="async" src="../money/assets/logo-icon.png"/>Money Lessons</a> <a href="../about/">About</a> <a href="../contact/">Contact</a> </nav> <div class="nav-cta"><a class="nav-login" href="../portal/">Login</a> <a class="btn btn-primary btn-sm" href="../education/#book-demo">Book Free Class</a> <button aria-controls="nav-links" aria-expanded="false" aria-label="Open menu" class="burger" id="burger-btn" type="button"> <svg aria-hidden="true" height="16" viewbox="0 0 22 16" width="22"><rect fill="currentColor" height="2" width="22"></rect><rect fill="currentColor" height="2" width="22" y="7"></rect><rect fill="currentColor" height="2" width="22" y="14"></rect></svg> </button> </div> </div> </header><main class="pay">
+<section class="p-hero"><div class="p-wrap">
+<span class="p-eye"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Secure checkout by Razorpay</span>
+<h1>Pay for your classes <em>in under a minute</em></h1>
+<p>Pick a plan, choose your currency and pay with any card, UPI or netbanking. Students from anywhere in the world are welcome.</p>
+</div></section>
+<section class="p-main"><div class="p-wrap">
+<div class="p-grid">
+<div class="p-card" id="left">
+<div class="p-sec">
+<div class="p-step"><b>1</b><h2>Choose your plan</h2></div>
+<div class="p-tabs" role="tablist" id="tabs">
+<button class="p-tab" role="tab" data-t="one" aria-selected="true">One-to-one</button>
+<button class="p-tab" role="tab" data-t="grp" aria-selected="false">Small group</button>
+<button class="p-tab" role="tab" data-t="sgl" aria-selected="false">Single session</button>
+</div>
+<div class="p-plans" id="plans" role="radiogroup" aria-label="Plan"></div>
+<p class="p-note" id="plan-note"></p>
+</div>
+<div class="p-sec">
+<div class="p-step"><b>2</b><h2>Pick your currency</h2></div>
+<div class="p-cur" id="cur"></div>
+<p class="p-note">Prices are set in US dollars and shown in your currency. You pay exactly what you see here, with no extra fees from us.</p>
+</div>
+<div class="p-sec">
+<div class="p-step"><b>3</b><h2>Who is it for?</h2></div>
+<form class="p-form" id="det" novalidate>
+<div class="p-f"><label for="sn">Student name</label><input id="sn" autocomplete="name" placeholder="e.g. Aarav Sharma" required/></div>
+<div class="p-f"><label for="em">Email for the receipt</label><input id="em" type="email" inputmode="email" autocomplete="email" placeholder="parent@example.com" required/></div>
+<div class="p-f"><label for="ph">WhatsApp number <span style="font-weight:600;color:var(--mut)">(optional)</span></label><input id="ph" type="tel" inputmode="tel" autocomplete="tel" placeholder="+1 555 123 4567"/></div>
+<div class="p-f" id="qtyw" style="display:none"><label for="qty">How many students are paying?</label><input id="qty" type="number" min="1" max="10" value="1"/></div>
+<div class="p-f full"><label for="nt">Grade, board and subject <span style="font-weight:600;color:var(--mut)">(optional)</span></label><textarea id="nt" placeholder="e.g. Grade 10 CBSE Maths, or SAT Math"></textarea></div>
+</form>
+</div>
+</div>
+<aside class="p-card p-sum" id="sum">
+<div id="sumbody">
+<h3>Your order</h3>
+<div class="p-line"><span>Plan</span><b id="s-plan">-</b></div>
+<div class="p-line"><span>What you get</span><b id="s-what">-</b></div>
+<div class="p-line" id="s-qrow" style="display:none"><span>Students</span><b id="s-q">1</b></div>
+<div class="p-line"><span>Currency</span><b id="s-cur">USD</b></div>
+<div class="p-total"><span>Total</span><b><span class="p-amt" id="s-total">-</span></b></div>
+<button class="p-pay" id="pay" type="button"><span class="p-spin"></span><span id="pay-t">Pay securely</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></button>
+<div class="p-msg" id="msg" role="alert" aria-live="polite"></div>
+<div class="p-methods"><span>Visa</span><span>Mastercard</span><span>Amex</span><span>UPI</span><span>Netbanking</span><span>Wallets</span></div>
+<ul class="p-trust">
+<li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Cards from any country work, including international cards.</span></li>
+<li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Payments are handled by Razorpay. We never see your card details.</span></li>
+<li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Official receipt by email the moment you pay.</span></li>
+<li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg><span>Fair refunds: see our <a href="../education/pricing/#refund" style="color:var(--red);font-weight:800">refund policy</a>.</span></li>
+</ul>
+</div>
+<div class="p-done" id="done">
+<div class="tick"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div>
+<h2>Payment received. Thank you!</h2>
+<p id="done-p">Your receipt is on its way to your email. We will confirm your sessions on WhatsApp within a few hours.</p>
+<div class="ref" id="done-ref"></div>
+<div><a class="p-altgrid" style="display:inline-flex" href="https://wa.me/917478147260"><span style="display:inline-flex;align-items:center;gap:8px;background:#25D366;color:#fff;border-radius:14px;padding:12px 20px;font:600 1rem 'Fredoka',sans-serif">Message us on WhatsApp</span></a></div>
+</div>
+</aside>
+</div>
+<div class="p-alt" id="alt" style="display:none">
+<h3>Online card payments are being switched on</h3>
+<p>You can still pay right now in either of these ways. Add the student's name in the note, then message us on WhatsApp with a screenshot.</p>
+<div class="p-altgrid"><a href="https://www.paypal.me/kingshuk46" target="_blank" rel="noopener">Pay with PayPal</a><a href="../education/pricing/#pay">Pay with UPI (India)</a><a href="https://wa.me/917478147260" target="_blank" rel="noopener">WhatsApp us</a></div>
+</div>
+<div class="p-faq">
+<div><b>Not had your free class yet?</b><p>Book it first. It is 30 minutes, free, and you only pay once you decide to stay. <a href="../education/index.html#book-demo" style="color:var(--red);font-weight:800">Book the free class</a></p></div>
+<div><b>Which currencies can I use?</b><p>US dollars, pounds, euros, Australian, Canadian and Singapore dollars, dirhams and rupees. Your bank does the conversion if your card is in another currency.</p></div>
+<div><b>Need help paying?</b><p>Message us on WhatsApp at +91 74781 47260 and we will sort it out with you, step by step.</p></div>
+</div>
+</div></section>
+</main>
+<script src="../currency-shared.js"></script>
+<script src="../assets/pay-config.js"></script>
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+var RATE={USD:1,GBP:.79,EUR:.92,AUD:1.52,CAD:1.36,SGD:1.34,AED:3.67,INR:83};
+var NAME={USD:"US dollar",GBP:"UK pound",EUR:"Euro",AUD:"Australian dollar",CAD:"Canadian dollar",SGD:"Singapore dollar",AED:"UAE dirham",INR:"Indian rupee"};
+var CAT={
+ one:[{id:"fl",t:"Fledgling",n:"10 sessions",usd:150,per:"$15 / session",save:17},{id:"fi",t:"Flight",n:"25 sessions",usd:300,per:"$12 / session",save:33,tag:"Most popular"},{id:"pa",t:"Parliament",n:"50 sessions",usd:450,per:"$9 / session",save:50}],
+ grp:[{id:"g24",t:"Small group",n:"2 to 4 students, 10 sessions each",usd:100,per:"$10 / student / session",pp:1},{id:"g57",t:"Standard group",n:"5 to 7 students, 10 sessions each",usd:70,per:"$7 / student / session",pp:1,tag:"Best value"},{id:"g810",t:"Full group",n:"8 to 10 students, 10 sessions each",usd:50,per:"$5 / student / session",pp:1}],
+ sgl:[{id:"s1",t:"1-to-1 session",n:"One live session",usd:18,per:"Single session"},{id:"ps",t:"Problem-solving",n:"One session, up to 5 problems",usd:20,per:"Flat rate"}]};
+var NOTE={one:"Every package starts after your free 30-minute class. The more sessions you buy, the lower the price per session.",grp:"Group prices are per student. Students share the same board and subject in one live session.",sgl:"No package needed. Send us your list of problems when you book."};
+var tab="one",sel="fi",cur=(window.WTMCurrency&&WTMCurrency.detectCurrency())||"USD";if(!RATE[cur])cur="USD";
+function conv(u,c){var n=u*RATE[c];return c==="USD"?u:(n>=1000?10*Math.round(n/10):n>=100?5*Math.round(n/5):n>=20?Math.round(n):Math.round(2*n)/2)}
+function fmt(v,c){try{return new Intl.NumberFormat("en",{style:"currency",currency:c,minimumFractionDigits:v%1?2:0,maximumFractionDigits:v%1?2:0}).format(v)}catch(e){return c+" "+v}}
+function find(id){for(var k in CAT)for(var i=0;i<CAT[k].length;i++)if(CAT[k][i].id===id)return CAT[k][i];return null}
+function qty(){var p=find(sel);if(!p||!p.pp)return 1;var q=parseInt($("qty").value,10);return q>=1&&q<=10?q:1}
+function total(){var p=find(sel);return conv(p.usd,cur)*qty()}
+function msg(t,k){var m=$("msg");m.className="p-msg "+(k||"");m.textContent=t||""}
+function renderPlans(){var h="";CAT[tab].forEach(function(p){var on=p.id===sel;h+='<button type="button" class="p-plan" role="radio" aria-checked="'+on+'" data-id="'+p.id+'">'+(p.tag?'<span class="p-tag">'+p.tag+'</span>':'')+'<h3>'+p.t+'</h3><div class="pp">'+fmt(conv(p.usd,cur),cur)+'</div><div class="pn">'+(p.pp?"per student":"total")+'</div><div class="pn">'+p.n+'</div>'+(p.save?'<span class="p-save">Save '+p.save+'%</span>':'')+'</button>'});$("plans").innerHTML=h;$("plan-note").textContent=NOTE[tab]}
+function renderCur(){var h="";Object.keys(RATE).forEach(function(c){h+='<button type="button" data-c="'+c+'" aria-pressed="'+(c===cur)+'" title="'+NAME[c]+'">'+c+'</button>'});$("cur").innerHTML=h}
+function renderSum(bump){var p=find(sel),q=qty();$("s-plan").textContent=p.t;$("s-what").textContent=p.n;$("s-cur").textContent=cur;$("qtyw").style.display=p.pp?"block":"none";$("s-qrow").style.display=p.pp?"flex":"none";$("s-q").textContent=q;var t=fmt(total(),cur);$("s-total").textContent=t;$("pay-t").textContent="Pay "+t+" securely";if(bump){var e=$("s-total");e.classList.add("bump");setTimeout(function(){e.classList.remove("bump")},250)}}
+function all(b){renderPlans();renderCur();renderSum(b)}
+$("tabs").onclick=function(e){var b=e.target.closest(".p-tab");if(!b)return;tab=b.dataset.t;[].forEach.call(this.children,function(x){x.setAttribute("aria-selected",x===b)});sel=CAT[tab][CAT[tab].length>1?(tab==="one"?1:(tab==="grp"?1:0)):0].id;all(1)};
+$("plans").onclick=function(e){var b=e.target.closest(".p-plan");if(!b)return;sel=b.dataset.id;all(1)};
+$("cur").onclick=function(e){var b=e.target.closest("button");if(!b)return;cur=b.dataset.c;try{localStorage.setItem("wtm_currency",cur)}catch(x){}all(1)};
+$("qty").oninput=function(){renderSum(1)};
+function valid(){var ok=true,n=$("sn"),m=$("em");[n,m].forEach(function(x){x.classList.remove("bad")});if(n.value.trim().length<2){n.classList.add("bad");ok=false}if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(m.value.trim())){m.classList.add("bad");ok=false}if(!ok){msg("Please add the student's name and a valid email so we can send your receipt.","err");(n.classList.contains("bad")?n:m).focus()}return ok}
+function busy(b){$("pay").disabled=b;$("pay").classList.toggle("busy",b)}
+function done(id,note){$("sumbody").style.display="none";$("done").style.display="block";$("done-ref").textContent=id?"Payment ID: "+id:"";if(note)$("done-p").textContent=note;$("sum").scrollIntoView({behavior:"smooth",block:"center"});try{sessionStorage.removeItem("wtm_pay")}catch(e){}}
+function loadRzp(){return new Promise(function(res,rej){if(window.Razorpay)return res();var s=document.createElement("script");s.src="https://checkout.razorpay.com/v1/checkout.js";s.onload=res;s.onerror=function(){rej(new Error("load"))};document.head.appendChild(s)})}
+function payload(){var p=find(sel);return{plan:sel,currency:cur,qty:qty(),name:$("sn").value.trim(),email:$("em").value.trim(),phone:$("ph").value.trim(),notes:$("nt").value.trim().slice(0,300),amount:total()}}
+function open(o,data){var rz=new Razorpay({key:o.keyId,amount:o.amount,currency:o.currency,order_id:o.orderId||undefined,name:"We The Mind",description:find(sel).t+" · "+find(sel).n,image:location.origin+location.pathname.replace(/pay\/.*$/,"")+"assets/wtm-logo.png",prefill:{name:data.name,email:data.email,contact:data.phone},notes:{student:data.name,plan:data.plan,qty:String(data.qty),whatsapp:data.phone,details:data.notes},theme:{color:"#E52421"},modal:{ondismiss:function(){busy(false);msg("Payment was not completed. You have not been charged.","err")}},handler:function(r){var C=window.WTM_PAY||{};if(C.verifyEndpoint&&r.razorpay_signature){fetch(C.verifyEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(r)}).catch(function(){})}done(r.razorpay_payment_id)}});rz.on("payment.failed",function(r){busy(false);msg((r&&r.error&&r.error.description)||"The payment did not go through. You have not been charged. Please try another card or method.","err")});rz.open()}
+$("pay").onclick=async function(){msg("");if(!valid())return;var C=window.WTM_PAY||{},data=payload();
+ if(!C.orderEndpoint&&!C.keyId&&!(C.links&&C.links[sel])){$("alt").style.display="block";$("alt").scrollIntoView({behavior:"smooth",block:"center"});msg("Card payments are not switched on yet. Please use PayPal or UPI below.","err");return}
+ busy(true);
+ try{
+  if(C.orderEndpoint){var r=await fetch(C.orderEndpoint,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action:"order",plan:data.plan,currency:data.currency,qty:data.qty,name:data.name,email:data.email,phone:data.phone,notes:data.notes})});var o=await r.json();if(!r.ok||!o.orderId)throw new Error(o.error||"order");await loadRzp();open(o,data)}
+  else if(C.links&&C.links[sel]){location.href=C.links[sel]}
+  else{await loadRzp();open({keyId:C.keyId,amount:Math.round(data.amount*100),currency:data.currency},data)}
+ }catch(e){busy(false);msg(e.message==="load"?"We could not load the secure payment window. Check your connection and try again.":"We could not start the payment just now. Please try again, or use PayPal or UPI below.","err");if(e.message!=="load")$("alt").style.display="block"}};
+all(0);
+})();
+</script>
+<footer> <div class="wrap"> <div class="footer-grid"> <div> <h4>We The Mind</h4> <p style="max-width:34ch;margin:0 auto">Live online tutoring for Grade 9 to college, with a free first class.</p> <div class="footer-social"> <a aria-label="YouTube" href="#" onclick="event.preventDefault()" rel="noopener" target="_blank" title="YouTube — link coming soon"> <svg aria-hidden="true" viewbox="0 0 24 24"><rect fill="none" height="14" rx="4" stroke="var(--ink-2)" stroke-width="1.6" width="20" x="2" y="5"></rect><path d="M10 9l6 3-6 3z" fill="var(--ink-2)"></path></svg> </a> <a aria-label="Instagram" href="#" onclick="event.preventDefault()" rel="noopener" target="_blank" title="Instagram — link coming soon"> <svg aria-hidden="true" viewbox="0 0 24 24"><rect fill="none" height="18" rx="5" stroke="var(--ink-2)" stroke-width="1.6" width="18" x="3" y="3"></rect><circle cx="12" cy="12" fill="none" r="4" stroke="var(--ink-2)" stroke-width="1.6"></circle><circle cx="17.2" cy="6.8" fill="var(--ink-2)" r="1.1"></circle></svg> </a> <a aria-label="LinkedIn" href="https://www.linkedin.com/company/wethemind/" rel="noopener" target="_blank" title="LinkedIn"> <svg aria-hidden="true" viewbox="0 0 24 24"><rect fill="none" height="18" rx="3" stroke="var(--ink-2)" stroke-width="1.6" width="18" x="3" y="3"></rect><circle cx="8" cy="9" fill="var(--ink-2)" r="1.3"></circle><rect fill="var(--ink-2)" height="7" width="2" x="7" y="11.5"></rect><path d="M12 11.5h2v1.1c.5-.8 1.4-1.3 2.5-1.3 2 0 3 1.3 3 3.6V18.5h-2v-3.2c0-1-.4-1.7-1.4-1.7-1 0-1.6.7-1.6 1.7v3.2h-2z" fill="var(--ink-2)"></path></svg> </a> <a aria-label="WhatsApp" href="https://wa.me/917478147260?text=Hi%20We%20the%20Mind!%20%F0%9F%91%8B%20I%27d%20love%20to%20grab%20a%20free%2030-minute%20session%20for%20my%20child%20%E2%80%94%20could%20you%20help%20me%20get%20started%3F" rel="noopener" target="_blank"> <svg aria-hidden="true" viewbox="0 0 32 32"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3z" fill="#25D366"></path><path d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z" fill="#fff"></path></svg> </a> </div> <a class="whatsapp-channel-cta" href="https://whatsapp.com/channel/0029Vb8QtE2AO7R8RcLozc3w" rel="noopener" target="_blank"> <span class="whatsapp-channel-icon"><svg aria-hidden="true" viewbox="0 0 32 32"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.8L3 29l6.7-2.1c1.9 1.1 4.1 1.7 6.3 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23.1c-2 0-3.9-.5-5.5-1.5l-.4-.2-4 1.2 1.2-3.9-.3-.4c-1.1-1.7-1.7-3.7-1.7-5.7 0-5.9 4.8-10.7 10.7-10.7 5.9 0 10.7 4.8 10.7 10.7S21.9 26.1 16 26.1z" fill="#fff"></path><path d="M21.6 18.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-.9 1.2-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.4-1.5-.9-.8-1.5-1.8-1.6-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.2.2-.3.3-.5.1-.2 0-.4 0-.6 0-.2-.7-1.7-1-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.4 0 1.4 1 2.8 1.2 3 .1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.8-.7 2-1.4.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4z" fill="#fff"></path></svg></span> <span class="whatsapp-channel-text"><strong>Join Our WhatsApp Channel</strong><small>Free course updates &amp; opportunities</small></span> </a> </div> <div> <h4>Explore</h4> <ul> <li><a href="../education/">Tutoring</a></li> <li><a href="../education/pricing/">Prices</a></li> <li><a href="../education/sat-practice/">Free SAT practice</a></li> <li><a href="../tools/">Free tools</a></li> <li><a href="../money/website/">Savoring Money</a></li> <li><a href="../academy/">Academy (soon)</a></li> <li><a href="../tech/">Tech (soon)</a></li> </ul> </div> <div> <h4>Company</h4> <ul> <li><a href="../blog/">Blog</a></li> <li><a href="../about/">About</a></li> <li><a href="../contact/">Contact</a></li> <li><a href="../privacy/">Privacy Policy</a></li> <li><a href="../terms/">Terms of Service</a></li> </ul> </div> <div> <h4>Get in Touch</h4> <ul> <li><a href="mailto:hello@wethemind.com">hello@wethemind.com</a></li> <li><a href="https://wa.me/917478147260">WhatsApp: +91 74781 47260</a></li> <li><a href="../education/#book-demo">Book a Free Session</a></li> </ul> </div> </div> <div class="footer-bottom"> <span>© <span id="year"></span> We The Mind. All rights reserved.</span> <span>Made for students, everywhere.</span> </div> </div> </footer><script defer src="../analytics.js"></script><script defer src="../assets/voice.js?v=20261022"></script><script defer src="../assets/ui.js?v=20261022"></script></body></html>
