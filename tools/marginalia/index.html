@@ -4746,11 +4746,27 @@ if ("serviceWorker" in navigator){
   // back to it, and every 30 minutes (installed windows can stay open for days). When one is ready
   // it says so and refreshes on a tap - after saving your work - or straight away on the start screen.
   let swReg = null, hadController = !!navigator.serviceWorker.controller, updateShown = false;
-  const checkForUpdate = ()=>{ if (swReg && navigator.onLine !== false) swReg.update().catch(()=>{}); };
+  // Also watch plans.js directly: a change to it alone (plans, sign-in, ads) never changes sw.js,
+  // so the service worker would not notice it. Compare a fingerprint of the file instead.
+  let jsSig = null;
+  const jsCheck = ()=>{
+    if (navigator.onLine === false) return;
+    fetch("plans.js?c=" + Date.now(), {cache:"no-store"}).then(r=>r.ok ? r.text() : "").then(t=>{
+      if (!t) return;
+      let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) | 0;
+      const sig = t.length + ":" + h;
+      if (jsSig === null){ jsSig = sig; return; }
+      if (sig === jsSig || updateShown) return;
+      updateShown = true;
+      if (!curDoc) location.reload(); else showUpdateReady();
+    }).catch(()=>{});
+  };
+  const checkForUpdate = ()=>{ if (swReg && navigator.onLine !== false) swReg.update().catch(()=>{}); jsCheck(); };
   window.addEventListener("load", ()=>{
     navigator.serviceWorker.register("sw.js", {updateViaCache: "none"}).then((reg)=>{
       swReg = reg;
-      setInterval(checkForUpdate, 30*60*1000);
+      jsCheck();
+      setInterval(checkForUpdate, 10*60*1000);
     }).catch(err=> console.warn("Service worker failed:", err));
   });
   document.addEventListener("visibilitychange", ()=>{ if (!document.hidden) checkForUpdate(); });
