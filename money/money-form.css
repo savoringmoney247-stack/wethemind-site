@@ -1,0 +1,10 @@
+/* Savoring Money booking form: navy + gold palette (overrides shared WTM red form styling) */
+#demo-form .form-submit{background:linear-gradient(135deg,#C99A1F 0%,#E6CB6E 38%,#FBE7A0 52%,#E6CB6E 66%,#C99A1F 100%)!important;background-size:200% 100%;color:#0D3B66!important;font-family:'Fredoka','Nunito',sans-serif!important;font-weight:600!important;letter-spacing:.02em!important;border:1px solid rgba(13,59,102,.18)!important;box-shadow:0 16px 26px -14px rgba(13,59,102,.55),inset 0 1px 0 rgba(255,255,255,.6)!important;text-shadow:0 1px 0 rgba(255,255,255,.35)!important;transition:transform .2s,box-shadow .2s,background-position .5s!important}
+#demo-form .form-submit:hover{background-position:100% 0!important;box-shadow:0 20px 30px -14px rgba(13,59,102,.7),inset 0 1px 0 rgba(255,255,255,.6)!important}
+#demo-form .form-submit svg{stroke:#0D3B66}
+#demo-form .fstep{color:#0D3B66;font-family:'Fredoka','Nunito',sans-serif;letter-spacing:.1em}
+#demo-form .fstep i{background:linear-gradient(135deg,#0D3B66,#1B5A94);color:#F6E7A8;font-family:'Fredoka','Nunito',sans-serif;box-shadow:0 6px 12px -6px rgba(13,59,102,.7)}
+#demo-form .fstep::after{background:linear-gradient(90deg,rgba(156,122,31,.45),transparent)}
+#demo-form .trust{color:#0D3B66;font-family:'Nunito',sans-serif;font-weight:700}
+#demo-form .trust li svg{color:#9C7A1F;stroke:#9C7A1F}
+#demo-form .form-footnote{color:#5b5a4c;font-family:'Nunito',sans-serif}
