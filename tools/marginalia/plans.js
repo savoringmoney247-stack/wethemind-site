@@ -555,8 +555,9 @@
       + '<div class="mg-kinds" role="group" aria-label="What kind of feedback"></div>'
       + '<label>How is Manaluz working for you?</label><div class="mg-stars" role="group" aria-label="Rating"></div>'
       + '<label for="mg-fb-msg">Your message</label><textarea id="mg-fb-msg" maxlength="1500" placeholder="What happened, or what would make Manaluz better for you?"></textarea>'
-      + '<div class="mg-fbrow"><div><label for="mg-fb-name">Name (optional)</label><input id="mg-fb-name" type="text" maxlength="80" value="' + esc2(nm) + '" autocomplete="name"></div>'
-      + '<div><label for="mg-fb-mail">Email (to reply)</label><input id="mg-fb-mail" type="email" maxlength="120" value="' + esc2(em) + '" autocomplete="email" placeholder="you@example.com"></div></div>'
+      + '<div class="mg-fbrow"><div><label for="mg-fb-name">Name *</label><input id="mg-fb-name" type="text" maxlength="80" required value="' + esc2(nm) + '" autocomplete="name"></div>'
+      + '<div><label for="mg-fb-mail">Email *</label><input id="mg-fb-mail" type="email" maxlength="120" required value="' + esc2(em) + '" autocomplete="email" placeholder="you@example.com"></div></div>'
+      + '<div style="margin:0 0 12px"><label for="mg-fb-tel">Contact number (optional)</label><input id="mg-fb-tel" type="text" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="+91 …"></div>'
       + '<label class="mg-fbchk"><input type="checkbox" id="mg-fb-dev" checked> Include my browser and screen size, so we can reproduce problems</label>'
       + '<div style="position:absolute;left:-9999px" aria-hidden="true"><input type="text" id="mg-fb-hp" tabindex="-1" autocomplete="off"></div>'
       + '<p class="mg-fberr" id="mg-fb-err" role="alert"></p>'
@@ -585,10 +586,12 @@
     setTimeout(function () { if (fbDlg) fbDlg.classList.add("show"); }, 50);
     var send = card.querySelector("#mg-fb-send"), err = card.querySelector("#mg-fb-err");
     send.addEventListener("click", function () {
-      var msg = card.querySelector("#mg-fb-msg").value.trim(), mail = card.querySelector("#mg-fb-mail").value.trim(), name = card.querySelector("#mg-fb-name").value.trim();
+      var msg = card.querySelector("#mg-fb-msg").value.trim(), mail = card.querySelector("#mg-fb-mail").value.trim(), name = card.querySelector("#mg-fb-name").value.trim(), tel = card.querySelector("#mg-fb-tel").value.trim();
       err.textContent = "";
       if (msg.length < 8) { err.textContent = "Please write a little more so we can help."; card.querySelector("#mg-fb-msg").focus(); return; }
-      if (mail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { err.textContent = "That email looks off. Fix it, or leave it empty."; return; }
+      if (name.length < 2) { err.textContent = "Please tell us your name."; card.querySelector("#mg-fb-name").focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { err.textContent = "Please enter a valid email so we can reply."; card.querySelector("#mg-fb-mail").focus(); return; }
+      if (tel && !/^[+\d][\d\s()\-]{5,18}$/.test(tel)) { err.textContent = "That contact number looks off. Fix it, or leave it empty."; card.querySelector("#mg-fb-tel").focus(); return; }
       try { var last = +localStorage.getItem("mg-fb-last") || 0; if (Date.now() - last < 30000) { err.textContent = "Thanks, that one just went through. Please wait a moment before sending another."; return; } } catch (e) {}
       var dev = card.querySelector("#mg-fb-dev").checked ? ("\n\nDevice: " + navigator.userAgent + " | screen " + screen.width + "x" + screen.height + " | build " + (document.documentElement.getAttribute("data-build") || "?")) : "";
       var head = "[Manaluz feedback · " + kind + (rating ? " · " + rating + "/5" : "") + " · Plan: " + planLabel() + "]\n";
@@ -597,9 +600,10 @@
       fd.append("source_page", "/tools/marginalia/ (Manaluz Spark feedback)");
       fd.append("form_started_at", String(fbOpenedAt));
       fd.append("company_website", card.querySelector("#mg-fb-hp").value);
-      fd.append("student_name", name || "Manaluz user");
+      fd.append("student_name", name);
+      if (tel) fd.append("phone", tel);
       fd.append("email", mail);
-      fd.append("notes", head + msg + dev);
+      fd.append("notes", head + msg + (tel ? "\n\nContact number: " + tel : "") + dev);
       send.disabled = true; send.textContent = "Sending…";
       var wait = Math.max(0, 3500 - (Date.now() - fbOpenedAt));
       setTimeout(function () {
@@ -608,7 +612,7 @@
         card.innerHTML = '<button class="mg-x" aria-label="Close" data-fb="close">×</button><div class="mg-fbdone">'
           + '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M19 33l9 9 17-19"/></svg>'
           + '<h2 style="justify-content:center;margin-top:12px">Thank you!</h2>'
-          + '<p class="mg-fbsub" style="margin:0">Your feedback is on its way to us.' + (mail ? " We will email you at <b>" + esc2(mail) + "</b> once it is resolved." : " Add an email next time if you would like a reply.") + '</p></div>';
+          + '<p class="mg-fbsub" style="margin:0">Your feedback is on its way to us.' + " We will email you at <b>" + esc2(mail) + "</b> once it is resolved." + '</p></div>';
         card.querySelector('[data-fb="close"]').addEventListener("click", closeFeedback);
         setTimeout(closeFeedback, 3600);
       }, wait);
