@@ -657,7 +657,7 @@
   function wishCss() {
     if (document.getElementById("mg-offer-css")) return;
     var s = document.createElement("style"); s.id = "mg-offer-css";
-    s.textContent = ".mg-wish-hero,.mg-fbdone{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important}.mg-wish-hero>*{width:100%;margin-left:auto!important;margin-right:auto!important;text-align:center!important;justify-content:center!important;align-items:center!important}.mg-wish-hero h2,.mg-wish-hero p{display:block!important}.mg-wish-price{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important}.mg-step{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}"
+    s.textContent = ".mg-wish-hero,.mg-fbdone{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important}.mg-wish-hero>*{width:100%;margin-left:auto!important;margin-right:auto!important;text-align:center!important;justify-content:center!important;align-items:center!important}.mg-wish-hero{padding:34px 22px 26px!important;gap:10px}.mg-wish-hero h2{display:block!important;font-size:clamp(30px,6vw,40px)!important;line-height:1.1!important;letter-spacing:-.01em;text-shadow:0 4px 22px rgba(0,0,0,.28);animation:mgGlow 3.2s ease-in-out infinite}.mg-wish-hero p{display:block!important;max-width:34ch;font-size:15px;line-height:1.5;opacity:.95;text-wrap:balance}.mg-wish-price{margin-top:6px;backdrop-filter:blur(6px);box-shadow:0 8px 26px rgba(0,0,0,.18)}@keyframes mgGlow{0%,100%{text-shadow:0 4px 22px rgba(0,0,0,.28)}50%{text-shadow:0 0 26px rgba(255,255,255,.55)}}.mg-wish-price{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important}.mg-step{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}"
       + ".mg-offers{margin:14px 0;display:grid;gap:10px;text-align:center}"
       + ".mg-offers h3{margin:0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}"
       + ".mg-offer{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(229,24,28,.10),rgba(168,85,247,.12));border:1px solid rgba(229,24,28,.35);animation:mgOfferIn .5s cubic-bezier(.2,.9,.3,1.2) both}"
@@ -699,6 +699,20 @@
     wishCss();
     var anchor = card.querySelector(".mg-steps");
     if (!anchor) return;
+    var pill = card.querySelector(".mg-wish-price");
+    if (pill) {
+      pill.setAttribute("role", "button"); pill.setAttribute("tabindex", "0"); pill.style.cursor = "pointer"; pill.title = "Tap to get started";
+      var goPill = function () {
+        var pay = card.querySelector(".mg-offer:not(.paid) button");
+        var tgt = pay ? pay.parentNode : card.querySelector("#mg-w-msg");
+        if (tgt && tgt.scrollIntoView) tgt.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (!pay && tgt && tgt.focus) setTimeout(function () { tgt.focus(); }, 450);
+        if (tgt) { tgt.style.transition = "box-shadow .3s"; tgt.style.boxShadow = "0 0 0 3px rgba(229,24,28,.55)"; setTimeout(function () { tgt.style.boxShadow = ""; }, 1400); }
+        toast(pay ? "Your upgrade is approved. Tap Pay ₹499 below." : "Describe your wish below. You pay ₹499 only after we approve it.");
+      };
+      pill.addEventListener("click", goPill);
+      pill.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goPill(); } });
+    }
     if (isOwner()) {
       var ow = el("div", "mg-owner");
       ow.innerHTML = "<strong>Owner: approve an upgrade</strong><input type=\"email\" id=\"mg-o-mail\" placeholder=\"customer email (must have signed in)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹499 offer</button>";
