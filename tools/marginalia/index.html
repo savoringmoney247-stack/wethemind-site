@@ -4562,7 +4562,7 @@ async function downloadOneDoc(d){
     saveBlob(new Blob([bytes], {type:"application/pdf"}), (d.file ? d.name : "notes") + "-annotated.pdf");
   }catch(err){
     console.error(err);
-    showToast("Something went wrong building the PDF.");
+    showToast("Something went wrong building the PDF." + (err && err.message ? " (" + String(err.message).slice(0, 70) + ")" : ""));
   }finally{
     exportBtn.disabled = !curDoc; dlMoreBtn.disabled = !docs.length; btn.innerHTML = oldLabel;
   }
@@ -4711,13 +4711,31 @@ async function drawAnnotations(page, ps, fontSet, embedImage){
     const face = fontSet[t.font] || fontSet.Helvetica;
     const useFont = t.bold ? face.bold : face.regular;
     const lineHeight = t.fontSize * 1.28;
-    const lines = wrapText(t.text, useFont, t.fontSize, t.w);
+    const lines = wrapText(mgSafe(t.text, useFont), useFont, t.fontSize, t.w);
     let y = H - t.y - t.fontSize*0.92;
     for (const line of lines){
       page.drawText(line, {x: t.x, y, size: t.fontSize, font: useFont, color: hexToRgb01(t.color)});
       y -= lineHeight;
     }
   }
+}
+// The built-in PDF fonts only cover Western characters. Anything else (math symbols, other scripts,
+// emoji) used to make the whole download fail, so swap in plain look-alikes and never throw.
+const MG_SYM = {"\u2212":"-","\u2013":"-","\u2014":"-","\u2264":"<=","\u2265":">=","\u2260":"!=","\u2248":"~","\u221A":"sqrt","\u03C0":"pi","\u221E":"inf","\u2192":"->","\u2190":"<-","\u21D2":"=>","\u2022":"\u2022","\u22C5":".","\u00B7":".","\u2217":"*","\u2211":"sum","\u0394":"Delta","\u03B8":"theta","\u03B1":"alpha","\u03B2":"beta","\u03BB":"lambda","\u03BC":"mu","\u03C3":"sigma","\u03A9":"Omega","\u03C9":"omega","\u2220":"angle","\u22A5":"perp","\u2225":"||","\u2234":"therefore","\u2235":"because","\u00A0":" ","\u2009":" ","\u200B":"","\u2070":"0","\u00B2":"\u00B2","\u00B3":"\u00B3","\u2074":"^4","\u2075":"^5","\u2076":"^6","\u2077":"^7","\u2078":"^8","\u2079":"^9","\u2080":"_0","\u2081":"_1","\u2082":"_2","\u2083":"_3","\u2084":"_4","\u2085":"_5","\u2086":"_6","\u2087":"_7","\u2088":"_8","\u2089":"_9","\u20B9":"Rs"};
+function mgSafe(text, font){
+  let out = "";
+  for (const ch of String(text)){
+    if (ch === "\n") { out += ch; continue; }
+    let r = ch;
+    try { font.encodeText(r); }
+    catch (e) {
+      r = MG_SYM[ch];
+      if (r === undefined) r = "?";
+      else { try { font.encodeText(r); } catch (e2) { r = r.replace(/[^\x20-\x7E]/g, "?"); } }
+    }
+    out += r;
+  }
+  return out;
 }
 function wrapText(text, font, size, maxWidth){
   const out = [];
@@ -4742,7 +4760,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "61";
+const MG_BUILD = "62";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
