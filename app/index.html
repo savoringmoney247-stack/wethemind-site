@@ -165,6 +165,20 @@ select,input[type=text]{text-align:center;text-align-last:center}
 #ios{display:none;position:fixed;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:40;max-width:420px;margin:0 auto;background:var(--card);border:2px solid var(--yel);border-radius:18px;padding:14px 16px;text-align:center;box-shadow:0 16px 40px -12px rgba(0,0,0,.35);font-weight:700}
 #ios.on{display:block;animation:pup .3s ease both}
 #ios button{background:none;border:0;color:var(--mut);font:700 .85rem Nunito;margin-top:6px;cursor:pointer}
+.mod{text-align:left;border:1.5px solid var(--line);border-radius:14px;margin:7px 0;background:var(--bg);overflow:hidden}
+.mod summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;flex-direction:column;gap:1px;position:relative;padding-right:38px}
+.mod summary::-webkit-details-marker{display:none}
+.mod summary::after{content:"+";position:absolute;right:14px;top:50%;margin-top:-13px;font:700 1.3rem Fredoka;color:var(--red);transition:transform .25s}
+.mod[open] summary::after{transform:rotate(45deg)}
+.mod summary b{font:600 .98rem Fredoka,sans-serif}.mod summary i{font-style:normal;color:var(--mut);font-size:.84rem;font-weight:700}
+.mod ul{margin:0;padding:0 14px 12px 32px;list-style:disc;text-align:left}.mod li{padding:2px 0;font-size:.9rem}
+.det .mod ul{list-style:disc;padding:0 14px 12px 32px}
+.det .std{margin:0 0 8px}
+
+.alts{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line)}
+.alts span{width:100%;font:800 .72rem Nunito;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.alts a{font:700 .9rem Nunito;text-decoration:none;color:var(--ink);background:var(--chip);border:1.5px solid var(--line);padding:9px 18px;border-radius:99px}
+.alts.hot a{background:var(--yel);color:#0C1A33;border-color:var(--yel);animation:pop .5s ease both}
 </style>
 <div id="ios"><div>Install Mathynx: tap <b>Share</b> ⬆️ then <b>Add to Home Screen</b></div><button id="iosx">Got it</button></div>
 <div id="ps" role="dialog" aria-modal="true" aria-label="Pay"><div class="pbox" id="pb"></div></div>
@@ -224,9 +238,63 @@ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'
 const ICO={courses:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6a3 3 0 013 3v11a2 2 0 00-2-2H4zM20 5h-6a3 3 0 00-3 3v11a2 2 0 012-2h7z"/></svg>',pricing:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9.5c0-1-1.3-1.8-3-1.8s-3 .8-3 1.9 1.3 1.6 3 2 3 .9 3 2-1.3 1.9-3 1.9-3-.8-3-1.8"/></svg>',book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>'};
 const TABS=[['courses','Courses'],['pricing','Pricing'],['book','Enroll']];
 function nav(){$('#nav').innerHTML=TABS.map(([k,l])=>`<button data-go="${k}" ${st.tab==k?'aria-current="page"':''}>${ICO[k]}${l}</button>`).join('')}
+
+/* ===== Curriculum: aligned to College Board frameworks & US Common Core (CCSS-M) ===== */
+const CUR={
+sat:{std:'College Board Digital SAT Math framework',min:24,hook:'4 domains. 1 pattern behind every question.',mods:[
+ ['Algebra','Which trick solves a problem in 10 seconds?',['Linear equations in one variable','Linear equations in two variables','Linear functions and slope','Systems of two linear equations','Linear inequalities']],
+ ['Advanced Math','Why do curves trick so many students?',['Equivalent expressions','Quadratics and nonlinear equations','Systems with a line and a curve','Polynomial, exponential and radical functions','Function transformations']],
+ ['Problem-Solving & Data','Can a graph lie to you?',['Ratios, rates and units','Percentages and percent change','Center and spread of data','Scatterplots and models','Probability and conditional probability','Sampling, margin of error, studies']],
+ ['Geometry & Trig','Which shapes hide on every test?',['Area and volume','Lines, angles and triangles','Right triangles and trig','Circles and equations of circles']],
+ ['Test Mode','How do top scorers use the clock?',['Desmos and calculator strategy','Module 1 and 2 pacing','2 full timed mock tests','Mistake log and review']]]},
+calc:{std:'College Board AP Calculus AB & BC (CED, 8 units AB / 10 units BC)',min:36,min2:'BC: 48 classes',hook:'The math behind motion, growth and change.',mods:[
+ ['Unit 1 · Limits','What happens when you zoom in forever?',['Rates of change','Limits from graphs, tables, algebra','Continuity','Infinite limits and asymptotes','Squeeze theorem, IVT']],
+ ['Unit 2 · Derivative rules','How fast is anything changing, right now?',['Definition of the derivative','Power, product, quotient rules','Trig, exponential, log derivatives']],
+ ['Unit 3 · Chain & implicit','Can you differentiate what you cannot solve?',['Chain rule','Implicit differentiation','Inverse functions and inverse trig','Higher-order derivatives']],
+ ['Unit 4 · Real-world rates','Why does a balloon grow slower as it fills?',['Motion: position, velocity, acceleration','Related rates','Linearization','L\'Hôpital\'s Rule']],
+ ['Unit 5 · Graph analysis','Can derivatives sketch a graph blind?',['Mean Value Theorem, extrema','Increasing, concavity, inflection','Optimization','Candidates test']],
+ ['Unit 6 · Integrals','How do tiny slices add up to an exact area?',['Riemann sums','Fundamental Theorem of Calculus','Antiderivatives and u-substitution','Integration by parts, partial fractions (BC)']],
+ ['Unit 7 · Differential equations','Can an equation predict the future?',['Slope fields','Separation of variables','Exponential and logistic models','Euler\'s method (BC)']],
+ ['Unit 8 · Applications','How much water fills this strange shape?',['Average value','Area between curves','Volumes: discs, washers, cross sections','Accumulation and net change','Arc length (BC)']],
+ ['BC · Unit 9','What if x and y both depend on time?',['Parametric equations and derivatives','Polar curves and area','Vector-valued functions']],
+ ['BC · Unit 10','Can infinitely many numbers add to a finite one?',['Convergence tests','Taylor and Maclaurin series','Lagrange error bound','Radius and interval of convergence']],
+ ['Exam Mode','What does a 5 really look like?',['MCQ and FRQ strategy','Timed practice exams','Calculator-active techniques']]]},
+alg1:{std:'US Common Core (CCSS-M) Algebra 1: HSA, HSF, HSN, HSS',min:36,hook:'The language every other math class speaks.',mods:[
+ ['Relationships between quantities','Why does every story become an equation?',['Units and quantities','Reading and writing expressions','Rates, ratios and modeling']],
+ ['Linear equations & inequalities','What does "solve" really mean?',['One-variable equations and inequalities','Literal equations and formulas','Absolute value','Compound inequalities']],
+ ['Linear functions & graphs','How does a line tell a story?',['Slope, intercepts and forms of a line','Graphing and writing linear equations','Function notation, domain and range','Arithmetic sequences']],
+ ['Systems','When do two stories meet?',['Graphing, substitution, elimination','Systems of inequalities','Word problems with systems']],
+ ['Exponents & polynomials','How do you shrink a giant number?',['Laws of exponents','Add, subtract, multiply polynomials','Factoring (GCF, trinomials, difference of squares)','Scientific notation']],
+ ['Quadratics','Why does a thrown ball trace a parabola?',['Graphing parabolas','Solve by factoring, square roots, formula','Completing the square','Vertex form and key features']],
+ ['Exponential functions','Why does money (and a virus) snowball?',['Growth and decay','Linear vs exponential','Geometric sequences']],
+ ['Data & statistics','Can numbers argue both sides?',['Mean, median, spread, box plots','Scatterplots and lines of best fit','Two-way tables, correlation vs causation']]]},
+alg2:{std:'US Common Core (CCSS-M) Algebra 2: HSN, HSA, HSF, HSS',min:40,hook:'The bridge from school math to real-world models.',mods:[
+ ['Functions & transformations','How do graphs shift, stretch, flip?',['Function families and notation','Transformations','Inverse and composite functions','Piecewise and absolute value']],
+ ['Quadratics & complex numbers','Can a number be imaginary and still useful?',['Complex numbers','Quadratic formula and discriminant','Completing the square','Quadratic systems']],
+ ['Polynomials','How many times can a curve cross zero?',['Operations and long/synthetic division','Remainder and Factor Theorem','Zeros, end behavior, graphs','Fundamental Theorem of Algebra']],
+ ['Rational & radical functions','Why can\'t you ever divide by zero?',['Rational expressions and equations','Asymptotes and holes','Radicals and rational exponents','Extraneous solutions']],
+ ['Exponential & logarithmic','Why do logs turn growth into straight lines?',['Exponential models and e','Logarithm definition and properties','Solving exponential and log equations','Compound interest']],
+ ['Sequences & series','How do patterns add up?',['Arithmetic and geometric sequences','Sigma notation','Finite and infinite geometric series']],
+ ['Trigonometry','Why do waves repeat?',['Unit circle and radians','Sine and cosine graphs','Trig identities (Pythagorean)','Modeling periodic data']],
+ ['Statistics & probability','Is it luck or is it math?',['Normal distribution','Sampling and inference','Conditional probability','Counting and combinations']]]},
+geo:{std:'US Common Core (CCSS-M) Geometry: HSG, HSN, HSA',min:36,hook:'Proof is a superpower. Learn how to wield it.',mods:[
+ ['Tools & transformations','Can you move a shape without changing it?',['Points, lines, planes, constructions','Translations, reflections, rotations','Dilations and similarity transformations']],
+ ['Angles & proof','How do you convince a skeptic?',['Angle relationships, parallel lines','Two-column and paragraph proofs','Logic and conditionals']],
+ ['Triangles & congruence','Which 3 facts lock a triangle in place?',['SSS, SAS, ASA, AAS, HL','Triangle centers and inequalities','Isosceles and equilateral triangles','Midsegments']],
+ ['Similarity & right triangles','How do you measure what you cannot touch?',['Similar triangles and proportions','Pythagorean theorem and triples','Special right triangles','Sine, cosine, tangent']],
+ ['Quadrilaterals & polygons','Why are some shapes so rigid?',['Properties of parallelograms and kin','Interior and exterior angles','Coordinate proofs']],
+ ['Circles','Where do all the angles in a circle hide?',['Arcs, chords, tangents','Inscribed and central angles','Arc length and sector area','Equation of a circle']],
+ ['Area, surface & volume','How much fits in a cone?',['Area of polygons and composite figures','Prisms, cylinders, pyramids, cones, spheres','Cavalieri\'s principle','Modeling with density']],
+ ['Probability','What are the odds, really?',['Sample spaces and events','Conditional probability','Counting rules']]]}
+};
+const CURP=Object.keys(CUR);
+function cdet(c){const u=CUR[c.id];if(!u)return '';
+ return `<div class="det"><span class="std d">✓ ${u.std}</span><div class="kv" style="justify-content:center;margin:2px 0 8px"><span class="tag g">${u.min}+ live classes${u.min2?' · '+u.min2:''}</span><span class="tag">Packs of ${PACK}</span></div><div class="small" style="font-weight:800;margin-bottom:8px">${u.hook}</div>`+
+ u.mods.map((m,i)=>`<details class="mod"><summary><b>${m[0]}</b><i>${m[1]}</i></summary><ul>${m[2].map(x=>`<li>${x}</li>`).join('')}</ul></details>`).join('')+
+ `<div class="small" style="margin:10px 0">${u.min} classes is the minimum we recommend. Every ${PACK} sessions is one pack.</div><button class="btn full" data-book="${c.id}">Free demo: ${c.n}</button></div>`}
 function courses(){
  return `<div class="hero">${LYNX(104)}<h1>Ever wonder why math clicks for some?</h1><p>Find out free. 30 minutes.</p><span class="std">✓ College Board · US Common Core</span><button class="btn w" data-go="book">Book free demo</button><a class="btn w" style="background:rgba(255,255,255,.2);color:#fff" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hi We The Mind! I have a question about tutoring.')}" target="_blank" rel="noopener">Ask us</a></div>${puzzle()}${helpCard()}`+
- `<h2 style="margin:6px 0 12px">Pick your challenge</h2>`+COURSES.filter(c=>!c.hide).map(c=>`<div class="card"><button class="course" data-open="${c.id}" aria-expanded="${st.open==c.id}"><span class="ic" style="background:${c.c}">${CH[c.id](c.c)}</span><div><h3>${c.n}</h3><small>${c.g}</small><div class="small">${c.who}</div></div></button>${st.open==c.id?`<div class="det"><b>Inside</b><ul>${c.t.map(x=>`<li>${x}</li>`).join('')}</ul><button class="btn full" data-book="${c.id}">Free demo: ${c.n}</button></div>`:''}</div>`).join('');
+ `<h2 style="margin:6px 0 12px">Pick your challenge</h2>`+COURSES.filter(c=>!c.hide).map(c=>`<div class="card"><button class="course" data-open="${c.id}" aria-expanded="${st.open==c.id}"><span class="ic" style="background:${c.c}">${CH[c.id](c.c)}</span><div><h3>${c.n}</h3><small>${c.g}</small><div class="small">${c.who}</div></div></button>${st.open==c.id?cdet(c):''}</div>`).join('');
 }
 function pricing(){
  const f=st.fmt,pr=PRICES[f].pack;
@@ -290,25 +358,27 @@ function loadRzp(){return new Promise((res,rej)=>{if(window.Razorpay)return res(
 function psOpen(id){payPlan=id;const p=PLANS[id];let sv={};try{sv=JSON.parse(localStorage.getItem('mx_pay')||'{}')}catch(e){}
  $('#pb').innerHTML=`<div class="chr">${CH.coin()}</div><h3>${p.t}</h3><div class="small">${p.n}</div><div class="pr">${money(p.usd)}</div>
  <input id="pn" placeholder="Student name" autocomplete="name" value="${(sv.n||'').replace(/"/g,'')}"><input id="pe" type="email" placeholder="Parent email" autocomplete="email" value="${(sv.e||'').replace(/"/g,'')}"><input id="pp" type="tel" placeholder="Parent WhatsApp number" autocomplete="tel" value="${(sv.p||'').replace(/"/g,'')}">
- <div class="perr" id="perr"></div><button class="btn full" id="pgo">Pay ${money(p.usd)} securely</button><div class="small" style="margin-top:8px">Cards, UPI, wallets. Powered by Razorpay.</div><button class="x" id="pcl">Not now</button>`;
+ <div class="perr" id="perr"></div><button class="btn full" id="pgo">Pay ${money(p.usd)} securely</button><div class="small" style="margin-top:8px">Cards, UPI, wallets. Powered by Razorpay.</div><div class="alts"><span>Or pay another way</span><a href="https://www.paypal.me/kingshuk46/${p.usd}USD" target="_blank" rel="noopener">PayPal</a><a id="pwa" href="#" target="_blank" rel="noopener">WhatsApp us</a></div><button class="x" id="pcl">Not now</button>`;
  $('#ps').classList.add('on');document.body.style.overflow='hidden'}
 function psClose(){$('#ps').classList.remove('on');document.body.style.overflow=''}
 function psDone(pid,p,d){const m=`Hi We The Mind! I just paid ${money(p.usd)} for ${p.t} (Payment ID ${pid}). Student: ${d.n}. Please schedule my sessions.`;
  $('#pb').innerHTML=`<div class="chr">${LYNX(90)}</div><h3>You're in! 🎉</h3><p style="margin:6px 0 12px">Payment received. Tap below and we'll set your first session.</p><div class="small" style="margin-bottom:12px">Payment ID: ${pid}</div><a class="btn full" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(m)}" target="_blank" rel="noopener">Schedule on WhatsApp</a><button class="x" id="pcl">Close</button>`}
+function psWa(){const p=PLANS[payPlan],n=($('#pn')||{}).value||'',m=`Hi We The Mind! I'd like to pay ${money(p.usd)} for ${p.t}. Student: ${n}. Please send me a payment link.`;return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(m)}`}
+function psFail(msg){const b=$('#pgo'),p=PLANS[payPlan];b.disabled=false;b.textContent='Try card again';$('#perr').innerHTML=msg+(/[.!]$/.test(msg)?'':'.')+' <b>No money was taken.</b> Use PayPal or WhatsApp below.';const a=document.querySelector('.alts');if(a)a.classList.add('hot')}
 async function psPay(){const p=PLANS[payPlan],d={n:$('#pn').value.trim(),e:$('#pe').value.trim(),p:$('#pp').value.trim()},err=$('#perr');
  ['pn','pe','pp'].forEach(k=>$('#'+k).classList.remove('bad'));let bad=[];
  if(d.n.length<2)bad.push('pn');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.e))bad.push('pe');if(d.p.replace(/\D/g,'').length<7)bad.push('pp');
  if(bad.length){bad.forEach(k=>$('#'+k).classList.add('bad'));err.textContent='Please fill all three so we can send your receipt.';return}
  try{localStorage.setItem('mx_pay',JSON.stringify(d))}catch(e){}
  const b=$('#pgo');b.disabled=true;b.textContent='Opening secure checkout…';err.textContent='';
- try{await loadRzp()}catch(e){b.disabled=false;b.textContent='Pay '+money(p.usd)+' securely';err.innerHTML=`Secure checkout can't open here. <a href="${LIVE_URL}" target="_blank" rel="noopener">Open the live app</a> to pay.`;return}
+ try{await loadRzp()}catch(e){psFail(location.hostname==='wethemind.com'?`Secure card checkout didn't load. Check your connection.`:`Card checkout can't open in this preview. <a href="${LIVE_URL}" target="_blank" rel="noopener">Open the live app</a>.`);return}
  const rz=new Razorpay({key:RZP_KEY,amount:Math.round(p.usd*100),currency:'USD',name:'We The Mind',description:p.t+' · '+p.n,prefill:{name:d.n,email:d.e,contact:d.p},notes:{plan:payPlan,student:d.n,whatsapp:d.p,subject:'Math'},theme:{color:'#E52421'},
   modal:{ondismiss:()=>{b.disabled=false;b.textContent='Pay '+money(p.usd)+' securely';err.textContent='Payment not completed. You have not been charged.'}},
   handler:r=>psDone(r.razorpay_payment_id,p,d)});
- rz.on('payment.failed',r=>{b.disabled=false;b.textContent='Pay '+money(p.usd)+' securely';err.textContent=(r&&r.error&&r.error.description)||'Payment failed. You have not been charged.'});
- rz.open()}
+ rz.on('payment.failed',r=>{psFail(((r&&r.error&&r.error.description)||'Card payment failed.')+'')});
+ try{rz.open()}catch(x){psFail('Card checkout could not start.')}}
 document.addEventListener('click',e=>{const t=e.target.closest('[data-pay]');if(t){psOpen(t.dataset.pay);return}
- if(e.target.id==='pgo')psPay();else if(e.target.id==='pcl'||e.target.id==='ps')psClose()});
+ if(e.target.id==='pwa'){e.target.href=psWa();return}if(e.target.id==='pgo')psPay();else if(e.target.id==='pcl'||e.target.id==='ps')psClose()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')psClose()});
 
 render();
