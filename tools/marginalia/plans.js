@@ -192,20 +192,63 @@
   var signBtn = el("button", "btn", "Sign in");
   signBtn.type = "button"; signBtn.title = "Sign in with Google to use your Pro plan on this device";
   if (actions) actions.insertBefore(signBtn, proBtn);
-  /* owner-only "View as" switch in the header (hidden for everyone else) */
-  var viewSel = el("select", "btn", "");
-  viewSel.title = "Admin: view the tool as another kind of user"; viewSel.style.display = "none";
-  [["admin", "View as: Me"], ["free", "View as: Free"], ["ember", "View as: Ember"], ["beacon", "View as: Beacon"], ["aurora", "View as: Aurora"]].forEach(function (o) {
-    var op = document.createElement("option"); op.value = o[0]; op.textContent = o[1]; viewSel.appendChild(op);
+  /* owner-only "View as" menu in the header (hidden for everyone else) */
+  var vcss = document.createElement("style");
+  vcss.textContent = [
+    ".mg-vw{position:relative;display:inline-flex}",
+    ".mg-vw>button{display:inline-flex;align-items:center;gap:7px}",
+    ".mg-vw .mg-dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--dot,#16a34a);flex:none;transition:background .35s}",
+    ".mg-vw.pulse>button .mg-dot{animation:mgRing .8s ease-out}",
+    "@keyframes mgRing{0%{box-shadow:0 0 0 0 var(--dot)}100%{box-shadow:0 0 0 13px transparent}}",
+    ".mg-vw .car{transition:transform .3s cubic-bezier(.2,.9,.3,1.3)}",
+    ".mg-vw.open .car{transform:rotate(180deg)}",
+    ".mg-vm{position:absolute;top:calc(100% + 8px);right:0;min-width:196px;padding:6px;border-radius:14px;background:var(--surface,#fff);border:1px solid var(--line,rgba(0,0,0,.12));box-shadow:0 22px 44px -18px rgba(0,0,0,.5);opacity:0;transform:translateY(-8px) scale(.94);transform-origin:top right;pointer-events:none;transition:opacity .16s ease,transform .26s cubic-bezier(.2,.95,.3,1.25);z-index:9999}",
+    ".mg-vw.open .mg-vm{opacity:1;transform:none;pointer-events:auto}",
+    ".mg-vm button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;background:none;border:none;border-radius:9px;padding:9px 10px;font:600 13px/1.1 inherit;color:inherit;cursor:pointer;opacity:0;transform:translateX(10px)}",
+    ".mg-vw.open .mg-vm button{opacity:1;transform:none;transition:opacity .22s ease,transform .28s cubic-bezier(.2,.9,.3,1.2),background .15s;transition-delay:calc(var(--i) * 40ms)}",
+    ".mg-vm button:hover{background:color-mix(in srgb,var(--accent) 11%,transparent)}",
+    ".mg-vm button.on{color:var(--accent)}",
+    ".mg-vm button.on::after{content:'\\2713';margin-left:auto;font-weight:800}",
+    ".mg-vm hr{border:none;border-top:1px solid var(--line,rgba(0,0,0,.1));margin:5px 4px}",
+    "@keyframes mgFlip{0%{transform:perspective(300px) rotateX(0)}50%{transform:perspective(300px) rotateX(88deg);opacity:.4}100%{transform:perspective(300px) rotateX(0)}}",
+    ".mg-flip{animation:mgFlip .55s ease}",
+    "@media (prefers-reduced-motion:reduce){.mg-vm,.mg-vm button,.mg-vw .car{transition:none!important}.mg-vw.pulse>button .mg-dot,.mg-flip{animation:none!important}}"
+  ].join("\n");
+  document.head.appendChild(vcss);
+  var VIEWS = [["admin", "Me (lifetime)", "#16a34a", "Me"], ["free", "Free user", "#94a3b8", "Free"], ["ember", "Ember", "#f97316", "Ember"], ["beacon", "Beacon", "#3b82f6", "Beacon"], ["aurora", "Aurora", "#a855f7", "Aurora"]];
+  var viewWrap = el("div", "mg-vw", ""); viewWrap.style.display = "none";
+  var viewBtn = el("button", "btn", '<i class="mg-dot"></i><span class="lbl"></span><svg class="car" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>');
+  viewBtn.type = "button"; viewBtn.title = "Admin: view the tool as another kind of user"; viewBtn.setAttribute("aria-haspopup", "menu");
+  var viewMenu = el("div", "mg-vm", ""); viewMenu.setAttribute("role", "menu");
+  VIEWS.forEach(function (o, i) {
+    if (i === 1) viewMenu.appendChild(document.createElement("hr"));
+    var b = el("button", "", '<i class="mg-dot" style="--dot:' + o[2] + '"></i>' + o[1]);
+    b.type = "button"; b.setAttribute("role", "menuitem"); b.setAttribute("data-v", o[0]); b.style.setProperty("--i", i);
+    b.addEventListener("click", function () { setView(o[0]); });
+    viewMenu.appendChild(b);
   });
-  if (actions) actions.insertBefore(viewSel, signBtn);
-  function syncView() { viewSel.style.display = isOwner() ? "" : "none"; viewSel.value = viewAs(); }
-  viewSel.addEventListener("change", function () {
+  viewWrap.appendChild(viewBtn); viewWrap.appendChild(viewMenu);
+  if (actions) actions.insertBefore(viewWrap, signBtn);
+  function viewInfo() { var k = viewAs(); for (var i = 0; i < VIEWS.length; i++) if (VIEWS[i][0] === k) return VIEWS[i]; return VIEWS[0]; }
+  function syncView() {
+    viewWrap.style.display = isOwner() ? "" : "none";
+    var o = viewInfo();
+    viewWrap.style.setProperty("--dot", o[2]);
+    viewBtn.querySelector(".lbl").textContent = "View as: " + o[3];
+    Array.prototype.forEach.call(viewMenu.querySelectorAll("button"), function (b) { b.classList.toggle("on", b.getAttribute("data-v") === o[0]); });
+  }
+  function setView(k) {
     if (!isOwner()) return;
-    try { localStorage.setItem("mg-viewas", viewSel.value); } catch (e) {}
-    ent = applyView(realEnt); remember(ent); showAds(!isAdFree(ent)); renderPlans();
-    toast("Viewing as: " + viewSel.options[viewSel.selectedIndex].text.replace("View as: ", ""));
-  });
+    try { localStorage.setItem("mg-viewas", k); } catch (e) {}
+    ent = applyView(realEnt); remember(ent); showAds(!isAdFree(ent)); renderPlans(); syncView();
+    viewWrap.classList.remove("open");
+    viewWrap.classList.remove("pulse"); void viewWrap.offsetWidth; viewWrap.classList.add("pulse");
+    proBtn.classList.remove("mg-flip"); void proBtn.offsetWidth; proBtn.classList.add("mg-flip");
+    toast("Viewing as: " + viewInfo()[1]);
+  }
+  viewBtn.addEventListener("click", function (e) { e.stopPropagation(); if (isOwner()) viewWrap.classList.toggle("open"); });
+  document.addEventListener("click", function (e) { if (!viewWrap.contains(e.target)) viewWrap.classList.remove("open"); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") viewWrap.classList.remove("open"); });
   signBtn.addEventListener("click", function () {
     if (user) return firebase().then(function (f) { return f.A.signOut(f.auth); });
     signIn().catch(function (e) {
