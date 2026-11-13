@@ -1045,6 +1045,12 @@ body{text-align:center}
 .mg-foot{justify-content:center;text-align:center;flex-direction:column;gap:8px}
 .mg-x{text-align:center}
 [contenteditable="true"],.content{text-align:left}
+/* phones: the header buttons hide their words (font-size:0) and keep only icons, so give the text-only ones an icon or a small label */
+@media (max-width:560px){
+  .hdr-actions .mg-wishbtn i,.hdr-actions .mg-spark i{font-size:17px;font-style:normal;line-height:1;display:inline-block}
+  .hdr-actions .mg-signbtn,.hdr-actions .mg-probtn{font-size:12px!important;font-weight:700;width:auto!important;min-width:34px;padding:7px 11px!important;white-space:nowrap}
+  .hdr-actions .mg-vw>button{font-size:12px;padding:7px 10px}
+}
 </style>
 </head>
 <body>
@@ -4782,7 +4788,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "64";
+const MG_BUILD = "65";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
