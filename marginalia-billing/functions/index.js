@@ -43,6 +43,8 @@ const RAZORPAY_WEBHOOK_SECRET = defineSecret("RAZORPAY_WEBHOOK_SECRET");
 const REGION = "asia-south1";
 const CORS = ["https://wethemind.com", "https://www.wethemind.com", /^http:\/\/localhost(:\d+)?$/];
 const GRACE_MS = 2 * 24 * 3600 * 1000;   // a couple of days' slack for late renewals
+const UPGRADE_PRICE_PAISE = 49900;        // custom upgrades: Rs 499 each, paid only after the owner approves a request
+const OWNER_EMAIL = "king.kngr47@gmail.com";
 
 const rzp = () => new Razorpay({ key_id: RAZORPAY_KEY_ID.value(), key_secret: RAZORPAY_KEY_SECRET.value() });
 const hmac = (secret, text) => crypto.createHmac("sha256", secret).update(text).digest("hex");
@@ -57,6 +59,11 @@ async function grantLifetime(uid, ref) {
     plan: "lifetime", tier: 3, active: true, until: null, status: "active", source: "razorpay", ref: ref || null,
     updatedAt: admin.firestore.FieldValue.serverTimestamp(),
   }, { merge: true });
+}
+
+async function markUpgradePaid(offerId, paymentId) {
+  if (!offerId) return;
+  await db.doc(`upgradeOffers/${offerId}`).set({ status: "paid", paymentId: paymentId || null, paidAt: admin.firestore.FieldValue.serverTimestamp() }, { merge: true });
 }
 
 async function grantMonthly(uid, sub, status) {
@@ -80,7 +87,20 @@ async function grantMonthly(uid, sub, status) {
 exports.createCheckout = onCall({ region: REGION, cors: CORS, secrets: [RAZORPAY_KEY_SECRET] }, async (req) => {
   if (!req.auth) throw new HttpsError("unauthenticated", "Sign in first.");
   const uid = req.auth.uid, plan = req.data && req.data.plan;
-  if (plan !== "lifetime" && plan !== "monthly" && !TIER_LEVEL[plan]) throw new HttpsError("invalid-argument", "Unknown plan.");
+  if (plan !== "lifetime" && plan !== "monthly" && plan !== "upgrade" && !TIER_LEVEL[plan]) throw new HttpsError("invalid-argument", "Unknown plan.");
+
+  if (plan === "upgrade") {   // a custom upgrade the owner has approved for this user
+    const offerId = String((req.data && req.data.offerId) || "");
+    if (!offerId) throw new HttpsError("invalid-argument", "Missing upgrade.");
+    const offer = await db.doc(`upgradeOffers/${offerId}`).get();
+    if (!offer.exists || offer.data().uid !== uid || offer.data().status !== "offered") throw new HttpsError("failed-precondition", "That upgrade is not available to pay.");
+    const amount = parseInt(offer.data().amountPaise, 10) || UPGRADE_PRICE_PAISE;
+    const order = await rzp().orders.create({
+      amount, currency: "INR", receipt: `mgu_${uid.slice(0, 18)}_${Date.now()}`.slice(0, 40), notes: { uid, plan: "upgrade", offerId },
+    });
+    await db.doc(`payments/${order.id}`).set({ uid, plan: "upgrade", offerId, kind: "order", status: "created", createdAt: admin.firestore.FieldValue.serverTimestamp() });
+    return { keyId: RAZORPAY_KEY_ID.value(), orderId: order.id, amount: order.amount, currency: order.currency };
+  }
 
   if (plan === "lifetime") {
     const amount = parseInt(LIFETIME_PRICE_PAISE.value(), 10);
@@ -120,9 +140,32 @@ exports.confirmPayment = onCall({ region: REGION, cors: CORS, secrets: [RAZORPAY
   if (!sameSig(expected, d.razorpay_signature)) throw new HttpsError("permission-denied", "Payment could not be verified.");
 
   await pay.ref.update({ status: "paid", paymentId: d.razorpay_payment_id, paidAt: admin.firestore.FieldValue.serverTimestamp() });
-  if (pay.data().plan === "lifetime") await grantLifetime(uid, d.razorpay_payment_id);
+  if (pay.data().plan === "upgrade") await markUpgradePaid(pay.data().offerId, d.razorpay_payment_id);
+  else if (pay.data().plan === "lifetime") await grantLifetime(uid, d.razorpay_payment_id);
   else await grantMonthly(uid, await rzp().subscriptions.fetch(d.razorpay_subscription_id), "active");
   return { ok: true };
+});
+
+/* 2b. Custom upgrades. The owner approves a request (createUpgradeOffer); the user then sees it and pays (createCheckout with plan "upgrade"). */
+exports.createUpgradeOffer = onCall({ region: REGION, cors: CORS }, async (req) => {
+  if (!req.auth || String(req.auth.token.email || "").toLowerCase() !== OWNER_EMAIL) throw new HttpsError("permission-denied", "Owner only.");
+  const email = String((req.data && req.data.email) || "").trim().toLowerCase();
+  const title = String((req.data && req.data.title) || "").trim().slice(0, 200);
+  if (!email || !title) throw new HttpsError("invalid-argument", "Email and a short title are needed.");
+  let user;
+  try { user = await admin.auth().getUserByEmail(email); }
+  catch (e) { throw new HttpsError("not-found", "That person has not signed in to Manaluz yet."); }
+  const ref = db.collection("upgradeOffers").doc();
+  await ref.set({ uid: user.uid, email, title, amountPaise: UPGRADE_PRICE_PAISE, status: "offered", createdAt: admin.firestore.FieldValue.serverTimestamp() });
+  return { ok: true, id: ref.id };
+});
+
+exports.listUpgradeOffers = onCall({ region: REGION, cors: CORS }, async (req) => {
+  if (!req.auth) throw new HttpsError("unauthenticated", "Sign in first.");
+  const q = await db.collection("upgradeOffers").where("uid", "==", req.auth.uid).get();
+  const offers = q.docs.map((x) => ({ id: x.id, title: x.data().title, amountPaise: x.data().amountPaise || UPGRADE_PRICE_PAISE, status: x.data().status }))
+    .filter((o) => o.status === "offered" || o.status === "paid");
+  return { offers };
 });
 
 /* 3. Cancel a monthly plan (it stays ad-free until the end of the paid month). */
@@ -155,6 +198,8 @@ exports.razorpayWebhook = onRequest({ region: REGION, secrets: [RAZORPAY_KEY_SEC
       else if (ev.event === "subscription.halted" || ev.event === "subscription.paused") await grantMonthly(uid, sub, "halted");
     } else if (pay && ev.event === "payment.captured" && pay.notes && pay.notes.uid && pay.notes.plan === "lifetime") {
       await grantLifetime(pay.notes.uid, pay.id);
+    } else if (pay && ev.event === "payment.captured" && pay.notes && pay.notes.uid && pay.notes.plan === "upgrade") {
+      await markUpgradePaid(pay.notes.offerId, pay.id);
     }
     res.status(200).send("ok");
   } catch (e) {
