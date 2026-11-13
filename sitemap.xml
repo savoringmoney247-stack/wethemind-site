@@ -54,4 +54,5 @@
   <url><loc>https://wethemind.com/tools/paper-workshop/</loc><lastmod>2026-10-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://wethemind.com/tools/quill-and-proof/</loc><lastmod>2026-10-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://wethemind.com/tools/whiteboard/</loc><lastmod>2026-10-16</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://wethemind.com/pay/</loc></url></urlset>
+<url><loc>https://wethemind.com/pay/</loc></url><url><loc>https://wethemind.com/refund/</loc></url>
+</urlset>
