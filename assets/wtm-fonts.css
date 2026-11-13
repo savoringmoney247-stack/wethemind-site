@@ -14,13 +14,13 @@ header .nav-cta .btn{white-space:nowrap!important;padding:10px 14px!important;fo
 @media(max-width:480px){header .nav .logo-text{display:none}header .nav{gap:8px}}
 
 /* Cute header CTA */
-.nav .btn-primary.btn-sm,.nav-links+.btn-primary,header .btn.btn-primary.btn-sm{position:relative;border-radius:999px;padding:8px 14px 8px 32px;background:linear-gradient(135deg,#E52421,#FF6A3D 60%,#FDBB0B);background-size:200% 200%;border:2px solid #fff;color:#fff;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:.95rem;letter-spacing:0;white-space:nowrap;box-shadow:0 0 0 1.5px #E52421,0 8px 18px -6px rgba(229,36,33,.65);animation:ctaDrift 5s ease-in-out infinite,ctaBob 2.8s ease-in-out infinite;transition:transform .2s}
-.nav .btn-primary.btn-sm::before,header .btn.btn-primary.btn-sm::before{content:"★";position:absolute;left:10px;top:50%;margin-top:-.62em;font-size:1.05em;line-height:1.2;color:#FFE27A;text-shadow:0 1px 0 rgba(0,0,0,.15);animation:ctaSpin 3.2s linear infinite}
-.nav .btn-primary.btn-sm::after,header .btn.btn-primary.btn-sm::after{content:"✦";position:absolute;right:4px;top:-8px;font-size:.85rem;color:#FDBB0B;animation:ctaTwinkle 1.8s ease-in-out infinite}
-.nav .btn-primary.btn-sm:hover,header .btn.btn-primary.btn-sm:hover{transform:translateY(-3px) rotate(-3deg) scale(1.06)}
+.nav .btn-primary.btn-sm,.nav-links+.btn-primary,header .btn.btn-primary.btn-sm{position:relative;border-radius:999px;padding:8px 14px 8px 32px;background:linear-gradient(135deg,#E52421,#FF6A3D 60%,#FDBB0B);background-size:200% 200%;border:2px solid #fff;color:#fff;font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:.95rem;letter-spacing:0;white-space:nowrap;box-shadow:0 0 0 1.5px #E52421,0 8px 18px -6px rgba(229,36,33,.65);transition:transform .2s}
+.nav .btn-primary.btn-sm::before,header .btn.btn-primary.btn-sm::before{content:"★";position:absolute;left:10px;top:50%;margin-top:-.62em;font-size:1.05em;line-height:1.2;color:#FFE27A;text-shadow:0 1px 0 rgba(0,0,0,.15);animation:ctaPulse 3.5s ease-in-out infinite}
+.nav .btn-primary.btn-sm::after,header .btn.btn-primary.btn-sm::after{content:"✦";position:absolute;right:4px;top:-8px;font-size:.85rem;color:#FDBB0B;opacity:.9}
+.nav .btn-primary.btn-sm:hover,header .btn.btn-primary.btn-sm:hover{transform:translateY(-2px) scale(1.04)}
 @keyframes ctaDrift{0%,100%{background-position:0 50%}50%{background-position:100% 50%}}
 @keyframes ctaBob{0%,100%{translate:0 0}50%{translate:0 -3px}}
-@keyframes ctaSpin{to{transform:rotate(360deg)}}
+@keyframes ctaPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
 @keyframes ctaTwinkle{0%,100%{transform:scale(.6) rotate(0);opacity:.5}50%{transform:scale(1.2) rotate(30deg);opacity:1}}
 @media(prefers-reduced-motion:reduce){.nav .btn-primary.btn-sm,header .btn.btn-primary.btn-sm,.nav .btn-primary.btn-sm::before,.nav .btn-primary.btn-sm::after{animation:none!important}}
 @media(min-width:861px) and (max-width:1100px){.nav .btn-primary.btn-sm,header .btn.btn-primary.btn-sm{padding:6px 10px 6px 24px;font-size:.85rem}.nav .btn-primary.btn-sm::before{left:7px}}
