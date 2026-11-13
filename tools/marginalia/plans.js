@@ -495,7 +495,7 @@
   }
 
   /* ---------- "Spark": feedback from users, collected in the We The Mind response sheet ---------- */
-  var FEEDBACK_ENDPOINT = "https://script.google.com/macros/s/AKfycbwoL_5dBwdtdA3F-ZfMZflSqM9JX5EbaOvc17rERA2s2NgthMooCYD4bDMPU4SvJBc/exec";
+  var FEEDBACK_ENDPOINT = "https://script.google.com/macros/s/AKfycbw5VjwsZcqkxkT92xHVF3hIelMzDyCsfJfEBUM_UjmNUxQGFVwXxYifcKnq2hx-lv0/exec";
   var fbDlg = null, fbOpenedAt = 0;
   var fcss = document.createElement("style");
   fcss.textContent = [
@@ -596,7 +596,8 @@
       var dev = card.querySelector("#mg-fb-dev").checked ? ("\n\nDevice: " + navigator.userAgent + " | screen " + screen.width + "x" + screen.height + " | build " + (document.documentElement.getAttribute("data-build") || "?")) : "";
       var head = "[Manaluz feedback · " + kind + (rating ? " · " + rating + "/5" : "") + " · Plan: " + planLabel() + "]\n";
       var fd = new FormData();
-      fd.append("form_name", "Contact Messages");
+      fd.append("form_name", "Manaluz Feedback");
+      fd.append("kind", kind); if (rating) fd.append("rating", String(rating)); fd.append("plan", planLabel());
       fd.append("source_page", "/tools/marginalia/ (Manaluz Spark feedback)");
       fd.append("form_started_at", String(fbOpenedAt));
       fd.append("company_website", card.querySelector("#mg-fb-hp").value);
@@ -778,7 +779,8 @@
       try { var last = +localStorage.getItem("mg-w-last") || 0; if (Date.now() - last < 30000) { err.textContent = "Your wish just went through. Please wait a moment before sending another."; return; } } catch (e) {}
       var head = "[Manaluz CUSTOM UPGRADE request · ₹499 per upgrade · Plan: " + planLabel() + "]\n";
       var fd = new FormData();
-      fd.append("form_name", "Contact Messages");
+      fd.append("form_name", "Manaluz Feedback");
+      fd.append("kind", "Custom upgrade wish"); fd.append("plan", planLabel());
       fd.append("source_page", "/tools/marginalia/ (Manaluz Wish: custom upgrade)");
       fd.append("form_started_at", String(wsOpenedAt));
       fd.append("company_website", card.querySelector("#mg-w-hp").value);
