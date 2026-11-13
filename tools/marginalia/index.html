@@ -4782,7 +4782,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "63";
+const MG_BUILD = "64";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
@@ -4806,8 +4806,9 @@ if ("serviceWorker" in navigator){
   let jsSig = null;
   const jsCheck = ()=>{
     if (navigator.onLine === false) return;
-    fetch("plans.js?c=" + Date.now(), {cache:"no-store"}).then(r=>r.ok ? r.text() : "").then(t=>{
-      if (!t) return;
+    Promise.all(["plans.js", "index.html"].map(u=>fetch(u + "?c=" + Date.now(), {cache:"no-store"}).then(r=>r.ok ? r.text() : ""))).then(parts=>{
+      if (parts.some(p=>!p)) return;
+      const t = parts.join("\u0001");
       let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) | 0;
       const sig = t.length + ":" + h;
       if (jsSig === null){ jsSig = sig; return; }
@@ -4821,10 +4822,11 @@ if ("serviceWorker" in navigator){
     navigator.serviceWorker.register("sw.js", {updateViaCache: "none"}).then((reg)=>{
       swReg = reg;
       jsCheck();
-      setInterval(checkForUpdate, 10*60*1000);
+      setInterval(checkForUpdate, 3*60*1000);
     }).catch(err=> console.warn("Service worker failed:", err));
   });
   document.addEventListener("visibilitychange", ()=>{ if (!document.hidden) checkForUpdate(); });
+  window.addEventListener("focus", checkForUpdate);
   window.addEventListener("online", checkForUpdate);
   navigator.serviceWorker.addEventListener("controllerchange", ()=>{
     if (!hadController){ hadController = true; return; }       // first install, not an update
