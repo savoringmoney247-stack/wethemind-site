@@ -652,6 +652,83 @@
   wishBtn.type = "button"; wishBtn.title = "Custom upgrade: tell us the feature you want, Rs 499 per upgrade";
   if (actions) actions.insertBefore(wishBtn, sparkBtn);
   wishBtn.addEventListener("click", openWish);
+
+  function wishCss() {
+    if (document.getElementById("mg-offer-css")) return;
+    var s = document.createElement("style"); s.id = "mg-offer-css";
+    s.textContent = ".mg-offers{margin:14px 0;display:grid;gap:10px;text-align:center}"
+      + ".mg-offers h3{margin:0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}"
+      + ".mg-offer{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(229,24,28,.10),rgba(168,85,247,.12));border:1px solid rgba(229,24,28,.35);animation:mgOfferIn .5s cubic-bezier(.2,.9,.3,1.2) both}"
+      + ".mg-offer strong{font-size:15px}.mg-offer small{opacity:.7}"
+      + ".mg-offer button{border:0;border-radius:999px;padding:10px 22px;font-weight:700;color:#fff;cursor:pointer;background:linear-gradient(90deg,#E5181C,#a855f7);box-shadow:0 6px 18px rgba(229,24,28,.35);transition:transform .15s}"
+      + ".mg-offer button:hover{transform:translateY(-1px) scale(1.03)}.mg-offer button:disabled{opacity:.6;cursor:wait}"
+      + ".mg-offer.paid{border-color:#16a34a;background:rgba(22,163,74,.12);animation:mgOfferIn .5s both,mgPaid 1.2s ease 1}"
+      + ".mg-owner{margin:14px 0;padding:12px;border-radius:14px;border:1px dashed rgba(148,163,184,.6);text-align:center;display:grid;gap:8px}"
+      + ".mg-owner input{text-align:center}.mg-owner button{border:0;border-radius:999px;padding:9px 18px;font-weight:700;background:#0f172a;color:#fff;cursor:pointer}"
+      + "@keyframes mgOfferIn{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}"
+      + "@keyframes mgPaid{0%{box-shadow:0 0 0 0 rgba(22,163,74,.6)}100%{box-shadow:0 0 0 24px rgba(22,163,74,0)}}";
+    document.head.appendChild(s);
+  }
+  function payUpgrade(o, btn, box, reload) {
+    busy(btn, true);
+    call("createCheckout", { plan: "upgrade", offerId: o.id }).then(function (c) {
+      return loadScript("https://checkout.razorpay.com/v1/checkout.js").then(function () {
+        var rz = new window.Razorpay({
+          key: c.keyId, name: "Manaluz", description: "Custom upgrade: " + o.title,
+          image: new URL("icon-192.png", location.href).href,
+          order_id: c.orderId, amount: c.amount, currency: c.currency,
+          prefill: { email: (user && user.email) || "", name: (user && user.displayName) || "" },
+          theme: { color: "#E5181C" },
+          modal: { ondismiss: function () { busy(btn, false); } },
+          handler: function (resp) {
+            call("confirmPayment", resp).then(function () {
+              box.classList.add("paid");
+              box.innerHTML = "<strong>🎉 Paid. Thank you!</strong><small>We have your payment for \"" + o.title.replace(/</g, "&lt;") + "\" and will start building it now.</small>";
+              try { burst(); } catch (e) {}
+              toast("Payment received. Your upgrade is on its way ✨");
+            }).catch(function () { busy(btn, false); toast("Payment went through but we could not confirm it yet. Please refresh in a minute."); });
+          }
+        });
+        rz.open();
+      });
+    }).catch(function (e) { busy(btn, false); toast((e && e.message) || "Could not start the payment. Try again."); });
+  }
+  function mountOffers(card) {
+    wishCss();
+    var anchor = card.querySelector(".mg-steps");
+    if (!anchor) return;
+    if (isOwner()) {
+      var ow = el("div", "mg-owner");
+      ow.innerHTML = "<strong>Owner: approve an upgrade</strong><input type=\"email\" id=\"mg-o-mail\" placeholder=\"customer email (must have signed in)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹499 offer</button>";
+      anchor.parentNode.insertBefore(ow, anchor);
+      ow.querySelector("#mg-o-go").addEventListener("click", function () {
+        var b = this, mail = ow.querySelector("#mg-o-mail").value.trim(), title = ow.querySelector("#mg-o-title").value.trim();
+        if (!mail || title.length < 3) { toast("Add the customer email and a short title."); return; }
+        busy(b, true);
+        call("createUpgradeOffer", { email: mail, title: title }).then(function () {
+          busy(b, false); ow.querySelector("#mg-o-mail").value = ""; ow.querySelector("#mg-o-title").value = ""; toast("Offer sent. They will see Pay ₹499 in their app.");
+        }).catch(function (e) { busy(b, false); toast((e && e.message) || "Could not create the offer."); });
+      });
+    }
+    if (!user) return;
+    var wrap = el("div", "mg-offers"); anchor.parentNode.insertBefore(wrap, anchor);
+    call("listUpgradeOffers").then(function (r) {
+      var list = (r && r.offers) || [];
+      if (!list.length) { wrap.remove(); return; }
+      wrap.innerHTML = "<h3>Your approved upgrades</h3>";
+      list.forEach(function (o) {
+        var box = el("div", "mg-offer" + (o.status === "paid" ? " paid" : ""));
+        var t = String(o.title).replace(/</g, "&lt;");
+        if (o.status === "paid") { box.innerHTML = "<strong>✅ " + t + "</strong><small>Paid. We are on it.</small>"; }
+        else {
+          box.innerHTML = "<strong>" + t + "</strong><small>Approved for you. Pay only now, in the app.</small>";
+          var b = el("button", "", "Pay ₹499"); b.type = "button"; box.appendChild(b);
+          b.addEventListener("click", function () { payUpgrade(o, b, box); });
+        }
+        wrap.appendChild(box);
+      });
+    }).catch(function () { wrap.remove(); });
+  }
   function closeWish() { if (!wsDlg) return; var x = wsDlg; wsDlg = null; x.classList.remove("show"); setTimeout(function () { x.remove(); }, 320); }
   function openWish() {
     if (wsDlg) return;
@@ -686,6 +763,7 @@
     wsDlg.addEventListener("click", function (e) { if (e.target === wsDlg) closeWish(); });
     document.addEventListener("keydown", function esc(e) { if (e.key === "Escape") { closeWish(); document.removeEventListener("keydown", esc); } });
     document.body.appendChild(wsDlg);
+    try { mountOffers(card); } catch (e) {}
     wsOpenedAt = Date.now();
     requestAnimationFrame(function () { requestAnimationFrame(function () { if (wsDlg) wsDlg.classList.add("show"); }); });
     setTimeout(function () { if (wsDlg) wsDlg.classList.add("show"); }, 50);
