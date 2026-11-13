@@ -699,6 +699,15 @@
     wishCss();
     var anchor = card.querySelector(".mg-steps");
     if (!anchor) return;
+    try {
+      var nmIn = card.querySelector("#mg-w-name"), emIn = card.querySelector("#mg-w-mail");
+      if (user && user.email && nmIn && emIn && nmIn.value.trim().length >= 2) {
+        var row = nmIn.closest(".mg-fbrow"); if (row) row.style.display = "none";
+        var who = el("p", "mg-asyou"); who.style.cssText = "margin:0 0 12px;text-align:center;font-size:13px;opacity:.8";
+        who.textContent = "Sending as " + nmIn.value.trim() + " · " + emIn.value.trim();
+        if (row) row.parentNode.insertBefore(who, row);
+      }
+    } catch (e) {}
     var pill = card.querySelector(".mg-wish-price");
     if (pill) {
       pill.setAttribute("role", "button"); pill.setAttribute("tabindex", "0"); pill.style.cursor = "pointer"; pill.title = "Tap to get started";
@@ -715,7 +724,7 @@
     }
     if (isOwner()) {
       var ow = el("div", "mg-owner");
-      ow.innerHTML = "<strong>Owner: approve an upgrade</strong><input type=\"email\" id=\"mg-o-mail\" placeholder=\"customer email (must have signed in)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹499 offer</button>";
+      ow.innerHTML = "<details><summary style=\"cursor:pointer;font-weight:700\">Owner tools: approve an upgrade</summary><div style=\"display:grid;gap:8px;margin-top:10px\"><input type=\"email\" id=\"mg-o-mail\" placeholder=\"customer email (must have signed in)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹499 offer</button></div></details>";
       anchor.parentNode.insertBefore(ow, anchor);
       ow.querySelector("#mg-o-go").addEventListener("click", function () {
         var b = this, mail = ow.querySelector("#mg-o-mail").value.trim(), title = ow.querySelector("#mg-o-title").value.trim();
@@ -758,14 +767,14 @@
       + '<div class="mg-wish-price"><b>₹499</b><span>per custom upgrade</span></div></div>'
       + '<div class="mg-steps">'
       + '<div class="mg-step" style="--i:0"><b>1</b><strong>Make a wish</strong>Describe the feature or change you want.</div>'
-      + '<div class="mg-step" style="--i:1"><b>2</b><strong>We reply</strong>You get a short plan and a secure Razorpay link by email.</div>'
-      + '<div class="mg-step" style="--i:2"><b>3</b><strong>We build it</strong>You pay only after you agree, then we make it happen.</div></div>'
+      + '<div class="mg-step" style="--i:1"><b>2</b><strong>We reply</strong>We review it and reply with a short plan.</div>'
+      + '<div class="mg-step" style="--i:2"><b>3</b><strong>We build it</strong>Approve and pay ₹499 right here in the app, then we make it happen.</div></div>'
       + '<label>Need inspiration? Tap one</label><div class="mg-ideas"></div>'
       + '<label for="mg-w-msg">Your wish</label><textarea id="mg-w-msg" maxlength="1500" placeholder="For example: I want a stamp tool with my school logo, and a one-click way to number pages like 1/12."></textarea>'
       + '<div class="mg-fbrow"><div><label for="mg-w-name">Name *</label><input id="mg-w-name" type="text" maxlength="80" required autocomplete="name" value="' + esc3(nm) + '"></div>'
       + '<div><label for="mg-w-mail">Email *</label><input id="mg-w-mail" type="email" maxlength="120" required autocomplete="email" placeholder="you@example.com" value="' + esc3(em) + '"></div></div>'
       + '<div style="margin:0 0 12px"><label for="mg-w-tel">Contact number (optional)</label><input id="mg-w-tel" type="text" inputmode="tel" maxlength="20" autocomplete="tel" placeholder="+91 …"></div>'
-      + '<p class="mg-wishnote">Nothing is charged now. We look at your request first, tell you if and how we can do it, and only then send the ₹499 payment link.</p>'
+      + '<p class="mg-wishnote">Nothing is charged now.</p>'
       + '<div style="position:absolute;left:-9999px" aria-hidden="true"><input type="text" id="mg-w-hp" tabindex="-1" autocomplete="off"></div>'
       + '<p class="mg-fberr" id="mg-w-err" role="alert"></p>'
       + '<button class="mg-fbsend" type="button" id="mg-w-send">Send my wish ✨</button>';
