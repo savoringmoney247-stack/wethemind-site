@@ -657,7 +657,8 @@
   function wishCss() {
     if (document.getElementById("mg-offer-css")) return;
     var s = document.createElement("style"); s.id = "mg-offer-css";
-    s.textContent = ".mg-offers{margin:14px 0;display:grid;gap:10px;text-align:center}"
+    s.textContent = ".mg-wish-hero,.mg-fbdone{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important}.mg-wish-hero>*{width:100%;margin-left:auto!important;margin-right:auto!important;text-align:center!important;justify-content:center!important;align-items:center!important}.mg-wish-hero h2,.mg-wish-hero p{display:block!important}.mg-wish-price{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important}.mg-step{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}"
+      + ".mg-offers{margin:14px 0;display:grid;gap:10px;text-align:center}"
       + ".mg-offers h3{margin:0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;opacity:.7}"
       + ".mg-offer{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border-radius:14px;background:linear-gradient(135deg,rgba(229,24,28,.10),rgba(168,85,247,.12));border:1px solid rgba(229,24,28,.35);animation:mgOfferIn .5s cubic-bezier(.2,.9,.3,1.2) both}"
       + ".mg-offer strong{font-size:15px}.mg-offer small{opacity:.7}"
