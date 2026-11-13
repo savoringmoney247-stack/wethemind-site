@@ -494,6 +494,127 @@
     return h + "</span></div>";
   }
 
+  /* ---------- "Spark": feedback from users, collected in the We The Mind response sheet ---------- */
+  var FEEDBACK_ENDPOINT = "https://script.google.com/macros/s/AKfycbwoL_5dBwdtdA3F-ZfMZflSqM9JX5EbaOvc17rERA2s2NgthMooCYD4bDMPU4SvJBc/exec";
+  var fbDlg = null, fbOpenedAt = 0;
+  var fcss = document.createElement("style");
+  fcss.textContent = [
+    ".mg-spark{display:inline-flex;align-items:center;gap:6px;font-weight:700}",
+    ".mg-spark i{font-style:normal;display:inline-block;color:#f59e0b;animation:mgTwinkle 2.8s ease-in-out infinite}",
+    "@keyframes mgTwinkle{0%,100%{transform:scale(1) rotate(0)}45%{transform:scale(1.35) rotate(18deg)}60%{transform:scale(.95) rotate(-8deg)}}",
+    ".mg-fb h2{display:flex;align-items:center;gap:8px}",
+    ".mg-fb .mg-fbsub{margin:0 0 14px;color:var(--ink-600);font-size:13.5px;line-height:1.5}",
+    ".mg-kinds{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}",
+    ".mg-kind{border:1.5px solid var(--line);background:var(--surface);color:inherit;border-radius:999px;padding:8px 14px;font:700 13px/1 inherit;cursor:pointer;transition:transform .2s cubic-bezier(.2,.9,.3,1.4),border-color .2s,background .2s}",
+    ".mg-kind:hover{transform:translateY(-2px);border-color:var(--accent)}",
+    ".mg-kind.on{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface));color:var(--accent);transform:scale(1.05)}",
+    ".mg-stars{display:flex;gap:4px;margin:0 0 14px}",
+    ".mg-star{background:none;border:none;padding:2px;font-size:28px;line-height:1;cursor:pointer;color:var(--line);transition:transform .25s cubic-bezier(.2,.9,.3,1.6),color .2s}",
+    ".mg-star.on{color:#f59e0b}",
+    ".mg-star:hover{transform:scale(1.25) rotate(-8deg)}",
+    ".mg-star.pop{animation:mgStarPop .4s cubic-bezier(.2,.9,.3,1.6)}",
+    "@keyframes mgStarPop{0%{transform:scale(.6)}60%{transform:scale(1.4) rotate(12deg)}100%{transform:scale(1)}}",
+    ".mg-fb label{display:block;font:700 12px/1 inherit;letter-spacing:.03em;color:var(--ink-600);margin:0 0 6px;text-transform:uppercase}",
+    ".mg-fb textarea,.mg-fb input[type=text],.mg-fb input[type=email]{width:100%;box-sizing:border-box;border:1.5px solid var(--line);border-radius:12px;padding:11px 12px;background:var(--surface);color:inherit;font:inherit;transition:border-color .2s,box-shadow .2s}",
+    ".mg-fb textarea{min-height:110px;resize:vertical}",
+    ".mg-fb textarea:focus,.mg-fb input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 16%,transparent)}",
+    ".mg-fbrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}",
+    "@media (max-width:520px){.mg-fbrow{grid-template-columns:1fr}}",
+    ".mg-fbchk{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-600);margin:0 0 14px;text-transform:none;letter-spacing:0;font-weight:500}",
+    ".mg-fbsend{position:relative;overflow:hidden;width:100%;border:none;border-radius:14px;padding:13px 16px;font:800 15px/1 inherit;color:#fff;cursor:pointer;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%,#f97316));transition:transform .2s,box-shadow .2s,opacity .2s}",
+    ".mg-fbsend:hover{transform:translateY(-2px);box-shadow:0 14px 26px -14px var(--accent)}",
+    ".mg-fbsend:disabled{opacity:.6;cursor:default;transform:none}",
+    ".mg-fberr{color:#dc2626;font-size:13px;min-height:18px;margin:0 0 8px}",
+    ".mg-fbdone{text-align:center;padding:26px 8px 12px;animation:mgUp .5s cubic-bezier(.22,1,.36,1) both}",
+    ".mg-fbdone svg{width:74px;height:74px}",
+    ".mg-fbdone circle{fill:none;stroke:#16a34a;stroke-width:4;stroke-dasharray:176;stroke-dashoffset:176;animation:mgDraw .7s ease forwards}",
+    ".mg-fbdone path{fill:none;stroke:#16a34a;stroke-width:5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:mgDraw .45s .55s ease forwards}",
+    "@keyframes mgDraw{to{stroke-dashoffset:0}}",
+    "@media (prefers-reduced-motion:reduce){.mg-spark i,.mg-star.pop,.mg-fbdone,.mg-fbdone circle,.mg-fbdone path{animation:none!important;stroke-dashoffset:0!important}}"
+  ].join("\n");
+  document.head.appendChild(fcss);
+  var sparkBtn = el("button", "btn mg-spark", "<i>✦</i><span>Spark</span>");
+  sparkBtn.type = "button"; sparkBtn.title = "Share feedback, report a problem or suggest an idea";
+  if (actions) actions.insertBefore(sparkBtn, signBtn);
+  sparkBtn.addEventListener("click", openFeedback);
+  function closeFeedback() { if (!fbDlg) return; var x = fbDlg; fbDlg = null; x.classList.remove("show"); setTimeout(function () { x.remove(); }, 320); }
+  function planLabel() {
+    var e = realEnt || ent; if (!e || !isAdFree(e)) return "Free";
+    return e.plan === "lifetime" ? "Lifetime" : (e.tierName ? e.tierName.charAt(0).toUpperCase() + e.tierName.slice(1) : "Paid");
+  }
+  function openFeedback() {
+    if (fbDlg) return;
+    var kind = "Idea", rating = 0;
+    fbDlg = el("div", "mg-dlg"); fbDlg.setAttribute("role", "dialog"); fbDlg.setAttribute("aria-modal", "true"); fbDlg.setAttribute("aria-label", "Send feedback");
+    var card = el("div", "mg-card mg-fb"); fbDlg.appendChild(card);
+    var nm = (user && user.displayName) || "", em = (user && user.email) || "";
+    function esc2(s) { return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;"); }
+    card.innerHTML = '<button class="mg-x" aria-label="Close" data-fb="close">×</button>'
+      + '<h2><span style="color:#f59e0b">✦</span> Spark</h2>'
+      + '<p class="mg-fbsub">Found a bug, missing a feature, or just want to say hi? Tell us. We read every message, and if you leave an email we will write back when it is sorted.</p>'
+      + '<div class="mg-kinds" role="group" aria-label="What kind of feedback"></div>'
+      + '<label>How is Manaluz working for you?</label><div class="mg-stars" role="group" aria-label="Rating"></div>'
+      + '<label for="mg-fb-msg">Your message</label><textarea id="mg-fb-msg" maxlength="1500" placeholder="What happened, or what would make Manaluz better for you?"></textarea>'
+      + '<div class="mg-fbrow"><div><label for="mg-fb-name">Name (optional)</label><input id="mg-fb-name" type="text" maxlength="80" value="' + esc2(nm) + '" autocomplete="name"></div>'
+      + '<div><label for="mg-fb-mail">Email (to reply)</label><input id="mg-fb-mail" type="email" maxlength="120" value="' + esc2(em) + '" autocomplete="email" placeholder="you@example.com"></div></div>'
+      + '<label class="mg-fbchk"><input type="checkbox" id="mg-fb-dev" checked> Include my browser and screen size, so we can reproduce problems</label>'
+      + '<div style="position:absolute;left:-9999px" aria-hidden="true"><input type="text" id="mg-fb-hp" tabindex="-1" autocomplete="off"></div>'
+      + '<p class="mg-fberr" id="mg-fb-err" role="alert"></p>'
+      + '<button class="mg-fbsend" type="button" id="mg-fb-send">Send feedback</button>';
+    var kinds = card.querySelector(".mg-kinds");
+    [["Bug", "🐞 Problem"], ["Idea", "💡 Idea"], ["Love", "💛 Love it"], ["Question", "❓ Question"]].forEach(function (k) {
+      var b = el("button", "mg-kind" + (k[0] === kind ? " on" : ""), k[1]); b.type = "button";
+      b.addEventListener("click", function () { kind = k[0]; Array.prototype.forEach.call(kinds.children, function (c) { c.classList.remove("on"); }); b.classList.add("on"); });
+      kinds.appendChild(b);
+    });
+    var stars = card.querySelector(".mg-stars");
+    function paint(n) { Array.prototype.forEach.call(stars.children, function (s, i) { s.classList.toggle("on", i < n); }); }
+    for (var s = 1; s <= 5; s++) (function (n) {
+      var b = el("button", "mg-star", "★"); b.type = "button"; b.setAttribute("aria-label", n + " of 5");
+      b.addEventListener("mouseenter", function () { paint(n); });
+      b.addEventListener("mouseleave", function () { paint(rating); });
+      b.addEventListener("click", function () { rating = rating === n ? 0 : n; paint(rating); b.classList.remove("pop"); void b.offsetWidth; b.classList.add("pop"); });
+      stars.appendChild(b);
+    })(s);
+    card.querySelector('[data-fb="close"]').addEventListener("click", closeFeedback);
+    fbDlg.addEventListener("click", function (e) { if (e.target === fbDlg) closeFeedback(); });
+    document.addEventListener("keydown", function esc(e) { if (e.key === "Escape") { closeFeedback(); document.removeEventListener("keydown", esc); } });
+    document.body.appendChild(fbDlg);
+    fbOpenedAt = Date.now();
+    requestAnimationFrame(function () { requestAnimationFrame(function () { if (fbDlg) fbDlg.classList.add("show"); }); });
+    setTimeout(function () { if (fbDlg) fbDlg.classList.add("show"); }, 50);
+    var send = card.querySelector("#mg-fb-send"), err = card.querySelector("#mg-fb-err");
+    send.addEventListener("click", function () {
+      var msg = card.querySelector("#mg-fb-msg").value.trim(), mail = card.querySelector("#mg-fb-mail").value.trim(), name = card.querySelector("#mg-fb-name").value.trim();
+      err.textContent = "";
+      if (msg.length < 8) { err.textContent = "Please write a little more so we can help."; card.querySelector("#mg-fb-msg").focus(); return; }
+      if (mail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { err.textContent = "That email looks off. Fix it, or leave it empty."; return; }
+      try { var last = +localStorage.getItem("mg-fb-last") || 0; if (Date.now() - last < 30000) { err.textContent = "Thanks, that one just went through. Please wait a moment before sending another."; return; } } catch (e) {}
+      var dev = card.querySelector("#mg-fb-dev").checked ? ("\n\nDevice: " + navigator.userAgent + " | screen " + screen.width + "x" + screen.height + " | build " + (document.documentElement.getAttribute("data-build") || "?")) : "";
+      var head = "[Manaluz feedback · " + kind + (rating ? " · " + rating + "/5" : "") + " · Plan: " + planLabel() + "]\n";
+      var fd = new FormData();
+      fd.append("form_name", "Contact Messages");
+      fd.append("source_page", "/tools/marginalia/ (Manaluz Spark feedback)");
+      fd.append("form_started_at", String(fbOpenedAt));
+      fd.append("company_website", card.querySelector("#mg-fb-hp").value);
+      fd.append("student_name", name || "Manaluz user");
+      fd.append("email", mail);
+      fd.append("notes", head + msg + dev);
+      send.disabled = true; send.textContent = "Sending…";
+      var wait = Math.max(0, 3500 - (Date.now() - fbOpenedAt));
+      setTimeout(function () {
+        try { fetch(FEEDBACK_ENDPOINT, { method: "POST", mode: "no-cors", body: fd }); } catch (e) {}
+        try { localStorage.setItem("mg-fb-last", String(Date.now())); } catch (e) {}
+        card.innerHTML = '<button class="mg-x" aria-label="Close" data-fb="close">×</button><div class="mg-fbdone">'
+          + '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M19 33l9 9 17-19"/></svg>'
+          + '<h2 style="justify-content:center;margin-top:12px">Thank you!</h2>'
+          + '<p class="mg-fbsub" style="margin:0">Your feedback is on its way to us.' + (mail ? " We will email you at <b>" + esc2(mail) + "</b> once it is resolved." : " Add an email next time if you would like a reply.") + '</p></div>';
+        card.querySelector('[data-fb="close"]').addEventListener("click", closeFeedback);
+        setTimeout(closeFeedback, 3600);
+      }, wait);
+    });
+  }
+
   /* ---------- who's signed in, and their plan ---------- */
   showAds(!cachedAdFree());                                  // no flash of ads for people who paid
   firebase().then(function (f) {
