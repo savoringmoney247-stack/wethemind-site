@@ -160,11 +160,6 @@ select,input[type=text]{text-align:center;text-align-last:center}
 .perr{color:var(--red);font-weight:700;font-size:.9rem;min-height:1.2em;margin:4px 0}
 .pill-btn{background:none}
 
-#inst{display:none;margin:14px auto 0;justify-content:center}
-#inst.on{display:inline-flex}
-#ios{display:none;position:fixed;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:40;max-width:420px;margin:0 auto;background:var(--card);border:2px solid var(--yel);border-radius:18px;padding:14px 16px;text-align:center;box-shadow:0 16px 40px -12px rgba(0,0,0,.35);font-weight:700}
-#ios.on{display:block;animation:pup .3s ease both}
-#ios button{background:none;border:0;color:var(--mut);font:700 .85rem Nunito;margin-top:6px;cursor:pointer}
 .mod{text-align:left;border:1.5px solid var(--line);border-radius:14px;margin:7px 0;background:var(--bg);overflow:hidden}
 .mod summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;flex-direction:column;gap:1px;position:relative;padding-right:38px}
 .mod summary::-webkit-details-marker{display:none}
@@ -179,6 +174,31 @@ select,input[type=text]{text-align:center;text-align-last:center}
 .alts span{width:100%;font:800 .72rem Nunito;letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
 .alts a{font:700 .9rem Nunito;text-decoration:none;color:var(--ink);background:var(--chip);border:1.5px solid var(--line);padding:9px 18px;border-radius:99px}
 .alts.hot a{background:var(--yel);color:#0C1A33;border-color:var(--yel);animation:pop .5s ease both}
+
+.crew{margin:10px auto 0;max-width:340px}
+.crew .row{display:flex;justify-content:center;align-items:flex-end;gap:2px}
+.crew .row span{display:block;animation:bob 3s ease-in-out infinite}
+.crew .row .hum{filter:drop-shadow(0 4px 6px rgba(0,0,0,.15))}
+.qb{display:inline-block;background:#fff;color:#0C1A33;font:700 .9rem Nunito,sans-serif;padding:9px 16px;border-radius:18px;position:relative;margin-bottom:12px;box-shadow:0 6px 16px -8px rgba(0,0,0,.35);transition:opacity .3s,transform .3s}
+.qb::after{content:"";position:absolute;left:50%;bottom:-7px;margin-left:-7px;border:7px solid transparent;border-bottom:0;border-top-color:#fff}
+.qb.sw{opacity:0;transform:translateY(4px)}
+.qhd{display:flex;align-items:center;gap:10px;margin:0 0 12px;text-align:left}
+.qhd .hum{flex:none}.qlist{display:flex;flex-direction:column;gap:6px;min-width:0}
+.qq{background:var(--bg);border:1.5px solid var(--line);border-radius:14px 14px 14px 4px;padding:8px 12px;font-weight:700;font-size:.86rem;animation:rise .4s ease both}
+.hum.big{margin:0 auto}
+
+.alts button{font:700 .9rem Nunito,sans-serif;color:var(--ink);background:var(--chip);border:1.5px solid var(--line);padding:9px 18px;border-radius:99px;cursor:pointer}
+
+.rlh{font:800 .72rem Nunito,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin:12px 0 6px}
+.rls{display:flex;flex-direction:column;gap:8px}
+.rl{display:grid;grid-template-columns:38px 1fr;column-gap:10px;text-align:left;background:linear-gradient(135deg,#FFF6DC,var(--bg));border:1.5px solid var(--line);border-radius:16px;padding:11px 12px;animation:rise .4s ease both}
+.rl span{grid-row:1/3;font-size:1.7rem;align-self:center;text-align:center}
+.rl b{font:600 .95rem Fredoka,sans-serif}.rl i{font-style:normal;font-size:.84rem;color:var(--mut);font-weight:700}
+#inst{display:none;margin:14px auto 0;justify-content:center}
+#inst.on{display:inline-flex}
+#ios{display:none;position:fixed;left:12px;right:12px;bottom:calc(86px + env(safe-area-inset-bottom,0px));z-index:40;max-width:420px;margin:0 auto;background:var(--card);border:2px solid var(--yel);border-radius:18px;padding:14px 16px;text-align:center;box-shadow:0 16px 40px -12px rgba(0,0,0,.35);font-weight:700}
+#ios.on{display:block;animation:pup .3s ease both}
+#ios button{background:none;border:0;color:var(--mut);font:700 .85rem Nunito;margin-top:6px;cursor:pointer}
 </style>
 <div id="ios"><div>Install Mathynx: tap <b>Share</b> ⬆️ then <b>Add to Home Screen</b></div><button id="iosx">Got it</button></div>
 <div id="ps" role="dialog" aria-modal="true" aria-label="Pay"><div class="pbox" id="pb"></div></div>
@@ -228,6 +248,38 @@ const SH=[['π',1],['+',1],['×',1],['√',1],['∑',1],['∞',1],['%',1],['△'
 function fx(){const pos=[[6,8],[88,6],[14,34],[80,28],[4,58],[92,52],[22,80],[74,76],[50,14],[46,90],[8,92],[94,88]];
  return pos.map((p,i)=>`<span class="fx" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${-i*1.3}s;animation-duration:${9+(i%5)*2}s;font-size:${22+(i%4)*8}px;color:${['#E52421','#FDBB0B','#0C1A33','#F0532A'][i%4]}">${SH[i][0]}</span>`).join('')+
  `<svg class="fx s1" viewBox="0 0 40 40" width="34" height="34" style="left:30%;top:46%"><circle cx="20" cy="20" r="13" fill="none" stroke="#FDBB0B" stroke-width="4"/></svg><svg class="fx s2" viewBox="0 0 40 40" width="30" height="30" style="left:68%;top:64%"><path d="M4 20 Q12 4 20 20 T36 20" fill="none" stroke="#E52421" stroke-width="4" stroke-linecap="round"/></svg><svg class="fx s3" viewBox="0 0 40 40" width="28" height="28" style="left:36%;top:70%"><polygon points="20,4 36,34 4,34" fill="none" stroke="#0C1A33" stroke-width="3.5" stroke-linejoin="round"/></svg><svg class="fx s1" viewBox="0 0 40 40" width="26" height="26" style="left:84%;top:40%"><path d="M20 3 L24 16 L37 20 L24 24 L20 37 L16 24 L3 20 L16 16 Z" fill="#FDBB0B"/></svg>`}
+
+/* ===== Human vector characters (original) ===== */
+const HP={
+ mia:{sk:'#F2C6A0',hr:'#3A2418',sh:'#E52421',st:'pony',ac:'#FDBB0B'},
+ leo:{sk:'#C98E62',hr:'#1E1410',sh:'#0C1A33',st:'cap',ac:'#FDBB0B'},
+ ava:{sk:'#8A5A3C',hr:'#14100E',sh:'#F0532A',st:'puff',ac:'#fff'},
+ sam:{sk:'#F7D9BE',hr:'#C9792B',sh:'#1E3A6E',st:'curly',ac:'#E52421'},
+ teach:{sk:'#E8B48C',hr:'#5A3B28',sh:'#FDBB0B',st:'bun',ac:'#0C1A33',gl:1},
+ grad:{sk:'#B9805A',hr:'#1E1410',sh:'#E52421',st:'grad',ac:'#FDBB0B'}
+};
+const HAIR={
+ pony:(c)=>`<path d="M22 34 Q22 14 40 14 Q58 14 58 34 Q54 24 40 24 Q26 24 22 34Z" fill="${c}"/><path d="M58 28 Q72 30 66 50 Q64 38 57 34Z" fill="${c}"/>`,
+ cap:(c,a)=>`<path d="M21 32 Q22 12 40 12 Q58 12 59 32Z" fill="${a}"/><rect x="18" y="29" width="32" height="6" rx="3" fill="${a}"/><path d="M22 34 Q24 28 30 28" stroke="${c}" stroke-width="4" fill="none" stroke-linecap="round"/>`,
+ puff:(c)=>`<circle cx="26" cy="18" r="9" fill="${c}"/><circle cx="54" cy="18" r="9" fill="${c}"/><path d="M22 34 Q22 15 40 15 Q58 15 58 34 Q54 24 40 24 Q26 24 22 34Z" fill="${c}"/>`,
+ curly:(c)=>`<g fill="${c}"><circle cx="24" cy="26" r="8"/><circle cx="32" cy="17" r="8"/><circle cx="44" cy="15" r="8"/><circle cx="54" cy="22" r="8"/><circle cx="57" cy="32" r="6"/><circle cx="23" cy="36" r="5"/></g>`,
+ bun:(c)=>`<circle cx="40" cy="8" r="8" fill="${c}"/><path d="M22 36 Q20 14 40 14 Q60 14 58 36 Q54 24 40 24 Q26 24 22 36Z" fill="${c}"/>`,
+ grad:(c,a)=>`<path d="M22 34 Q22 16 40 16 Q58 16 58 34 Q54 25 40 25 Q26 25 22 34Z" fill="${c}"/><polygon points="40,3 68,13 40,22 12,13" fill="#0C1A33"/><rect x="34" y="18" width="12" height="6" fill="#0C1A33"/><path d="M64 14 V28" stroke="${a}" stroke-width="2.5"/><circle cx="64" cy="30" r="2.6" fill="${a}"/>`
+};
+const HUM=(k,sz=84,cls='')=>{const p=HP[k];return `<svg class="hum ${cls}" viewBox="0 0 80 100" width="${sz}" height="${sz*1.25}" aria-hidden="true"><g class="mascot">
+ <path d="M10 100 Q10 66 40 66 Q70 66 70 100Z" fill="${p.sh}"/><path d="M33 66 L40 78 L47 66Z" fill="${p.sk}"/>
+ ${k==='teach'?`<rect x="52" y="74" width="24" height="18" rx="3" fill="#fff" stroke="#0C1A33" stroke-width="2"/><text x="64" y="88" text-anchor="middle" font-family="Fredoka,sans-serif" font-weight="700" font-size="14" fill="#E52421">∑</text>`:''}
+ ${k==='grad'?`<rect x="48" y="76" width="22" height="14" rx="2" fill="#fff"/><path d="M52 81 H66 M52 85 H62" stroke="#E52421" stroke-width="2"/>`:''}
+ <rect x="34" y="56" width="12" height="14" rx="5" fill="${p.sk}"/>
+ ${p.st==='puff'||p.st==='curly'||p.st==='bun'?HAIR[p.st](p.hr,p.ac):''}
+ <circle cx="40" cy="40" r="19" fill="${p.sk}"/><circle cx="21" cy="42" r="3.5" fill="${p.sk}"/><circle cx="59" cy="42" r="3.5" fill="${p.sk}"/>
+ ${p.st==='pony'||p.st==='cap'||p.st==='grad'?HAIR[p.st](p.hr,p.ac):''}
+ ${p.st==='puff'||p.st==='bun'||p.st==='curly'?`<path d="M22 36 Q24 22 40 22 Q56 22 58 36 Q52 28 40 28 Q28 28 22 36Z" fill="${p.hr}"/>`:''}
+ <g class="blink"><circle cx="33" cy="42" r="2.7" fill="#0C1A33"/><circle cx="47" cy="42" r="2.7" fill="#0C1A33"/><circle cx="33.9" cy="41" r=".9" fill="#fff"/><circle cx="47.9" cy="41" r=".9" fill="#fff"/></g>
+ ${p.gl?`<g fill="none" stroke="#0C1A33" stroke-width="1.8"><circle cx="33" cy="42" r="6.5"/><circle cx="47" cy="42" r="6.5"/><path d="M39.5 42 H40.5"/></g>`:''}
+ <path d="M34 49 Q40 55 46 49" stroke="#0C1A33" stroke-width="2.2" fill="none" stroke-linecap="round"/><circle cx="28" cy="48" r="3" fill="#FF8E8E" opacity=".55"/><circle cx="52" cy="48" r="3" fill="#FF8E8E" opacity=".55"/></g></svg>`};
+const QS=['Why is x always the mystery?','Can infinity be a number?','Why do waves repeat?','How do top scorers beat the clock?','What shape is hiding in this room?','Why does money snowball?','Can an equation predict the future?'];
+const crew=()=>`<div class="crew"><div class="qb" id="qb">${QS[0]}</div><div class="row">${['mia','leo','teach','ava','sam'].map((k,i)=>`<span style="animation-delay:${-i*.5}s">${HUM(k,58)}</span>`).join('')}</div></div>`;
 const $=s=>document.querySelector(s);
 let st={problems:'',rev:false,tab:'courses',open:null,plan:'monthly',fmt:'one',course:'sat',tz:'Eastern (ET)',days:[],name:'',contact:'',grade:''};
 try{Object.assign(st,JSON.parse(localStorage.getItem('wtm_app')||'{}'),{tab:'courses',open:null,rev:false,course:st.course})}catch(e){}
@@ -241,13 +293,13 @@ function nav(){$('#nav').innerHTML=TABS.map(([k,l])=>`<button data-go="${k}" ${s
 
 /* ===== Curriculum: aligned to College Board frameworks & US Common Core (CCSS-M) ===== */
 const CUR={
-sat:{std:'College Board Digital SAT Math framework',min:24,hook:'4 domains. 1 pattern behind every question.',mods:[
+sat:{real:[["🛒", "Why does the SAT love percent change?", "Sales tax, tuition hikes, your next Chipotle bill. Same skill."], ["🎵", "How does Spotify guess your next song?", "Scatterplots and lines of best fit, the SAT data domain."], ["🗳️", "Can math call an election from 1,000 people?", "Margin of error, the idea behind every US poll."]],mat:["Official College Board practice tests (Bluebook)", "Desmos and calculator cheat sheet", "Class notes after every session", "Practice set after every class", "Unit quizzes and mistake log", "Parent progress updates"],q:["Why do 700+ scorers skip the easy-looking problems first?", "Can you solve a hard problem without solving it?", "What's the one habit that adds 100 points?"],std:'College Board Digital SAT Math framework',min:24,hook:'4 domains. 1 pattern behind every question.',mods:[
  ['Algebra','Which trick solves a problem in 10 seconds?',['Linear equations in one variable','Linear equations in two variables','Linear functions and slope','Systems of two linear equations','Linear inequalities']],
  ['Advanced Math','Why do curves trick so many students?',['Equivalent expressions','Quadratics and nonlinear equations','Systems with a line and a curve','Polynomial, exponential and radical functions','Function transformations']],
  ['Problem-Solving & Data','Can a graph lie to you?',['Ratios, rates and units','Percentages and percent change','Center and spread of data','Scatterplots and models','Probability and conditional probability','Sampling, margin of error, studies']],
  ['Geometry & Trig','Which shapes hide on every test?',['Area and volume','Lines, angles and triangles','Right triangles and trig','Circles and equations of circles']],
  ['Test Mode','How do top scorers use the clock?',['Desmos and calculator strategy','Module 1 and 2 pacing','2 full timed mock tests','Mistake log and review']]]},
-calc:{std:'College Board AP Calculus AB & BC (CED, 8 units AB / 10 units BC)',min:28,min2:'BC: 36 classes',hook:'The math behind motion, growth and change.',mods:[
+calc:{real:[["🎢", "What makes a roller coaster drop thrilling?", "Derivatives: steepness at one exact instant."], ["🚀", "How does NASA time a rocket burn?", "Velocity is the derivative of position. Acceleration, the next one."], ["🥤", "How fast does a cup fill as it widens?", "Related rates, a favorite AP free-response idea."]],mat:["Past AP free-response questions (AP Central)", "Formula and theorem sheet", "Class notes after every session", "Practice set after every class", "Unit quizzes and mistake log", "Parent progress updates"],q:["Can you add up infinitely many tiny pieces?", "How does a GPS know your speed this instant?", "Why does a 5 feel unreachable until it isn't?"],std:'College Board AP Calculus AB & BC (CED, 8 units AB / 10 units BC)',min:28,min2:'BC: 36 classes',hook:'The math behind motion, growth and change.',mods:[
  ['Unit 1 · Limits','What happens when you zoom in forever?',['Rates of change','Limits from graphs, tables, algebra','Continuity','Infinite limits and asymptotes','Squeeze theorem, IVT']],
  ['Unit 2 · Derivative rules','How fast is anything changing, right now?',['Definition of the derivative','Power, product, quotient rules','Trig, exponential, log derivatives']],
  ['Unit 3 · Chain & implicit','Can you differentiate what you cannot solve?',['Chain rule','Implicit differentiation','Inverse functions and inverse trig','Higher-order derivatives']],
@@ -259,7 +311,7 @@ calc:{std:'College Board AP Calculus AB & BC (CED, 8 units AB / 10 units BC)',mi
  ['BC · Unit 9','What if x and y both depend on time?',['Parametric equations and derivatives','Polar curves and area','Vector-valued functions']],
  ['BC · Unit 10','Can infinitely many numbers add to a finite one?',['Convergence tests','Taylor and Maclaurin series','Lagrange error bound','Radius and interval of convergence']],
  ['Exam Mode','What does a 5 really look like?',['MCQ and FRQ strategy','Timed practice exams','Calculator-active techniques']]]},
-alg1:{std:'US Common Core (CCSS-M) Algebra 1: HSA, HSF, HSN, HSS',min:24,hook:'The language every other math class speaks.',mods:[
+alg1:{real:[["📱", "Which phone plan is really cheaper?", "Linear equations pick the winner before you sign."], ["🚗", "Why does surge pricing feel random?", "It is a function. Learn to read it."], ["🏀", "Will that free throw go in?", "Quadratics trace the arc of every shot."]],mat:["Common Core-aligned worksheets", "Equation-solving cheat sheet", "Class notes after every session", "Practice set after every class", "Unit quizzes and mistake log", "Parent progress updates"],q:["Why does every story hide an equation?", "Can a graph tell you the future?", "What do two lines crossing really mean?"],std:'US Common Core (CCSS-M) Algebra 1: HSA, HSF, HSN, HSS',min:24,hook:'The language every other math class speaks.',mods:[
  ['Relationships between quantities','Why does every story become an equation?',['Units and quantities','Reading and writing expressions','Rates, ratios and modeling']],
  ['Linear equations & inequalities','What does "solve" really mean?',['One-variable equations and inequalities','Literal equations and formulas','Absolute value','Compound inequalities']],
  ['Linear functions & graphs','How does a line tell a story?',['Slope, intercepts and forms of a line','Graphing and writing linear equations','Function notation, domain and range','Arithmetic sequences']],
@@ -268,7 +320,7 @@ alg1:{std:'US Common Core (CCSS-M) Algebra 1: HSA, HSF, HSN, HSS',min:24,hook:'T
  ['Quadratics','Why does a thrown ball trace a parabola?',['Graphing parabolas','Solve by factoring, square roots, formula','Completing the square','Vertex form and key features']],
  ['Exponential functions','Why does money (and a virus) snowball?',['Growth and decay','Linear vs exponential','Geometric sequences']],
  ['Data & statistics','Can numbers argue both sides?',['Mean, median, spread, box plots','Scatterplots and lines of best fit','Two-way tables, correlation vs causation']]]},
-alg2:{std:'US Common Core (CCSS-M) Algebra 2: HSN, HSA, HSF, HSS',min:28,hook:'The bridge from school math to real-world models.',mods:[
+alg2:{real:[["🏠", "What does a 30-year mortgage really cost?", "Exponentials: the reason early saving wins."], ["🦠", "Why do viruses and viral videos snowball?", "Exponential growth, then logarithms to tame it."], ["🎧", "Why does sound travel in waves?", "Sine and cosine model every note you hear."]],mat:["Common Core-aligned worksheets", "Function families cheat sheet", "Class notes after every session", "Practice set after every class", "Unit quizzes and mistake log", "Parent progress updates"],q:["How do video games draw curves?", "Why can't you take the square root of -1... or can you?", "Why does money (and a virus) snowball?"],std:'US Common Core (CCSS-M) Algebra 2: HSN, HSA, HSF, HSS',min:28,hook:'The bridge from school math to real-world models.',mods:[
  ['Functions & transformations','How do graphs shift, stretch, flip?',['Function families and notation','Transformations','Inverse and composite functions','Piecewise and absolute value']],
  ['Quadratics & complex numbers','Can a number be imaginary and still useful?',['Complex numbers','Quadratic formula and discriminant','Completing the square','Quadratic systems']],
  ['Polynomials','How many times can a curve cross zero?',['Operations and long/synthetic division','Remainder and Factor Theorem','Zeros, end behavior, graphs','Fundamental Theorem of Algebra']],
@@ -277,7 +329,7 @@ alg2:{std:'US Common Core (CCSS-M) Algebra 2: HSN, HSA, HSF, HSS',min:28,hook:'T
  ['Sequences & series','How do patterns add up?',['Arithmetic and geometric sequences','Sigma notation','Finite and infinite geometric series']],
  ['Trigonometry','Why do waves repeat?',['Unit circle and radians','Sine and cosine graphs','Trig identities (Pythagorean)','Modeling periodic data']],
  ['Statistics & probability','Is it luck or is it math?',['Normal distribution','Sampling and inference','Conditional probability','Counting and combinations']]]},
-geo:{std:'US Common Core (CCSS-M) Geometry: HSG, HSN, HSA',min:24,hook:'Proof is a superpower. Learn how to wield it.',mods:[
+geo:{real:[["⚾", "Why is a baseball diamond exactly 90 feet?", "Right triangles decide that long throw to first."], ["🛑", "Why is a stop sign an octagon?", "Polygons, angles and symmetry on every US street."], ["📍", "How does GPS find you with satellites?", "Distances, circles and triangles. Geometry in your pocket."]],mat:["Common Core-aligned proof practice", "Theorems and formulas sheet", "Class notes after every session", "Practice set after every class", "Unit quizzes and mistake log", "Parent progress updates"],q:["How did people measure the Earth with a stick?", "Can you prove something is true forever?", "Why are honeycombs hexagons?"],std:'US Common Core (CCSS-M) Geometry: HSG, HSN, HSA',min:24,hook:'Proof is a superpower. Learn how to wield it.',mods:[
  ['Tools & transformations','Can you move a shape without changing it?',['Points, lines, planes, constructions','Translations, reflections, rotations','Dilations and similarity transformations']],
  ['Angles & proof','How do you convince a skeptic?',['Angle relationships, parallel lines','Two-column and paragraph proofs','Logic and conditionals']],
  ['Triangles & congruence','Which 3 facts lock a triangle in place?',['SSS, SAS, ASA, AAS, HL','Triangle centers and inequalities','Isosceles and equilateral triangles','Midsegments']],
@@ -289,11 +341,11 @@ geo:{std:'US Common Core (CCSS-M) Geometry: HSG, HSN, HSA',min:24,hook:'Proof is
 };
 const CURP=Object.keys(CUR);
 function cdet(c){const u=CUR[c.id];if(!u)return '';
- return `<div class="det"><span class="std d">✓ ${u.std}</span><div class="kv" style="justify-content:center;margin:2px 0 8px"><span class="tag g">${u.min}+ live classes${u.min2?' · '+u.min2:''}</span><span class="tag">Packs of ${PACK}</span></div><div class="small" style="font-weight:800;margin-bottom:8px">${u.hook}</div>`+
+ const hk={sat:'mia',calc:'grad',alg1:'leo',alg2:'ava',geo:'sam'}[c.id];return `<div class="det"><div class="qhd">${HUM(hk,70)}<div class="qlist">${u.q.map((x,i)=>`<div class="qq" style="animation-delay:${i*.15}s">🤔 ${x}</div>`).join('')}</div></div><span class="std d">✓ ${u.std}</span><div class="kv" style="justify-content:center;margin:2px 0 8px"><span class="tag g">${u.min}+ live classes${u.min2?' · '+u.min2:''}</span><span class="tag">Packs of ${PACK}</span></div><div class="small" style="font-weight:800;margin-bottom:8px">${u.hook}</div><div class="rlh">Real life 🇺🇸</div><div class="rls">${u.real.map(x=>`<div class="rl"><span>${x[0]}</span><b>${x[1]}</b><i>${x[2]}</i></div>`).join('')}</div><div class="rlh">Curriculum</div>`+
  u.mods.map((m,i)=>`<details class="mod"><summary><b>${m[0]}</b><i>${m[1]}</i></summary><ul>${m[2].map(x=>`<li>${x}</li>`).join('')}</ul></details>`).join('')+
- `<div class="small" style="margin:10px 0">${u.min} classes is the minimum we recommend. Every ${PACK} sessions is one pack.</div><button class="btn full" data-book="${c.id}">Free demo: ${c.n}</button></div>`}
+ `<div class="rlh">What you get</div><div class="kv" style="justify-content:center;margin:0 0 10px">${u.mat.map(x=>`<span class="tag">${x}</span>`).join('')}</div><div class="small" style="margin:10px 0">${u.min} classes is the minimum we recommend. Every ${PACK} sessions is one pack.</div><button class="btn full" data-book="${c.id}">Free demo: ${c.n}</button></div>`}
 function courses(){
- return `<div class="hero">${LYNX(104)}<h1>Ever wonder why math clicks for some?</h1><p>Find out free. 30 minutes.</p><span class="std">✓ College Board · US Common Core</span><button class="btn w" data-go="book">Book free demo</button><a class="btn w" style="background:rgba(255,255,255,.2);color:#fff" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hi We The Mind! I have a question about tutoring.')}" target="_blank" rel="noopener">Ask us</a></div>${puzzle()}${helpCard()}`+
+ return `<div class="hero">${LYNX(104)}<h1>Ever wonder why math clicks for some?</h1><p>Find out free. 30 minutes.</p><span class="std">🇺🇸 Built for US students · College Board · Common Core</span>${crew()}<button class="btn w" data-go="book">Book free demo</button><a class="btn w" style="background:rgba(255,255,255,.2);color:#fff" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hi We The Mind! I have a question about tutoring.')}" target="_blank" rel="noopener">Ask us</a></div>${puzzle()}${helpCard()}`+
  `<h2 style="margin:6px 0 12px">Pick your challenge</h2>`+COURSES.filter(c=>!c.hide).map(c=>`<div class="card"><button class="course" data-open="${c.id}" aria-expanded="${st.open==c.id}"><span class="ic" style="background:${c.c}">${CH[c.id](c.c)}</span><div><h3>${c.n}</h3><small>${c.g}</small><div class="small">${c.who}</div></div></button>${st.open==c.id?cdet(c):''}</div>`).join('');
 }
 function pricing(){
@@ -337,35 +389,24 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-go],[data-
  if(d.help){st.course='help';st.tab='book'}else if(d.rev)st.rev=!st.rev;else if(d.go)st.tab=d.go;else if(d.open)st.open=st.open==d.open?null:d.open;else if(d.book){st.course=d.book;st.tab='book'}else if(d.plan)st.plan=d.plan;else if(d.fmt)st.fmt=d.fmt;else if(d.day){const i=st.days.indexOf(d.day);i>=0?st.days.splice(i,1):st.days.push(d.day)}
  render();if(d.go||d.book)window.scrollTo({top:0})});
 $('#fx').innerHTML=fx();
-/* ===== PWA ===== */
-let dip=null;
-const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
-if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')&&location.pathname.indexOf('/app')===0){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
-addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;const b=$('#inst');if(b)b.classList.add('on')});
-addEventListener('appinstalled',()=>{dip=null;const b=$('#inst');if(b)b.classList.remove('on')});
-document.addEventListener('click',async e=>{const t=e.target.closest('#inst');if(t){if(dip){dip.prompt();try{await dip.userChoice}catch(x){}dip=null;t.classList.remove('on')}else{$('#ios').classList.add('on')}}
- if(e.target.id==='iosx'){$('#ios').classList.remove('on');try{localStorage.setItem('mx_ios','1')}catch(x){}}});
-const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-(function(){if(standalone()||!(location.protocol==='https:'||location.hostname==='localhost')||location.pathname.indexOf('/app')!==0)return;const f=document.querySelector('.foot');if(!f)return;const b=document.createElement('button');b.id='inst';b.className='wbtn'+(isiOS?' on':'');b.type='button';b.textContent='📲 Install app';f.parentNode.insertBefore(b,f);if(dip)b.classList.add('on')})();
-(function(){const q=new URLSearchParams(location.search).get('go');if(q&&['courses','pricing','book'].includes(q)){st.tab=q}})();
-
 /* ===== In-app payment (Razorpay Checkout) ===== */
 const RZP_KEY='rzp_live_TyorbeIN9SY9C1',LIVE_URL='https://wethemind.com/app/';
 const PLANS={m10:{t:'Mathynx 1-to-1',n:'10 live math sessions',usd:99},mg:{t:'Mathynx small group',n:'10 sessions, per student',usd:59},m1h:{t:'Mathynx 1 hour',n:'Any math problems',usd:SINGLE}};
 PLANS.m10.usd=PRICES.one.pack;PLANS.mg.usd=PRICES.grp.pack;
 let payPlan=null;
 function loadRzp(){return new Promise((res,rej)=>{if(window.Razorpay)return res();const x=document.createElement('script');x.src='https://checkout.razorpay.com/v1/checkout.js';x.onload=res;x.onerror=()=>rej(new Error('load'));document.head.appendChild(x)})}
-function psOpen(id){payPlan=id;const p=PLANS[id];let sv={};try{sv=JSON.parse(localStorage.getItem('mx_pay')||'{}')}catch(e){}
+const ISLIVE=location.hostname==='wethemind.com'||location.hostname==='www.wethemind.com'||location.hostname==='localhost';
+function psOpen(id){payPlan=id;const p=PLANS[id];if(!ISLIVE){$('#pb').innerHTML=`<div class="chr">${CH.coin()}</div><h3>${p.t}</h3><div class="pr">${money(p.usd)}</div><p class="small" style="margin-bottom:12px">Secure checkout opens in the live app.</p><a class="btn full" href="${LIVE_URL}?pay=${id}" target="_blank" rel="noopener">Continue to pay ${money(p.usd)}</a><button class="x" id="pcl">Not now</button>`;$('#ps').classList.add('on');document.body.style.overflow='hidden';return}let sv={};try{sv=JSON.parse(localStorage.getItem('mx_pay')||'{}')}catch(e){}
  $('#pb').innerHTML=`<div class="chr">${CH.coin()}</div><h3>${p.t}</h3><div class="small">${p.n}</div><div class="pr">${money(p.usd)}</div>
  <input id="pn" placeholder="Student name" autocomplete="name" value="${(sv.n||'').replace(/"/g,'')}"><input id="pe" type="email" placeholder="Parent email" autocomplete="email" value="${(sv.e||'').replace(/"/g,'')}"><input id="pp" type="tel" placeholder="Parent WhatsApp number" autocomplete="tel" value="${(sv.p||'').replace(/"/g,'')}">
- <div class="perr" id="perr"></div><button class="btn full" id="pgo">Pay ${money(p.usd)} securely</button><div class="small" style="margin-top:8px">Cards, UPI, wallets. Powered by Razorpay.</div><div class="alts"><span>Or pay another way</span><a href="https://www.paypal.me/kingshuk46/${p.usd}USD" target="_blank" rel="noopener">PayPal</a><a id="pwa" href="#" target="_blank" rel="noopener">WhatsApp us</a></div><button class="x" id="pcl">Not now</button>`;
+ <div class="perr" id="perr"></div><button class="btn full" id="pgo">Pay ${money(p.usd)} securely</button><div class="small" style="margin-top:8px">Cards and wallets. Powered by Razorpay.</div><div class="alts"><span>Or pay another way</span><a href="https://www.paypal.me/kingshuk46/${p.usd}USD" target="_blank" rel="noopener">PayPal</a><a id="pwa" href="#" target="_blank" rel="noopener">WhatsApp us</a></div><button class="x" id="pcl">Not now</button>`;
  $('#ps').classList.add('on');document.body.style.overflow='hidden'}
 function psClose(){$('#ps').classList.remove('on');document.body.style.overflow=''}
 function psDone(pid,p,d){const m=`Hi We The Mind! I just paid ${money(p.usd)} for ${p.t} (Payment ID ${pid}). Student: ${d.n}. Please schedule my sessions.`;
  $('#pb').innerHTML=`<div class="chr">${LYNX(90)}</div><h3>You're in! 🎉</h3><p style="margin:6px 0 12px">Payment received. Tap below and we'll set your first session.</p><div class="small" style="margin-bottom:12px">Payment ID: ${pid}</div><a class="btn full" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent(m)}" target="_blank" rel="noopener">Schedule on WhatsApp</a><button class="x" id="pcl">Close</button>`}
 function psWa(){const p=PLANS[payPlan],n=($('#pn')||{}).value||'',m=`Hi We The Mind! I'd like to pay ${money(p.usd)} for ${p.t}. Student: ${n}. Please send me a payment link.`;return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(m)}`}
 function psFail(msg){const b=$('#pgo'),p=PLANS[payPlan];b.disabled=false;b.textContent='Try card again';$('#perr').innerHTML=msg+(/[.!]$/.test(msg)?'':'.')+' <b>No money was taken.</b> Use PayPal or WhatsApp below.';const a=document.querySelector('.alts');if(a)a.classList.add('hot')}
-async function psPay(){const p=PLANS[payPlan],d={n:$('#pn').value.trim(),e:$('#pe').value.trim(),p:$('#pp').value.trim()},err=$('#perr');
+async function psPay(cur){cur=cur||'USD';const p=PLANS[payPlan],d={n:$('#pn').value.trim(),e:$('#pe').value.trim(),p:$('#pp').value.trim()},err=$('#perr');
  ['pn','pe','pp'].forEach(k=>$('#'+k).classList.remove('bad'));let bad=[];
  if(d.n.length<2)bad.push('pn');if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.e))bad.push('pe');if(d.p.replace(/\D/g,'').length<7)bad.push('pp');
  if(bad.length){bad.forEach(k=>$('#'+k).classList.add('bad'));err.textContent='Please fill all three so we can send your receipt.';return}
@@ -381,5 +422,20 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-pay]');if(
  if(e.target.id==='pwa'){e.target.href=psWa();return}if(e.target.id==='pgo')psPay();else if(e.target.id==='pcl'||e.target.id==='ps')psClose()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')psClose()});
 
+/* ===== PWA ===== */
+let dip=null;
+const standalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')&&location.pathname.indexOf('/app')===0){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}
+addEventListener('beforeinstallprompt',e=>{e.preventDefault();dip=e;const b=$('#inst');if(b)b.classList.add('on')});
+addEventListener('appinstalled',()=>{dip=null;const b=$('#inst');if(b)b.classList.remove('on')});
+document.addEventListener('click',async e=>{const t=e.target.closest('#inst');if(t){if(dip){dip.prompt();try{await dip.userChoice}catch(x){}dip=null;t.classList.remove('on')}else{$('#ios').classList.add('on')}}
+ if(e.target.id==='iosx'){$('#ios').classList.remove('on');try{localStorage.setItem('mx_ios','1')}catch(x){}}});
+const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+(function(){if(standalone()||!(location.protocol==='https:'||location.hostname==='localhost')||location.pathname.indexOf('/app')!==0)return;const f=document.querySelector('.foot');if(!f)return;const b=document.createElement('button');b.id='inst';b.className='wbtn'+(isiOS?' on':'');b.type='button';b.textContent='📲 Install app';f.parentNode.insertBefore(b,f);if(dip)b.classList.add('on')})();
+(function(){const q=new URLSearchParams(location.search).get('go');if(q&&['courses','pricing','book'].includes(q)){st.tab=q}})();
+
+
+let qi=0;setInterval(()=>{const b=document.getElementById('qb');if(!b)return;b.classList.add('sw');setTimeout(()=>{qi=(qi+1)%QS.length;b.textContent=QS[qi];b.classList.remove('sw')},300)},3600);
+(function(){try{const q=new URLSearchParams(location.search).get('pay');if(q&&PLANS[q]&&ISLIVE)psOpen(q)}catch(e){}})();
 render();
 </script>
