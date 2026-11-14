@@ -240,19 +240,19 @@ select,input[type=text]{text-align:center;text-align-last:center}
 
 <script>
 /* ===== Edit prices here (US dollars). Everything in the app updates from this block. ===== */
-const SINGLE=11; /* one-hour problem help */
-const PRICES={
-  one:{name:'One-to-one',pack:89,plan:'m10'},
-  grp:{name:'Small group (per student)',pack:55,plan:'mg'}
-};
+const SINGLE=12; /* one-hour problem help */
+const PRICES={one:{name:'One-to-one'},grp:{name:'Small group (per student)'}};
+/* Tier prices per 10-session course. A = Foundation, B = Core exam, C = Advanced */
+const TP={A:{lbl:'Foundation',one:89,grp:55},B:{lbl:'Core exam',one:99,grp:59},C:{lbl:'Advanced',one:119,grp:69}};
+const REG='igcse';
 const PACK=10; /* sessions per course pack */
 const WHATSAPP='917478147260',PAY_URL='https://wethemind.com/pay/',BOOK_URL='https://wethemind.com/education/#book-demo',REFUND_URL='https://wethemind.com/refund/';
 const COURSES=[
 {id:'help',hide:true,n:'1-hour problem help',g:'Any year',s:'?',c:'',t:[]},
-{id:"c0580",n:"Cambridge IGCSE Maths (0580)",g:"Core & Extended",c:'linear-gradient(135deg,#E52421,#F0532A)',s:'',who:"What do A* students do differently?",ic:'sat',hk:'mia',t:[]},
-{id:"c0606",n:"IGCSE Additional Maths (0606)",g:"Years 10–11",c:'linear-gradient(135deg,#0C1A33,#1E3A6E)',s:'',who:"Is Additional Maths worth it?",ic:'calc',hk:'grad',t:[]},
-{id:"edx",n:"Edexcel International GCSE Maths (4MA1)",g:"Foundation & Higher",c:'linear-gradient(135deg,#F0532A,#FDBB0B)',s:'',who:"What does Paper 2H hide?",ic:'alg2',hk:'ava',t:[]},
-{id:"a9709",n:"Cambridge AS & A Level Maths (9709)",g:"Years 12–13",c:'linear-gradient(135deg,#1E3A6E,#E52421)',s:'',who:"Pure, mechanics or stats: where do points hide?",ic:'geo',hk:'sam',t:[]}
+{id:"c0580",tier:'A',n:"Cambridge IGCSE Maths (0580)",g:"Core & Extended",c:'linear-gradient(135deg,#E52421,#F0532A)',s:'',who:"What do A* students do differently?",ic:'sat',hk:'mia',t:[]},
+{id:"c0606",tier:'B',n:"IGCSE Additional Maths (0606)",g:"Years 10–11",c:'linear-gradient(135deg,#0C1A33,#1E3A6E)',s:'',who:"Is Additional Maths worth it?",ic:'calc',hk:'grad',t:[]},
+{id:"edx",tier:'A',n:"Edexcel International GCSE Maths (4MA1)",g:"Foundation & Higher",c:'linear-gradient(135deg,#F0532A,#FDBB0B)',s:'',who:"What does Paper 2H hide?",ic:'alg2',hk:'ava',t:[]},
+{id:"a9709",tier:'C',n:"Cambridge AS & A Level Maths (9709)",g:"Years 12–13",c:'linear-gradient(135deg,#1E3A6E,#E52421)',s:'',who:"Pure, mechanics or stats: where do points hide?",ic:'geo',hk:'sam',t:[]}
 ];
 const PUZ=[["Solve 2x² − 5x − 3 = 0", "x = 3 or x = −½. It factorises to (2x + 1)(x − 3)."], ["Find the nth term of 5, 8, 11, 14, …", "3n + 2. The common difference is 3."], ["The rate is 1 USD = 3.67 AED. How many USD for AED 1,835?", "500 USD. 1835 ÷ 3.67 = 500."], ["Simplify (x² − 9) / (x² + x − 6)", "(x − 3)/(x − 2). Cancel the common (x + 3)."], ["A cone has radius 6 cm and height 8 cm. What is its curved surface area, in terms of π?", "60π cm². Slant height = 10, so πrl = π × 6 × 10."], ["Differentiate y = 3x⁴ − 2x² + 7 and find dy/dx at x = 1.", "dy/dx = 12x³ − 4x, which is 8 at x = 1."], ["Two cards are drawn from 52 without replacement. What is the probability both are aces?", "1/221. (4/52) × (3/51) = 1/221."]];
 function culture(){return `<div class="card" style="text-align:center"><div class="rlh" style="margin-top:0">${REGION[0]}</div><div class="rls">${REGION[1].map(x=>`<div class="rl"><span>${x[0]}</span><b>${x[1]}</b><i>${x[2]}</i></div>`).join('')}</div></div>`}
@@ -314,6 +314,51 @@ try{Object.assign(st,JSON.parse(localStorage.getItem('wtm_app_igcse')||'{}'),{ta
 const save=()=>{try{localStorage.setItem('wtm_app_igcse',JSON.stringify(st))}catch(e){}};
 const money=n=>'$'+n.toLocaleString('en-US',{minimumFractionDigits:n%1?2:0,maximumFractionDigits:2});
 
+/* ===== Calendar promos and festive themes (automatic, no editing needed) ===== */
+const D0=(y,m,d)=>new Date(y,m,d),addD=(d,n)=>D0(d.getFullYear(),d.getMonth(),d.getDate()+n);
+const nthDow=(y,m,n,w)=>{const f=D0(y,m,1);return D0(y,m,1+((7+w-f.getDay())%7)+7*(n-1))};
+const easterD=y=>{const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),t=h+l-7*m+114;return D0(y,Math.floor(t/31)-1,t%31+1)};
+/* Movable festivals [month0, day]. Dates for Eid are approximate (moon sighting). Extend this table in 2030. */
+const MOV={diwali:{2026:[10,8],2027:[9,29],2028:[9,17],2029:[10,5],2030:[9,26]},lny:{2026:[1,17],2027:[1,6],2028:[0,26],2029:[1,13],2030:[1,3]},eid:{2026:[2,20],2027:[2,10],2028:[1,27],2029:[1,15],2030:[1,5]},matariki:{2026:[6,10],2027:[5,25],2028:[6,14],2029:[6,6],2030:[5,21]}};
+const mov=(k,y)=>MOV[k]&&MOV[k][y]?D0(y,MOV[k][y][0],MOV[k][y][1]):null;
+const BTS={us:[[7,15],[8,10]],uk:[[7,25],[8,14]],au:[[0,20],[1,10]],igcse:[[7,15],[8,10]]};
+const ALLR=['us','uk','au','igcse'];
+function evs(y){const L=[],A=(id,name,em,s,e,off,rg,msg)=>{if(s&&e)L.push({id,name,em,s,e,off,rg,msg})};
+ const tg=nthDow(y,10,4,4),dv=mov('diwali',y),ln=mov('lny',y),ei=mov('eid',y),mk=mov('matariki',y),es=easterD(y),bt=BTS;
+ A('newyear','New Year','✨',D0(y,11,28),D0(y+1,0,5),.15,ALLR,'New year, new star. Start the year strong.');
+ A('pi','Pi Week','π',D0(y,2,8),D0(y,2,14),.14,ALLR,'14% off, because 3.14 deserves a party.');
+ ALLR.forEach(r=>A('bts','Back to school','🎒',D0(y,bt[r][0][0],bt[r][0][1]),D0(y,bt[r][1][0],bt[r][1][1]),.1,[r],'A fresh term deserves a confident start.'));
+ A('halloween','Spooky-good Maths','🎃',D0(y,9,24),D0(y,9,31),.1,['us'],'Maths is only scary until it clicks.');
+ A('thanksgiving','Thanksgiving','🍂',addD(tg,-3),tg,.15,['us'],'Grateful for curious minds. A thank-you from us.');
+ A('blackfriday','Black Friday','🏷️',addD(tg,1),addD(tg,4),.25,ALLR,'Our biggest offer of the year, through Cyber Monday.');
+ A('christmas','Holiday season','❄️',D0(y,11,14),D0(y,11,25),.15,ALLR,'Give the gift of getting maths.');
+ A('boxing','Boxing Day','🎁',D0(y,11,26),D0(y,11,27),.2,['uk','au'],'Treat yourself to a head start.');
+ if(dv)A('diwali','Diwali','🪔',addD(dv,-5),addD(dv,1),.15,ALLR,'Light up a new subject. Happy Diwali.');
+ if(ln)A('lny','Lunar New Year','🏮',addD(ln,-4),addD(ln,3),.15,['us','au','igcse'],'Wishing you a bright, lucky new year.');
+ if(ei)A('eid','Eid','🌙',addD(ei,-3),addD(ei,3),.15,['uk','au','igcse'],'Eid Mubarak from all of us.');
+ if(mk)A('matariki','Matariki','⭐',addD(mk,-2),addD(mk,2),.15,['au'],'Look up. Find your star.');
+ A('easter','Easter revision boost','🌷',addD(es,-14),addD(es,2),.1,['uk','au','igcse'],'Spring into revision before exam season.');
+ return L}
+const TH={newyear:['#5B3FD0','#E0409A','#FFD36B','#0B1030','#3A1C71','#D76D77','#9D8CFF','#F472B6'],pi:['#7C3AED','#A855F7','#FFD43B','#1E1B4B','#6D28D9','#F472B6','#B79CFF','#C084FC'],bts:['#1D4ED8','#3B82F6','#FFC933','#0C2461','#1D4ED8','#38BDF8','#7FA8FF','#60A5FA'],halloween:['#C2410C','#EA580C','#FDBA12','#1A0B2E','#5B21B6','#EA580C','#FF8A3D','#FB923C'],thanksgiving:['#B5541C','#D9822B','#F2B84B','#4A2511','#9C4A1A','#E0A458','#E8803A','#F0A04B'],blackfriday:['#B3001B','#E01E37','#FFC400','#0A0A0A','#2A0A10','#B3001B','#FF4D63','#FF7A8A'],christmas:['#B3202A','#C8423A','#F4C542','#0F3D2E','#1B6B4A','#B3202A','#FF6B6B','#FF8F8F'],boxing:['#B3202A','#C8423A','#F4C542','#0F3D2E','#1B6B4A','#B3202A','#FF6B6B','#FF8F8F'],diwali:['#C2410C','#E8590C','#FFC83D','#3B0A45','#A3205B','#F59E0B','#FF7A3D','#FF9A5C'],lny:['#C8102E','#E63946','#FFD23F','#7A0C1B','#C8102E','#F6A623','#FF5A6B','#FF8A94'],eid:['#0F766E','#14A38F','#F6C453','#062E3F','#0F766E','#7DD3B0','#3CCFBA','#6FE0CE'],matariki:['#2F4FBF','#5B6CF0','#FFD166','#070B2E','#1A2A6C','#6A5ACD','#7E93FF','#A3B1FF'],easter:['#15803D','#22A559','#FFD84D','#14532D','#16A34A','#FACC15','#4ADE80','#86EFAC']};
+const FALL={newyear:'✨',pi:'π',bts:'✏️',halloween:'🎃',thanksgiving:'🍂',blackfriday:'🏷️',christmas:'❄',boxing:'❄',diwali:'🪔',lny:'🏮',eid:'🌙',matariki:'⭐',easter:'🌷'};
+let OCC=null;
+(function(){try{const now=new Date(),host=location.hostname,prod=host==='wethemind.com'||host==='www.wethemind.com';let t=D0(now.getFullYear(),now.getMonth(),now.getDate());
+ const q=new URLSearchParams(location.search).get('d');if(!prod&&q&&/^\d{4}-\d{2}-\d{2}$/.test(q)){const a=q.split('-');t=D0(+a[0],+a[1]-1,+a[2])}
+ const all=[].concat(evs(t.getFullYear()-1),evs(t.getFullYear()),evs(t.getFullYear()+1)).filter(x=>x.rg.includes(REG));
+ const h=(location.hash.match(/occ=(\w+)/)||[])[1];
+ if(!prod&&h){const x=all.find(z=>z.id==h);if(x){OCC=Object.assign({},x,{demo:1})}}
+ if(!OCC){const act=all.filter(x=>x.s<=t&&t<=x.e).sort((a,b)=>b.off-a.off);if(act[0]){OCC=Object.assign({},act[0]);OCC.left=Math.round((act[0].e-t)/864e5)}}
+}catch(e){OCC=null}})();
+const OFF=OCC?OCC.off:0,dp=n=>OFF?Math.round(n*(1-OFF)):n;
+function banner(){if(!OCC)return '';const l=OCC.demo?'Preview':OCC.left<1?'Last day':OCC.left+' day'+(OCC.left>1?'s':'')+' left';
+ return `<div class="occ" role="note"><span class="oe" aria-hidden="true">${OCC.em}</span><div><b>${OCC.name}: ${Math.round(OFF*100)}% off</b><span>${OCC.msg} Applied automatically. ${l}.</span></div></div>`}
+(function(){const css='.occ{display:flex;align-items:center;gap:12px;text-align:left;background:linear-gradient(120deg,var(--red),var(--red2));color:#fff;border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:0 6px 18px rgba(0,0,0,.18)}.occ .oe{font:700 1.7rem Fredoka,sans-serif;flex:none;width:44px;height:44px;display:grid;place-items:center;background:rgba(255,255,255,.2);border-radius:50%}.occ b{display:block;font:600 1.02rem Fredoka,Nunito,sans-serif}.occ span:not(.oe){display:block;font:700 .82rem/1.35 Nunito,sans-serif;opacity:.95}s.was{opacity:.55;font-weight:600;font-size:.8em}.tcard.hot{border:2px solid var(--yel)}#fall{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}#fall i{position:absolute;top:-8%;font-style:normal;opacity:.7;animation:fl linear infinite}@keyframes fl{to{transform:translateY(112vh) rotate(300deg)}}@media (prefers-reduced-motion:reduce){#fall{display:none}}';
+ const T=OCC&&TH[OCC.id];let th='';
+ if(T){th=`:root{--red:${T[0]};--red2:${T[1]};--yel:${T[2]}}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--red:${T[6]};--red2:${T[7]}}}:root[data-theme="dark"]{--red:${T[6]};--red2:${T[7]}}.hero.sky-h{background:linear-gradient(165deg,${T[3]} 0%,${T[4]} 58%,${T[5]} 135%)}.hero.sky-h .btn:first-of-type{background:var(--yel)}.occ{color:#fff}`}
+ const s=document.createElement('style');s.id='occ-css';s.textContent=css+th;document.head.appendChild(s);
+ if(T){document.documentElement.setAttribute('data-occ',OCC.id);const f=document.createElement('div');f.id='fall';f.setAttribute('aria-hidden','true');let h='';const g=FALL[OCC.id]||OCC.em;for(let i=0;i<9;i++)h+=`<i style="left:${4+i*11}%;font-size:${14+(i*7)%10}px;animation-duration:${9+(i*5)%7}s;animation-delay:-${(i*3)%9}s">${g}</i>`;f.innerHTML=h;document.body.appendChild(f)}
+ let m=document.querySelector('meta[name=theme-color]');if(T&&m)m.setAttribute('content',T[3])})();
+
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;');
 const ICO={courses:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h6a3 3 0 013 3v11a2 2 0 00-2-2H4zM20 5h-6a3 3 0 00-3 3v11a2 2 0 012-2h7z"/></svg>',pricing:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9.5c0-1-1.3-1.8-3-1.8s-3 .8-3 1.9 1.3 1.6 3 2 3 .9 3 2-1.3 1.9-3 1.9-3-.8-3-1.8"/></svg>',book:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>'};
 const TABS=[['courses','Courses'],['pricing','Pricing'],['book','Enroll']];
@@ -335,13 +380,14 @@ function courses(){
  return `<div class="hero sky-h"><i class="tw t1"></i><i class="tw t2"></i><i class="tw t3"></i><i class="tw t4"></i><i class="tw t5"></i>${LYNX(104)}<div class="kick">Wonder first</div><h1>Ever wonder why maths clicks for some?</h1><p>Every mind has a hidden star. Find yours free in 30 minutes.</p><span class="std">Cambridge &amp; Edexcel, made simple</span>${crew()}<button class="btn w" data-go="book">★ Find your first star</button><a data-ask="1" class="btn w" style="background:rgba(255,255,255,.2);color:#fff" href="https://wa.me/${WHATSAPP}?text=${encodeURIComponent('Hi We The Mind! I have a question about tutoring.')}" target="_blank" rel="noopener">Ask us</a></div>${sky()}${puzzle()}${culture()}${helpCard()}`+
  `<h2 style="margin:6px 0 12px">Pick your challenge</h2>`+COURSES.filter(c=>!c.hide).map(c=>`<div class="card"><button class="course" data-open="${c.id}" aria-expanded="${st.open==c.id}"><span class="ic" style="background:${c.c}">${CH[c.ic||c.id](c.c)}</span><div><h3>${c.n}</h3><small>${c.g}</small><div class="small">${c.who}</div></div></button>${st.open==c.id?cdet(c):''}</div>`).join('');
 }
+function pcard(pr,pl,lbl,names,hot){const d=dp(pr);return `<div class="card tcard${hot?' hot':''}"><div class="small" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">${lbl}</div><div class="small" style="margin:2px 0 0">${names}</div><div class="price" style="margin:6px 0">${OFF?`<s class="was">${money(pr)}</s> `:''}${money(d)} <small>${PACK} sessions</small></div><div class="kv"><span class="tag g">Just ${money(d/PACK)} a session</span>${OFF?`<span class="tag">${Math.round(OFF*100)}% off today</span>`:''}</div><button class="btn full" style="margin-top:10px" data-pay="${pl}">Pay ${money(d)} now</button></div>`}
 function pricing(){
- const f=st.fmt,pr=PRICES[f].pack;
+ const f=st.fmt;
  return `<div class="chr">${CH.coin()}</div><h2 style="margin-bottom:6px">Smaller than you think.</h2><span class="std d">✓ Cambridge IGCSE · Pearson Edexcel International GCSE</span>
  <div class="seg two" role="group" aria-label="Format">${Object.keys(PRICES).map(k=>`<button data-fmt="${k}" aria-pressed="${f==k}">${k=='one'?'One-to-one':'Small group'}</button>`).join('')}</div>
- <div class="card"><div class="small" style="font-weight:800;text-transform:uppercase;letter-spacing:.06em">${PRICES[f].name} · Any course</div><div class="price" style="margin:6px 0">${money(pr)} <small>${PACK} sessions</small></div><p style="margin:6px 0 0">Pay once. No subscription. No hidden fees.</p>
- <div class="kv"><span class="tag g">Just ${money(pr/PACK)} a session</span><span class="tag">All 5 courses</span></div><button class="btn full" style="margin-top:12px" data-pay="${PRICES[f].plan}">Pay ${money(pr)} now</button><div class="small" style="margin-top:8px">Secure checkout by Razorpay. Starts after your free demo.</div></div>
- <div class="card"><h3>Just need help with a few problems?</h3><div class="price" style="margin:6px 0">${money(SINGLE)} <small>one hour</small></div><button class="btn ghost full" data-help="1">Book 1 hour</button><button class="btn ghost full" style="margin-top:8px" data-pay="m1h">Pay ${money(SINGLE)} now</button></div>
+ <p class="small" style="text-align:center;margin:0 0 10px">${PRICES[f].name}. Pay once, no subscription, no hidden fees. Price depends on the level.</p>
+ ${Object.keys(TP).map(t=>pcard(TP[t][f],(f=='one'?'o':'g')+t,TP[t].lbl,COURSES.filter(c=>c.tier==t).map(c=>c.n).join(' · '),t=='B')).join('')}
+ <div class="card"><h3>Just need help with a few problems?</h3><div class="price" style="margin:6px 0">${OFF?`<s class="was">${money(SINGLE)}</s> `:''}${money(dp(SINGLE))} <small>one hour</small></div><button class="btn ghost full" data-help="1">Book 1 hour</button><button class="btn ghost full" style="margin-top:8px" data-pay="m1h">Pay ${money(dp(SINGLE))} now</button><div class="small" style="margin-top:8px">Secure checkout by Razorpay. Packs start after your free demo.</div></div>
  <div class="card"><h3>Always included</h3><ul><li>Free 30-min demo</li><li>Cambridge & Pearson Edexcel syllabus aligned</li><li>Parent updates</li></ul></div>
  <button class="btn full" data-book="${st.course=='help'?'sat':st.course}">Book free demo</button>`;
 }
@@ -356,13 +402,13 @@ function book(){
  <label for="bt">Parent phone or email</label><input id="bt" type="text" value="${esc(st.contact)}" placeholder="+1 555 123 4567 or you@example.com">
  <label for="tz">Time zone</label><select id="tz">${['Gulf (GST)', 'India (IST)', 'Singapore / HK', 'UK (GMT/BST)', 'Africa (EAT / WAT)', 'Other (tell us)'].map(z=>`<option ${z==st.tz?'selected':''}>${z}</option>`).join('')}</select>
  <label>Preferred times</label><div class="chips">${['Weekday afternoons','Weekday evenings','Saturday','Sunday'].map(d=>`<button data-day="${d}" aria-pressed="${st.days.includes(d)}">${d}</button>`).join('')}</div>
- <div class="sum">${H?`1 hour, one-to-one · ${money(SINGLE)}<br><span class="small">Any maths topic. No course needed.</span>`:`${c.n} · ${PRICES[f].name} · ${PACK} sessions · ${money(PRICES[f].pack)}<br><span class="small">Free 30-min demo first.</span>`}</div>
+ <div class="sum">${H?`1 hour, one-to-one · ${money(dp(SINGLE))}<br><span class="small">Any maths topic. No course needed.</span>`:`${c.n} · ${PRICES[f].name} · ${PACK} sessions · ${money(dp(TP[c.tier][f]))}${OFF?` <s class="was">${money(TP[c.tier][f])}</s>`:''}<br><span class="small">Free 30-min demo first.</span>`}</div>
  <p class="err" id="er" hidden></p>
  <p style="margin:16px 0 8px"><button class="btn full" id="wa">Send on WhatsApp</button></p>
  <p style="margin:0 0 8px"><button class="btn ghost full" id="cp">Copy details</button></p>
  <div class="pills"><a href="${BOOK_URL}" target="_blank" rel="noopener">Booking form</a><button type="button" class="pl" data-go="pricing">Pay online</button><a href="${REFUND_URL}" target="_blank" rel="noopener">Refund policy</a></div>`;
 }
-function msg(){const c=COURSES.find(x=>x.id==st.course),f=st.fmt;if(st.course=='help')return `Hi We The Mind! I'd like to book a 1-hour problem help session (${money(SINGLE)}).\nSubject: Maths\nProblems: ${st.problems}\nStudent: ${st.name} (${st.grade})\nTime zone: ${st.tz}\nPreferred times: ${st.days.join(', ')||'Flexible'}\nContact: ${st.contact}`;return `Hi We The Mind! I'd like to book a free 30-minute demo session.\nSubject: Maths\nCourse: ${c.n}\nPlan: ${PACK} sessions, ${PRICES[f].name} (${money(PRICES[f].pack)})\nStudent: ${st.name} (${st.grade})\nTime zone: ${st.tz}\nPreferred times: ${st.days.join(', ')||'Flexible'}\nContact: ${st.contact}`}
+function msg(){const c=COURSES.find(x=>x.id==st.course),f=st.fmt;if(st.course=='help')return `Hi We The Mind! I'd like to book a 1-hour problem help session (${money(dp(SINGLE))}).\nSubject: Maths\nProblems: ${st.problems}\nStudent: ${st.name} (${st.grade})\nTime zone: ${st.tz}\nPreferred times: ${st.days.join(', ')||'Flexible'}\nContact: ${st.contact}`;return `Hi We The Mind! I'd like to book a free 30-minute demo session.\nSubject: Maths\nCourse: ${c.n}\nPlan: ${PACK} sessions, ${PRICES[f].name} (${money(dp(TP[c.tier][f]))}${OCC?', '+OCC.name+' offer':''})\nStudent: ${st.name} (${st.grade})\nTime zone: ${st.tz}\nPreferred times: ${st.days.join(', ')||'Flexible'}\nContact: ${st.contact}`}
 function valid(){const e=[];if(st.course=='help'&&!st.problems.trim())e.push('maths problems');if(!st.name.trim())e.push('student name');if(!st.contact.trim())e.push('parent phone or email');if(e.length){const x=$('#er');x.hidden=false;x.textContent='Please add the '+e.join(' and ')+'.';return false}$('#er').hidden=true;return true}
 
 /* ===== Star sky ===== */
@@ -381,7 +427,7 @@ function star(k){if(lit.includes(k))return;lit.push(k);try{localStorage.setItem(
 document.addEventListener('toggle',e=>{const d=e.target;if(d&&d.matches&&d.matches('details.mod')&&d.open)star('E')},true);
 document.addEventListener('click',e=>{if(e.target.closest('[data-ask]'))star('R')});
 const DISC='<p class="small" style="text-align:center;opacity:.75;margin:18px 6px 4px">Independent tutoring by We The Mind. Exam boards and curriculum bodies named here are trademarks of their owners. We are not affiliated with or endorsed by them.</p>';
-function render(){const en=st._last!==st.tab;st._last=st.tab;$('#v').innerHTML={courses,pricing,book}[st.tab]()+DISC;$('#v').classList.toggle('enter',en);nav();save();
+function render(){const en=st._last!==st.tab;st._last=st.tab;$('#v').innerHTML=banner()+{courses,pricing,book}[st.tab]()+DISC;$('#v').classList.toggle('enter',en);nav();save();
  if(st.tab=='book'){$('#bc').onchange=e=>{st.course=e.target.value;save();render()};
   if($('#bp'))$('#bp').oninput=e=>{st.problems=e.target.value;save()};
   for(const [id,k] of [['bn','name'],['bg','grade'],['bt','contact']])$('#'+id).oninput=e=>{st[k]=e.target.value;save()};
@@ -395,8 +441,9 @@ document.addEventListener('click',e=>{const t=e.target.closest('[data-go],[data-
 $('#fx').innerHTML=fx();
 /* ===== In-app payment (Razorpay Checkout) ===== */
 const RZP_KEY='rzp_live_TyorbeIN9SY9C1',LIVE_URL='https://wethemind.com/app-global/';
-const PLANS={m10:{t:'Wenvyra Globe 1-to-1',n:'10 live maths sessions',usd:99},mg:{t:'Wenvyra Globe small group',n:'10 sessions, per student',usd:59},m1h:{t:'Wenvyra Globe 1 hour',n:'Any maths problems',usd:SINGLE}};
-PLANS.m10.usd=PRICES.one.pack;PLANS.mg.usd=PRICES.grp.pack;
+const PLANS={m1h:{t:'Wenvyra Globe 1 hour',n:'Any maths problems',base:SINGLE}};
+for(const t in TP){PLANS['o'+t]={t:'Wenvyra Globe 1-to-1 · '+TP[t].lbl,n:'10 live maths sessions',base:TP[t].one};PLANS['g'+t]={t:'Wenvyra Globe small group · '+TP[t].lbl,n:'10 sessions, per student',base:TP[t].grp}}
+for(const k in PLANS){PLANS[k].usd=dp(PLANS[k].base);if(OCC)PLANS[k].n+=' · '+OCC.name+' offer'}
 let payPlan=null;
 function loadRzp(){return new Promise((res,rej)=>{if(window.Razorpay)return res();const x=document.createElement('script');x.src='https://checkout.razorpay.com/v1/checkout.js';x.onload=res;x.onerror=()=>rej(new Error('load'));document.head.appendChild(x)})}
 const ISLIVE=location.hostname==='wethemind.com'||location.hostname==='www.wethemind.com'||location.hostname==='localhost';
