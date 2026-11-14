@@ -177,6 +177,7 @@
   /* ---------- header button ---------- */
   var proBtn = el("button", "btn mg-probtn", "Go Pro");
   proBtn.type = "button"; proBtn.title = "Manaluz Pro";
+  (function(){var w=/;\s*wv\)/.test(navigator.userAgent||"");if(w){try{sessionStorage.setItem("mg-in-app","1");}catch(e){}}var s=document.createElement("style");s.textContent=".mg-app-only{display:none!important}";if(w){document.documentElement.classList.add("mg-webview");s.textContent=".mg-probtn,.mg-adbar .mg-noads{display:none!important}";document.head.appendChild(s);}})();
   var actions = document.querySelector(".hdr-actions");
   if (actions) actions.insertBefore(proBtn, actions.firstChild);
   proBtn.addEventListener("click", openPlans);
