@@ -1,7 +1,7 @@
 {
   "name": "WordSpark — English Dictionary",
   "short_name": "WordSpark",
-  "id": "./",
+  "id": "/tools/apps/english-dictionary/",
   "description": "Learn English words the fun way. Definitions, etymology, quizzes and daily word challenges. Fully offline.",
   "start_url": "./index.html",
   "display": "standalone",
