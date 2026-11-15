@@ -652,7 +652,7 @@
   ].join("\n");
   document.head.appendChild(wcss);
   var wishBtn = el("button", "btn mg-wishbtn", "<i>🪄</i><span>Wish</span>");
-  wishBtn.type = "button"; wishBtn.title = "Custom upgrade: tell us the feature you want, Rs 499 per upgrade";
+  wishBtn.type = "button"; wishBtn.title = "Custom upgrade: tell us the feature you want, Rs 512 per upgrade";
   if (actions) actions.insertBefore(wishBtn, sparkBtn);
   wishBtn.addEventListener("click", openWish);
 
