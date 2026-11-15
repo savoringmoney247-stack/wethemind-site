@@ -43,7 +43,7 @@ const RAZORPAY_WEBHOOK_SECRET = defineSecret("RAZORPAY_WEBHOOK_SECRET");
 const REGION = "asia-south1";
 const CORS = ["https://wethemind.com", "https://www.wethemind.com", /^http:\/\/localhost(:\d+)?$/];
 const GRACE_MS = 2 * 24 * 3600 * 1000;   // a couple of days' slack for late renewals
-const UPGRADE_PRICE_PAISE = 49900;        // custom upgrades: Rs 499 each, paid only after the owner approves a request
+const UPGRADE_PRICE_PAISE = 51200;        // custom upgrades: Rs 512 (Rs 499 + Razorpay fee) each, paid only after the owner approves a request
 const OWNER_EMAIL = "king.kngr47@gmail.com";
 
 const rzp = () => new Razorpay({ key_id: RAZORPAY_KEY_ID.value(), key_secret: RAZORPAY_KEY_SECRET.value() });
