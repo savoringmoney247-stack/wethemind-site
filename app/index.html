@@ -240,10 +240,10 @@ select,input[type=text]{text-align:center;text-align-last:center}
 
 <script>
 /* ===== Edit prices here (US dollars). Everything in the app updates from this block. ===== */
-const SINGLE=13; /* one-hour problem help */
+const SINGLE=19; /* one-hour problem help */
 const PRICES={one:{name:'One-to-one'},grp:{name:'Small group (per student)'}};
 /* Tier prices per 10-session course. A = Foundation, B = Core exam, C = Advanced */
-const TP={A:{lbl:'Foundation',one:92,grp:57},B:{lbl:'Core exam',one:103,grp:61},C:{lbl:'Advanced',one:123,grp:72}};
+const TP={A:{lbl:'Foundation',one:99,grp:59},B:{lbl:'Core exam',one:109,grp:69},C:{lbl:'Advanced',one:129,grp:79}};
 const REG='us';
 const PACK=10; /* sessions per course pack */
 const WHATSAPP='917478147260',PAY_URL='https://wethemind.com/pay/',BOOK_URL='https://wethemind.com/education/#book-demo',REFUND_URL='https://wethemind.com/refund/';
@@ -350,7 +350,7 @@ let OCC=null;
  if(!prod&&h){const x=all.find(z=>z.id==h);if(x){OCC=Object.assign({},x,{demo:1})}}
  if(!OCC){const act=all.filter(x=>x.s<=t&&t<=x.e).sort((a,b)=>b.off-a.off);if(act[0]){OCC=Object.assign({},act[0]);OCC.left=Math.round((act[0].e-t)/864e5)}}
 }catch(e){OCC=null}})();
-const OFF=OCC?OCC.off:0,dp=n=>OFF?Math.round(n*(1-OFF)):n;
+const OFF=OCC?OCC.off:0,dp=n=>{if(!OFF)return n;const x=n*(1-OFF),r=Math.max(9,Math.round((x-9)/10)*10+9);return Math.min(r,n)};
 function banner(){if(!OCC)return '';const l=OCC.demo?'Preview':OCC.left<1?'Last day':OCC.left+' day'+(OCC.left>1?'s':'')+' left';
  return `<div class="occ" role="note"><span class="oe" aria-hidden="true">${OCC.em}</span><div><b>${OCC.name}: ${Math.round(OFF*100)}% off</b><span>${OCC.msg} Applied automatically. ${l}.</span></div></div>`}
 (function(){const css='.occ{display:flex;align-items:center;gap:12px;text-align:left;background:linear-gradient(120deg,var(--red),var(--red2));color:#fff;border-radius:16px;padding:12px 14px;margin:0 0 14px;box-shadow:0 6px 18px rgba(0,0,0,.18)}.occ .oe{font:700 1.7rem Fredoka,sans-serif;flex:none;width:44px;height:44px;display:grid;place-items:center;background:rgba(255,255,255,.2);border-radius:50%}.occ b{display:block;font:600 1.02rem Fredoka,Nunito,sans-serif}.occ span:not(.oe){display:block;font:700 .82rem/1.35 Nunito,sans-serif;opacity:.95}s.was{opacity:.55;font-weight:600;font-size:.8em}.tcard.hot{border:2px solid var(--yel)}#fall{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:5}#fall i{position:absolute;top:-8%;font-style:normal;opacity:.7;animation:fl linear infinite}@keyframes fl{to{transform:translateY(112vh) rotate(300deg)}}@media (prefers-reduced-motion:reduce){#fall{display:none}}';

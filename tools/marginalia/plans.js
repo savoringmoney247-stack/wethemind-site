@@ -652,7 +652,7 @@
   ].join("\n");
   document.head.appendChild(wcss);
   var wishBtn = el("button", "btn mg-wishbtn", "<i>🪄</i><span>Wish</span>");
-  wishBtn.type = "button"; wishBtn.title = "Custom upgrade: tell us the feature you want, Rs 512 per upgrade";
+  wishBtn.type = "button"; wishBtn.title = "Custom upgrade: tell us the feature you want, Rs 519 per upgrade";
   if (actions) actions.insertBefore(wishBtn, sparkBtn);
   wishBtn.addEventListener("click", openWish);
 
@@ -735,21 +735,21 @@
         if (tgt && tgt.scrollIntoView) tgt.scrollIntoView({ behavior: "smooth", block: "center" });
         if (!pay && tgt && tgt.focus) setTimeout(function () { tgt.focus(); }, 450);
         if (tgt) { tgt.style.transition = "box-shadow .3s"; tgt.style.boxShadow = "0 0 0 3px rgba(229,24,28,.55)"; setTimeout(function () { tgt.style.boxShadow = ""; }, 1400); }
-        toast(pay ? "Your upgrade is approved. Tap Pay ₹512 below." : "Describe your wish below. You pay ₹512 only after we approve it.");
+        toast(pay ? "Your upgrade is approved. Tap Pay ₹519 below." : "Describe your wish below. You pay ₹519 only after we approve it.");
       };
       pill.addEventListener("click", goPill);
       pill.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); goPill(); } });
     }
     if (isOwner()) {
       var ow = el("div", "mg-owner");
-      ow.innerHTML = "<details><summary style=\"cursor:pointer;font-weight:700\">Owner tools: approve an upgrade</summary><div style=\"display:grid;gap:8px;margin-top:10px\"><input type=\"email\" id=\"mg-o-mail\" placeholder=\"Their email (they need to have signed in to Manaluz)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹512 offer</button></div></details>";
+      ow.innerHTML = "<details><summary style=\"cursor:pointer;font-weight:700\">Owner tools: approve an upgrade</summary><div style=\"display:grid;gap:8px;margin-top:10px\"><input type=\"email\" id=\"mg-o-mail\" placeholder=\"Their email (they need to have signed in to Manaluz)\"><input type=\"text\" id=\"mg-o-title\" maxlength=\"100\" placeholder=\"short title, e.g. Page numbers tool\"><button type=\"button\" id=\"mg-o-go\">Send ₹519 offer</button></div></details>";
       anchor.parentNode.insertBefore(ow, anchor);
       ow.querySelector("#mg-o-go").addEventListener("click", function () {
         var b = this, mail = ow.querySelector("#mg-o-mail").value.trim(), title = ow.querySelector("#mg-o-title").value.trim();
         if (!mail || title.length < 3) { toast("Please add their email and a short title."); return; }
         busy(b, true);
         call("createUpgradeOffer", { email: mail, title: title }).then(function () {
-          busy(b, false); ow.querySelector("#mg-o-mail").value = ""; ow.querySelector("#mg-o-title").value = ""; toast("Offer sent. They will see Pay ₹512 in their app.");
+          busy(b, false); ow.querySelector("#mg-o-mail").value = ""; ow.querySelector("#mg-o-title").value = ""; toast("Offer sent. They will see Pay ₹519 in their app.");
         }).catch(function (e) { busy(b, false); toast((e && e.message) || "Could not create the offer."); });
       });
     }
@@ -765,7 +765,7 @@
         if (o.status === "paid") { box.innerHTML = "<strong>✅ " + t + "</strong><small>Paid. We are on it.</small>"; }
         else {
           box.innerHTML = "<strong>" + t + "</strong><small>Approved for you. Pay only now, in the app.</small>";
-          var b = el("button", "", "Pay ₹512"); b.type = "button"; box.appendChild(b);
+          var b = el("button", "", "Pay ₹519"); b.type = "button"; box.appendChild(b);
           b.addEventListener("click", function () { payUpgrade(o, b, box); });
         }
         wrap.appendChild(box);
@@ -782,11 +782,11 @@
     var sparks = ""; for (var k = 0; k < 9; k++) sparks += '<i class="sp" style="left:' + (6 + k * 11) + '%;animation-delay:' + ((k * 0.47) % 4).toFixed(2) + 's;animation-duration:' + (3.4 + (k % 3) * 0.7).toFixed(1) + 's"></i>';
     card.innerHTML = '<button class="mg-x" aria-label="Close" data-w="close" style="z-index:2;color:#fff;background:rgba(0,0,0,.25)">×</button>'
       + '<div class="mg-wish-hero">' + sparks + '<h2>🪄 Say the word.</h2><p>Need Manaluz to do something it does not do yet? Tell us, and we will build it for you.</p>'
-      + '<div class="mg-wish-price"><b>₹512</b><span>per custom upgrade</span></div></div>'
+      + '<div class="mg-wish-price"><b>₹519</b><span>per custom upgrade</span></div></div>'
       + '<div class="mg-steps">'
       + '<div class="mg-step" style="--i:0"><b>1</b><strong>Make a wish</strong>Describe the feature or change you want.</div>'
       + '<div class="mg-step" style="--i:1"><b>2</b><strong>We reply</strong>We review it and reply with a short plan.</div>'
-      + '<div class="mg-step" style="--i:2"><b>3</b><strong>We build it</strong>Approve and pay ₹512 right here in the app, then we make it happen.</div></div>'
+      + '<div class="mg-step" style="--i:2"><b>3</b><strong>We build it</strong>Approve and pay ₹519 right here in the app, then we make it happen.</div></div>'
       + '<label>Need inspiration? Tap one</label><div class="mg-ideas"></div>'
       + '<label for="mg-w-msg">Your wish</label><textarea id="mg-w-msg" maxlength="1500" placeholder="For example: I want a stamp tool with my school logo, and a one-click way to number pages like 1/12."></textarea>'
       + '<div class="mg-fbrow"><div><label for="mg-w-name">Name *</label><input id="mg-w-name" type="text" maxlength="80" required autocomplete="name" value="' + esc3(nm) + '"></div>'
@@ -820,7 +820,7 @@
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { err.textContent = "Please enter a valid email so we can reply."; card.querySelector("#mg-w-mail").focus(); return; }
       if (tel && !/^[+\d][\d\s()\-]{5,18}$/.test(tel)) { err.textContent = "That contact number looks off. Fix it, or leave it empty."; card.querySelector("#mg-w-tel").focus(); return; }
       try { var last = +localStorage.getItem("mg-w-last") || 0; if (Date.now() - last < 30000) { err.textContent = "Your wish just went through. Please wait a moment before sending another."; return; } } catch (e) {}
-      var head = "[Manaluz CUSTOM UPGRADE request · ₹512 per upgrade · Plan: " + planLabel() + "]\n";
+      var head = "[Manaluz CUSTOM UPGRADE request · ₹519 per upgrade · Plan: " + planLabel() + "]\n";
       var fd = new FormData();
       fd.append("form_name", "Manaluz Feedback");
       fd.append("kind", "Custom upgrade wish"); fd.append("plan", planLabel());
@@ -839,7 +839,7 @@
         card.innerHTML = '<button class="mg-x" aria-label="Close" data-w="close">×</button><div class="mg-fbdone">'
           + '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="28"/><path d="M19 33l9 9 17-19"/></svg>'
           + '<h2 style="justify-content:center;margin-top:12px">Wish received ✨</h2>'
-          + '<p class="mg-fbsub" style="margin:0">We will email <b>' + esc3(mail) + '</b> soon with a quick plan and a secure payment link for ₹512. You pay only if you are happy with the plan.</p></div>';
+          + '<p class="mg-fbsub" style="margin:0">We will email <b>' + esc3(mail) + '</b> soon with a quick plan and a secure payment link for ₹519. You pay only if you are happy with the plan.</p></div>';
         card.querySelector('[data-w="close"]').addEventListener("click", closeWish);
         setTimeout(closeWish, 5200);
       }, wait);
