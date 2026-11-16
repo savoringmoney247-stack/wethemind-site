@@ -60,3 +60,14 @@ body:has(#sidebar-toggle) .sm-tab{display:none!important}
 /* education hero "passport": stop long buttons stretching the card past small phone screens */
 @media(max-width:820px){.passport{grid-template-columns:minmax(0,1fr)}.passport-page{min-width:0}.passport .hero-cta-row .btn{white-space:normal;max-width:100%;text-align:center}}
 @media(max-width:360px){.passport-page{padding:32px 18px}}
+
+/* ---- Nov 16: phone header ----
+   1) the homepage menu list was always open and covered the page (an inline rule forced it to display:flex);
+   2) "Book Free Class": the spinning star sat on top of the label and the red-to-gold gradient made the end of the
+      white text hard to read. On phones: solid red, no star/sparkle, no bobbing, clear white label. */
+@media(max-width:900px){
+ header .btn.btn-primary.btn-sm,.nav .btn-primary.btn-sm{animation:none!important;translate:none!important;padding:9px 14px!important;background:#E52421!important;background-image:none!important;border:2px solid #fff!important;color:#fff!important;font-size:.8rem!important;line-height:1.1!important;text-shadow:none!important;box-shadow:0 0 0 1.5px #E52421,0 6px 14px -6px rgba(229,36,33,.6)!important}
+ header .btn.btn-primary.btn-sm::before,header .btn.btn-primary.btn-sm::after,.nav .btn-primary.btn-sm::before,.nav .btn-primary.btn-sm::after{content:none!important;display:none!important}
+ header .nav-links.nav-open{display:flex!important}
+}
+@media(max-width:420px){header .btn.btn-primary.btn-sm,.nav .btn-primary.btn-sm{padding:8px 10px!important;font-size:.72rem!important}}
