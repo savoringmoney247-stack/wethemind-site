@@ -421,6 +421,11 @@ button{font:inherit;cursor:pointer;}
 .tab-x:hover{background:var(--accent-soft);color:var(--ink-900);}
 .tab-add{border:none;background:none;color:var(--ink-600);width:30px;height:30px;font-size:20px;border-radius:8px;margin-bottom:3px;flex:0 0 auto;}
 .tab-add:hover{background:var(--surface);}
+.tabmenu{position:fixed;z-index:200;min-width:230px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow-lg);padding:6px;display:flex;flex-direction:column}
+.tabmenu-item{display:block;width:100%;text-align:left;background:none;border:none;font:inherit;font-size:13px;color:var(--ink-900);padding:9px 12px;border-radius:8px;cursor:pointer}
+.tabmenu-item:hover:not(:disabled),.tabmenu-item:focus-visible{background:var(--surface-2);outline:none}
+.tabmenu-item:disabled{color:var(--ink-400);cursor:default}
+.tabmenu-sep{height:1px;background:var(--line);margin:4px 2px}
 .opening{margin:auto;color:var(--ink-400);font-size:13px;padding:40px;}
 .tabbar:not([hidden]) ~ .outlinepanel{top:140px;}
 .thumb{
@@ -2018,7 +2023,16 @@ function renderTabs(){
     const nm = document.createElement("span"); nm.className = "tab-name"; nm.textContent = d.name + (d.ready ? "" : " …");
     const x = document.createElement("button"); x.className = "tab-x"; x.title = "Close this file"; x.textContent = "×";
     t.append(nm, x);
-    t.addEventListener("click", ()=> activateDoc(d));
+    t.addEventListener("click", ()=>{ if (t._lp){ t._lp = false; return; } activateDoc(d); });
+    t.addEventListener("contextmenu", (e)=>{ e.preventDefault(); openTabMenu(e.clientX, e.clientY, d); });
+    let lpTimer = null;
+    t.addEventListener("pointerdown", (e)=>{
+      if (e.pointerType !== "touch") return;
+      clearTimeout(lpTimer);
+      const px = e.clientX, py = e.clientY;
+      lpTimer = setTimeout(()=>{ t._lp = true; openTabMenu(px, py, d); }, 550);
+    });
+    ["pointerup","pointercancel","pointermove","pointerleave"].forEach(ev=> t.addEventListener(ev, ()=> clearTimeout(lpTimer)));
     t.addEventListener("auxclick", (e)=>{ if (e.button === 1){ e.preventDefault(); closeDoc(d); } });
     x.addEventListener("click", (e)=>{ e.stopPropagation(); closeDoc(d); });
     tabbar.appendChild(t);
@@ -2028,6 +2042,79 @@ function renderTabs(){
   add.addEventListener("click", ()=> openInput.click());
   tabbar.appendChild(add);
   if (activeTab) activeTab.scrollIntoView({block:"nearest", inline:"nearest"});
+}
+
+/* ---------------- tab right-click / long-press menu ---------------- */
+let tabMenuEl = null;
+function closeTabMenu(){ if (tabMenuEl){ tabMenuEl.remove(); tabMenuEl = null; } }
+document.addEventListener("keydown", (e)=>{ if (e.key === "Escape") closeTabMenu(); });
+document.addEventListener("pointerdown", (e)=>{ if (tabMenuEl && !tabMenuEl.contains(e.target)) closeTabMenu(); }, true);
+window.addEventListener("resize", closeTabMenu);
+window.addEventListener("blur", closeTabMenu);
+function closeMany(list, keep){
+  if (keep && curDoc !== keep) activateDoc(keep);
+  list.forEach(x=> closeDoc(x));
+}
+async function printDocs(list){
+  for (let i = 0; i < list.length; i++){
+    const d = list[i];
+    try{
+      showToast("Preparing " + d.name + " to print…");
+      const bytes = await buildExportPdf(d);
+      const url = URL.createObjectURL(new Blob([bytes], {type:"application/pdf"}));
+      await new Promise((res)=>{
+        const f = document.createElement("iframe");
+        f.style.cssText = "position:fixed;right:0;bottom:0;width:1px;height:1px;border:0;opacity:0";
+        f.onload = ()=>{ setTimeout(()=>{
+          try{ f.contentWindow.focus(); f.contentWindow.print(); }catch(err){ window.open(url, "_blank"); }
+          setTimeout(res, 1200);
+          setTimeout(()=>{ f.remove(); URL.revokeObjectURL(url); }, 120000);
+        }, 400); };
+        f.src = url;
+        document.body.appendChild(f);
+        setTimeout(res, 9000);
+      });
+    }catch(err){
+      console.error(err);
+      showToast("Couldn't prepare " + d.name + " for printing.");
+    }
+  }
+}
+function openTabMenu(x, y, d){
+  closeTabMenu();
+  const i = docs.indexOf(d), n = docs.length;
+  if (i < 0) return;
+  const m = document.createElement("div");
+  m.className = "tabmenu"; m.setAttribute("role", "menu");
+  const add = (label, on, fn)=>{
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "tabmenu-item"; b.textContent = label; b.disabled = !on;
+    b.setAttribute("role", "menuitem");
+    b.addEventListener("click", ()=>{ closeTabMenu(); fn(); });
+    m.appendChild(b);
+  };
+  const sep = ()=>{ const s = document.createElement("div"); s.className = "tabmenu-sep"; m.appendChild(s); };
+  add("Close Tab", true, ()=> closeDoc(d));
+  add("Close all tabs", true, ()=>{ const rest = docs.filter(z=> z !== curDoc); closeMany(curDoc ? rest.concat([curDoc]) : rest); });
+  add("Close Others", n > 1, ()=> closeMany(docs.filter(z=> z !== d), d));
+  add("Close Left", i > 0, ()=> closeMany(docs.slice(0, i), d));
+  add("Close Right", i < n - 1, ()=> closeMany(docs.slice(i + 1), d));
+  sep();
+  add("Copy File Name", true, ()=>{
+    try{ navigator.clipboard.writeText(d.name).then(()=> showToast("Copied the file name."), ()=> showToast("Couldn't copy it.")); }
+    catch(err){ showToast("Couldn't copy it."); }
+  });
+  if (!window.ManaluzNative){
+    sep();
+    add("Print Current Tab", !!d.ready, ()=> printDocs([d]));
+    add("Print All Tabs", n > 1, ()=> printDocs(docs.filter(z=> z.ready)));
+  }
+  document.body.appendChild(m);
+  const r = m.getBoundingClientRect();
+  m.style.left = Math.max(6, Math.min(x, window.innerWidth - r.width - 6)) + "px";
+  m.style.top = Math.max(6, Math.min(y, window.innerHeight - r.height - 6)) + "px";
+  tabMenuEl = m;
+  const first = m.querySelector("button:not(:disabled)"); if (first) first.focus();
 }
 
 /* ---------------- opening files ---------------- */
@@ -4788,7 +4875,7 @@ function wrapText(text, font, size, maxWidth){
 window.addEventListener("resize", ()=>{ /* keep current scale; user can rezoom */ });
 
 /* ---------------- PWA: service worker, install prompt, file handling, drag&drop ---------------- */
-const MG_BUILD = "67";
+const MG_BUILD = "68";
 (function buildStamp(){
   document.documentElement.setAttribute("data-build", MG_BUILD);   // no visible label; check with: document.documentElement.dataset.build
   // Self-update: if the server has a newer build than the one running, drop old caches and reload once.
