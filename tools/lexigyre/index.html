@@ -1,0 +1,836 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Lexigyre: Free Word Puzzle and Cube Game | We The Mind</title>
+<meta name="description" content="Play Lexigyre free: unscramble words and watch a 3x3 puzzle cube solve itself. A fun vocabulary and thinking game for kids and adults, with a new Daily puzzle.">
+<link rel="canonical" href="https://wethemind.com/tools/lexigyre/">
+<meta property="og:type" content="website"><meta property="og:title" content="Lexigyre: Free Word Puzzle and Cube Game"><meta property="og:description" content="Unscramble the word, turn the cube. A free puzzle game from We The Mind."><meta property="og:url" content="https://wethemind.com/tools/lexigyre/"><meta property="og:image" content="https://wethemind.com/assets/og-image.png"><meta name="twitter:card" content="summary_large_image">
+<meta name="robots" content="index,follow,max-image-preview:large"><meta name="theme-color" content="#080b12">
+<link rel="icon" href="../../assets/favicon-32.png" sizes="32x32" type="image/png"><link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"VideoGame","name":"Lexigyre","description":"A free word-unscramble puzzle where every correct word turns a 3x3 puzzle cube back toward solved.","url":"https://wethemind.com/tools/lexigyre/","genre":["Puzzle","Word game"],"gamePlatform":"Web browser","applicationCategory":"Game","operatingSystem":"Any","inLanguage":"en","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"We The Mind","url":"https://wethemind.com/"}}</script>
+</head><body>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout: cube under a soft spotlight on the left, word rack on the right at wide widths; stacked on phones.
+   Look: obsidian table, brass hairlines, engraved ivory tiles. The six cube colours are the only bright accents. */
+:root{
+  color-scheme:dark;
+  --bg:#080b12; --panel:#0f1420; --line:#1f2839; --line2:#2b3650; --fg:#ecebe6; --muted:#8a93ab;
+  --brass:#c9a45c; --brass-hi:#ecd29a; --brass-lo:#8f7236;
+  --tile-a:#f9f3e4; --tile-b:#e8dfc6; --tile-edge:#b9ad8c; --tile-ink:#1b1a17;
+  --good:#2bbd6e; --good-edge:#177c47; --warn:#ffb020; --warn-edge:#a76e00; --bad:#ff6270;
+  --c-red:#d9304a; --c-orange:#ff8a1f; --c-white:#f4f4ef; --c-yellow:#ffd43b; --c-green:#22b05f; --c-blue:#2f6bf2;
+  --display:'Marcellus','Trajan Pro',Georgia,serif;
+  --body:'Outfit',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box}
+body{
+  background-color:var(--bg);
+  background-image:radial-gradient(1000px 520px at 72% -12%,rgba(47,107,242,.13),transparent 60%),radial-gradient(760px 520px at 0% 108%,rgba(201,164,92,.08),transparent 60%);
+  background-attachment:fixed;
+  color:var(--fg);
+  font:400 16px/1.4 var(--body);
+  padding-block:10px 24px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px));
+  -webkit-tap-highlight-color:transparent;
+}
+button{font:inherit;color:inherit;touch-action:manipulation}
+.k,.pill,.btn,.icon-btn,.tok,.stat{-webkit-user-select:none;user-select:none}
+:focus-visible{outline:2px solid var(--brass-hi);outline-offset:2px}
+
+.app{max-width:1000px;margin:0 auto;display:grid;gap:14px;grid-template-columns:minmax(0,1fr)}
+.top{display:flex;align-items:center;justify-content:space-between;gap:10px 18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:11px}
+.brand svg{width:26px;height:26px;flex:none}
+.brand h1{font:400 17px/1 var(--display);letter-spacing:.36em;text-transform:uppercase;margin:0}
+.stats{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;font-variant-numeric:tabular-nums;min-width:0;max-width:100%}
+.stat{display:grid;line-height:1.1}
+.stat small{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass)}
+.stat b{font:500 18px/1.25 var(--body)}
+.pill{height:36px;padding:0 13px;border-radius:999px;border:1px solid var(--line2);background:transparent;cursor:pointer;font-size:13px;letter-spacing:.06em;display:inline-flex;align-items:center;gap:8px}
+.pill:hover{border-color:var(--brass)}
+.pill.new::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--brass);box-shadow:0 0 8px var(--brass)}
+.icon-btn{width:36px;height:36px;border-radius:50%;border:1px solid var(--line2);background:transparent;display:grid;place-items:center;cursor:pointer}
+.icon-btn:hover{border-color:var(--brass)}
+.icon-btn svg{width:18px;height:18px}
+
+.play{display:grid;gap:14px;min-width:0}
+.stage{position:relative;display:grid;justify-items:center;gap:8px;min-width:0}
+.stage::before{content:"";position:absolute;inset:0 0 18% 0;background:radial-gradient(closest-side,rgba(236,210,154,.10),transparent 72%);pointer-events:none}
+#cube{position:relative;display:block;width:min(100%,40vh,440px);width:min(100%,40svh,440px);aspect-ratio:1;touch-action:pan-y;cursor:grab;max-width:100%}
+#cube:active{cursor:grabbing}
+.tall #cube{width:min(100%,30vh,440px);width:min(100%,30svh,440px)}
+.formula-wrap{position:relative;display:grid;justify-items:center;gap:6px;max-width:100%}
+.lab{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);text-align:center}
+.formula{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;min-height:32px}
+.tok{min-width:34px;padding:3px 9px;border-radius:7px;border:1px solid var(--line);background:rgba(255,255,255,.02);text-align:center;font:500 14px/1.3 var(--body);letter-spacing:.05em;transition:opacity .35s,color .35s,border-color .35s}
+.tok.done{opacity:.28;text-decoration:line-through}
+.tok.next{border-color:var(--brass);color:var(--brass-hi)}
+
+.banner{position:absolute;z-index:5;left:50%;top:6%;transform:translateX(-50%);display:grid;gap:2px;justify-items:center;text-align:center;
+  padding:12px 22px;border-radius:14px;background:rgba(8,11,18,.88);border:1px solid var(--brass);backdrop-filter:blur(6px);cursor:pointer;
+  box-shadow:0 10px 40px rgba(0,0,0,.5);animation:rise .45s cubic-bezier(.2,.8,.2,1);max-width:min(94%,360px)}
+.banner b{font:400 20px/1.2 var(--display);letter-spacing:.08em;color:var(--brass-hi)}
+.banner span{font-size:13px;color:var(--muted)}
+@keyframes rise{from{opacity:0;transform:translate(-50%,14px)}to{opacity:1;transform:translate(-50%,0)}}
+
+.rack{background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.012));border:1px solid var(--line);border-radius:20px;padding:16px;display:grid;gap:13px;min-width:0;box-shadow:inset 0 1px 0 rgba(201,164,92,.35)}
+.rack-head{display:flex;justify-content:space-between;gap:8px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.pace{height:3px;border-radius:2px;background:rgba(255,255,255,.07);overflow:hidden}
+.pace i{display:block;height:100%;background:linear-gradient(90deg,var(--brass-lo),var(--brass-hi));transform-origin:left;transform:scaleX(0)}
+.msg{min-height:1.5em;font-weight:400;text-align:center;color:#d4d8e4}
+.msg[data-tone="good"]{color:var(--good)}
+.msg[data-tone="bad"]{color:var(--warn)}
+.row{display:flex;align-items:flex-start;justify-content:center;gap:6px;width:100%;container-type:inline-size}
+.slot,.tile,.ghost{flex:0 1 58px;min-width:0;aspect-ratio:1;border-radius:11px;padding:0;position:relative}
+.k{font-family:var(--display);font-weight:400;text-transform:uppercase;line-height:1;display:grid;place-items:center;
+   font-size:clamp(17px,calc(100cqw / var(--n,6) * .56),34px)}
+.tile,.slot.on{border:0;background:linear-gradient(180deg,var(--tile-a),var(--tile-b));color:var(--tile-ink);
+  box-shadow:0 4px 0 var(--tile-edge),inset 0 1px 0 rgba(255,255,255,.8);text-shadow:0 1px 0 rgba(255,255,255,.7);cursor:pointer;transition:transform .08s,box-shadow .08s}
+.tile:active{transform:translateY(3px);box-shadow:0 1px 0 var(--tile-edge),inset 0 1px 0 rgba(255,255,255,.8)}
+.slot{border:1.5px dashed var(--line2);background:rgba(255,255,255,.025);cursor:default}
+.slot.on{cursor:pointer}
+.slot.good{background:linear-gradient(180deg,#34cf7e,var(--good));color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.25);box-shadow:0 4px 0 var(--good-edge),inset 0 1px 0 rgba(255,255,255,.35);cursor:default}
+.slot.bad{background:linear-gradient(180deg,#ffc24d,var(--warn));color:#2b1c00;text-shadow:none;box-shadow:0 4px 0 var(--warn-edge)}
+.ghost{border:1.5px dashed transparent;background:rgba(255,255,255,.035)}
+.row[data-wrap="1"]{flex-wrap:wrap;row-gap:8px}
+.row[data-wrap="1"] .tile,.row[data-wrap="1"] .ghost{flex:0 0 min(58px,calc((100% - (var(--n) - 1) * 6px) / var(--n)))}
+.row.shake{animation:shake .42s}
+.win .slot{animation:hop .55s both;animation-delay:calc(var(--i,0) * 70ms)}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(4px)}}
+@keyframes hop{0%{transform:translateY(0)}40%{transform:translateY(-12px)}100%{transform:translateY(0)}}
+.tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{border:1px solid var(--line2);background:transparent;padding:8px 16px;border-radius:999px;cursor:pointer;font-weight:400;font-size:14px;letter-spacing:.06em}
+.btn small{color:var(--brass);margin-left:5px}
+.btn:hover{border-color:var(--brass)}
+
+.veil{position:fixed;inset:0;z-index:20;display:grid;place-items:center;background:rgba(5,7,12,.76);backdrop-filter:blur(6px);
+  padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.card{width:min(100%,400px);background:var(--panel);border:1px solid var(--line2);border-radius:22px;padding:26px;display:grid;gap:14px;box-shadow:inset 0 1px 0 rgba(201,164,92,.4),0 24px 60px rgba(0,0,0,.55)}
+.strip{display:flex;height:5px;border-radius:3px;overflow:hidden}
+.strip i{flex:1}
+.card h2{margin:0;font:400 30px/1.1 var(--display);letter-spacing:.06em;text-wrap:balance}
+.card p{margin:0;color:#c6cde2}
+.card .kick{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass)}
+.marks{font-size:26px;letter-spacing:.1em;line-height:1.2}
+.acts{display:grid;gap:10px}
+.go{border:0;background:linear-gradient(180deg,var(--brass-hi),var(--brass));color:#201808;font-weight:600;font-size:16px;letter-spacing:.04em;padding:13px 18px;border-radius:12px;box-shadow:0 4px 0 var(--brass-lo);cursor:pointer}
+.go:active{transform:translateY(3px);box-shadow:0 1px 0 var(--brass-lo)}
+.alt{padding:11px 16px;border-radius:12px}
+
+@media(max-width:420px){.rack{padding:12px}.row{gap:5px}.stats{width:100%;justify-content:space-between;gap:8px}.pill{padding:0 10px}.stat b{font-size:17px}}
+@media(min-width:860px){
+  .play{grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);align-items:center;gap:30px}
+  #cube{width:min(100%,62vh,520px);width:min(100%,62svh,520px)}
+  .rack{padding:24px}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+
+<nav class="wtm-top" aria-label="We The Mind"><a href="../../" class="wtm-back">&larr; We The Mind</a><a href="../" class="wtm-back">All free tools</a></nav>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <svg viewBox="0 0 28 28" aria-hidden="true"><g id="mark"></g></svg>
+      <h1>Lexigyre</h1>
+    </div>
+    <div class="stats">
+      <div class="stat"><small id="rank">Apprentice</small><b id="lvl">1</b></div>
+      <div class="stat"><small>Score</small><b id="score">0</b></div>
+      <div class="stat"><small>Streak</small><b id="streak">0</b></div>
+      <button class="pill" id="daily" type="button">Daily</button>
+      <button class="icon-btn" id="snd" type="button" aria-label="Sound on" aria-pressed="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path id="waves" d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/><path id="mutex" d="M17 9l5 6M22 9l-5 6" hidden/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="play">
+    <section class="stage" aria-label="Puzzle cube">
+      <svg id="cube" viewBox="0 0 400 400" role="img" aria-label="A 3 by 3 puzzle cube. Drag to turn your view.">
+        <defs><filter id="soft"><feGaussianBlur stdDeviation="7"/></filter></defs>
+        <ellipse cx="200" cy="372" rx="118" ry="13" fill="#000" opacity=".5" filter="url(#soft)"/>
+        <g id="solid"></g>
+        <g id="fx"></g>
+      </svg>
+      <div class="formula-wrap">
+        <span class="lab">Scramble · each word undoes the last turn</span>
+        <div class="formula" id="formula" aria-live="polite"></div>
+      </div>
+      <div class="banner" id="banner" hidden></div>
+    </section>
+
+    <section class="rack" aria-label="Word">
+      <div class="rack-head"><span id="wordcount">Word 1 of 3</span><span id="levelinfo">3 letters</span></div>
+      <div class="pace" aria-hidden="true"><i id="pace"></i></div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div id="slots" class="row"></div>
+      <div id="tray" class="row"></div>
+      <div class="tools">
+        <button class="btn" id="shuffle" type="button">Shuffle</button>
+        <button class="btn" id="clear" type="button">Clear</button>
+        <button class="btn" id="hint" type="button">Hint<small>−25</small></button>
+      </div>
+    </section>
+  </main>
+</div>
+
+
+<section class="about" aria-labelledby="abt">
+  <h2 id="abt">How to play Lexigyre</h2>
+  <p class="lead">Unscramble the word. Every right answer turns the puzzle cube back one move, until the whole cube is solved.</p>
+  <ol class="steps">
+    <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="6" y="14" width="10" height="10" rx="3" fill="#ecd29a"/><rect x="19" y="14" width="10" height="10" rx="3" fill="#ecd29a"/><rect x="32" y="14" width="10" height="10" rx="3" fill="#ecd29a"/><path d="M12 34h24" stroke="#8a93ab" stroke-width="3" stroke-linecap="round" stroke-dasharray="2 6"/></svg><b>1. Look at the letters</b><span>They are mixed up. Tap them in an order that spells a real word.</span></li>
+    <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="8" y="8" width="32" height="32" rx="7" fill="#2bbd6e"/><path d="M16 25l6 6 11-13" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><b>2. Get it right</b><span>Green means a letter is in the right place. Orange means try again. A wrong guess costs nothing.</span></li>
+    <li><svg viewBox="0 0 48 48" aria-hidden="true"><rect x="9" y="9" width="30" height="30" rx="4" fill="#2f6bf2"/><path d="M19 9v30M29 9v30M9 19h30M9 29h30" stroke="#080b12" stroke-width="2.5"/><path d="M38 6a14 14 0 0 1 4 10" fill="none" stroke="#ecd29a" stroke-width="3" stroke-linecap="round"/></svg><b>3. Watch the cube turn</b><span>Each correct word undoes one scramble move. Finish the word list to see the cube solve itself.</span></li>
+    <li><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 6l5 12 13 1-10 9 3 13-11-7-11 7 3-13-10-9 13-1z" fill="#ffd43b"/></svg><b>4. Level up</b><span>Words get longer and the cube gets trickier. Come back each day for the Daily puzzle.</span></li>
+  </ol>
+  <h3>Questions kids and parents ask</h3>
+  <details><summary>Is it free?</summary><p>Yes. It is free to play in your browser, with no sign-up.</p></details>
+  <details><summary>Does it save my place?</summary><p>Yes. Your level and score are saved on your own device, so you can close it and come back.</p></details>
+  <details><summary>Does it teach anything?</summary><p>It builds vocabulary and spelling, and it trains you to think a few steps ahead, like a cube solver. Some words come from maths and science.</p></details>
+  <details><summary>Why does it make sound?</summary><p>Sound starts after your first tap. Tap the speaker icon to turn it off.</p></details>
+  <p class="more">Made by <a href="../../">We The Mind</a>. Try our other <a href="../">free tools</a> and <a href="../../education/sat-practice/">free SAT Math practice</a>.</p>
+</section>
+<style>
+.wtm-top{max-width:1000px;margin:0 auto 6px;display:flex;justify-content:space-between;gap:12px;font-size:13px}
+.wtm-back{color:var(--muted);text-decoration:none;letter-spacing:.04em}.wtm-back:hover{color:var(--brass-hi)}
+.about{max-width:760px;margin:40px auto 0;padding:26px 0 0;border-top:1px solid var(--line);color:#c6cde2}
+.about h2{font:400 26px/1.2 var(--display);letter-spacing:.06em;color:var(--fg);margin:0 0 8px;text-wrap:balance}
+.about h3{font:400 19px/1.2 var(--display);letter-spacing:.05em;color:var(--fg);margin:28px 0 10px}
+.about .lead{font-size:18px;line-height:1.5;margin:0 0 18px}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
+.steps li{display:grid;gap:6px;align-content:start;padding:16px;border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.025)}
+.steps svg{width:46px;height:46px}.steps b{color:var(--brass-hi);font-weight:500}.steps span{font-size:15px;line-height:1.45}
+.about details{border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:8px 0;background:rgba(255,255,255,.02)}
+.about summary{cursor:pointer;color:var(--fg)}.about details p{margin:8px 0 0;font-size:15px}
+.about .more{margin-top:22px;font-size:14px;color:var(--muted)}.about .more a{color:var(--brass-hi)}
+</style>
+<div class="veil" id="veil" hidden>
+  <div class="card" role="dialog" aria-modal="true" aria-labelledby="vTitle">
+    <div class="strip" id="vStrip"></div>
+    <span class="kick" id="vKick"></span>
+    <h2 id="vTitle"></h2>
+    <div id="vBody" style="display:grid;gap:8px"></div>
+    <div class="acts">
+      <button class="go" id="vGo" type="button">Close</button>
+      <button class="btn alt" id="vAlt" type="button" hidden>Copy result</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var REDUCED=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+var $=function(s){return document.querySelector(s);};
+
+/* ==ENGINE== */
+var COL={red:'#d9304a',orange:'#ff8a1f',white:'#f4f4ef',yellow:'#ffd43b',green:'#22b05f',blue:'#2f6bf2'};
+var FACE_COL={'0,1':COL.red,'0,-1':COL.orange,'1,1':COL.white,'1,-1':COL.yellow,'2,1':COL.green,'2,-1':COL.blue};
+function ident(){return [[1,0,0],[0,1,0],[0,0,1]];}
+function mm(a,b){var r=[[0,0,0],[0,0,0],[0,0,0]];for(var i=0;i<3;i++)for(var j=0;j<3;j++)r[i][j]=a[i][0]*b[0][j]+a[i][1]*b[1][j]+a[i][2]*b[2][j];return r;}
+function mv(a,v){return [a[0][0]*v[0]+a[0][1]*v[1]+a[0][2]*v[2],a[1][0]*v[0]+a[1][1]*v[1]+a[1][2]*v[2],a[2][0]*v[0]+a[2][1]*v[1]+a[2][2]*v[2]];}
+function rot(axis,t){var c=Math.cos(t),s=Math.sin(t);
+  if(axis===0)return [[1,0,0],[0,c,-s],[0,s,c]];
+  if(axis===1)return [[c,0,s],[0,1,0],[-s,0,c]];
+  return [[c,-s,0],[s,c,0],[0,0,1]];}
+function r0(x){return Math.round(x)+0;}
+function rv(v){return [r0(v[0]),r0(v[1]),r0(v[2])];}
+function rm(m){return [rv(m[0]),rv(m[1]),rv(m[2])];}
+
+var FACES=[];
+(function(){
+  for(var a=0;a<3;a++){[1,-1].forEach(function(s){
+    var u=(a+1)%3,v=(a+2)%3;
+    function quad(h,off){return [[-1,-1],[1,-1],[1,1],[-1,1]].map(function(ij){var q=[0,0,0];q[a]=s*(0.5+off);q[u]=ij[0]*h;q[v]=ij[1]*h;return q;});}
+    var n=[0,0,0];n[a]=s;
+    FACES.push({n:n,body:quad(0.5,0),st:quad(0.38,0.004)});
+  });}
+})();
+
+function makeCube(){
+  var cubies=[];
+  for(var x=-1;x<=1;x++)for(var y=-1;y<=1;y++)for(var z=-1;z<=1;z++){
+    var p=[x,y,z],st=[null,null,null,null,null,null];
+    for(var a=0;a<3;a++){
+      if(p[a]===1)st[a*2]=FACE_COL[a+',1'];
+      if(p[a]===-1)st[a*2+1]=FACE_COL[a+',-1'];
+    }
+    cubies.push({h:[x,y,z],p:[x,y,z],R:ident(),st:st});
+  }
+  return cubies;
+}
+function applyMove(cubies,m){
+  var Rm=rot(m.axis,m.dir*Math.PI/2);
+  for(var i=0;i<cubies.length;i++){var c=cubies[i];
+    if(c.p[m.axis]===m.layer){c.p=rv(mv(Rm,c.p));c.R=rm(mm(Rm,c.R));}
+  }
+}
+function isSolved(cubies){
+  return cubies.every(function(c){
+    return c.p[0]===c.h[0]&&c.p[1]===c.h[1]&&c.p[2]===c.h[2]&&
+      c.R.every(function(r,i){return r.every(function(x,j){return x===(i===j?1:0);});});
+  });
+}
+function makeScramble(n,allowSlices,rng){
+  rng=rng||Math.random;
+  var layers=allowSlices?[-1,0,1]:[-1,1],last=null;
+  for(var tries=0;tries<60;tries++){
+    var used={},moves=[],guard=0;
+    while(moves.length<n&&guard++<300){
+      var axis=Math.floor(rng()*3),layer=layers[Math.floor(rng()*layers.length)],key=axis+':'+layer;
+      if(used[key])continue;
+      used[key]=1;moves.push({axis:axis,layer:layer,dir:rng()<0.5?-1:1});
+    }
+    last=moves;
+    if(moves.length<n)continue;
+    var t=makeCube();moves.forEach(function(m){applyMove(t,m);});
+    if(!isSolved(t))return moves;
+  }
+  return last;
+}
+var CW={0:{'1':-1,'-1':1,'0':1},1:{'1':-1,'-1':1,'0':1},2:{'1':-1,'-1':1,'0':-1}};
+var NAMES=[{'1':'R','-1':'L','0':'M'},{'1':'U','-1':'D','0':'E'},{'1':'F','-1':'B','0':'S'}];
+function notation(m){return NAMES[m.axis][m.layer]+(m.dir===CW[m.axis][m.layer]?'':'′');}
+/* ==/ENGINE== */
+
+/* ---------- 3D drawing ---------- */
+var S=66,D=9,CX=200,CY=190;
+var RGB={};
+Object.keys(COL).forEach(function(k){var h=COL[k];RGB[h]=[parseInt(h.substr(1,2),16),parseInt(h.substr(3,2),16),parseInt(h.substr(5,2),16)];});
+var LIGHT=(function(){var v=[-0.35,0.65,0.7],l=Math.sqrt(v[0]*v[0]+v[1]*v[1]+v[2]*v[2]);return [v[0]/l,v[1]/l,v[2]/l];})();
+function shade(hex,k){var c=RGB[hex];return 'rgb('+Math.min(255,c[0]*k|0)+','+Math.min(255,c[1]*k|0)+','+Math.min(255,c[2]*k|0)+')';}
+
+function render3D(cubies,V,anim){
+  var items=[],Ra=anim?rot(anim.axis,anim.angle):null;
+  for(var i=0;i<cubies.length;i++){
+    var c=cubies[i],p=c.p,Rt=c.R;
+    if(anim&&c.p[anim.axis]===anim.layer){p=mv(Ra,p);Rt=mm(Ra,Rt);}
+    var M=mm(V,Rt),vp=mv(V,p);
+    for(var f=0;f<6;f++){
+      var F=FACES[f],nv=mv(M,F.n);
+      var fcx=vp[0]+nv[0]*0.5,fcy=vp[1]+nv[1]*0.5,fcz=vp[2]+nv[2]*0.5;
+      if(nv[0]*(-fcx)+nv[1]*(-fcy)+nv[2]*(D-fcz)<=0)continue;
+      var html='<polygon points="'+proj(F.body,M,vp)+'" fill="#10121b" stroke="#10121b" stroke-width="1.4" stroke-linejoin="round"/>';
+      if(c.st[f]){
+        var k=0.74+0.34*Math.max(0,nv[0]*LIGHT[0]+nv[1]*LIGHT[1]+nv[2]*LIGHT[2]);
+        var col=shade(c.st[f],k);
+        html+='<polygon points="'+proj(F.st,M,vp)+'" fill="'+col+'" stroke="'+col+'" stroke-width="5" stroke-linejoin="round"/>';
+      }
+      items.push({d:fcz,h:html});
+    }
+  }
+  items.sort(function(a,b){return a.d-b.d;});
+  var out='';for(var j=0;j<items.length;j++)out+=items[j].h;
+  return out;
+}
+function proj(quad,M,vp){
+  var s='';
+  for(var i=0;i<4;i++){
+    var w=mv(M,quad[i]),x=w[0]+vp[0],y=w[1]+vp[1],z=w[2]+vp[2],f=D/(D-z);
+    s+=(CX+S*x*f).toFixed(1)+','+(CY-S*y*f).toFixed(1)+' ';
+  }
+  return s;
+}
+
+/* ---------- audio (soft bells with a little room reverb) ---------- */
+var A={ctx:null,master:null,bus:null,on:true,gesture:false,nb:null};
+try{if(localStorage.getItem('lexigyre.sound')==='off')A.on=false;}catch(e){}
+function ensure(){
+  if(!A.gesture)return null;
+  if(!A.ctx){
+    var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+    var c=A.ctx=new C();
+    A.master=c.createGain();A.master.gain.value=A.on?0.6:0;A.master.connect(c.destination);
+    A.bus=c.createGain();A.bus.connect(A.master);
+    var len=Math.floor(c.sampleRate*1.8),imp=c.createBuffer(2,len,c.sampleRate);
+    for(var ch=0;ch<2;ch++){var d=imp.getChannelData(ch);for(var i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);}
+    var rev=c.createConvolver();rev.buffer=imp;var wet=c.createGain();wet.gain.value=0.2;
+    A.bus.connect(rev);rev.connect(wet);wet.connect(A.master);
+  }
+  if(A.ctx.state==='suspended')A.ctx.resume();
+  return A.ctx;
+}
+['pointerdown','keydown','touchstart'].forEach(function(ev){
+  window.addEventListener(ev,function(){A.gesture=true;ensure();},{capture:true,passive:true});
+});
+function tone(f,t,d,o){
+  o=o||{};var c=ensure();if(!c)return;
+  var osc=c.createOscillator(),g=c.createGain(),t0=c.currentTime+t,v=o.v||0.18;
+  osc.type=o.type||'sine';osc.frequency.setValueAtTime(f,t0);
+  if(o.to)osc.frequency.exponentialRampToValueAtTime(o.to,t0+d);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(v,t0+0.006);g.gain.exponentialRampToValueAtTime(0.0001,t0+d);
+  osc.connect(g);g.connect(A.bus);osc.start(t0);osc.stop(t0+d+0.03);
+}
+function noise(t,d,o){
+  o=o||{};var c=ensure();if(!c)return;
+  if(!A.nb){var len=c.sampleRate,b=c.createBuffer(1,len,c.sampleRate),ch=b.getChannelData(0);for(var i=0;i<len;i++)ch[i]=Math.random()*2-1;A.nb=b;}
+  d=Math.min(d,0.95);
+  var s=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain(),t0=c.currentTime+t;
+  s.buffer=A.nb;f.type=o.type||'bandpass';f.Q.value=o.q||0.9;
+  f.frequency.setValueAtTime(o.f0||400,t0);f.frequency.exponentialRampToValueAtTime(o.f1||1600,t0+d);
+  g.gain.setValueAtTime(0.0001,t0);g.gain.exponentialRampToValueAtTime(o.v||0.3,t0+d*(o.peak||0.4));g.gain.exponentialRampToValueAtTime(0.0001,t0+d);
+  s.connect(f);f.connect(g);g.connect(A.bus);s.start(t0);s.stop(t0+d+0.02);
+}
+var NOTE=function(base,semi){return base*Math.pow(2,semi/12);};
+function bell(f,t,d,v){tone(f,t,d,{v:v});tone(f*2.76,t,d*0.5,{v:v*0.28});tone(f*5.4,t,d*0.25,{v:v*0.1});}
+var sfx={
+  tick:function(i){tone(520+(i||0)*26,0,0.07,{type:'triangle',v:0.15});},
+  back:function(){tone(320,0,0.06,{type:'triangle',v:0.11,to:260});},
+  shuffle:function(){for(var i=0;i<4;i++)tone(300+Math.random()*300,i*0.04,0.04,{type:'square',v:0.045});},
+  turn:function(d,pitch){pitch=pitch||1;
+    noise(0,d,{v:0.3,f0:350*pitch,f1:1700*pitch,q:0.9});
+    tone(95*pitch,d*0.92,0.14,{type:'sine',v:0.34,to:55});
+    noise(d*0.94,0.06,{v:0.18,f0:3200,f1:2400,type:'highpass',q:0.7});},
+  correct:function(k){var sc=[0,2,4,7,9,12,14,16],b=NOTE(392,sc[k%8]);
+    bell(b,0,0.7,0.16);bell(b*1.5,0.09,0.7,0.12);bell(b*2,0.18,0.9,0.1);},
+  wrong:function(){tone(200,0,0.2,{type:'sawtooth',v:0.09,to:130});tone(150,0.14,0.24,{type:'sawtooth',v:0.09,to:95});},
+  hint:function(){bell(880,0,0.4,0.1);bell(1318,0.08,0.5,0.08);},
+  fanfare:function(){
+    [[0,0],[4,0.12],[7,0.24],[12,0.38],[16,0.52],[19,0.66]].forEach(function(n){bell(NOTE(262,n[0]),n[1],1.2,0.15);});
+    [0,4,7,12].forEach(function(s){tone(NOTE(524,s),0.85,1.6,{type:'sine',v:0.08});});}
+};
+function buzz(p){try{if(navigator.vibrate)navigator.vibrate(p);}catch(e){}}
+
+/* ---------- words ---------- */
+var RAW={
+3:'hot|eat,tea,eta|key|cup|oil|dog|bed,deb|sea|box|eye|ice|sun|bar,bra,arb|fan|pop|sad,das|bus,sub|bag,gab|cat,act|map,amp|aid|fly|mad,dam|bay,aby|arm,mar,ram|sky|era,are,ear|leg,gel|fox|joy|hat|raw|cap|tie|gap|hip,phi|egg|pet|gym,myg|kit|lab,alb|hop|pan,nap|pen|sum|bat,tab|bow|ton,not|pit,tip|spy|pub|bin,nib|arc,car|bug|pie|oak,oka|rat,art,tar|jam|shy|ash|ion|par,rap|rod|pig,gip|zoo|cow|lip|mud|ski|ham|ace|fig|bee|hub|bud,dub|ink,kin|toe|dot,tod|nut,tun|tin,nit|fur|ego|gut,tug|den,end|pad',
+4:'road,orad|town,wont|main,mina|term|fine|hear,hare,rhea|lead,deal,dale,lade|film|view,wive|star,arts,rats,tsar|hour|bank|park|rate,tear,tare|fall|size|blue,bleu|send,ends|poor|code,deco|sign,sing|hair|door,odor,rood|safe|goal,gaol|huge|pass|deep|base|ball|card|wall|note,tone|rock,cork|cold,clod|sort|fair|drop,prod|wide|unit|rule,lure|ship,hips|rich|skin,sink,inks|fish|glad|spot,stop,post,tops,pots|male,meal,lame|shop,posh,hops,soph|sick|foot|hall|cell|mass|heat|ride,dire|tree,rete|wind|cent|lake,leak,kale|seat,east,eats,teas,sate,seta|push|hill|rise,sire|wild|camp|firm|cast,acts,cats,scat|wood|rare,rear|roll|farm|busy,buys|iron|wine|edge|port|zone|flat|fuel,flue|mail|rain,rani|boat,bota|warm|beer|moon,mono|jump|soft|joke|pool,loop,polo|snow,owns,sown|hole|weak,wake,weka|milk|cute|fake|cook|pure|neck|mode,demo,dome|meat,team,mate,tame|bird,drib|bowl,blow|tiny|wing|salt,last,slat,lats|bond|mile,lime|bell|flag|load,dalo|plot|lane,lean,elan|diet,tied,edit,tide|item,time,emit,mite|yard,dray|tool,loot|rice|roof|hide|bike,kibe|cake|loud,ludo|peak|pink|tall|nose,ones,sone|wise|lift,flit|bush,hubs|inch,chin|vast|coal,cola|rush|grey,gyre|gate,geta|bone,ebon|gear|fort|math|gray|acid|bath,baht|mood|tape,peat,pate|sand|desk|wire,weir|belt|root|rail,lair,lira,rial,lari,aril|deck|dust,stud|sake|spin,pins,snip|pace,cape|tube|coat,taco|epic|poll|exit|tail|ease|bull|boom|teen|trap,part,tarp,prat,rapt|knee,keen|chip|mask|jazz|stem|beef|mall|clay,lacy,acyl|tale,late,teal,tael|slip,lips,lisp|bass|gulf|dual,auld,laud|logo|tune|dawn,wand|bold|exam|menu|clip|lion,lino|pipe|poem,mope,pome|rude|dirt|lazy|shoe,hose|palm,lamp|pole,lope|leaf,flea|duck|dish|swim|dose,does|flip|beta,beat,bate,abet|cave|yoga|bulk|boot|taxi|corn|grid,gird|soap|bare,bear,brae|clue|bias|lens|icon,coin|crop,porc|soup,opus|beam,bema|horn|bend|mere|disc|visa|cage|deer,reed,rede|dive|drum|mild|silk|pour|pine|lung|slot,lost,lots|cafe,face|pale,plea,leap,peal|myth|fold|span,snap,pans,naps|hint,thin|nest,sent,tens,nets|scan,cans|rope,pore|hull|doll|buzz|slim|tent,nett|oven|bolt,blot|soda|hype|fork|pork|pill|lamb,balm|goat,toga|arch,char|axis|sail,sial|disk,kids,skid|void|dash,shad|neat,ante,etna|sore,rose,eros|barn,bran|dock|ruby,bury|lawn|cart|oval|wade,awed|bean,bane|pity|pond|stir|oath|lily|cone,once|cube|atom,moat|opal',
+5:'power|month|field,filed,felid|price|force|total|sense|worth,throw,wroth|movie|sound|stuff|green,genre|model|drive,diver|range,anger|style|stage,gates|title|legal|paper|voice|earth,heart,hater|truth|build|piece|write|river|track|album|store|funny|radio,aroid|brown|focus|cross|speed|quick|extra,taxer|scene,cense|photo|clean,lance|heavy|hotel,thole,helot|claim|image|reach|brain,bairn|civil|dance,acned|beach|dream,armed,derma|color|sweet|grand|doubt|drink|worse,sower,serow|basic|block|coast,costa,coats,tacos,ascot|glass|score,cores|smart,trams|brand|mouth|fresh|metal|faith|enter,rente|apply|agent|prime|waste,sweat,tawse|stone,notes,tones,onset|aware|birth|tough|lucky|magic|alive|apple|stick,ticks|horse,shore|frank|solid,idols|taste,state,testa|plane,panel,penal|upper|shape,phase,heaps|steel,sleet,stele|joint|cheap,peach|limit|proof|crowd|chair|honor|sugar,argus|entry|drama,damar|route,outer,outre|smoke|laugh|lunch|storm|quiet,quite|truck|smile,miles,slime|shirt|false,leafs,fleas|theme|usual|giant|cycle|rural|teeth|tight|fruit|crown|depth|plate,petal,pleat,tepal|sight|cable|print|broad,board,dobra|motor|solar|pilot|paint,inapt|debut,tubed|chest|steam,teams,mates,meats|exact|trend|tower|bread,beard,bared,debar,barde,ardeb|wheel|rough|topic,optic,picot|pride|smell|sharp|audio|chart,ratch|cloud|loose|moral,molar|bound|shock|trail,trial|bonus,bosun|flash|ideal|pitch|plain,lapin|pizza|clock|label|comic|skill|trash|boost,boots|sheet|layer,early,relay|bench|medal|vital|grass|rapid|angle,angel,glean|valid|ratio|creek|honey|logic|juice|dozen,zoned|fancy|input|flood|swing,wings|shake|robin|brave|piano|mouse|slide,sidle|sauce,cause|candy|alien,aline,anile|alarm,malar|globe|quest|opera|scope,copse|brick|venue|alpha|noble|robot|habit|ultra|asset,seats,tasse|snake,sneak|essay|fluid|climb|twist|fence|loyal,alloy|laser,arles|flesh,shelf|patch|nerve,never|humor|trace,react,cater,crate,carte,caret|sheep|cargo|spray,prays,raspy|verse,serve,sever|chill|grain|liver|suite|shine,hines|couch|rocky,corky|bacon|swift|salad|pearl|blank|curve|harsh|cabin|arrow|valve|alike|eagle|ridge,dirge|delta|charm,march|stamp|canon|booth|cliff|shark|lemon,melon|dairy,diary|olive,voile|setup,upset,stupe|skull|meter,metre,retem|tooth|chick|basin,sabin|merit,timer,remit,mitre,miter|drain,nadir,dinar,ranid|sunny|fiber,brief,fibre|graph|brass|ranch|lobby|orbit|trunk|eager,agree,eagre,ragee|cloth|gauge|badge|ferry,fryer|wheat|stark|thumb|wrist|sheer,heres|puppy|crude,cured|flour,fluor|vinyl|pause|acute|straw,warts,swart|dense,needs|steak,takes,stake,skate|berry|sweep|ankle|handy|amber,bream|skirt,stirk|curry|polar|waist,waits|cheek|tense,teens,sente|purse,sprue|frost,forts|brake,break,baker|depot,opted|spice|float,aloft|chess|towel,owlet|spine,pines,snipe|dodge|prone|pasta,patas|tenth|plaza|stare,rates,tears,aster,teras|paste,tapes,spate|vault|blunt|scrap,craps,scarp|shaft|wagon|snack|ditch|onion|teddy|spoon,snoop|shiny|alley|vague|marsh,harms|salon,loans,solan|dough|coral,carol,claro|risen,resin,rinse,siren,reins,serin|maple,ample|irony|porch|ivory|elbow,below,bowel|swamp|goose|tasty|grill|merry|slate,least,tales,tesla,stale,stela|surge,urges|yacht|drift|scent,cents|token|manor,roman|ounce|flush|spicy|sting|altar|digit|lunar,ulnar|comet|linen|topaz',
+6:'market|moment|summer|energy|strong|period|record|common|return,turner|middle|result,ulster,lustre,luster,rustle,sutler|policy|source,course,cerous|follow|review,viewer|entire|choice,echoic|simple|modern|figure|listen,silent,enlist,tinsel|access|create,cerate,ecarte|weight|island|normal|region,ignore,eringo|female|travel,varlet|credit,direct|minute,minuet|nature|letter|centre,center,recent,tenrec|global|degree|active|spring|senior|secret,resect|notice,noetic|theory|advice|broken|camera|coffee|speech|actual|screen,censer,secern|mobile|square|demand,madden|famous|engine|target|memory|silver,sliver|window|method|dinner|garden,ranged,gander|bridge|volume|beauty|unique|honest,ethnos|plenty|valley|museum|forest,foster,softer|yellow|native|planet,platen|factor|golden,longed,dongle|appeal|device|sector,escort,corset,scoter|studio|talent,latent,latten|vision|signal|orange,onager|stream,master|ticket|desire,reside|unable,nebula|bright|medium|motion|dollar|random|afford|cheese|scheme|bottle|button|relief|manner|nearby|circle,cleric|carbon|origin|driven,verdin|hidden|sample|height,eighth|decade|comedy|campus|colour|guitar|stable,tables|pocket|format|mirror|belief|castle,cleats|hungry|palace|formal|spoken|thread,hatred,dearth|muscle|legend|reveal,leaver|output,putout|aspect|remote,meteor|sudden|poetry|decent|desert,rested|smooth|fallen|liquid|arrive|resort,roster,torres,sorter|tongue|settle|asleep,please,elapse|regard,grader|script|luxury|expand|cotton|proven|wooden|purple|tissue,suites|manual,alumna|frozen|jacket|domain,daimon|favour|symbol|praise,aspire,spirea,paries|rocket|affair,raffia|summit,mutism|agenda|shield|wisdom|phrase,shaper,seraph|worthy|filter,trifle,lifter|galaxy|intent|mature|vessel|margin,arming|copper|mutual,umlaut|autumn|oxygen|spider|garage|powder|tunnel|export|laptop|casual,causal|burden,burned|rubber|recipe,pierce|serial,serail|strict|cruise|permit|excess|bronze,bonzer|patent,patten|carpet|cherry|trophy|gentle|cinema,anemic,iceman|unfair|barrel|notion|bubble|hammer|wallet|strain,trains,instar|urgent|harbor|cattle|accent|pepper|closet|linear,nailer|banner|jungle|divide|freeze|potato|import|mighty|statue,astute|subtle,bustle,sublet|fabric|layout,outlay|basket|monkey|matrix|cookie|bucket|median,maiden,medina|rabbit|static|detect|thesis|rhythm|tablet|stance,ascent,secant,centas|subway|sketch|collar|sunset|finale|ladder,raddle|arctic|fridge|anchor|bounce|helmet|salmon|banana|portal,patrol|outlet|vector,covert|clause|fossil|expose|needle|intact|superb|viable|canvas|marble,ramble,ambler|employ|tricky|sprint,prints|pillow|canyon|pencil|hollow|ballet|plasma|binary,brainy|absurd|virtue|cement|robust|tenure,neuter,tureen|sleeve|fierce|polite,piolet|debris,brides|runway,unwary|sensor|garlic|verbal|exotic|refuge|turtle|glance|sphere|peanut|chrome|voyage|liable,labile|module|candle|gossip|sodium|radius|coupon|scroll|pickup|fringe,finger|breeze|tomato|spiral|violet|heroic|humour|inland|enzyme|nickel|decree,recede|suburb|ribbon|kindle,linked|ironic|vacant|puppet|picnic|sticky|evolve|warmth|remake|parody|velvet|stereo|floral|memoir|bypass|insect,nicest|behold|unsure|gallon|finite|groove|falcon|violin|potent|beacon|cereal,relace|supper|vanity|analog,agonal|magnet|arcade|deluxe|slogan|auburn|thrill|grease,agrees|salute|upward|tactic,tictac|quartz|gravel|trench|willow|midway|plaque|staple,plates,petals,pastel,septal|sleepy|strand|scenic|capped|parcel,placer,carpel|depart,parted,petard|tipped|bakery|remark,marker|speedy|bamboo|artery|torque,quoter|pillar|kitten|stitch|laurel,allure|edible,debile|podium|lizard|yogurt|canned|donkey|mantle,mental,lament,mantel|carrot|unseen|payday|cavity|pigeon,epigon|utmost|beaver|storey,oyster|strait,artist,traits|cellar,recall,caller|mystic|meadow|shaken|rugged,grudge|proton,pronto|photon|cosine,oscine',
+7:'account|average|picture,cuprite|central|science|quality|natural|article,recital|written|foreign|popular|version|percent|respect,spectre,specter,scepter,sceptre|tonight|century|western|station|message|justice|ability|subject|product|regular|opinion|weekend|imagine|awesome|machine|reality,irately|primary|purpose|comment|weather,wreathe|complex|library|channel|stopped|airport|surface|fashion|feature|profile|edition,tineoid|healthy|trouble|produce|eastern,nearest,earnest|concept|journal|request,quester|vehicle|develop|initial|massive|session|classic|climate,metical|command|supreme,presume|minimum|planned|ancient|applied|perform,preform|concern|holiday,hyaloid|advance|journey|kitchen,thicken|strange|display|obvious|chicken|worried|stadium|context|capable|maximum|reserve,reverse|extreme|careful|typical|pattern|factory|concert|unknown|protein,pointer,pterion,repoint|theatre,theater|license,silence|fantasy|plastic|studied|highway|circuit|chamber,becharm|element|bedroom,boredom|railway|curious|mystery|formula|unusual|fiction|passion|helpful|nervous|capture|stomach|crystal|organic|visible|fitness|intense|reflect|cricket|summary|genuine,ingenue|monitor|privacy|consent|instant|density,destiny|radical|uniform|faculty|ongoing|virtual|courage|dynamic|footage|fortune|goodbye|awkward|crucial|segment|shelter|tribute|seventh|inquiry|trigger|neutral,unalert|diverse,revised,derives,deviser|warrant|graphic|outdoor|magical|biology|wealthy|gravity|chronic|transit|spotted|insight|emotion|trapped|distant|costume|endless|vintage|garbage|mixture|loyalty|partial,patrial|grammar|barrier|wrapped|buffalo|thunder|logical|teenage|precise,recipes|jewelry|handful|harmony|artwork|eternal,enteral|generic|minimal|publish|cartoon|blanket|rainbow|horizon|quantum|outlook,lookout|laundry|halfway|unhappy|observe,obverse,verbose|compact|grocery|apology|majesty|airline|shallow|mineral,marline|essence,senesce|harvest|passive|voltage|mansion,onanism|bizarre,brazier|dignity|vitamin|interim|silicon|cottage|freight,fighter|evident|honesty|cluster|habitat|archive|bicycle|harbour|caution,auction|harmful|preview|bargain|elegant|sixteen|terrain,trainer,retrain|anatomy|optimal|texture|desktop|unclear,nuclear|leisure|outline,elution|catalog|shuttle|rebuild,builder|balloon|clarity|dislike|nursery|adverse|terrace,caterer,retrace|immense|consume|coconut|whistle|unaware|surplus|swallow|unified|mindset|fulfill|curtain|antique|fragile|granite,tearing,ingrate|lengthy|obscure|diagram|vanilla|refusal|imagery|statute|gateway,getaway|pumpkin|dessert,deserts|reactor,creator|exploit|premise,empires|sunrise|calcium|cuisine|undergo,guerdon|luggage|sausage,assuage|hopeful|tractor|balcony|newborn|chopped|penguin|antenna|literal|algebra|pathway|diploma|volcano|geology|stellar|textile|perfume|utilize|baggage|upright|thirsty|palette,peltate|compass|popcorn|dilemma|empathy|hallway|apparel|analogy|theorem|starred,traders|boulder,doubler|pottery|capsule,upscale|haircut|stylish|prairie|persona|realism|feather,terefah|mustard,durmast|restart,starter|sensory|scenery|durable|replica,caliper|harness|gradual|fixture|vibrant|dolphin|novelty|brewery|trivial|extinct|daytime|panther|seafood|caliber,calibre|posture,petrous,spouter|lobster,bolster|polymer|mileage|scarlet,cartels|vinegar|drastic|paradox|inspect|turbine,tribune|refrain|fertile|aquatic|furnace|ambient|gorilla|bladder|plateau|jasmine|gazette|freeway|lantern|factual|emerald|crimson|leopard|slender,lenders|bravery|elastic|nucleus|garment|calorie|surreal|glacier,gracile|trumpet|telecom|shampoo|seaside|festive|cushion|secrecy|mastery|orchard|cologne|dungeon|swollen|eminent|abdomen|lithium|dissent|glitter|thinner|bedtime|cabbage|rampant,mantrap|rooftop|chimney|headset|poultry|chassis|quartet|seismic|methane|optimum|dialect,citadel|skinned|plaster,stapler|asphalt|rebound,bounder|booklet|residue|thyroid|playful|chuckle|neutron|integer|decimal,medical,claimed,declaim|tangent|polygon|fractal,flatcar|octagon|hexagon',
+8:'position|personal|original|official|evidence|language|increase|hospital|straight|district|response|specific|standard|tomorrow,moorwort|addition|pressure|previous,pervious|positive|favorite|material|majority|physical|approach|multiple|northern|powerful|exchange|distance|solution|critical|strength|negative|function|software|birthday|surprise|magazine|strategy|mountain,antimuon|medicine|festival|capacity|domestic|platform|schedule|internal|numerous|identity|argument|aircraft|assembly|familiar|relevant,levanter|facility|creative,reactive|universe|attitude|accurate|pleasure|interior|bathroom|constant|absolute|ultimate,mutilate|external|valuable|document|historic,orchitis|province|everyday|proposal|superior|concrete|exposure|memorial|dramatic|downtown|vacation|lifetime|entrance|discover,divorces|resident,inserted,sintered|suitable|heritage|grateful|gorgeous|guidance|precious|humanity|railroad|apparent|occupied|terminal,tramline|database|midnight|calendar|petition|hardware|distinct|reliable|estimate|eligible|dialogue|judgment|equipped|peaceful|parallel|spectrum|equality|enormous|modified|accuracy|pleasant|handsome|generate,teenager|portrait|nonsense|patience|generous|wireless|bacteria|scenario|tropical|basement|advisory|compound|contrary|paradise|sunshine|infinite|premiere|workshop|vertical|protocol|timeline,ilmenite|duration|goodness|flexible|boundary|sandwich|variable|adjacent|deadline|overview|keyboard|laughter|faithful|earliest|elephant|diameter|glorious|fabulous|momentum|rational|adorable|intimate|password|comeback|adequate|mobility|passport|withdraw|pipeline|semester|headline|platinum|equation|delicate|aluminum|sympathy|indirect|kindness|disposal|cylinder|mistaken|acoustic|seasonal|hydrogen|doctrine,centroid|portable|frontier|headache|integral,relating,triangle,altering,alerting|fraction|circular|tendency|homeland|mainland|elevator|junction|illusion|overtime|profound|verified|thankful|altitude,latitude|velocity|airplane,perianal|shortage|nickname|ambition|exterior|hometown|optional|fountain|monument|terrific|literacy|particle|landmark|embedded|thirteen|umbrella,umbellar|cocktail|farewell|leverage|geometry|corridor|fourteen|backyard|maturity|pharmacy|appetite|unstable|underway|forehead|informal,formalin|uncommon|sunlight|handbook|envelope|instinct|morality,molarity|gasoline,lignosae|carriage|necklace|daylight|inherent|critique|outright|applause|twilight|metallic|electron|infinity|citation|membrane|rainfall|homemade|eighteen|reliance|vicinity|colorful|decisive|tutorial|skeleton|eternity,entirety|wardrobe|probable|bulletin|foremost|unwanted|definite|backpack|traction|textbook|fortress|credible|interval|audition|fairness|abundant|registry|dinosaur|symphony|maternal|stubborn|dispatch|activate|nitrogen|shipment|lifelong|splendid|flagship|initiate|notebook|eventual|longtime|metaphor|specimen|obstacle|volatile|feasible|perceive|disguise|marginal,alarming|detector|infrared|downward|template|cosmetic|alphabet|validity|cinnamon|pentagon|highland|bracelet|lipstick|squirrel|helpless|forestry|beverage|invasive|efficacy|sidewalk|rigorous|communal|navigate|imminent|peculiar|activism|airborne|caffeine|prostate|garrison|locality|mattress,smartest|molecule|dreadful|needless,lessened|softball|tangible|immature|optimism|downhill|honorary|obsolete|ruthless|graffiti|driveway|calculus|multiply|sapphire|diagonal|subtract|exponent|quotient|parabola',
+9:'beautiful|attention|difficult|potential|statement,testament|direction|yesterday|effective|agreement|equipment|wonderful|structure|authority|influence|advantage|reference|excellent|afternoon|fantastic|expensive|transport|emotional|apartment|committed|essential|breakfast|newspaper|permanent|programme|exclusive|brilliant|worldwide|secondary|childhood|tradition|chocolate|extensive|criticism|universal|temporary|practical|technique|sensitive|qualified|extension|awareness|confident|efficient|promotion|telephone|forgotten|narrative|broadcast|defensive|automatic|residence|objective|frequency|landscape|chemistry|preferred|exception|principle|delicious|satellite|prominent|intention|component|diversity|stability|lifestyle|furniture|framework|franchise|dependent|satisfied|radiation|classical|encounter|signature|copyright|certified,rectified|reception|legendary|lightning|identical|privilege|overnight|conscious|anonymous|testimony|realistic,eristical|classroom|portfolio|intensity|inventory|northwest|provision|mandatory,damnatory|excessive|interface|alternate|editorial|unlimited|invisible|warehouse|continent|elaborate|intensive|expertise|tolerance|detection|placement|workplace|authentic|ignorance|peninsula|paragraph|sentiment|remainder|threshold|algorithm,logarithm|dimension|justified|machinery|precision|voluntary|telegraph|magnitude|publicity|resistant|uncertain,runcinate|construct|geography|travelled|suspicion|curiosity|inclusive|fortunate|memorable|countless|clearance|ambitious|synthetic|generator|aggregate|vegetable|incorrect|composite|sanctuary|directory|butterfly|inability|affection|gratitude|sculpture|indicator|competent|renewable|enjoyable|reservoir|sensation|champagne|aftermath|biography|trademark|specialty|proximity|selective|seventeen|billboard,broadbill|abundance|operative,evaporite|judgement|commodity|arbitrary|favorable|desirable|notorious|dominance|livestock|innocence|discourse|oversight|prototype|certainty|healthier|reluctant|assurance|enjoyment|honorable|unrelated,unaltered|microwave|primitive|imaginary|prevalent|apparatus|sociology|fertility|precedent|objection|attribute|mentality|stainless,saltiness|limestone,milestone|valuation|thickness|endurance|storyline|amusement|jewellery|aerospace|undertake|aluminium|paramount|miniature|bilateral|directive|masculine|greatness|energetic|diplomacy|irregular|premature|boulevard|wallpaper|honeymoon|skeptical|unanimous|perimeter|partition|inaugural|riverside|malicious|versatile,relatives|cardboard|disregard|stupidity|cellphone'
+};
+var BANK={};
+Object.keys(RAW).forEach(function(k){
+  BANK[k]=RAW[k].split('|').map(function(e){return e.split(',');});
+});
+var LENS=[3,4,4,5,5,6,6,7,7,8],MOVES=[3,3,4,4,5,5,6,6,7,7];
+function cfg(L){return L<=10?{len:LENS[L-1],n:MOVES[L-1],max:8}:(L<=12?{len:8,n:8,max:8}:{len:9,n:8,max:9});}
+var RANKS=['Apprentice','Cadet','Adept','Strategist','Virtuoso','Maestro','Grandmaster','Sovereign'];
+function rank(L){return RANKS[Math.min(7,Math.floor((L-1)/2))];}
+var seen={};
+function shuffleArr(a,rng){rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+/* Banks are ordered most-familiar first; early levels draw from the familiar end, later ones open up the whole list. */
+function pickOne(len,rng,seenMap,frac){
+  var all=BANK[len],lim=Math.min(all.length,Math.max(12,Math.floor(all.length*(frac||1)))),head=all.slice(0,lim),
+      pool=head.filter(function(e){return !seenMap[e[0]];});
+  if(!pool.length){head.forEach(function(e){delete seenMap[e[0]];});pool=head;}
+  var e=pool[Math.floor(rng()*pool.length)];seenMap[e[0]]=1;return e;
+}
+function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
+function keyOf(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function fmt(ms){var s=Math.round(ms/1000);return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
+
+/* ---------- state + persistence ---------- */
+var best={level:0,score:0};
+try{var bb=JSON.parse(localStorage.getItem('lexigyre.best')||'null');if(bb&&bb.level)best=bb;}catch(e){}
+var daily={last:'',streak:0,marks:[],ms:0,score:0};
+try{var dd=JSON.parse(localStorage.getItem('lexigyre.daily')||'null');if(dd&&dd.last)daily=dd;}catch(e){}
+function saveDaily(){try{localStorage.setItem('lexigyre.daily',JSON.stringify(daily));}catch(e){}}
+var state={mode:'journey',gen:0,level:1,score:0,streak:0,busy:true,len:3,n:3,words:[],moves:[],solved:0,
+  target:'',accept:{},tiles:[],order:[],slots:[],locked:[],flags:[],hints:0,wrong:0,
+  paceOn:false,elapsed:0,paceMs:20000,totalMs:0,rng:Math.random,dMarks:[],backup:null};
+function saveBest(){
+  if(state.mode!=='journey')return;
+  if(state.level>best.level||state.score>best.score){
+    best={level:Math.max(best.level,state.level),score:Math.max(best.score,state.score)};
+    try{localStorage.setItem('lexigyre.best',JSON.stringify(best));}catch(e){}
+  }
+}
+function saveJourney(){
+  if(state.mode!=='journey')return;
+  try{localStorage.setItem('lexigyre.save',JSON.stringify({level:state.level,score:state.score,streak:state.streak,solved:state.solved,words:state.words,moves:state.moves}));}catch(e){}
+}
+function loadSave(){
+  try{
+    var s=JSON.parse(localStorage.getItem('lexigyre.save')||'null');
+    if(s&&Array.isArray(s.words)&&Array.isArray(s.moves)&&s.words.length&&s.words.length===s.moves.length&&s.solved<s.words.length&&s.level>=1&&
+       s.words.every(function(w){return Array.isArray(w)&&w.length&&typeof w[0]==='string'&&BANK[w[0].length];}))return s;
+  }catch(e){}
+  return null;
+}
+
+var cubeEl=$('#cube'),solidEl=$('#solid'),fxEl=$('#fx'),slotsEl=$('#slots'),trayEl=$('#tray'),msgEl=$('#msg'),formulaEl=$('#formula'),paceEl=$('#pace'),bannerEl=$('#banner');
+var veil=$('#veil');
+var sleep=function(ms){return new Promise(function(r){setTimeout(r,ms);});};
+
+/* ---------- cube runtime ---------- */
+var cubies=makeCube(),anim=null,queue=[],yaw=-0.62,pitch=0.5,spin=null,dragging=false,parts=[],ring=null,lastT=performance.now();
+function ease(t){return t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;}
+function turn(move,dur){
+  return new Promise(function(res){
+    queue.push({move:move,dur:REDUCED?Math.min(dur,160):dur,res:res});
+    if(!anim)pump();
+  });
+}
+function pump(){
+  var q=queue.shift();
+  if(!q){anim=null;return;}
+  anim={axis:q.move.axis,layer:q.move.layer,target:q.move.dir*Math.PI/2,angle:0,t0:performance.now(),dur:q.dur,move:q.move,res:q.res};
+}
+function restoreCube(moves,solved){
+  state.gen++;anim=null;queue=[];cubies=makeCube();
+  moves.forEach(function(m){applyMove(cubies,m);});
+  for(var i=0;i<solved;i++){var m=moves[moves.length-1-i];applyMove(cubies,{axis:m.axis,layer:m.layer,dir:-m.dir});}
+}
+function burst(){
+  var cols=Object.keys(COL).map(function(k){return COL[k];});
+  for(var i=0;i<90;i++){
+    var a=Math.random()*Math.PI*2,sp=90+Math.random()*260;
+    parts.push({x:CX,y:CY,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-120,r:3+Math.random()*4,c:cols[i%6],life:0,max:1.3+Math.random()*1.0,rot:Math.random()*360,vr:(Math.random()-0.5)*600});
+  }
+  ring={t0:performance.now()};
+}
+var lastFrac=-1;
+function frame(now){
+  var dt=Math.min(0.05,(now-lastT)/1000);lastT=now;
+  if(!dragging&&!REDUCED)yaw+=dt*0.2;
+  var extra=0;
+  if(spin){var t=Math.min(1,(now-spin.t0)/spin.dur);extra=ease(t)*Math.PI*2;if(t>=1)spin=null;}
+  if(anim){
+    var u=Math.min(1,(now-anim.t0)/anim.dur);anim.angle=anim.target*ease(u);
+    if(u>=1){applyMove(cubies,anim.move);var r=anim.res;anim=null;pump();r();}
+  }
+  if(state.paceOn){state.elapsed+=dt*1000;state.totalMs+=dt*1000;}
+  var frac=state.paceOn?Math.max(0,1-state.elapsed/state.paceMs):(lastFrac<0?0:lastFrac);
+  if(state.paceOn&&Math.abs(frac-lastFrac)>0.002){lastFrac=frac;paceEl.style.transform='scaleX('+frac.toFixed(3)+')';}
+  var V=mm(rot(0,pitch),rot(1,yaw+extra));
+  solidEl.innerHTML=render3D(cubies,V,anim);
+  var fx='';
+  if(ring){var rt=(now-ring.t0)/900;if(rt>=1)ring=null;else fx+='<circle cx="'+CX+'" cy="'+CY+'" r="'+(30+rt*190).toFixed(1)+'" fill="none" stroke="#ecd29a" stroke-width="'+(5*(1-rt)).toFixed(1)+'" opacity="'+(0.85*(1-rt)).toFixed(2)+'"/>';}
+  if(parts.length){
+    parts=parts.filter(function(p){return p.life<p.max;});
+    for(var i=0;i<parts.length;i++){var p=parts[i];p.life+=dt;p.vy+=380*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.rot+=p.vr*dt;
+      fx+='<rect x="'+(p.x-p.r).toFixed(1)+'" y="'+(p.y-p.r*0.5).toFixed(1)+'" width="'+(p.r*2).toFixed(1)+'" height="'+p.r.toFixed(1)+'" fill="'+p.c+'" opacity="'+Math.max(0,1-p.life/p.max).toFixed(2)+'" transform="rotate('+p.rot.toFixed(0)+' '+p.x.toFixed(1)+' '+p.y.toFixed(1)+')"/>';}
+  }
+  fxEl.innerHTML=fx;
+  requestAnimationFrame(frame);
+}
+requestAnimationFrame(frame);
+
+var lx=0,ly=0;
+cubeEl.addEventListener('pointerdown',function(e){dragging=true;lx=e.clientX;ly=e.clientY;try{cubeEl.setPointerCapture(e.pointerId);}catch(x){}});
+cubeEl.addEventListener('pointermove',function(e){if(!dragging)return;yaw+=(e.clientX-lx)*0.01;pitch=Math.max(-1.2,Math.min(1.2,pitch+(e.clientY-ly)*0.01));lx=e.clientX;ly=e.clientY;});
+['pointerup','pointercancel','lostpointercapture'].forEach(function(n){cubeEl.addEventListener(n,function(){dragging=false;});});
+
+/* ---------- HUD ---------- */
+function hud(){
+  var dm=state.mode==='daily';
+  $('#rank').textContent=dm?'Daily':rank(state.level);
+  $('#lvl').textContent=dm?(Math.min(state.solved+1,state.n)+'/'+state.n):state.level;
+  $('#score').textContent=state.score;$('#streak').textContent=state.streak;
+  $('#wordcount').textContent='Word '+Math.min(state.solved+1,state.n)+' of '+state.n;
+  $('#levelinfo').textContent=state.len+' letters';
+  var db=$('#daily'),done=daily.last===keyOf(new Date());
+  db.textContent=dm?'Journey':(done?'Daily ✓':'Daily');
+  db.classList.toggle('new',!dm&&!done);
+}
+function setMsg(t,tone){msgEl.textContent=t;msgEl.dataset.tone=tone||'';}
+function renderFormula(shown){
+  var n=state.moves.length,html='';
+  for(var i=0;i<Math.min(shown,n);i++){
+    var done=i>=n-state.solved,next=i===n-1-state.solved&&shown>=n;
+    html+='<span class="tok'+(done?' done':'')+(next?' next':'')+'">'+notation(state.moves[i])+'</span>';
+  }
+  formulaEl.innerHTML=html;
+}
+
+/* ---------- rack ---------- */
+function render(){
+  var wrap=state.len>=7&&trayEl.clientWidth/state.len<40;
+  trayEl.dataset.wrap=wrap?'1':'0';
+  document.body.classList.toggle('tall',wrap);
+  slotsEl.style.setProperty('--n',state.len);trayEl.style.setProperty('--n',wrap?Math.ceil(state.len/2):state.len);
+  slotsEl.innerHTML=state.slots.map(function(id,i){
+    if(id==null)return '<button class="slot" type="button" data-i="'+i+'" style="--i:'+i+'" aria-label="Empty slot '+(i+1)+'"></button>';
+    var cls=['slot','k','on'];
+    if(state.locked[i])cls.push('good');
+    if(state.flags[i])cls.push('bad');
+    return '<button class="'+cls.join(' ')+'" type="button" data-i="'+i+'" data-t="'+id+'" style="--i:'+i+'" aria-label="'+state.tiles[id]+' in slot '+(i+1)+'">'+state.tiles[id]+'</button>';
+  }).join('');
+  var placed={};state.slots.forEach(function(id){if(id!=null)placed[id]=1;});
+  trayEl.innerHTML=state.order.map(function(id){
+    return placed[id]?'<span class="ghost"></span>':'<button class="tile k" type="button" data-id="'+id+'" data-t="'+id+'" aria-label="Letter '+state.tiles[id]+'">'+state.tiles[id]+'</button>';
+  }).join('');
+}
+/* FLIP: tiles glide from where they were to where they land */
+function flipRender(){
+  var first={};
+  document.querySelectorAll('[data-t]').forEach(function(el){first[el.dataset.t]=el.getBoundingClientRect();});
+  render();
+  if(REDUCED||!document.body.animate)return;
+  document.querySelectorAll('[data-t]').forEach(function(el){
+    var a=first[el.dataset.t];if(!a)return;
+    var b=el.getBoundingClientRect(),dx=a.left-b.left,dy=a.top-b.top;
+    if(Math.abs(dx)<1&&Math.abs(dy)<1)return;
+    el.style.zIndex=5;
+    var an=el.animate([{transform:'translate('+dx+'px,'+dy+'px)'},{transform:'none'}],{duration:230,easing:'cubic-bezier(.2,.8,.2,1)'});
+    an.onfinish=an.oncancel=function(){el.style.zIndex='';};
+  });
+}
+function loadWord(){
+  var entry=state.words[state.solved];
+  state.target=entry[0];state.accept={};entry.forEach(function(w){state.accept[w]=1;});
+  var rng=state.mode==='daily'?state.rng:Math.random,letters=entry[0].split(''),ord;
+  var tries=0;
+  do{ord=shuffleArr(letters.slice(),rng).join('');tries++;}while(state.accept[ord]&&tries<200);
+  if(state.accept[ord]){ord=letters.slice(1).concat(letters[0]).join('');}   /* guard: never loop forever */
+  state.len=letters.length;
+  state.tiles=ord.split('');state.order=state.tiles.map(function(_,i){return i;});
+  state.slots=state.tiles.map(function(){return null;});
+  state.locked=state.tiles.map(function(){return false;});
+  state.flags=[];state.hints=0;state.wrong=0;state.busy=false;
+  state.elapsed=0;state.paceMs=(6+state.len*5)*1000;state.paceOn=true;lastFrac=1;paceEl.style.transform='scaleX(1)';
+  slotsEl.classList.remove('win');
+  hud();render();renderFormula(state.moves.length);
+  setMsg(!best.level&&state.level===1&&state.solved===0&&state.mode==='journey'?'Tap the letters in order to spell the word. Each answer turns the cube back.':'Spell the word.');
+  saveJourney();
+}
+function placeTile(id){
+  if(state.busy)return;
+  var i=state.slots.indexOf(null);if(i<0)return;
+  state.slots[i]=id;sfx.tick(i);buzz(6);flipRender();
+  if(state.slots.indexOf(null)<0)checkWord();
+}
+function removeAt(i){
+  if(state.busy||state.slots[i]==null||state.locked[i])return;
+  state.slots[i]=null;sfx.back();flipRender();
+}
+function checkWord(){
+  var w=state.slots.map(function(id){return state.tiles[id];}).join('');
+  if(state.accept[w])return success();
+  state.streak=0;state.wrong++;
+  var right=0;state.flags=[];
+  state.slots.forEach(function(id,i){
+    if(state.locked[i]){right++;return;}
+    if(state.tiles[id]===state.target[i]){state.locked[i]=true;right++;}
+    else{state.flags[i]=true;}
+  });
+  state.busy=true;hud();render();sfx.wrong();buzz([30,40,30]);
+  slotsEl.classList.remove('shake');void slotsEl.offsetWidth;slotsEl.classList.add('shake');
+  setMsg(right+' of '+state.len+' in place','bad');
+  var g=state.gen;
+  setTimeout(function(){
+    if(g!==state.gen)return;
+    state.slots=state.slots.map(function(id,i){return state.flags[i]?null:id;});
+    state.flags=[];state.busy=false;slotsEl.classList.remove('shake');flipRender();
+  },750);
+}
+async function success(){
+  var g=state.gen;
+  state.busy=true;state.flags=[];
+  var frac=Math.max(0,1-state.elapsed/state.paceMs);state.paceOn=false;
+  state.locked=state.locked.map(function(){return true;});
+  var clean=state.wrong===0&&state.hints===0,tb=Math.round(frac*state.len*10);
+  var pts=state.len*20+tb+(clean?30:0)+state.streak*5;
+  state.score+=pts;state.streak++;
+  if(state.mode==='daily')state.dMarks.push(clean?'🟩':'🟨');
+  var k=state.solved;
+  slotsEl.classList.add('win');render();hud();sfx.correct(k);buzz([12,30,18]);
+  setMsg((clean?'Clean solve':'Correct')+' · +'+pts,'good');
+  await sleep(650);if(g!==state.gen)return;
+  var m0=state.moves[state.moves.length-1-state.solved],inv={axis:m0.axis,layer:m0.layer,dir:-m0.dir};
+  state.solved++;renderFormula(state.moves.length);
+  var d=REDUCED?160:700;
+  sfx.turn(d/1000,1);
+  await turn(inv,d);if(g!==state.gen)return;
+  if(state.solved>=state.n){return state.mode==='daily'?dailyComplete():levelComplete();}
+  saveJourney();
+  await sleep(150);if(g!==state.gen)return;
+  loadWord();
+}
+function hint(){
+  if(state.busy)return;
+  var i=-1;for(var s=0;s<state.len;s++){if(!state.locked[s]){i=s;break;}}
+  if(i<0)return;
+  var need=state.target[i];
+  if(state.slots[i]!=null&&state.tiles[state.slots[i]]!==need)state.slots[i]=null;
+  if(state.slots[i]==null){
+    var placed={};state.slots.forEach(function(id){if(id!=null)placed[id]=1;});
+    var id=state.order.find(function(t){return !placed[t]&&state.tiles[t]===need;});
+    if(id==null){
+      for(var j=0;j<state.len;j++){
+        if(j!==i&&!state.locked[j]&&state.slots[j]!=null&&state.tiles[state.slots[j]]===need){id=state.slots[j];state.slots[j]=null;break;}
+      }
+    }
+    if(id==null)return;
+    state.slots[i]=id;
+  }
+  state.locked[i]=true;state.hints++;state.score=Math.max(0,state.score-25);
+  sfx.hint();hud();flipRender();
+  if(state.slots.indexOf(null)<0)checkWord();
+}
+$('#shuffle').addEventListener('click',function(){if(state.busy)return;shuffleArr(state.order);sfx.shuffle();flipRender();});
+$('#clear').addEventListener('click',function(){
+  if(state.busy)return;
+  state.slots=state.slots.map(function(id,i){return state.locked[i]?id:null;});sfx.back();flipRender();
+});
+$('#hint').addEventListener('click',hint);
+slotsEl.addEventListener('click',function(e){var b=e.target.closest('[data-i]');if(b)removeAt(+b.dataset.i);});
+trayEl.addEventListener('click',function(e){var b=e.target.closest('[data-id]');if(b)placeTile(+b.dataset.id);});
+window.addEventListener('keydown',function(e){
+  if(!veil.hidden||state.busy||e.metaKey||e.ctrlKey||e.altKey)return;
+  var k=e.key;
+  if(/^[a-zA-Z]$/.test(k)){
+    var ch=k.toLowerCase(),placed={};state.slots.forEach(function(id){if(id!=null)placed[id]=1;});
+    var id=state.order.find(function(t){return !placed[t]&&state.tiles[t]===ch;});
+    if(id!=null)placeTile(id);
+  }else if(k==='Backspace'){
+    e.preventDefault();
+    for(var i=state.slots.length-1;i>=0;i--){if(state.slots[i]!=null&&!state.locked[i]){removeAt(i);break;}}
+  }else if(k===' '){
+    if(e.target&&/^(BUTTON|INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName))return;
+    e.preventDefault();shuffleArr(state.order);sfx.shuffle();flipRender();
+  }
+});
+
+/* ---------- flow: journey ---------- */
+async function runScramble(){
+  state.gen++;var g=state.gen;
+  state.busy=true;state.paceOn=false;state.solved=0;state.elapsed=0;lastFrac=0;paceEl.style.transform='scaleX(0)';
+  cubies=makeCube();anim=null;queue=[];
+  slotsEl.innerHTML='';trayEl.innerHTML='';slotsEl.classList.remove('win');
+  state.len=state.words[0][0].length;
+  hud();setMsg('Scrambling the cube…');formulaEl.innerHTML='';
+  await sleep(300);if(g!==state.gen)return;
+  for(var i=0;i<state.moves.length;i++){
+    renderFormula(i+1);
+    var d=REDUCED?160:280;
+    sfx.turn(d/1000,1+i*0.07);
+    await turn(state.moves[i],d);if(g!==state.gen)return;
+  }
+  loadWord();
+}
+function startLevel(){
+  var c=cfg(state.level);state.n=c.n;
+  var words=[];
+  var frac=Math.min(1,0.3+0.07*state.level);
+  for(var i=0;i<c.n;i++)words.push(pickOne(i===c.n-1?Math.min(c.max,c.len+1):c.len,Math.random,seen,frac));
+  state.words=words;state.moves=makeScramble(c.n,state.level>=4);
+  runScramble();
+}
+var bannerTimer=null;
+function showBanner(title,sub,ms,cb){
+  bannerEl.innerHTML='<b>'+title+'</b><span>'+sub+'</span>';bannerEl.hidden=false;
+  var done=false;
+  function fin(){if(done)return;done=true;clearTimeout(bannerTimer);bannerEl.hidden=true;bannerEl.onclick=null;cb();}
+  bannerTimer=setTimeout(fin,ms);bannerEl.onclick=fin;
+}
+function levelComplete(){
+  var g=state.gen;state.busy=true;
+  var bonus=100+state.level*25,before=rank(state.level),after=rank(state.level+1);
+  state.score+=bonus;saveBest();hud();
+  sfx.fanfare();buzz([20,40,20,40,60]);if(!REDUCED)spin={t0:performance.now(),dur:1700};burst();
+  setMsg('Cube solved','good');
+  showBanner('Level '+state.level+' cleared','+'+bonus+(after!==before?' · Promoted to '+after:''),2800,function(){
+    if(g!==state.gen)return;
+    state.level++;startLevel();
+  });
+}
+
+/* ---------- flow: daily ---------- */
+function snapshot(){return {level:state.level,score:state.score,streak:state.streak,solved:state.solved,words:state.words,moves:state.moves,n:state.n};}
+function enterDaily(){
+  if(state.busy&&state.mode==='journey')return;
+  clearTimeout(bannerTimer);bannerEl.hidden=true;bannerEl.onclick=null;
+  var key=keyOf(new Date()),rng=mulberry32(hashStr('lexigyre-'+key)),sm={};
+  state.backup=snapshot();state.mode='daily';state.rng=rng;
+  state.words=[4,5,5,6,7].map(function(l){return pickOne(l,rng,sm,0.8);});
+  state.n=5;state.moves=makeScramble(5,true,rng);
+  state.score=0;state.streak=0;state.dMarks=[];state.totalMs=0;
+  runScramble();
+}
+function exitDaily(){
+  clearTimeout(bannerTimer);bannerEl.hidden=true;bannerEl.onclick=null;
+  var b=state.backup;state.mode='journey';state.rng=Math.random;
+  if(b){
+    state.level=b.level;state.score=b.score;state.streak=b.streak;state.words=b.words;state.moves=b.moves;state.n=b.n;state.solved=b.solved;
+    restoreCube(b.moves,b.solved);loadWord();
+  }else{startLevel();}
+  state.backup=null;
+}
+function dailyComplete(){
+  var g=state.gen;state.busy=true;
+  sfx.fanfare();buzz([20,40,20,40,60]);if(!REDUCED)spin={t0:performance.now(),dur:1700};burst();
+  setMsg('Daily cube solved','good');
+  var now=new Date(),y=new Date(now.getTime());y.setDate(y.getDate()-1);
+  var streak=daily.last===keyOf(y)?daily.streak+1:1;
+  daily={last:keyOf(now),streak:streak,marks:state.dMarks.slice(),ms:state.totalMs,score:state.score};saveDaily();
+  hud();
+  setTimeout(function(){if(g===state.gen)showDailyResult();},1800);
+}
+function dailyText(){
+  var d=new Date(),mon=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()];
+  return 'Lexigyre Daily · '+d.getDate()+' '+mon+'\n'+daily.marks.join('')+'\n'+fmt(daily.ms)+' · '+daily.score+' pts · streak '+daily.streak;
+}
+function showDailyResult(){
+  var inDaily=state.mode==='daily';
+  showVeil({kick:'Daily cube · '+keyOf(new Date()),title:'Solved',
+    lines:['<div class="marks">'+daily.marks.join('')+'</div>','Time '+fmt(daily.ms)+' · '+daily.score+' points · '+daily.streak+'-day streak','A new cube arrives tomorrow.'],
+    btn:inDaily?'Back to journey':'Close',go:function(){if(inDaily)exitDaily();},alt:'Copy result',altGo:copyResult});
+}
+function copyResult(){
+  var txt=dailyText(),b=$('#vAlt');
+  function ok(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy result';},1600);}
+  function fb(){
+    var ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy');ok();}catch(e){b.textContent='Select and copy';}
+    document.body.removeChild(ta);
+  }
+  try{navigator.clipboard.writeText(txt).then(ok,fb);}catch(e){fb();}
+}
+$('#daily').addEventListener('click',function(){
+  if(state.mode==='daily'){exitDaily();return;}
+  if(daily.last===keyOf(new Date())){showDailyResult();return;}
+  enterDaily();
+});
+
+/* ---------- veil + chrome ---------- */
+var STRIP=['--c-red','--c-orange','--c-white','--c-yellow','--c-green','--c-blue'];
+$('#vStrip').innerHTML=STRIP.map(function(v){return '<i style="background:var('+v+')"></i>';}).join('');
+var goCb=null,altCb=null;
+function showVeil(o){
+  $('#vKick').textContent=o.kick;$('#vTitle').textContent=o.title;
+  $('#vBody').innerHTML=o.lines.map(function(l){return l.charAt(0)==='<'?l:'<p>'+l+'</p>';}).join('');
+  $('#vGo').textContent=o.btn;goCb=o.go||null;
+  var alt=$('#vAlt');altCb=o.altGo||null;
+  if(o.alt){alt.textContent=o.alt;alt.hidden=false;}else alt.hidden=true;
+  veil.hidden=false;$('#vGo').focus();
+}
+$('#vGo').addEventListener('click',function(){veil.hidden=true;var cb=goCb;goCb=null;if(cb)cb();});
+$('#vAlt').addEventListener('click',function(){if(altCb)altCb();});
+
+var MARK=['--c-red','--c-white','--c-blue','--c-green','--c-yellow','--c-red','--c-orange','--c-blue','--c-white'];
+$('#mark').innerHTML=MARK.map(function(v,i){return '<rect x="'+(i%3)*10+'" y="'+Math.floor(i/3)*10+'" width="8" height="8" rx="2" fill="var('+v+')"/>';}).join('');
+
+function paintSound(){
+  var b=$('#snd');b.setAttribute('aria-pressed',A.on?'true':'false');b.setAttribute('aria-label',A.on?'Sound on':'Sound off');
+  if(A.on){$('#waves').removeAttribute('hidden');$('#mutex').setAttribute('hidden','');}
+  else{$('#waves').setAttribute('hidden','');$('#mutex').removeAttribute('hidden');}
+}
+$('#snd').addEventListener('click',function(){
+  A.on=!A.on;if(A.master)A.master.gain.value=A.on?0.6:0;
+  try{localStorage.setItem('lexigyre.sound',A.on?'on':'off');}catch(e){}
+  paintSound();if(A.on)sfx.tick(2);
+});
+paintSound();
+
+/* ---------- boot: playing within a second, resuming where you left off ---------- */
+var sv=loadSave();
+if(sv){
+  state.level=sv.level;state.score=sv.score||0;state.streak=sv.streak||0;state.words=sv.words;state.moves=sv.moves;state.n=sv.words.length;state.solved=sv.solved;
+  restoreCube(sv.moves,sv.solved);loadWord();
+  setMsg('Welcome back. Pick up where you left off.');
+}else{
+  hud();startLevel();
+}
+})();
+</script>
+
+
+</body></html>
