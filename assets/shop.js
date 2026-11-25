@@ -1,6 +1,6 @@
 /* Amazon links. Put each Associates tracking ID in TAGS once the accounts exist; until then the links are plain Amazon searches. */
 (function(){
-var TAGS={com:"",uk:"",in:""};
+var TAGS={com:"",uk:"",in:"etigadgetstor-21"};
 var HOST={com:"www.amazon.com",uk:"www.amazon.co.uk",in:"www.amazon.in"};
 document.querySelectorAll("a.buy[data-q]").forEach(function(a){
 var r=a.getAttribute("data-r")||"com";
