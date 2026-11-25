@@ -91,7 +91,7 @@ footer a{color:var(--mut)}
 .ctl .btn{font-size:16px;padding:8px 14px;min-height:40px}
 .ctl .sel{max-width:100%}
 
-.tcta{margin:30px 0 0;display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:22px;align-items:center;background:linear-gradient(135deg,#0C1A33,#1b3566);color:#fff;border-radius:28px;padding:22px 28px;box-shadow:0 8px 0 #060d1a;overflow:hidden;position:relative}
+.tcta{margin:30px 0 0;display:grid;grid-template-columns:minmax(0,250px) minmax(0,1fr);gap:26px;align-items:center;background:linear-gradient(135deg,#0C1A33,#1b3566);color:#fff;border-radius:28px;padding:22px 28px;box-shadow:0 8px 0 #060d1a;overflow:hidden;position:relative}
 .tcta svg{width:100%;height:auto}.tcta .tc-t{text-align:left}
 .tc-k{display:inline-block;font:800 12px 'Nunito';letter-spacing:.1em;text-transform:uppercase;color:var(--yel);margin-bottom:4px}
 .tcta h2{font-size:clamp(24px,4vw,34px);line-height:1.15;margin:0 0 8px;color:#fff;text-wrap:balance}
