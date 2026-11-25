@@ -60,8 +60,8 @@
 .pr-pp small{color:#5b6678;font-size:.85rem}
 .pr-pl{align-self:center;font-weight:800;text-decoration:none;color:#0C1A33;background:#FDBB0B;border-radius:999px;padding:11px 20px;box-shadow:0 4px 0 #b98300}
 .pr-pl:hover{filter:brightness(1.05)}
-.pr-sib{max-width:860px;margin:26px auto 0;display:grid;grid-template-columns:96px minmax(0,1fr) auto;gap:20px;align-items:center;background:linear-gradient(135deg,#0C1A33,#1b3566);color:#fff;border-radius:24px;padding:18px 24px;box-shadow:0 7px 0 #060d1a}
-.pr-sib svg{width:96px;height:80px}
+.pr-sib{max-width:860px;margin:26px auto 0;display:grid;grid-template-columns:120px minmax(0,1fr) auto;gap:20px;align-items:center;background:linear-gradient(135deg,#0C1A33,#1b3566);color:#fff;border-radius:24px;padding:18px 24px;box-shadow:0 7px 0 #060d1a}
+.pr-sib svg{width:120px;height:96px}
 .pr-st{text-align:left}.pr-sk{display:block;font:800 .72rem Nunito,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#FDBB0B}
 .pr-st b{display:block;font:600 1.4rem/1.2 Fredoka,sans-serif;margin:2px 0 4px;color:#fff}
 .pr-st p{margin:0;color:#cfd9e8;font-size:.98rem;line-height:1.45}
