@@ -79,3 +79,14 @@ footer a{color:var(--mut)}
 .sel{font:700 17px 'Nunito';border:2px solid var(--line);border-radius:12px;padding:6px 10px;background:#fff;min-height:44px}
 @media(max-width:560px){.hm{grid-template-columns:1fr}}
 .sr{position:absolute;left:-9999px}
+/* ---- coach and controls ---- */
+.coach{background:#fff;border:3px solid var(--yel);border-radius:22px;padding:14px 16px;margin:0 0 16px;display:grid;gap:10px;box-shadow:0 6px 0 #e9d9a6}
+.coach[hidden]{display:none}
+.cs{display:flex;gap:14px;align-items:center}
+.cn{flex:none;min-width:54px;height:54px;border-radius:16px;background:var(--red);color:#fff;font:600 20px 'Fredoka',sans-serif;display:grid;place-items:center;padding:0 6px}
+.cs b{font:600 20px 'Fredoka',sans-serif}.cs p{margin:2px 0 0;font-size:18px;color:var(--mut)}
+.cb{display:flex;gap:8px;flex-wrap:wrap}
+.helpbar{margin:0 0 12px}.helpbar .btn{font-size:16px;padding:8px 14px;min-height:40px;box-shadow:0 4px 0 var(--line)}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ctl .btn{font-size:16px;padding:8px 14px;min-height:40px}
+.ctl .sel{max-width:100%}
