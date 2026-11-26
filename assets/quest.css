@@ -33,3 +33,6 @@
 @media(max-width:480px){.qm-mgrid{grid-template-columns:repeat(2,1fr);gap:10px}}
 .qm-mc span{font:600 12px Nunito,sans-serif;color:#5b6678;margin-top:-2px}.qm-mc svg{aspect-ratio:600/380}
 .qm-mc{align-items:center;text-align:center}.qm-mc b,.qm-mc span,.qm-mc em{text-align:center;width:100%}.qm-mc em{margin-top:auto}.more:has(.qm-mgrid){text-align:center}.more:has(.qm-mgrid) h2{text-align:center}
+.qm .fig{animation:qfig .28s ease-out both}@keyframes qfig{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.qm .fig .qd{stroke-dasharray:1;animation:qdraw .75s cubic-bezier(.3,.7,.2,1) both}@keyframes qdraw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.qm .fig.plot{padding:4px;border-radius:16px;border:2px solid #d9d9d9;box-shadow:0 2px 0 #e4e4e4}
