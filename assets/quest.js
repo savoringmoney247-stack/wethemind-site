@@ -59,6 +59,7 @@ Q.wn=function(ans,c,fmt){fmt=fmt||n;var seen={},o=[],key=function(v){return Stri
  var base=Math.max(1,Math.abs(rd(ans,0))>9?Math.round(Math.abs(ans)/8):1),k=1;
  while(o.length<5&&k<40){[ans+k*base,ans-k*base,ans*2,ans/2,-ans].forEach(function(v){if(o.length<7&&isFinite(v)&&!seen[key(v)]){seen[key(v)]=1;o.push(fmt(v))}});k++}
  return o};
+Q.tidy=function(s){return s.replace(/ \+ (-|\u2212)/g,' \u2212 ').replace(/\(x \+ 0\)/g,'x').replace(/ [+\u2212] 0x(?![\w\u00b2])/g,'').replace(/(^|[^\d.\w\/])1([a-z])(?![a-z])/g,'$1$2')};
 /* ---------- registry ---------- */
 Q.U={};Q.add=function(slug,def){Q.C[slug]=def;def.units.forEach(function(u){Q.U[slug+'.'+u.id]=u})};
 /* build one question from a unit: validates and shuffles options */
@@ -67,8 +68,8 @@ Q.make=function(unit,t,tries){tries=tries||0;var r,i;
  var ok=r&&r.q&&r.a!=null&&r.w&&r.w.length;
  if(ok){var seen={},ws=[];seen[String(r.a)]=1;r.w.forEach(function(w){w=String(w);if(!seen[w]&&w!==''&&!/NaN|undefined|Infinity/.test(w)){seen[w]=1;ws.push(w)}});
   if(ws.length>=3&&!/NaN|undefined|Infinity/.test(String(r.a)+r.q+(r.why||''))){ws=shuf(ws).slice(0,3);var opts=shuf([{l:String(r.a),ok:1}].concat(ws.map(function(w){return{l:w,ok:0}})));
-   var fx=function(x){return String(x==null?'':x).replace(/(^|[\s(,=\u27e8\u00b1])-(?=\d)/g,'$1\u2212')};opts.forEach(function(o){o.l=fx(o.l)});
-   return{q:fx(r.q),fig:r.fig||'',opts:opts,why:fx(r.why),hint:fx(r.hint),u:unit.name}}}
+   var fx=function(x){return Q.tidy(String(x==null?'':x).replace(/(^|[\s(,=\u27e8\u00b1])-(?=\d)/g,'$1\u2212'))};opts.forEach(function(o){o.l=fx(o.l)});
+   return{q:fx(r.q).replace(/^Factor:/,'Factor completely:'),fig:r.fig||'',opts:opts,why:fx(r.why),hint:fx(r.hint),u:unit.name}}}
  if(tries>30){if(Q.DEBUG)throw new Error('bad question in '+unit.id);return null}
  return Q.make(unit,t,tries+1)};
 /* ---------- camp plan ---------- */
@@ -82,6 +83,6 @@ Q.plan=function(def){var U=def.units.length,out=[];
 Q.campQuestions=function(def,camp){var qs=[],used={},k=0;
  for(var j=0;j<camp.q&&k<80;){k++;var unit=camp.summit?def.units[ri(0,def.units.length-1)]:def.units[camp.u],
    t=camp.summit?ri(8,10):Math.round(camp.tier+(j-(camp.q-1)/2)*0.45),m=Q.make(unit,t);
-  if(!m||used[m.q+m.opts.map(function(o){return o.l}).join()])continue;used[m.q+m.opts.map(function(o){return o.l}).join()]=1;qs.push(m);j++}
+  var key=k<45?m.q:m.q+m.opts.map(function(o){return o.l}).join();if(!m||used[key])continue;used[key]=1;qs.push(m);j++}
  return qs};
 })(typeof window!=='undefined'?window:global);
