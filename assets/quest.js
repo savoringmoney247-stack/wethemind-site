@@ -23,12 +23,12 @@ Q.ipoly=function(c){var d=c.length,o=[];for(var i=0;i<c.length;i++)o.push(c[i]/(
 var NAVY='#0C1A33',RED='#E52421',BLUE='#2a6fd6',GRN='#1fa463',YEL='#FDBB0B';
 Q.col={navy:NAVY,red:RED,blue:BLUE,green:GRN,yel:YEL};
 Q.svg=function(w,h,inner,cls){return '<svg class="fig '+(cls||'')+'" viewBox="0 0 '+w+' '+h+'" role="img" aria-hidden="true">'+inner+'</svg>'};
-Q.txt=function(x,y,t,o){o=o||{};return '<text x="'+rd(x,1)+'" y="'+rd(y,1)+'" font-size="'+(o.s||12)+'" fill="'+(o.c||NAVY)+'" text-anchor="'+(o.a||'middle')+'" font-weight="'+(o.w||600)+'" font-family="Nunito,system-ui,sans-serif">'+t+'</text>'};
+Q.txt=function(x,y,t,o){o=o||{};return '<text x="'+rd(x,1)+'" y="'+rd(y,1)+'" font-size="'+(o.s||12)+'" fill="'+(o.c||NAVY)+'" text-anchor="'+(o.a||'middle')+'" font-weight="'+(o.w||600)+'" font-family="Nunito,system-ui,sans-serif"'+(o.h?' stroke="#fff" stroke-width="3" paint-order="stroke" stroke-linejoin="round"':'')+'>'+t+'</text>'};
 Q.line=function(x1,y1,x2,y2,c,w,dash){return '<line x1="'+rd(x1,1)+'" y1="'+rd(y1,1)+'" x2="'+rd(x2,1)+'" y2="'+rd(y2,1)+'" stroke="'+(c||NAVY)+'" stroke-width="'+(w||2)+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+' stroke-linecap="round"/>'};
 Q.dot=function(x,y,c,r){return '<circle cx="'+rd(x,1)+'" cy="'+rd(y,1)+'" r="'+(r||3.5)+'" fill="'+(c||RED)+'"/>'};
 Q.path=function(pts,o){o=o||{};return '<path d="M'+pts.map(function(p){return rd(p[0],1)+' '+rd(p[1],1)}).join('L')+(o.close?'Z':'')+'" fill="'+(o.fill||'none')+'" stroke="'+(o.stroke||NAVY)+'" stroke-width="'+(o.w==null?2:o.w)+'" stroke-linejoin="round"'+(o.dash?' stroke-dasharray="'+o.dash+'"':'')+(o.op?' fill-opacity="'+o.op+'"':'')+'/>'};
 /* plot: o={xmin,xmax,ymin,ymax,w,h,fns:[{f,c,dash,w}],pts:[[x,y,'open'|'',label]],segs:[[x1,y1,x2,y2,c,dash]],shade:{f,g,a,b,c},txt:[[x,y,t]],xs:step,ys:step,noTicks} */
-Q.plot=function(o){var W=o.w||320,H=o.h||220,m=22,x0=o.xmin,x1=o.xmax,y0=o.ymin,y1=o.ymax;
+Q.plot=function(o){var W=o.w||320,H=o.h||220,m=28,x0=o.xmin,x1=o.xmax,y0=o.ymin,y1=o.ymax;
  var X=function(x){return m+(x-x0)/(x1-x0)*(W-2*m)},Y=function(y){return H-m-(y-y0)/(y1-y0)*(H-2*m)};
  var s='<rect x="0" y="0" width="'+W+'" height="'+H+'" fill="#fff"/>';
  var step=function(a,b){var r=(b-a)/6,p=Math.pow(10,Math.floor(Math.log(r)/Math.LN10)),f=r/p;return (f<1.5?1:f<3.5?2:f<7.5?5:10)*p};
@@ -37,8 +37,8 @@ Q.plot=function(o){var W=o.w||320,H=o.h||220,m=22,x0=o.xmin,x1=o.xmax,y0=o.ymin,
  for(k=Math.ceil(y0/ys)*ys;k<=y1+1e-9;k+=ys)s+=Q.line(m,Y(k),W-m,Y(k),'#e6dcc6',1);
  var ax=Math.min(Math.max(0,x0),x1),ay=Math.min(Math.max(0,y0),y1);
  s+=Q.line(m,Y(ay),W-m,Y(ay),NAVY,1.6)+Q.line(X(ax),m,X(ax),H-m,NAVY,1.6);
- if(!o.noTicks){for(k=Math.ceil(x0/xs)*xs;k<=x1+1e-9;k+=xs){if(Math.abs(k)>1e-9)s+=Q.txt(X(k),Y(ay)+12,n(rd(k,2)),{s:9,c:'#5b6678',w:700})}
-  for(k=Math.ceil(y0/ys)*ys;k<=y1+1e-9;k+=ys){if(Math.abs(k)>1e-9)s+=Q.txt(X(ax)-4,Y(k)+3,n(rd(k,2)),{s:9,c:'#5b6678',a:'end',w:700})}}
+ if(!o.noTicks){for(k=Math.ceil(x0/xs)*xs;k<=x1+1e-9;k+=xs){if(Math.abs(k)>1e-9)s+=Q.txt(X(k),Y(ay)+14,n(rd(k,2)),{s:11,c:'#4a5568',w:700,h:1})}
+  for(k=Math.ceil(y0/ys)*ys;k<=y1+1e-9;k+=ys){if(Math.abs(k)>1e-9)s+=Q.txt(X(ax)-6,Y(k)+4,n(rd(k,2)),{s:11,c:'#4a5568',a:'end',w:700,h:1})}}
  var samp=function(f,a,b){var pts=[],N=240,prev=null,seg=[];for(var i=0;i<=N;i++){var x=a+(b-a)*i/N,y;try{y=f(x)}catch(e){y=NaN}
    var bad=!isFinite(y)||y>y1+(y1-y0)*0.6||y<y0-(y1-y0)*0.6;if(!bad&&prev!==null&&Math.abs(y-prev)>(y1-y0)*0.7)bad=true;
    if(bad){if(seg.length>1)pts.push(seg);seg=[];prev=isFinite(y)?y:null;if(isFinite(y)&&!(y>y1+(y1-y0)*0.6||y<y0-(y1-y0)*0.6)){seg=[[X(x),Y(y)]]}}else{seg.push([X(x),Y(y)]);prev=y}}
