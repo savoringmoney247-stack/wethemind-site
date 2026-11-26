@@ -412,14 +412,20 @@ var LENS=[3,4,4,5,5,6,6,7,7,8],MOVES=[3,3,4,4,5,5,6,6,7,7];
 function cfg(L){return L<=10?{len:LENS[L-1],n:MOVES[L-1],max:8}:(L<=12?{len:8,n:8,max:8}:{len:9,n:8,max:9});}
 var RANKS=['Apprentice','Cadet','Adept','Strategist','Virtuoso','Maestro','Grandmaster','Sovereign'];
 function rank(L){return RANKS[Math.min(7,Math.floor((L-1)/2))];}
-var seen={};
+var seen={};try{seen=JSON.parse(localStorage.getItem('lexigyre.seen')||'{}')||{};}catch(e){seen={};}
 function shuffleArr(a,rng){rng=rng||Math.random;for(var i=a.length-1;i>0;i--){var j=Math.floor(rng()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
 /* Banks are ordered most-familiar first; early levels draw from the familiar end, later ones open up the whole list. */
 function pickOne(len,rng,seenMap,frac){
-  var all=BANK[len],lim=Math.min(all.length,Math.max(12,Math.floor(all.length*(frac||1)))),head=all.slice(0,lim),
-      pool=head.filter(function(e){return !seenMap[e[0]];});
-  if(!pool.length){head.forEach(function(e){delete seenMap[e[0]];});pool=head;}
-  var e=pool[Math.floor(rng()*pool.length)];seenMap[e[0]]=1;return e;
+  var all=BANK[len],n=all.length,
+      lim=Math.min(n,Math.max(24,Math.floor(n*(frac||1)))),
+      fresh=function(e){return !seenMap[e[0]];},
+      pool=all.slice(0,lim).filter(fresh);
+  /* window used up: open the rest of the bank before ever repeating a word */
+  if(!pool.length)pool=all.filter(fresh);
+  if(!pool.length){all.forEach(function(e){delete seenMap[e[0]];});pool=all.slice();}
+  var e=pool[Math.floor(rng()*pool.length)];seenMap[e[0]]=1;
+  if(seenMap===seen)try{localStorage.setItem('lexigyre.seen',JSON.stringify(seen));}catch(x){}
+  return e;
 }
 function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
 function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}

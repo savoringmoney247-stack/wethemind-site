@@ -28,6 +28,12 @@
 .sdp{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}.sdp button{width:56px;height:52px;border:2px solid var(--line);border-radius:12px;background:#fff;font:600 24px 'Fredoka';cursor:pointer}
 </style><style>
 .sq [hidden]{display:none!important}
+.sq .lad{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;max-width:640px;margin:14px auto 6px}
+.sq .lp{border:3px solid var(--navy);border-radius:16px;background:linear-gradient(#e9fbef,#b9ecc9);padding:8px 4px 6px;cursor:pointer;font:inherit;color:var(--navy);display:flex;flex-direction:column;align-items:center;gap:2px;min-height:78px;transition:transform .12s}
+.sq .lp:hover:not(:disabled){transform:translateY(-3px)}.sq .lp .no{font:600 22px Fredoka,sans-serif}.sq .lp .nm{font:700 10.5px/1.15 Nunito,sans-serif;text-align:center;color:#2b5c42}.sq .lp .sr{font:700 12px Nunito,sans-serif;color:#d98a00;letter-spacing:1px}
+.sq .lp.bs{background:linear-gradient(#fff1c2,#ffd15a)}.sq .lp.bs .nm{color:#7a5200}.sq .lp.lk{background:#ece6d6;border-color:#cfc6b0;color:#9a927f;cursor:not-allowed}.sq .lp.cur{animation:lpp 1.4s ease-in-out infinite;box-shadow:0 0 0 4px rgba(253,187,11,.55)}
+@keyframes lpp{50%{transform:scale(1.05)}}@media(max-width:480px){.sq .lad{grid-template-columns:repeat(4,1fr)}.sq .lp .nm{display:none}.sq .lp{min-height:64px}}
+
 .sq .hud{display:flex;flex-wrap:wrap;gap:8px}
 .sq .stat b#sqL{color:#E52421;letter-spacing:2px}
 .sq-mis{text-align:center;margin:0 0 6px}.sq-mis b{font:600 20px Fredoka,sans-serif;color:var(--navy);display:block}.sq-mis span{color:#5b6678;font-weight:700;font-size:.92rem}
@@ -61,7 +67,7 @@
 .rk{font:600 24px Fredoka,sans-serif;color:#E52421}.nb{font-weight:800;color:#1fa463}.sub2{color:#5b6678}
 .fin{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:12px 0}.fin span{display:inline-grid;background:var(--cream);border:2px solid var(--line);border-radius:14px;padding:6px 16px;min-width:96px}.fin small{font-weight:800;color:#5b6678}.fin b{font:600 24px Fredoka,sans-serif}
 @media(prefers-reduced-motion:reduce){.sq *,.sq-river::before{animation:none!important;transition:none!important}}
-</style><div class="box sq" id="sq"><div class="bar"><div class="hud"><span class="stat"><small>Mission</small><b id="sqM">1/5</b></span><span class="stat"><small>Score</small><b id="sqS">0</b></span><span class="stat"><small>Combo</small><b id="sqC">&times;1</b></span><span class="stat"><small>Lives</small><b id="sqL">&hearts;&hearts;&hearts;</b></span></div><div class="ctl"><button class="btn y" id="sqNew" type="button">New game</button></div></div>
+</style><div class="box sq" id="sq"><div class="bar"><div class="hud"><span class="stat"><small>Level</small><b id="sqM">1/20</b></span><span class="stat"><small>Score</small><b id="sqS">0</b></span><span class="stat"><small>Combo</small><b id="sqC">&times;1</b></span><span class="stat"><small>Lives</small><b id="sqL">&hearts;&hearts;&hearts;</b></span></div><div class="ctl"><button class="btn y" id="sqNew" type="button">New game</button></div></div>
 <div id="sqPlay" hidden><p class="sq-mis"><b id="sqMn"></b><span id="sqMn2"></span></p><div class="sq-prog" id="sqPg" aria-hidden="true"></div><p class="sq-q" id="sqQ" aria-live="polite"></p><div class="sq-river"><div class="sq-row" id="sqRow"></div></div><div class="sq-time" aria-hidden="true"><i id="sqTi"></i></div><div class="sq-opts" id="sqOpts"></div><div class="ans" id="sqType" hidden><input id="sqIn" type="number" inputmode="numeric" aria-label="Your answer" autocomplete="off"><button class="btn" id="sqOk" type="button">Check</button><button class="btn g" id="sqHint" type="button">Hint</button></div><p class="msg" id="sqMsg" aria-live="polite"></p><div class="sq-why" id="sqWhy" hidden></div><p style="text-align:center;margin:12px 0 0"><button class="btn" id="sqNext" type="button" hidden>Next</button></p></div>
 <div class="sq-card" id="sqCard"></div></div>
 <section class="how"><h2>How to play</h2><ol class="steps"><li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#E52421"/><text x="24" y="32" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="24" fill="#fff">1</text></svg><b>Read the stones</b><span>Each row of numbers follows one rule.</span></li><li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#FDBB0B"/><text x="24" y="32" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="24" fill="#fff">2</text></svg><b>Find the rule</b><span>Arithmetic adds the same number. Geometric multiplies by the same number.</span></li><li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#1fa463"/><text x="24" y="32" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="24" fill="#fff">3</text></svg><b>Beat the timer</b><span>Fast answers earn bonus points. Streaks build a combo up to &times;3.</span></li><li><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="21" fill="#2f6bf2"/><text x="24" y="32" text-anchor="middle" font-family="Fredoka" font-weight="600" font-size="24" fill="#fff">4</text></svg><b>Save the frog</b><span>Three lives. A wrong answer is a splash. Reach the far bank to win.</span></li></ol></section>
@@ -77,17 +83,23 @@ function rd(v){return Math.round(v*100)/100}
 function f(v){return String(rd(v)).replace('-','−')}
 var FROG='<svg class="frog" viewBox="0 0 40 34" aria-hidden="true"><ellipse cx="20" cy="22" rx="15" ry="10" fill="#2fbf71"/><circle cx="11" cy="10" r="6" fill="#2fbf71"/><circle cx="29" cy="10" r="6" fill="#2fbf71"/><circle cx="11" cy="9" r="3.200" fill="#fff"/><circle cx="29" cy="9" r="3.200" fill="#fff"/><circle cx="12" cy="9" r="1.600" fill="#0C1A33"/><circle cx="28" cy="9" r="1.600" fill="#0C1A33"/><path d="M13 24q7 5 14 0" stroke="#0C1A33" fill="none" stroke-width="2" stroke-linecap="round"/></svg>';
 var SPLASH='<svg class="spl" viewBox="0 0 40 30" aria-hidden="true"><g fill="#5db8f5"><circle cx="8" cy="20" r="4"/><circle cx="20" cy="9" r="5"/><circle cx="32" cy="20" r="4"/><circle cx="14" cy="26" r="2.500"/><circle cx="27" cy="26" r="2.500"/></g></svg>';
-var MS=[
-{n:'Stepping Stones',s:'Arithmetic: add the same number each time',k:'A',r:4,t:25},
-{n:'Growth Garden',s:'Geometric: multiply by the same number each time',k:'G',r:4,t:25},
-{n:'Rule Detective',s:'Spot the type, then find the rule',k:'D',r:5,t:22},
-{n:'Mixed Bridge',s:'Negatives, fractions and tricky rules',k:'X',r:5,t:22},
-{n:'Far Away Jumps',s:'Use the formula to leap to the nth term',k:'N',r:5,t:50}];
-var TOTAL=0;MS.forEach(function(m){TOTAL+=m.r});
+var LV=20;
+var SPEC=[
+['First Hop','Add the same number each time','A0',0],['Pebble Path','Arithmetic: next stone','A0',0],['Mossy Steps','Fill a gap in the middle','A0',1],
+['Seed Garden','Geometric: multiply each time','G0',0],['BOSS: Stone Guardian','Arithmetic and geometric together','AG',1],
+['Sprout Row','Geometric gaps','G0',1],['Fork in the Path','Which kind is it?','AGD',1],['Rule Detective','Spot the type, then the rule','D',1],['Deep Water','Bigger numbers and steps','A1',1],
+['BOSS: River Serpent','Everything so far, faster','A1GD',1],
+['Mirror Pond','Negative ratios flip the sign','G1',1],['Foggy Bridge','Negatives, halves and fractions','A1G1',1],['Master Detective','Tricky rules, no hints','DX',1],['Far Away Jumps','Leap to the nth term','N',0],
+['BOSS: Thunder Toad','Mixed rules plus nth terms','A1G1DN',1],
+['Which Stone?','Find the term number','W',0],['Stone Collector','Add up the first n stones','S',0],['Double Leap','nth term and term number','NW',0],['Never-Ending Path','Infinite geometric sum','I',0],
+['SUMMIT: Lily Queen','Every skill, the full test','NWSID',1]];
+function lvl(L){var p=SPEC[L-1],boss=(L%5===0);return{n:p[0],s:p[1],pool:p[2].match(/A0|A1|G0|G1|AG|DX|D|N|W|S|I/g),mid:p[3],r:boss?5:3,t:Math.max(18,30-Math.floor((L-1)*0.6))}}
+function ranks(L){return L>=20?'Pond Legend':L>=15?'Sequence Master':L>=10?'Sequence Pro':L>=5?'Pattern Explorer':'Sequence Rookie'}
+var TOTAL=3;
 var st,q,timer,locked=true;
 function opA(d){return(d<0?'−':'+')+f(Math.abs(d))}
 function opG(r){return'×'+(r<0?'('+f(r)+')':f(r))}
-function genA(adv,r){var a,d;if(!adv){a=R(1,12);d=R(2,6)}else{a=R(-10,15);d=pick([-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9,0.5,1.5,-0.5,-1.5]);if(Math.abs(d)<1)a=R(-4,10)+0.5*R(0,1)}
+function genA(adv,r){var a,d;if(!adv){var L0=st?st.L:1;a=R(1,L0<3?6:12);d=R(2,L0<3?3:6)}else{a=R(-10,15);d=pick([-7,-6,-5,-4,-3,-2,2,3,4,5,6,7,8,9,0.5,1.5,-0.5,-1.5]);if(Math.abs(d)<1)a=R(-4,10)+0.5*R(0,1)}
  var t=[];for(var i=0;i<5;i++)t.push(rd(a+d*i));return{type:'A',v:d,terms:t,a:a}}
 function genG(adv){var a,r;if(!adv){r=pick([2,2,3]);a=r===3?R(1,3):R(1,5)}else{r=pick([2,3,-2,-3,0.5,0.5,-0.5,1.5]);if(r===0.5||r===-0.5)a=16*R(1,4);else if(r===1.5)a=16*R(1,3);else a=r===-3?R(1,3):R(1,5)}
  var t=[];for(var i=0;i<5;i++)t.push(rd(a*Math.pow(r,i)));return{type:'G',v:r,terms:t,a:a}}
@@ -110,25 +122,43 @@ function mkDet(s){var o1=[{l:'Arithmetic (add)',ok:s.type==='A'},{l:'Geometric (
 function mkN(){var s,n,ans,t;if(Math.random()<.55){var a=R(1,10),d=R(2,7);n=R(10,25);s={type:'A',v:d,terms:[a,a+d,a+2*d,a+3*d]};ans=a+(n-1)*d;t='a<sub>n</sub> = a<sub>1</sub> + (n − 1)d = '+a+' + '+(n-1)+' × '+d+' = <b>'+ans+'</b>'}
  else{var a2=R(1,3),r=pick([2,2,3]);n=R(5,7);s={type:'G',v:r,terms:[a2,a2*r,a2*r*r,a2*r*r*r]};ans=a2*Math.pow(r,n-1);t='a<sub>n</sub> = a<sub>1</sub> × r<sup>n−1</sup> = '+a2+' × '+r+'<sup>'+(n-1)+'</sup> = <b>'+ans+'</b>'}
  return{kind:'type',terms:s.terms,n:n,ans:ans,why:whyText(s)+'<br>'+t,ask:'What is term number '+n+'?',hint:s.type==='A'?'Add the difference '+(n-1)+' times to the first term.':'Multiply by the ratio '+(n-1)+' times, starting from the first term.',s:s}}
-function build(){var m=MS[st.m],k=m.k;if(k==='A')return mkPick(genA(false),st.r);if(k==='G')return mkPick(genG(false),st.r);
- if(k==='D')return mkDet(Math.random()<.5?genA(st.r>2):genG(st.r>2));
- if(k==='X')return mkPick(Math.random()<.5?genA(true):genG(true),st.r+2);return mkN()}
+function opts4(ans,c){var seen={},o=[];seen[ans]=1;c.forEach(function(x){x=rd(x);if(!seen[x]&&isFinite(x)){seen[x]=1;o.push(x)}});var k=1;while(o.length<3){var x=rd(ans+k*(o.length%2?1:-1)*Math.max(1,Math.round(Math.abs(ans)/10)));if(!seen[x]){seen[x]=1;o.push(x)}k++}return sh(o).slice(0,3)}
+function mkW(){var a=R(2,12),d=R(2,7),n=R(8,22),X=a+(n-1)*d,s={type:'A',v:d,terms:[a,a+d,a+2*d,a+3*d]};
+ return{kind:'type',terms:s.terms,n:n,ans:n,cap:'= '+X,why:whyText(s)+'<br>Solve a<sub>1</sub> + (n − 1)d = '+X+': '+a+' + (n − 1)×'+d+' = '+X+', so n − 1 = '+((X-a)/d)+' and n = <b>'+n+'</b>',ask:'Which term number equals '+X+'?',hint:'Set a + (n − 1)d equal to '+X+' and solve for n.',s:s}}
+function mkS(){var a=R(1,9),d=R(2,6),n=R(6,14),S=n*(2*a+(n-1)*d)/2,s={type:'A',v:d,terms:[a,a+d,a+2*d,a+3*d]};
+ return{kind:'type',terms:s.terms,n:n,ans:S,cap:'sum of '+n,why:whyText(s)+'<br>Sum of n terms: S = n(2a + (n − 1)d)/2 = '+n+'×('+(2*a)+' + '+(n-1)+'×'+d+')/2 = <b>'+S+'</b>',ask:'What is the sum of the first '+n+' stones?',hint:'Use S = n(2a + (n − 1)d)/2, or pair the first and last terms.',s:s}}
+function mkI(){var c=pick([[54,1/3],[27,2/3],[32,.5],[24,-.5],[16,.5]]),a=c[0],r=c[1],t=[];for(var i=0;i<4;i++)t.push(rd(a*Math.pow(r,i)));
+ var S=rd(a/(1-r)),o=opts4(S,[a/(1+r),a*(1+r),a/r,S+a/2,S-a/2]);
+ var s={type:'G',v:r,terms:t,a:a};
+ return{kind:'pick',terms:t,hide:-1,dots:1,opts:sh([S].concat(o)).map(function(v){return{l:f(v),ok:v===S}}),why:whyText(s)+'<br>|r| &lt; 1, so the path never stops but the total settles: S = a<sub>1</sub>/(1 − r) = '+f(a)+'/(1 − '+(r<0?'('+f(r)+')':f(r))+') = <b>'+f(S)+'</b>',ask:'These stones go on forever. What do they add up to?',s:s}}
+function mkN2(L){var s,n,ans,t;if(Math.random()<.55||L<14){var a=R(L>=14?-6:1,10),d=pick(L>=14?[-5,-4,-3,3,4,5,6,7,9]:[2,3,4,5,6,7]);n=R(10,24+L);s={type:'A',v:d,terms:[a,a+d,a+2*d,a+3*d]};ans=a+(n-1)*d;t='a<sub>n</sub> = a<sub>1</sub> + (n − 1)d = '+f(a)+' + '+(n-1)+' × '+f(d)+' = <b>'+f(ans)+'</b>'}
+ else{var a2=R(1,3),r=pick([2,3,-2]);n=R(5,L>=17?9:7);s={type:'G',v:r,terms:[a2,a2*r,a2*r*r,a2*r*r*r]};ans=a2*Math.pow(r,n-1);t='a<sub>n</sub> = a<sub>1</sub> × r<sup>n−1</sup> = '+a2+' × '+(r<0?'('+r+')':r)+'<sup>'+(n-1)+'</sup> = <b>'+f(ans)+'</b>'}
+ return{kind:'type',terms:s.terms,n:n,ans:ans,why:whyText(s)+'<br>'+t,ask:'What is term number '+n+'?',hint:s.type==='A'?'Add the difference '+(n-1)+' times to the first term.':'Multiply by the ratio '+(n-1)+' times, starting from the first term.',s:s}}
+function build(){var sp=lvl(st.L),k=pick(sp.pool),adv=st.L>=9,rr=sp.mid?(Math.random()<.65?2:st.r):st.r+2;
+ if(k==='A0')return mkPick(genA(false),sp.mid?rr:2+(st.r>0?2:0));
+ if(k==='G0')return mkPick(genG(false),sp.mid?rr:2+(st.r>0?2:0));
+ if(k==='A1')return mkPick(genA(true),rr);if(k==='G1')return mkPick(genG(true),rr);
+ if(k==='AG')return mkPick(Math.random()<.5?genA(false):genG(false),rr);
+ if(k==='D')return mkDet(Math.random()<.5?genA(st.L>=9):genG(st.L>=9));
+ if(k==='DX')return mkDet(Math.random()<.5?genA(true):genG(true));
+ if(k==='N')return mkN2(st.L);if(k==='W')return mkW();if(k==='S')return mkS();if(k==='I')return mkI();
+ return mkPick(genA(false),2)}
 function stonesFor(){var o=[],t=q.terms,s=q.s;
- if(q.kind==='type'){t.forEach(function(v,i){o.push({x:f(v),op:i?(s.type==='A'?opA(s.v):opG(s.v)):''})});o.push({x:'…',c:'dots',op:''});o.push({x:'?',c:'q tgt',op:'',cap:'term '+q.n});return o}
- t.forEach(function(v,i){o.push({x:i===q.hide?'?':f(v),c:i===q.hide?'q':'',op:i?(s.type==='A'?opA(s.v):opG(s.v)):''})});return o}
+ if(q.kind==='type'){t.forEach(function(v,i){o.push({x:f(v),op:i?(s.type==='A'?opA(s.v):opG(s.v)):''})});o.push({x:'…',c:'dots',op:''});o.push({x:'?',c:'q tgt',op:'',cap:q.cap||'term '+q.n});return o}
+ t.forEach(function(v,i){o.push({x:i===q.hide?'?':f(v),c:i===q.hide?'q':'',op:i?(s.type==='A'?opA(s.v):opG(s.v)):''})});if(q.dots)o.push({x:'…',c:'dots',op:''});return o}
 function drawRow(){var h='';stonesFor().forEach(function(s,i){
  if(i)h+='<span class="gp"><span class="op">'+(s.op||'')+'</span></span>';
  var l=String(s.x).length;h+='<span class="st '+(s.c||'')+(l>=5?' l5':l>=4?' l4':'')+'">'+s.x+(s.cap?'<small>'+s.cap+'</small>':'')+'</span>'});
  $('sqRow').innerHTML=h;$('sqRow').className='sq-row'+(q.kind==='type'?' ty':'')}
-function dots(){var h='',n=0;for(var i=0;i<MS.length;i++)for(var j=0;j<MS[i].r;j++){var c=n<st.n?'d':n===st.n?'c':'';h+='<i class="'+c+'"></i>';n++}$('sqPg').innerHTML=h}
-function hud(){$('sqM').textContent=Math.min(st.m+1,MS.length)+'/'+MS.length;$('sqS').textContent=st.score;var mu=Math.min(1+.25*st.streak,3);$('sqC').textContent='×'+rd(mu);
+function dots(){var h='',R2=lvl(st.L).r;for(var n=0;n<R2;n++){var c=n<st.n?'d':n===st.n?'c':'';h+='<i class="'+c+'"></i>'}$('sqPg').innerHTML=h}
+function hud(){$('sqM').textContent=st.L+'/'+LV;$('sqS').textContent=st.score;var mu=Math.min(1+.25*st.streak,3);$('sqC').textContent='×'+rd(mu);
  var l='';for(var i=0;i<3;i++)l+=i<st.lives?'♥':'♡';$('sqL').textContent=l;$('sqL').setAttribute('aria-label',st.lives+' lives')}
 function show(el,on){el.hidden=!on}
-function ask(Q){q=Q;locked=false;st.hint=false;var m=MS[st.m];$('sqMn').textContent='Mission '+(st.m+1)+': '+m.n;$('sqMn2').textContent=m.s;
+function ask(Q){q=Q;locked=false;st.hint=false;var m=lvl(st.L);$('sqMn').textContent='Level '+st.L+': '+m.n;$('sqMn2').textContent=m.s;
  $('sqQ').textContent=q.ask;drawRow();dots();hud();$('sqMsg').textContent='';show($('sqWhy'),false);show($('sqNext'),false);
  if(q.kind==='pick'){show($('sqOpts'),true);show($('sqType'),false);var h='';q.opts.forEach(function(o,i){h+='<button type="button" class="op" data-i="'+i+'"><kbd>'+(i+1)+'</kbd>'+o.l+'</button>'});$('sqOpts').innerHTML=h;$('sqOpts').className='sq-opts n'+q.opts.length}
  else{show($('sqOpts'),false);show($('sqType'),true);$('sqIn').value='';$('sqIn').disabled=false;$('sqOk').disabled=false;$('sqIn').focus()}
- st.t0=Date.now();st.lim=(q.last?15:MS[st.m].t)*1000;clearInterval(timer);timer=setInterval(tick,100);tick()}
+ st.t0=Date.now();st.lim=(q.last?15:lvl(st.L).t)*1000;clearInterval(timer);timer=setInterval(tick,100);tick()}
 function tick(){var left=st.lim-(Date.now()-st.t0),p=Math.max(0,left/st.lim);$('sqTi').style.width=(p*100)+'%';$('sqTi').className=p<.25?'lo':'';if(left<=0&&!locked){resolve(false,true)}}
 function target(){var rows=$('sqRow').querySelectorAll('.st');return q.kind==='type'?rows[rows.length-1]:q.hide>=0?rows[q.hide]:rows[rows.length-1]}
 function resolve(ok,timeout){if(locked)return;locked=true;clearInterval(timer);var left=Math.max(0,st.lim-(Date.now()-st.t0))/1000;
@@ -145,19 +175,29 @@ function resolve(ok,timeout){if(locked)return;locked=true;clearInterval(timer);v
  var more=ok&&q.next;
  if(more){$('sqWhy').innerHTML='Right! Now find the rule…';show($('sqWhy'),true);setTimeout(function(){ask(q.next)},900);return}
  $('sqWhy').innerHTML=q.why;show($('sqWhy'),true);
- var end=st.lives<=0;st.n++;dots();var last=st.n>=TOTAL;
- $('sqNext').textContent=end||last?'See my results':'Next';show($('sqNext'),true);$('sqNext').focus()}
-function nextQ(){if(st.lives<=0)return finish(false);st.r++;if(st.r>=MS[st.m].r){st.m++;st.r=0}if(st.m>=MS.length)return finish(true);ask(build())}
+ var end=st.lives<=0;st.n++;dots();var last=st.n>=lvl(st.L).r;
+ $('sqNext').textContent=end?'See my results':last?'Finish level':'Next';show($('sqNext'),true);$('sqNext').focus()}
+function nextQ(){if(st.lives<=0)return finish(false);if(st.n>=lvl(st.L).r)return finish(true);st.r++;ask(build())}
 function best(){try{return+localStorage.getItem('wtm_seq_best')||0}catch(e){return 0}}
 function saveBest(v){try{if(v>best())localStorage.setItem('wtm_seq_best',String(v))}catch(e){}}
-function rank(s){return s<3000?'Sequence Rookie':s<7000?'Pattern Explorer':s<11000?'Sequence Pro':'Sequence Master'}
-function finish(win){clearInterval(timer);var prev=best();saveBest(st.score);show($('sqPlay'),false);var acc=st.total?Math.round(st.right*100/st.total):0;
- $('sqCard').innerHTML='<h2>'+(win?'You crossed the river!':'The frog took a swim')+'</h2><p class="rk">'+rank(st.score)+'</p><div class="fin"><span><small>Score</small><b>'+st.score+'</b></span><span><small>Correct</small><b>'+st.right+'/'+st.total+'</b></span><span><small>Accuracy</small><b>'+acc+'%</b></span><span><small>Best</small><b>'+Math.max(prev,st.score)+'</b></span></div>'+(st.score>prev&&prev>0?'<p class="nb">New personal best!</p>':'')+'<p><button class="btn" id="sqAgain" type="button">Play again</button> <a class="btn g" href="/games/number-pattern/">More number patterns</a></p><p class="sub2">Want a tutor to explain sequences? <a href="/education/#book-demo">Book your first class free</a>.</p>';
- show($('sqCard'),true);$('sqAgain').onclick=start;$('sqAgain').focus()}
-function start(){st={m:0,r:0,n:0,score:0,streak:0,lives:3,right:0,total:0};show($('sqCard'),false);show($('sqPlay'),true);ask(build())}
-function intro(){clearInterval(timer);show($('sqPlay'),false);st={m:0,r:0,n:0,score:0,streak:0,lives:3,right:0,total:0};hud();var b=best();
- $('sqCard').innerHTML='<h2>Help the frog cross the river</h2><p>Hop across '+TOTAL+' stepping stones. Each row of numbers follows a rule: <b>add</b> the same number (arithmetic) or <b>multiply</b> by the same number (geometric). Spot the rule and fill the gap before the timer runs out.</p><ul class="how3"><li>3 lives</li><li>Combo bonus for streaks</li><li>5 missions</li></ul>'+(b?'<p class="nb">Your best: '+b+'</p>':'')+'<p><button class="btn" id="sqGo" type="button">Start the crossing</button></p>';
- show($('sqCard'),true);$('sqGo').onclick=start}
+function lad(){try{var o=JSON.parse(localStorage.getItem('wtm_seq_lad'));if(o&&o.s)return o}catch(e){}return{s:[]}}
+function saveLad(o){try{localStorage.setItem('wtm_seq_lad',JSON.stringify(o))}catch(e){}}
+function unlocked(o){var u=1;while(u<LV&&o.s[u-1])u++;return u}
+function stars(n){return '★'.repeat(n)+'☆'.repeat(3-n)}
+function ladder(){var o=lad(),u=unlocked(o),h='<div class="lad">';var ord=[];for(var rw=3;rw>=0;rw--)for(var cc=1;cc<=5;cc++)ord.push(rw*5+cc);ord.forEach(function(L){var sp=lvl(L),on=L<=u,s=o.s[L-1]||0,boss=L%5===0;
+ h+='<button type="button" class="lp'+(boss?' bs':'')+(on?'':' lk')+(L===u&&!s?' cur':'')+'" data-l="'+L+'"'+(on?'':' disabled')+' aria-label="Level '+L+(on?'':' locked')+'"><span class="no">'+(on?L:'🔒')+'</span><span class="nm">'+sp.n.replace(/^(BOSS|SUMMIT): /,'')+'</span><span class="sr">'+(boss?(L===20?'SUMMIT ':'BOSS ')+'':'')+(s?stars(s):'')+'</span></button>'});
+ return h+'</div>'}
+function rk(){var o=lad(),u=unlocked(o);return o.s[LV-1]?'Pond Legend':ranks(Math.min(u,19))}
+function done(){var o=lad();return o.s.filter(Boolean).length}
+function finish(win){clearInterval(timer);var o=lad(),L=st.L,prev=best(),acc=st.total?Math.round(st.right*100/st.total):0,sc=Math.max(1,Math.min(3,st.lives));
+ if(win){var bonus=50*L*sc;st.score+=bonus;o.s[L-1]=Math.max(o.s[L-1]||0,sc);saveLad(o)}saveBest(st.score);show($('sqPlay'),false);
+ var nx=win&&L<LV;
+ $('sqCard').innerHTML='<h2>'+(win?(L===LV?'You reached the summit!':'Level '+L+' cleared!'):'Splash! Level '+L+' is not over')+'</h2><p class="rk">'+(win?stars(sc):'Try again, the path stays the same difficulty')+'</p><div class="fin"><span><small>Score</small><b>'+st.score+'</b></span><span><small>Correct</small><b>'+st.right+'/'+st.total+'</b></span><span><small>Accuracy</small><b>'+acc+'%</b></span><span><small>Rank</small><b style="font-size:15px">'+rk()+'</b></span></div>'+(st.score>prev&&prev>0?'<p class="nb">New personal best!</p>':'')+'<p>'+(nx?'<button class="btn" id="sqNx" type="button">Level '+(L+1)+' →</button> ':'<button class="btn" id="sqAgain" type="button">'+(win?'Replay for more stars':'Try level '+L+' again')+'</button> ')+'<button class="btn g" id="sqMap" type="button">Level ladder</button></p><p class="sub2">Want a tutor to explain sequences? <a href="/education/#book-demo">Book your first class free</a>.</p>';
+ show($('sqCard'),true);var nb=$('sqNx');if(nb){nb.onclick=function(){begin(L+1,st.score)};nb.focus()}var ag=$('sqAgain');if(ag){ag.onclick=function(){begin(L,win?st.score:0)};ag.focus()}$('sqMap').onclick=intro}
+function begin(L,score){st={L:L,r:0,n:0,score:score||0,streak:0,lives:3,right:0,total:0};show($('sqCard'),false);show($('sqPlay'),true);ask(build())}
+function intro(){clearInterval(timer);show($('sqPlay'),false);st={L:1,r:0,n:0,score:0,streak:0,lives:3,right:0,total:0};hud();var b=best(),o=lad(),u=unlocked(o);
+ $('sqCard').innerHTML='<h2>Climb the Lily Ladder</h2><p>Twenty levels, and each one is only a tiny bit harder than the last. Start with simple hops, then meet negatives, fractions, nth terms, sums and a path that never ends. Every fifth level is a boss.</p><p class="rk">'+ranks(u)+' · '+done()+'/'+LV+' levels cleared'+(b?' · best score '+b:'')+'</p>'+ladder()+'<p class="sub2">Tap a lit lily pad to play. Clear a level to unlock the next one.</p>';
+ show($('sqCard'),true);$('sqCard').querySelectorAll('.lp').forEach(function(x){x.onclick=function(){begin(+x.getAttribute('data-l'),0)}});var c=$('sqCard').querySelector('.cur');if(c&&c.scrollIntoView)try{c.scrollIntoView({block:'center'})}catch(e){}}
 $('sqOpts').addEventListener('click',function(e){var b=e.target.closest('button.op');if(!b||locked)return;var i=+b.getAttribute('data-i');b.classList.add(q.opts[i].ok?'ok':'no');resolve(q.opts[i].ok)});
 $('sqOk').onclick=function(){if(locked)return;var v=$('sqIn').value.trim();if(v==='')return;resolve(+v===q.ans)};
 $('sqIn').addEventListener('keydown',function(e){if(e.key==='Enter')$('sqOk').click()});
