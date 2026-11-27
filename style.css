@@ -15,8 +15,9 @@ header .nav-cta{gap:12px;margin-left:8px}
 
 /* article polish: hero art on a clean card, next-steps strip */
 .article-hero .post-hero{background:linear-gradient(180deg,#FFFaF0,#FFF1DC);border-radius:24px;padding:18px 22px;box-shadow:0 18px 40px -18px rgba(0,0,0,.55),0 0 0 4px rgba(253,187,11,.55);max-width:min(560px,100%);height:auto;margin-top:18px}
-.article-body .next-steps{text-align:center;font:600 1.02rem/1.6 Nunito,system-ui,sans-serif;color:#0C1A33;background:#FFF7E0;border:2px dashed #FDBB0B;border-radius:18px;padding:18px 20px;margin:28px 0}
-.article-body .next-steps a{font-weight:800;color:#0C1A33;text-decoration:none;border-bottom:3px solid #E52421;padding-bottom:1px;transition:.15s}
-.article-body .next-steps a:hover{background:#E52421;color:#fff;border-radius:6px}
-.article-body .next-steps a:last-of-type{display:inline-block;background:#E52421;color:#fff;border:0;border-radius:999px;padding:8px 18px;margin-top:6px}
-.article-body .next-steps a:last-of-type:hover{background:#0C1A33}
+.article-body .next-steps{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px 14px;text-align:center;font:700 1rem/1.4 Nunito,system-ui,sans-serif;color:#0C1A33;background:#fff;border:2px solid #0C1A33;border-radius:20px;box-shadow:0 5px 0 #0C1A33;padding:16px 20px;margin:32px auto}
+.article-body .next-steps a{display:inline-flex;align-items:center;gap:6px;font-weight:800;color:#0C1A33;background:#FFF1C2;border:2px solid #FDBB0B;border-radius:999px;padding:8px 18px;text-decoration:none;transition:transform .15s,background .15s}
+.article-body .next-steps a:only-of-type::after{content:"\2192";font-weight:800}
+.article-body .next-steps a:hover{background:#FDBB0B;transform:translateY(-2px)}
+.article-body .next-steps a:last-of-type:not(:first-of-type){background:#E52421;border-color:#E52421;color:#fff}
+.article-body .next-steps a:last-of-type:not(:first-of-type):hover{background:#0C1A33;border-color:#0C1A33}
