@@ -1,3 +1,8 @@
+(function(){var has=[].some.call(document.scripts,function(s){return !s.src&&s.textContent.indexOf("nav-dropdown-toggle")>-1});if(has)return;
+function init(){[].forEach.call(document.querySelectorAll(".nav-dropdown"),function(dd){var b=dd.querySelector(".nav-dropdown-toggle");if(!b)return;b.addEventListener("click",function(e){e.stopPropagation();var o=dd.classList.toggle("open");b.setAttribute("aria-expanded",o)});});
+document.addEventListener("click",function(e){[].forEach.call(document.querySelectorAll(".nav-dropdown.open"),function(d){if(!d.contains(e.target))d.classList.remove("open")})});
+document.addEventListener("keydown",function(e){if(e.key=="Escape")[].forEach.call(document.querySelectorAll(".nav-dropdown.open"),function(d){d.classList.remove("open")})})}
+if(document.readyState!="loading")init();else document.addEventListener("DOMContentLoaded",init)})();
 (function(){
 if(window.__wtmS)return;window.__wtmS=1;
 var idx=null,box,inp,list,btn,sel=-1,res=[];
