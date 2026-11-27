@@ -1,0 +1,46 @@
+/* Subject/curriculum landing pages */
+body{text-align:center}
+header.top{position:sticky;top:0;z-index:50;background:var(--bg);padding:10px 18px!important;display:flex;justify-content:space-between!important;align-items:center;flex-wrap:nowrap!important;border-bottom:1px solid var(--line);box-shadow:0 6px 18px -14px rgba(12,26,51,.4)}
+header.top>a{display:flex;align-items:center;gap:8px;font:700 1.15rem Fredoka,sans-serif!important}
+header.top>a::before{content:"";width:34px;height:34px;background:url(/assets/logo-mark.png) center/contain no-repeat;flex:none}
+header.top nav{display:flex;align-items:center;gap:6px}
+header.top nav a{font:700 .95rem Nunito,sans-serif!important;padding:8px 12px;border-radius:999px;color:var(--fg);text-decoration:none}
+header.top nav a:last-child{background:#E52421;color:#fff}
+header.top nav a:hover{background:rgba(229,36,33,.08)}header.top nav a:last-child:hover{background:#c91d1a}
+main{max-width:860px!important;padding:22px 18px 56px!important}
+main>p:first-child{display:inline-block;margin:0 0 14px;padding:6px 14px;border-radius:999px;background:#FFF1CC;font-size:.85rem;font-weight:700}
+main>p:first-child a{color:#0C1A33;text-decoration:none}
+h1{font-size:clamp(1.9rem,6vw,2.8rem)!important;line-height:1.12;margin:.1em auto .35em!important;max-width:20ch;text-wrap:balance}
+.lead{max-width:34em;margin:0 auto 1em;font-size:1.1rem!important;line-height:1.55}
+.related{font-size:.92rem;margin:0 0 6px;color:var(--mut)}
+.related a{font-weight:700}
+.cta{justify-content:center;margin:20px 0 26px!important}
+.btn{padding:14px 26px!important;border-radius:999px!important;font-size:1.02rem;box-shadow:0 10px 22px -12px rgba(12,26,51,.5)}
+figure{max-width:720px;margin:22px auto!important}
+figure img{box-shadow:0 18px 40px -26px rgba(12,26,51,.6)}
+figcaption{text-align:center}
+h2{text-align:center;font-size:clamp(1.5rem,4.6vw,1.9rem)!important;margin:1.8em 0 .6em!important;position:relative;padding-bottom:12px}
+h2::after{content:"";display:block;width:46px;height:4px;border-radius:2px;background:#FDBB0B;margin:10px auto 0}
+.pw h2{margin-top:0!important}
+table{border-radius:14px;overflow:hidden;border-collapse:separate;border-spacing:0;text-align:left}
+td,th{text-align:left}
+tr:last-child td,tr:last-child th{border-bottom:0}
+th{background:#FFF7E3;color:#0C1A33}
+main>ul,main>ol{display:grid;gap:10px;list-style:none;padding:0;margin:0 auto;max-width:640px;text-align:left}
+main>ul{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr))}
+main>ul li,main>ol li{background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:11px 14px;margin:0}
+main>ol{counter-reset:w}main>ol li{counter-increment:w;display:flex;gap:10px;align-items:flex-start}
+main>ol li::before{content:counter(w);flex:none;width:24px;height:24px;border-radius:50%;background:#E52421;color:#fff;font:600 .8rem/24px Fredoka,sans-serif;text-align:center;margin-top:1px}
+details{text-align:left;max-width:720px;margin:10px auto}
+details p{margin:.6em 0 .2em}
+.rel{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.rel a{margin:0!important;padding:9px 16px;border:1.5px solid var(--line);border-radius:999px;text-decoration:none;font-weight:700;background:var(--card)}
+@media(max-width:600px){
+header.top{padding:8px 64px 8px 14px!important}
+header.top nav a:not(:last-child){display:none}
+header.top>a{font-size:1.05rem!important}
+.cta{flex-direction:column;align-items:stretch;padding:0 4px}
+.btn{text-align:center;width:100%}
+main{padding:18px 16px 44px!important}
+}
+.pw li svg{margin:0 auto;display:block}
