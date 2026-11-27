@@ -12,3 +12,11 @@ header .nav-links a{font-size:.74rem;letter-spacing:.05em}
 header .nav-cta{gap:12px;margin-left:8px}
 @media(max-width:1180px){header .nav-links{gap:16px}header .nav-links a{font-size:.7rem}}
 @media(max-width:480px){header .nav{gap:10px}header .nav .logo{margin-right:0}header .nav .logo-text{font-size:.78rem}header .nav-cta{margin-left:auto}}
+
+/* article polish: hero art on a clean card, next-steps strip */
+.article-hero .post-hero{background:linear-gradient(180deg,#FFFaF0,#FFF1DC);border-radius:24px;padding:18px 22px;box-shadow:0 18px 40px -18px rgba(0,0,0,.55),0 0 0 4px rgba(253,187,11,.55);max-width:min(560px,100%);height:auto;margin-top:18px}
+.article-body .next-steps{text-align:center;font:600 1.02rem/1.6 Nunito,system-ui,sans-serif;color:#0C1A33;background:#FFF7E0;border:2px dashed #FDBB0B;border-radius:18px;padding:18px 20px;margin:28px 0}
+.article-body .next-steps a{font-weight:800;color:#0C1A33;text-decoration:none;border-bottom:3px solid #E52421;padding-bottom:1px;transition:.15s}
+.article-body .next-steps a:hover{background:#E52421;color:#fff;border-radius:6px}
+.article-body .next-steps a:last-of-type{display:inline-block;background:#E52421;color:#fff;border:0;border-radius:999px;padding:8px 18px;margin-top:6px}
+.article-body .next-steps a:last-of-type:hover{background:#0C1A33}
